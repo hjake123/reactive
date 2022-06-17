@@ -12,6 +12,6 @@ public class ModItemModels extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        // Non-block based item models are custom.
+        withExistingParent("reactive:item/crucible", modLoc("block/crucible"));
     }
 }

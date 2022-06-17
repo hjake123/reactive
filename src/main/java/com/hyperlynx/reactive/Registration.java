@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +43,11 @@ public class Registration {
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(Registration.class));
     }
 
+    // ----------------------- REGISTRATION ------------------------
 
+    public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
+            () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
+    public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, CreativeModeTab.TAB_MISC);
 
     // ----------------------- METHODS ------------------------
 

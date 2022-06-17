@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.datagen;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.Registration;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
@@ -12,6 +13,6 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-
+        add(Registration.CRUCIBLE.get(), "Crucible");
     }
 }

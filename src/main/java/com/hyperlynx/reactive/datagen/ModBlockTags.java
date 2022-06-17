@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.datagen;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.Registration;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.tags.BlockTags;
@@ -10,8 +11,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Ref;
-
 public class ModBlockTags extends BlockTagsProvider{
 
     public ModBlockTags(DataGenerator pGenerator, @Nullable ExistingFileHelper existingFileHelper) {
@@ -20,9 +19,10 @@ public class ModBlockTags extends BlockTagsProvider{
 
     @Override
     protected void addTags() {
-
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(Registration.CRUCIBLE.get());
+        System.out.println("Yeah, how about this, hmm?");
     }
-
 
     @NotNull
     @Override
