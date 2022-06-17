@@ -4,6 +4,8 @@ import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -29,13 +31,28 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
+        poseStack.translate(0, 0.5625f, 0);
+        poseStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         if(/*crucible.getBlockState().getValue(CrucibleBlock.FULL)*/true) {
             TextureAtlasSprite sprite = this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon();
             int color = BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos());
             VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-            Helper.renderIcon(poseStack, buffer, sprite, color, 0.7F, combinedOverlay, combinedLight);
+            renderIcon(poseStack, buffer, sprite, color, 0.7F, combinedOverlay, combinedLight);
         }
         poseStack.popPose();
+    }
+
+    // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)
+    public static void renderIcon(PoseStack ms, VertexConsumer builder, TextureAtlasSprite sprite, int color, float alpha, int overlay, int light) {
+        int red = ((color >> 16) & 0xFF);
+        int green = ((color >> 8) & 0xFF);
+        int blue = (color & 0xFF);
+        Matrix4f mat = ms.last().pose();
+        // Due to previous rotation, Y and Z are switched.
+        builder.vertex(mat, 0.2f, 0.8f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.8f, 0.8f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.8f, 0.2f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.2f, 0.2f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
     }
 
 }
