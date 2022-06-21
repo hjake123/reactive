@@ -27,13 +27,13 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         this.blockRenderDispatcher = context.getBlockRenderDispatcher();
     }
 
-    // Inspired by Petal Apothecary rendering in Botania.
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
-        poseStack.translate(0, 0.5625f, 0);
+        // 0.5625 is the 'full' water level.
+        poseStack.translate(0, 0.5625, 0);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(90f));
-        if(/*crucible.getBlockState().getValue(CrucibleBlock.FULL)*/true) {
+        if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon();
             int color = BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos());
             VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());

@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +21,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import javax.annotation.Nullable;
 
 public class CrucibleBlock extends Block implements EntityBlock {
 
@@ -37,7 +39,11 @@ public class CrucibleBlock extends Block implements EntityBlock {
     }
 
     // Adapted from Cauldron code.
-    protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 10, 14);
+    //protected static final VoxelShape SHAPE = Block.box(2, 0, 2, 14, 10, 14);
+
+    // Copied from the model itself. There's probably a better way!
+    protected static final VoxelShape SHAPE = Shapes.or(Block.box(3, 1, 3, 13, 2, 13), Shapes.or(Block.box(13, 2, 3,14, 10, 13), Shapes.or(Block.box(2, 2, 3,3, 10, 13), Shapes.or(Block.box(3, 2, 2, 13, 10, 3), Shapes.or(Block.box(3, 2, 13,13, 10, 14))))));
+
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
         return SHAPE;
