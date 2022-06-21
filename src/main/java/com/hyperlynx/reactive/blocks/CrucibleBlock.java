@@ -76,7 +76,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
         }
         if(player.getItemInHand(hand).is(Items.WATER_BUCKET) && !state.getValue(FULL)){
             level.setBlock(pos, state.setValue(FULL, true), 2); // 2 is the flag for "update and notify client"
-            level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F, false);
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
             if(player instanceof ServerPlayer) {
                 if(((ServerPlayer) player).gameMode.isSurvival()){
                     player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
