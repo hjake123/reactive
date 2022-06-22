@@ -1,29 +1,21 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.PowerType;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -33,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
@@ -44,6 +36,9 @@ public class Registration {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ReactiveMod.MODID);
 
+    // Handles registration of Powers.
+    public static final DeferredRegister<PowerType> POWERS = DeferredRegister.create(new ResourceLocation(ReactiveMod.MODID, "power_registry"), ReactiveMod.MODID);
+    //public static final Supplier<IForgeRegistry<Power>> POWER_REGISTRY = POWERS.makeRegistry(RegistryBuilder::new); ???
 
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -51,6 +46,7 @@ public class Registration {
         ITEMS.register(bus);
         PARTICLES.register(bus);
         TILES.register(bus);
+        POWERS.register(bus);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(Registration.class));
     }
 
@@ -61,12 +57,18 @@ public class Registration {
     public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, CreativeModeTab.TAB_MISC);
 
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
-            () -> BlockEntityType.Builder.of(new BlockEntityType.BlockEntitySupplier<CrucibleBlockEntity>() {
-                @Override
-                public @NotNull CrucibleBlockEntity create(BlockPos pos, BlockState state) {
-                    return new CrucibleBlockEntity(pos, state);
-                }
-            }, CRUCIBLE.get()).build(null));
+            () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
+
+    // Registers the Alchemical Powers in the base mod.
+    public static final RegistryObject<PowerType> BLAZE_POWER = POWERS.register("blaze", () -> new PowerType(0xFFA300));
+    public static final RegistryObject<PowerType> MIND_POWER = POWERS.register("mind", () -> new PowerType(0x7A5BB5));
+    public static final RegistryObject<PowerType> SOUL_POWER = POWERS.register("soul", () -> new PowerType(0x60F5FA));
+    public static final RegistryObject<PowerType> CURSE_POWER = POWERS.register("curse", () -> new PowerType(0x6A5244));
+    public static final RegistryObject<PowerType> LIGHT_POWER = POWERS.register("light", () -> new PowerType(0xF6DAB4));
+    public static final RegistryObject<PowerType> WARP_POWER = POWERS.register("warp", () -> new PowerType(0xFFA300));
+    public static final RegistryObject<PowerType> ACID_POWER = POWERS.register("caustic", () -> new PowerType(0x9D1E2D));
+    public static final RegistryObject<PowerType> VITAL_POWER = POWERS.register("vital", () -> new PowerType(0xFF0606));
+    public static final RegistryObject<PowerType> BODY_POWER = POWERS.register("body", () -> new PowerType(0xAF5220));
 
     // ----------------------- METHODS ------------------------
 
