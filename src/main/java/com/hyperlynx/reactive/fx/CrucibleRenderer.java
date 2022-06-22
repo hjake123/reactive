@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.fx;
 
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
+import com.hyperlynx.reactive.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -35,24 +36,21 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         poseStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon();
-            int color = BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos());
+            Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
             VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-            renderIcon(poseStack, buffer, sprite, color, crucible.getWaterOpacity(), combinedOverlay, combinedLight, crucible.getWaterRed(), crucible.getWaterGreen(), crucible.getWaterBlue());
+            renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);
         }
         poseStack.popPose();
     }
 
     // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)
-    public static void renderIcon(PoseStack ms, VertexConsumer builder, TextureAtlasSprite sprite, int color, float alpha, int overlay, int light, float tintRed, float tintGreen, float tintBlue) {
-        int red = (int) (((color >> 16) & 0xFF) * tintRed);
-        int green = (int) (((color >> 8) & 0xFF) * tintGreen);
-        int blue = (int) ((color & 0xFF) * tintBlue);
+    public static void renderIcon(PoseStack ms, VertexConsumer builder, TextureAtlasSprite sprite, Color color, float alpha, int overlay, int light) {
         Matrix4f mat = ms.last().pose();
         // Due to previous rotation, Y and Z are switched.
-        builder.vertex(mat, 0.2f, 0.8f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
-        builder.vertex(mat, 0.8f, 0.8f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
-        builder.vertex(mat, 0.8f, 0.2f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
-        builder.vertex(mat, 0.2f, 0.2f, 0).color(red, green, blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.2f, 0.8f, 0).color(color.red, color.green, color.blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.8f, 0.8f, 0).color(color.red, color.green, color.blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV1()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.8f, 0.2f, 0).color(color.red, color.green, color.blue, (int) (alpha * 255F)).uv(sprite.getU1(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        builder.vertex(mat, 0.2f, 0.2f, 0).color(color.red, color.green, color.blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
     }
 
 }

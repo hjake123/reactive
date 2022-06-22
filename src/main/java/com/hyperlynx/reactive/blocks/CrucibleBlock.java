@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +16,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -23,6 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -73,5 +77,19 @@ public class CrucibleBlock extends Block implements EntityBlock {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Nullable
+    @Override
+    public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
+       if(type == Registration.CRUCIBLE_BE_TYPE.get()){
+           return new BlockEntityTicker<CrucibleBlockEntity>() {
+               @Override
+               public void tick(Level l, BlockPos p, BlockState s, CrucibleBlockEntity c) {
+                   com.hyperlynx.reactive.tile.CrucibleBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.tile.CrucibleBlockEntity) c);
+               }
+           };
+       }
+       return null;
     }
 }

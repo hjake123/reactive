@@ -1,6 +1,6 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.alchemy.PowerType;
+import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
@@ -11,12 +11,14 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -33,8 +35,8 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ReactiveMod.MODID);
 
     // Handles registration of Powers.
-    public static final DeferredRegister<PowerType> POWERS = DeferredRegister.create(new ResourceLocation(ReactiveMod.MODID, "power_registry"), ReactiveMod.MODID);
-    public static final Supplier<IForgeRegistry<PowerType>> POWER_SUPPLIER = POWERS.makeRegistry(RegistryBuilder::new);
+    public static final DeferredRegister<Power> POWERS = DeferredRegister.create(new ResourceLocation(ReactiveMod.MODID, "power_registry"), ReactiveMod.MODID);
+    public static final Supplier<IForgeRegistry<Power>> POWER_SUPPLIER = POWERS.makeRegistry(RegistryBuilder::new);
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
@@ -55,15 +57,15 @@ public class Registration {
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
 
     // Registers the Alchemical Powers in the base mod.
-    public static final RegistryObject<PowerType> BLAZE_POWER = POWERS.register("blaze", () -> new PowerType(0xFFA300));
-    public static final RegistryObject<PowerType> MIND_POWER = POWERS.register("mind", () -> new PowerType(0x7A5BB5));
-    public static final RegistryObject<PowerType> SOUL_POWER = POWERS.register("soul", () -> new PowerType(0x60F5FA));
-    public static final RegistryObject<PowerType> CURSE_POWER = POWERS.register("curse", () -> new PowerType(0x6A5244));
-    public static final RegistryObject<PowerType> LIGHT_POWER = POWERS.register("light", () -> new PowerType(0xF6DAB4));
-    public static final RegistryObject<PowerType> WARP_POWER = POWERS.register("warp", () -> new PowerType(0xFFA300));
-    public static final RegistryObject<PowerType> ACID_POWER = POWERS.register("caustic", () -> new PowerType(0x9D1E2D));
-    public static final RegistryObject<PowerType> VITAL_POWER = POWERS.register("vital", () -> new PowerType(0xFF0606));
-    public static final RegistryObject<PowerType> BODY_POWER = POWERS.register("body", () -> new PowerType(0xAF5220));
+    public static final RegistryObject<Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze",0xFFA300));
+    public static final RegistryObject<Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind",0x7A5BB5));
+    public static final RegistryObject<Power> SOUL_POWER = POWERS.register("soul", () -> new Power("soul",0x60F5FA));
+    public static final RegistryObject<Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse",0x6A5244));
+    public static final RegistryObject<Power> LIGHT_POWER = POWERS.register("light", () -> new Power("light",0xF6DAB4));
+    public static final RegistryObject<Power> WARP_POWER = POWERS.register("warp", () -> new Power("warp",0xFFA300));
+    public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic",0x9D1E2D));
+    public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital",0xFF0606));
+    public static final RegistryObject<Power> BODY_POWER = POWERS.register("body", () -> new Power("body",0xAF5220));
 
     // ----------------------- METHODS ------------------------
 

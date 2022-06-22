@@ -1,7 +1,10 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.util.ConfigMan;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
