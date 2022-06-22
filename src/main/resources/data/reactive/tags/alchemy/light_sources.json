@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:dusts/glowstone",
+    "#forge:gems/prismarine",
+    "minecraft:crying_obsidian",
+    "minecraft:shroomlight",
+    "minecraft:froglight"
+  ]
+}

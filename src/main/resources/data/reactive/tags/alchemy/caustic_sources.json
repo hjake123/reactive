@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:dusts/redstone",
+    "minecraft:spider_eye",
+    "minecraft:magma_cream",
+    "minecraft:sugar",
+    "#forge:gunpowder"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:crops",
+    "minecraft:rotten_flesh",
+    "#forge:mushrooms",
+    "#forge:slimeballs",
+    "#forge:eggs",
+    "forge:bones",
+    "#forge:leather"
+  ]
+}

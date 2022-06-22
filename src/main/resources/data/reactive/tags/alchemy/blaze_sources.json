@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:rods/blaze",
+    "minecraft:blaze_powder",
+    "minecraft:magma_cream",
+    "#forge:gunpowder"
+  ]
+}
