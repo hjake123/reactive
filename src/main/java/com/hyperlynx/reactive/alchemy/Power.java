@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.util.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -21,9 +22,17 @@ public class Power {
         this.color = color;
     }
 
-    // Queries the Power Registry to ask for the power referred to by reactive:(name), where (name) is supplied by the tag.
+    // Searches the Power Registry to locate the power referred to by the name in the tag.
     public static Power readPower(CompoundTag tag){
-        return Registration.POWER_SUPPLIER.get().getValue(new ResourceLocation(tag.getString("name"), ReactiveMod.MODID));
+        Power ret = null;
+        for(RegistryObject<Power> reg : Registration.POWERS.getEntries()){
+            if(reg.get().getName().equals(tag.getString("name"))){
+                ret = reg.get();
+                break;
+            }
+        }
+        if(ret == null) System.err.println("Failed to read power. This will break things.");
+        return ret;
     }
 
     public Color getColor(){

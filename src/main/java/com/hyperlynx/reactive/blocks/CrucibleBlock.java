@@ -68,7 +68,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
         if(player.getItemInHand(hand).is(Items.WATER_BUCKET) && !state.getValue(FULL)){
-            level.setBlock(pos, state.setValue(FULL, true), 2); // 2 is the flag for "update and notify client"
+            level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
             if(player instanceof ServerPlayer) {
                 if(((ServerPlayer) player).gameMode.isSurvival()){
@@ -83,12 +83,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
        if(type == Registration.CRUCIBLE_BE_TYPE.get()){
-           return new BlockEntityTicker<CrucibleBlockEntity>() {
-               @Override
-               public void tick(Level l, BlockPos p, BlockState s, CrucibleBlockEntity c) {
-                   com.hyperlynx.reactive.tile.CrucibleBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.tile.CrucibleBlockEntity) c);
-               }
-           };
+           return (l, p, s, c) -> com.hyperlynx.reactive.tile.CrucibleBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.tile.CrucibleBlockEntity) c);
        }
        return null;
     }
