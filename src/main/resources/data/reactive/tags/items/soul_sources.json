@@ -1,7 +1,8 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:soul_speed_blocks",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
     "#minecraft:piglin_repellents",
     "minecraft:sculk"
   ]

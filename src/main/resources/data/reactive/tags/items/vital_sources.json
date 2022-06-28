@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "minecraft:glistering_melon",
+    "minecraft:glistering_melon_slice",
     "minecraft:ghast_tear",
     "minecraft:golden_apple",
-    "#forge:crop/beetroot"
+    "#forge:crops/beetroot"
   ]
 }

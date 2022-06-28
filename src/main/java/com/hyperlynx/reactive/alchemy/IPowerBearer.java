@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public interface IPowerBearer extends INBTSerializable<CompoundTag> {
-    void addPower(Power p, int amount);
+    boolean addPower(Power p, int amount);
     int getPowerLevel(Power t);
     boolean expendPower(Power t, int amount);
     Color getCombinedColor(int base);

@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -58,8 +59,8 @@ public class CrucibleBlock extends Block implements EntityBlock {
         return new CrucibleBlockEntity(pos, state);
     }
 
-    public List<Entity> getEntitesInside(Level level){
-        return level.getEntities(null, INSIDE.bounds());
+    public static List<Entity> getEntitesInside(BlockPos pos, Level level){
+        return level.getEntities(null, INSIDE.bounds().move(pos));
     }
 
     @Override

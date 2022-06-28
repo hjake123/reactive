@@ -40,9 +40,18 @@ public class Power {
     }
     public String getName() { return name; }
 
-    //TODO: implement
+    // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
     public static Power getSourcePower(ItemStack i){
-        return Registration.ACID_POWER.get();
+        if(i.is(PowerTags.acidSource)) return Registration.ACID_POWER.get();
+        if(i.is(PowerTags.blazeSource)) return Registration.BLAZE_POWER.get();
+        if(i.is(PowerTags.bodySource)) return Registration.BODY_POWER.get();
+        if(i.is(PowerTags.curseSource)) return Registration.CURSE_POWER.get();
+        if(i.is(PowerTags.lightSource)) return Registration.LIGHT_POWER.get();
+        if(i.is(PowerTags.mindSource)) return Registration.MIND_POWER.get();
+        if(i.is(PowerTags.soulSource)) return Registration.SOUL_POWER.get();
+        if(i.is(PowerTags.vitalSource)) return Registration.VITAL_POWER.get();
+        if(i.is(PowerTags.warpSource)) return Registration.WARP_POWER.get();
+        return null;
     }
 
 }

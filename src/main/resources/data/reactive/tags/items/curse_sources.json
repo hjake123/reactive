@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:soul_speed_blocks",
+    "#minecraft:soul_fire_base_blocks",
     "minecraft:rotten_flesh",
     "minecraft:fermented_spider_eye",
     "minecraft:wither_rose",

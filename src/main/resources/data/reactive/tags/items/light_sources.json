@@ -5,6 +5,8 @@
     "#forge:gems/prismarine",
     "minecraft:crying_obsidian",
     "minecraft:shroomlight",
-    "minecraft:froglight"
+    "minecraft:pearlescent_froglight",
+    "minecraft:verdant_froglight",
+    "minecraft:ochre_froglight"
   ]
 }

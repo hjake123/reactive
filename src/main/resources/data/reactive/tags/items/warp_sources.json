@@ -1,9 +1,9 @@
 {
   "replace": false,
   "values": [
-    "minecraft:warped_stems",
+    "#minecraft:warped_stems",
     "minecraft:warped_fungus",
-    "forge:ender_pearls",
+    "#forge:ender_pearls",
     "minecraft:chorus_fruit"
   ]
 }
