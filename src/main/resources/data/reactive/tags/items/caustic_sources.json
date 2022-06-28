@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "minecraft:spider_eye",
-    "minecraft:sugar"
+    "minecraft:sugar",
+    "minecraft:nether_wart",
+    "minecraft:weeping_vines",
+    "minecraft:crimson_fungus",
+    "minecraft:crimson_roots"
   ]
 }

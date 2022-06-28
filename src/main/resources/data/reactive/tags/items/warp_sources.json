@@ -4,6 +4,9 @@
     "#minecraft:warped_stems",
     "minecraft:warped_fungus",
     "#forge:ender_pearls",
-    "minecraft:chorus_fruit"
+    "minecraft:chorus_fruit",
+    "minecraft:warped_roots",
+    "minecraft:twisting_vines",
+    "minecraft:warped_roots"
   ]
 }

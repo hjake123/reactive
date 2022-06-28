@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -77,7 +78,20 @@ public class CrucibleBlock extends Block implements EntityBlock {
                 }
             }
         }
-        return InteractionResult.SUCCESS;
+
+        if(state.getValue(FULL)){
+            BlockEntity ent = level.getBlockEntity(pos);
+            if(ent instanceof CrucibleBlockEntity){
+                // Clear the crucible with shift-right-click.
+                if(player.isShiftKeyDown()){
+                    level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
+                    level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+                }
+                return InteractionResult.SUCCESS;
+            }
+        }
+
+        return InteractionResult.PASS;
     }
 
     @Nullable

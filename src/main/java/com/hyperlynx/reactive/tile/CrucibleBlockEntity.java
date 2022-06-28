@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.tile;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.alchemy.IPowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -33,7 +34,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     private int total_power = 0; // The current total number of power units in the Crucible.
     private int tick_counter = 0; // Used for counting active ticks. See tick().
-    private final Color mix_color = new Color(); // Used to cache mixture color between updtates;
+    private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     private boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
@@ -45,37 +46,48 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         crucible.tick_counter++;
         if(crucible.tick_counter >= CRUCIBLE_TICK_DELAY && !level.isClientSide()){
             crucible.tick_counter = 1;
-            List<ItemStack> items = getItemsInside(level, pos, state, true);
+
+            // Clear the crucible if it is empty.
+            if(!state.getValue(CrucibleBlock.FULL)) crucible.expendPower();
+
+            // Check for new items to dissolve into Power.
+            List<ItemStack> items = getItemsInside(level, pos, state, crucible);
             if(!items.isEmpty()){
                 boolean changed = false;
                 for(ItemStack i : items){
-                    changed = changed || crucible.addPower(Power.getSourcePower(i), i.getCount()*10); // TODO: power levels??
+                    changed = changed || crucible.addPower(Power.getSourcePower(i), i.getCount() * 10); // TODO: power levels??
                 }
                 if(changed){
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.9F);
                 }
             }
-            System.out.println("Current powers: " + crucible.powers);
+
         }
     }
 
-    private static List<ItemStack> getItemsInside(Level level, BlockPos pos, BlockState state, boolean removeItems){
+    private static List<ItemStack> getItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         ArrayList<ItemStack> items = new ArrayList<>();
         if(!state.getValue(CrucibleBlock.FULL)){
             return items;
         }
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
-            if(e instanceof ItemEntity){
+            if(e instanceof ItemEntity && crucible.canDissolve(((ItemEntity) e).getItem())){
                 items.add(((ItemEntity) e).getItem());
                 Power p = Power.getSourcePower(((ItemEntity) e).getItem());
                 // Only remove items that have a power assigned to them.
-                if(removeItems && !(p == null)){
+                // TODO: Don't delete items that aren't dissolved.
+                if(!(p == null)){
                     e.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }
         return items;
+    }
+
+    // Returns true if we have enough Caustic to dissolve the item.
+    private boolean canDissolve(ItemStack i){
+        return i.is(AlchemyTags.easyDissolve) || getPowerLevel(Registration.ACID_POWER.get()) >= 40;
     }
 
     // ----- Helper and power management methods -----
@@ -93,7 +105,6 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         if(p == null){
             return false;
         }
-        System.out.println("Adding " + p.getName());
         if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
             amount = CRUCIBLE_MAX_POWER - getTotalPowerLevel();
         }
@@ -133,6 +144,11 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             return true;
         }
         return false;
+    }
+
+    public void expendPower() {
+        powers.clear();
+        total_power = 0;
     }
 
     public int getTotalPowerLevel(){

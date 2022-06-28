@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:rods/blaze",
+    "#forge:gems/prismarine",
+    "minecraft:phantom_membrane",
+    "minecraft:golden_apple",
+    "#forge:ender_pearls",
+    "minecraft:wither_skeleton_skull",
+    "minecraft:sculk_catalyst"
+  ]
+}
