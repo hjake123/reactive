@@ -3,7 +3,7 @@ package com.hyperlynx.reactive;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
-import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -11,14 +11,13 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -56,7 +55,7 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
 
-    // Registers the Alchemical Powers in the base mod.
+    // Registers the Alchemical Powers.
     public static final RegistryObject<Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze",0xFFA300));
     public static final RegistryObject<Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind",0x7A5BB5));
     public static final RegistryObject<Power> SOUL_POWER = POWERS.register("soul", () -> new Power("soul",0x60F5FA));
@@ -92,5 +91,10 @@ public class Registration {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
+    }
+
+    @SubscribeEvent
+    public static void worldDataInit(WorldEvent.CreateSpawnPosition event){
+
     }
 }

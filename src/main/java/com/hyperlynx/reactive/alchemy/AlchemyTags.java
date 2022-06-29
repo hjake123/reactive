@@ -16,7 +16,6 @@ public class AlchemyTags {
     public static final TagKey<Item> acidSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "caustic_sources"));
     public static final TagKey<Item> vitalSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "vital_sources"));
     public static final TagKey<Item> bodySource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "body_sources"));
-    public static final TagKey<Item> easyDissolve = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "easy_dissolve"));
     public static final TagKey<Item> highPower = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "high_potency"));
 
 }

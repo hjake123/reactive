@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.tile;
+package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.AlchemyTags;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -30,12 +29,12 @@ import java.util.List;
 
 public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     private static final int CRUCIBLE_TICK_DELAY = 30; // The number of server ticks before the Crucible does its full calculations.
-    public static final int CRUCIBLE_MAX_POWER = 640; // The maximum power the Crucible can hold.
+    public static final int CRUCIBLE_MAX_POWER = 6400; // The maximum power the Crucible can hold.
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
-    private int total_power = 0; // The current total number of power units in the Crucible.
+    // The current total number of power units in the Crucible.
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
-    private boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
+    public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -51,11 +50,14 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             if(!state.getValue(CrucibleBlock.FULL)) crucible.expendPower();
 
             // Check for new items to dissolve into Power.
-            List<ItemStack> items = getItemsInside(level, pos, state, crucible);
+            List<ItemStack> items = dissolveItemsInside(level, pos, state, crucible);
             if(!items.isEmpty()){
                 boolean changed = false;
                 for(ItemStack i : items){
-                    changed = changed || crucible.addPower(Power.getSourcePower(i), i.getCount() * 10); // TODO: power levels??
+                    List<Power> stack_power_list = Power.getSourcePower(i);
+                    for(Power p : stack_power_list){
+                        changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.level) / stack_power_list.size());
+                    }
                 }
                 if(changed){
                     crucible.setDirty(level, pos, state);
@@ -66,7 +68,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         }
     }
 
-    private static List<ItemStack> getItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
+    private static List<ItemStack> dissolveItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         ArrayList<ItemStack> items = new ArrayList<>();
         if(!state.getValue(CrucibleBlock.FULL)){
             return items;
@@ -74,10 +76,9 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
             if(e instanceof ItemEntity && crucible.canDissolve(((ItemEntity) e).getItem())){
                 items.add(((ItemEntity) e).getItem());
-                Power p = Power.getSourcePower(((ItemEntity) e).getItem());
+                List<Power> p = Power.getSourcePower(((ItemEntity) e).getItem());
                 // Only remove items that have a power assigned to them.
-                // TODO: Don't delete items that aren't dissolved.
-                if(!(p == null)){
+                if(!(p.isEmpty())){
                     e.remove(Entity.RemovalReason.KILLED);
                 }
             }
@@ -87,7 +88,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
 
     // Returns true if we have enough Caustic to dissolve the item.
     private boolean canDissolve(ItemStack i){
-        return i.is(AlchemyTags.easyDissolve) || getPowerLevel(Registration.ACID_POWER.get()) >= 40;
+        return true;
     }
 
     // ----- Helper and power management methods -----
@@ -115,7 +116,6 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         else
             powers.put(p, amount);
 
-        total_power += amount;
         return true;
     }
 
@@ -135,12 +135,10 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         int level = powers.get(t);
         if(level > amount){
             powers.put(t, level-amount);
-            total_power -= amount;
             return true;
         }
         if (level == amount) {
             powers.remove(t);
-            total_power -= amount;
             return true;
         }
         return false;
@@ -148,11 +146,15 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
 
     public void expendPower() {
         powers.clear();
-        total_power = 0;
     }
 
     public int getTotalPowerLevel(){
-        return total_power;
+        int totalpp = 0;
+        if(powers == null) return 0;
+        for (Power p : powers.keySet()) {
+            totalpp += powers.get(p);
+        }
+        return totalpp;
     }
 
     // These methods calculate and return the combined color of the cauldron's mixture
@@ -179,7 +181,8 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                 continue; // Skip any invalid values if they exist.
             }
             Color pow_color = p.getColor();
-            float pow_weight = powers.get(p) / (float) getTotalPowerLevel();
+            float pow_weight = getPowerLevel(p) / (float) getTotalPowerLevel();
+            //System.out.println("Power " + p.getName() + " level: " + getPowerLevel(p) + " weight: " + pow_weight);
             mix_color.red += pow_color.red * pow_weight;
             mix_color.green += pow_color.green * pow_weight;
             mix_color.blue += pow_color.blue * pow_weight;
@@ -210,7 +213,6 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        // Mark that the color has changed and should be recalculated.
         color_changed = true;
     }
 

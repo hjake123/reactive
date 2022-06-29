@@ -1,16 +1,14 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.tile.CrucibleBlockEntity;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
@@ -86,6 +84,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
                 if(player.isShiftKeyDown()){
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                     level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+                    ((CrucibleBlockEntity) ent).color_changed = true;
                 }
                 return InteractionResult.SUCCESS;
             }
@@ -98,7 +97,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
        if(type == Registration.CRUCIBLE_BE_TYPE.get()){
-           return (l, p, s, c) -> com.hyperlynx.reactive.tile.CrucibleBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.tile.CrucibleBlockEntity) c);
+           return (l, p, s, c) -> com.hyperlynx.reactive.be.CrucibleBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.be.CrucibleBlockEntity) c);
        }
        return null;
     }

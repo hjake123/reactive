@@ -2,9 +2,14 @@ package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.Color;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -39,23 +44,24 @@ public class Power {
     public String getName() { return name; }
 
     // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
-    // TODO: Deal with stacks assigned to multiple Powers somehow.
-    public static Power getSourcePower(ItemStack i) {
-        if (i.is(AlchemyTags.acidSource)) return Registration.ACID_POWER.get();
-        if (i.is(AlchemyTags.blazeSource)) return Registration.BLAZE_POWER.get();
-        if (i.is(AlchemyTags.bodySource)) return Registration.BODY_POWER.get();
-        if (i.is(AlchemyTags.curseSource)) return Registration.CURSE_POWER.get();
-        if (i.is(AlchemyTags.lightSource)) return Registration.LIGHT_POWER.get();
-        if (i.is(AlchemyTags.mindSource)) return Registration.MIND_POWER.get();
-        if (i.is(AlchemyTags.soulSource)) return Registration.SOUL_POWER.get();
-        if (i.is(AlchemyTags.vitalSource)) return Registration.VITAL_POWER.get();
-        if (i.is(AlchemyTags.warpSource)) return Registration.WARP_POWER.get();
-        return null;
+    public static List<Power> getSourcePower(ItemStack i) {
+        ArrayList<Power> stack_powers = new ArrayList<>();
+        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Registration.ACID_POWER.get());
+        if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Registration.BLAZE_POWER.get());
+        if (i.is(AlchemyTags.bodySource)) stack_powers.add(Registration.BODY_POWER.get());
+        if (i.is(AlchemyTags.curseSource)) stack_powers.add(Registration.CURSE_POWER.get());
+        if (i.is(AlchemyTags.lightSource)) stack_powers.add(Registration.LIGHT_POWER.get());
+        if (i.is(AlchemyTags.mindSource)) stack_powers.add(Registration.MIND_POWER.get());
+        if (i.is(AlchemyTags.soulSource)) stack_powers.add(Registration.SOUL_POWER.get());
+        if (i.is(AlchemyTags.vitalSource)) stack_powers.add(Registration.VITAL_POWER.get());
+        if (i.is(AlchemyTags.warpSource)) stack_powers.add(Registration.WARP_POWER.get());
+        return stack_powers;
     }
 
-    // TODO: Exact yield/power should vary per world.
-    public static int getSourcelevel(ItemStack i) {
-        return i.is(AlchemyTags.highPower) ? 160 : 10;
+    public static int getSourceLevel(ItemStack i, Level level) {
+        return WorldSpecificValue.get(
+                level, "powerlevel_" + i.getItem().getDescriptionId(),
+                i.is(AlchemyTags.highPower) ? 3200: 40,
+                i.is(AlchemyTags.highPower) ? 800: 10);
     }
-
 }
