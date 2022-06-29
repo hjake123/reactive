@@ -84,7 +84,6 @@ public class CrucibleBlock extends Block implements EntityBlock {
                 if(player.isShiftKeyDown()){
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                     level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
-                    ((CrucibleBlockEntity) ent).color_changed = true;
                 }
                 return InteractionResult.SUCCESS;
             }

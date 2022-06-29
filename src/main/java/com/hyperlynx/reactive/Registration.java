@@ -92,9 +92,4 @@ public class Registration {
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
     }
-
-    @SubscribeEvent
-    public static void worldDataInit(WorldEvent.CreateSpawnPosition event){
-
-    }
 }
