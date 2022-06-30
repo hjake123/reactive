@@ -124,7 +124,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
 
     @Override
     public int getPowerLevel(Power t) {
-        if(powers.isEmpty()){
+        if(powers.isEmpty() || powers.get(t) == null){
             return 0;
         }
         return powers.get(t);
