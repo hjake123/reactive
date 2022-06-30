@@ -4,11 +4,17 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.recipes.PurifyRecipe;
+import com.hyperlynx.reactive.recipes.PurifyRecipeSerializer;
+import com.hyperlynx.reactive.recipes.PurifyRecipeType;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,6 +42,11 @@ public class Registration {
     // Handles registration of Powers.
     public static final DeferredRegister<Power> POWERS = DeferredRegister.create(new ResourceLocation(ReactiveMod.MODID, "power_registry"), ReactiveMod.MODID);
     public static final Supplier<IForgeRegistry<Power>> POWER_SUPPLIER = POWERS.makeRegistry(RegistryBuilder::new);
+
+    // Handles registration of recipes.
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ReactiveMod.MODID);
+
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
@@ -43,17 +54,24 @@ public class Registration {
         PARTICLES.register(bus);
         TILES.register(bus);
         POWERS.register(bus);
+        RECIPE_TYPES.register(bus);
+        RECIPE_SERIALIZERS.register(bus);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(Registration.class));
     }
 
     // ----------------------- REGISTRATION ------------------------
 
+    // Register the all-important Crucible.
     public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
             () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
     public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, CreativeModeTab.TAB_MISC);
 
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
+
+    // Register items.
+    public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
+            () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 
     // Registers the Alchemical Powers.
     public static final RegistryObject<Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze",0xFFA300));
@@ -65,6 +83,10 @@ public class Registration {
     public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic",0x9D1E2D));
     public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital",0xFF0606));
     public static final RegistryObject<Power> BODY_POWER = POWERS.register("body", () -> new Power("body",0xAF5220));
+
+    //Register the recipe types and serializers.
+    public static final RegistryObject<RecipeType<PurifyRecipe>> PURIFY_RECIPE_TYPE = RECIPE_TYPES.register("purify", PurifyRecipeType::new);
+    public static final RegistryObject<RecipeSerializer<PurifyRecipe>> PURIFY_SERIALIZER = RECIPE_SERIALIZERS.register("purify_serializer", PurifyRecipeSerializer::new);
 
     // ----------------------- METHODS ------------------------
 

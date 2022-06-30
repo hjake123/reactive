@@ -1,0 +1,9 @@
+{
+  "type": "reactive:purification",
+  "reactant": {
+    "item": "#forge:gems/amethyst"
+  },
+  "product": {
+    "item": "reactive:quartz"
+  }
+}
