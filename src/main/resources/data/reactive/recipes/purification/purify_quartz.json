@@ -1,7 +1,7 @@
 {
   "type": "reactive:purification",
   "reactant": {
-    "item": "#forge:gems/amethyst"
+    "item": "minecraft:amethyst_shard"
   },
   "product": {
     "item": "reactive:quartz"

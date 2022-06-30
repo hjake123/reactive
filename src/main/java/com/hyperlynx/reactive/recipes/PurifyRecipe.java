@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.recipes;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -48,15 +49,15 @@ public class PurifyRecipe implements Recipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return null;
+        return Registration.PURIFY_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.getOptional(new ResourceLocation(ReactiveMod.MODID, "purification")).get();
+        return Registration.PURIFY_RECIPE_TYPE.get();
     }
 
-    // No, these aren't for the recipe book...
+    // No, these recipes aren't for the recipe book, Mojang...
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {

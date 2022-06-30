@@ -6,13 +6,12 @@ import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.recipes.PurifyRecipe;
 import com.hyperlynx.reactive.recipes.PurifyRecipeSerializer;
-import com.hyperlynx.reactive.recipes.PurifyRecipeType;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +22,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -83,10 +81,11 @@ public class Registration {
     public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic",0x9D1E2D));
     public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital",0xFF0606));
     public static final RegistryObject<Power> BODY_POWER = POWERS.register("body", () -> new Power("body",0xAF5220));
+    // TODO: Add Verdant power for moss and spore blossoms and flowers.
 
     //Register the recipe types and serializers.
-    public static final RegistryObject<RecipeType<PurifyRecipe>> PURIFY_RECIPE_TYPE = RECIPE_TYPES.register("purify", PurifyRecipeType::new);
-    public static final RegistryObject<RecipeSerializer<PurifyRecipe>> PURIFY_SERIALIZER = RECIPE_SERIALIZERS.register("purify_serializer", PurifyRecipeSerializer::new);
+    public static final RegistryObject<RecipeType<PurifyRecipe>> PURIFY_RECIPE_TYPE = RECIPE_TYPES.register("purification", () -> getRecipeType("purification"));
+    public static final RegistryObject<RecipeSerializer<PurifyRecipe>> PURIFY_SERIALIZER = RECIPE_SERIALIZERS.register("purification", PurifyRecipeSerializer::new);
 
     // ----------------------- METHODS ------------------------
 
@@ -98,6 +97,16 @@ public class Registration {
     // Helper method for BlockItem registration without a tab
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    // Helper method for Recipe Types.
+    public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {
+        return new RecipeType<>()
+        {
+            public String toString() {
+                return ReactiveMod.MODID + ":" + id;
+            }
+        };
     }
 
     // Various event handlers to set up different items.
