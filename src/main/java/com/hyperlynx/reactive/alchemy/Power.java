@@ -15,6 +15,7 @@ import java.util.List;
 public class Power {
     private final Color color;
     private final String name;
+
     public Power(String name, int color){
         this.name = name;
         this.color = new Color(color);
@@ -46,7 +47,7 @@ public class Power {
     // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Registration.ACID_POWER.get());
+        if (i.is(AlchemyTags.verdantSource)) stack_powers.add(Registration.VERDANT_POWER.get());
         if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Registration.BLAZE_POWER.get());
         if (i.is(AlchemyTags.bodySource)) stack_powers.add(Registration.BODY_POWER.get());
         if (i.is(AlchemyTags.curseSource)) stack_powers.add(Registration.CURSE_POWER.get());

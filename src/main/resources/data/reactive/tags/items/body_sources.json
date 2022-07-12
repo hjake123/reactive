@@ -6,6 +6,8 @@
     "#forge:mushrooms",
     "#forge:eggs",
     "#forge:bones",
-    "#forge:leather"
+    "#forge:leather",
+    "minecraft:sugar",
+    "minecraft:honeycomb"
   ]
 }

@@ -6,6 +6,7 @@
     "#minecraft:piglin_repellents",
     "minecraft:sculk",
     "minecraft:sculk_catalyst",
-    "minecraft:sculk_sensor"
+    "minecraft:sculk_sensor",
+    "minecraft:echo_shard"
   ]
 }

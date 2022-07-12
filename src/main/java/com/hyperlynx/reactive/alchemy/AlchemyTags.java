@@ -13,9 +13,10 @@ public class AlchemyTags {
     public static final TagKey<Item> curseSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "curse_sources"));
     public static final TagKey<Item> lightSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "light_sources"));
     public static final TagKey<Item> warpSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "warp_sources"));
-    public static final TagKey<Item> acidSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "caustic_sources"));
     public static final TagKey<Item> vitalSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "vital_sources"));
     public static final TagKey<Item> bodySource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "body_sources"));
+    public static final TagKey<Item> verdantSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "verdant_source"));
+
     public static final TagKey<Item> highPower = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "high_potency"));
 
 }
