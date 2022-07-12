@@ -26,3 +26,30 @@ public class ReactiveMod
     }
 
 }
+
+/*
+TODO LIST
+
+- Remove Blaze Power and replace with Blaze Power -> Ash purification recipe.
+
+- Reactions!
+    - Catalyst reactions occur when certain items are dissolved and provide a different output for each item.
+        - Requires items for different rxn outcomes.
+        - Most common crafting rxn
+        - Proportions should be random per world.
+            - If you do it with wrong contents, do something weird.
+        - Some effects summon custom entities to do crazy things.
+
+    - Ambient rxns have a chance to occur for mixtures of multiple Powers.
+        - Should cause effects on the world.
+        - Proportions AND effects be random per world.
+        - Some should be able to be mitigated i.e. with candles, runes, etc.
+
+- Useful results
+    - Should be generally materials/items with bizarre properties. Ideas:
+        - Stardust: Glowing powder that floats in a clump in the air. Under moonlight it glows brighter. In the End it scatters.
+        - Archmetal: A malleable metal that makes for slow but long-lasting tools.
+        - Wizard's Wax: A substance that can be used in place of honeycomb to make candles.
+        -
+
+ */
