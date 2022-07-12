@@ -31,6 +31,9 @@ public class ReactiveMod
 TODO LIST
 
 - Reactions!
+    - Reactions (rnxs) will be stored in another custom registry, and then can be made like new block subtypes.
+    The Crucible will be able to search the whole registry for matching reactions so no problem here.
+
     - Catalyst reactions occur when certain items are dissolved and provide a different output for each item.
         - Requires items for different rxn outcomes.
         - Most common crafting rxn

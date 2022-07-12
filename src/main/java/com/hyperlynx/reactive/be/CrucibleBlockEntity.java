@@ -35,6 +35,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+    The heart of the whole mod, the Crucible's Block Entity.
+    This is a complicated class, but each method should be pretty self-explanatory, or documented if not.
+    Overall, the crucible does these things every (configurable, defauly 30) ticks:
+        - Check the blockstate to see if it should empty itself.
+        - Check to see if there are new item entities.
+            - If there are, check if they need to have any recipes applied, and do that if there are.
+            - Otherwise, just dissolve them and add their Power to the pool.
+ */
 public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
@@ -55,6 +64,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             if (!level.isClientSide()){
                 // Become empty when there's no water.
                 if (!state.getValue(CrucibleBlock.FULL)) {
+                    // TODO: Create byproducts here.
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
                 }
@@ -74,6 +84,8 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                         level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
                     }
                 }
+
+                // TODO: Attempt to perform any reactions.
             }
         }else{
             if (!state.getValue(CrucibleBlock.FULL)) {
