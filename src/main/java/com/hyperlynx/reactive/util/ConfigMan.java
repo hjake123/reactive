@@ -5,9 +5,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class ConfigMan {
     public static class Common {
+        public ForgeConfigSpec.IntValue crucibleTickDelay;
+
         public ForgeConfigSpec.BooleanValue parachuteQuilt;
         public ForgeConfigSpec.BooleanValue ragingBurning;
-        public ForgeConfigSpec.IntValue rageRange;
         public ForgeConfigSpec.BooleanValue mourningTP;
         public ForgeConfigSpec.IntValue mourningRange;
         public ForgeConfigSpec.IntValue insomniaTicks;
@@ -19,8 +20,8 @@ public class ConfigMan {
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Config Settings")
                     .push("config");
-            laserBlindness = builder.comment("Shining the Pointer into an entity's eyes blinds them briefly. [Default: true]")
-                    .define("laserBlindness", true);
+            crucibleTickDelay = builder.comment("The crucible performs its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 30]")
+                    .defineInRange("crucibleTickDelay", 30, 1, 900);
             builder.pop();
         }
     }

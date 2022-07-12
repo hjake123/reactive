@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.PurifyRecipe;
 import com.hyperlynx.reactive.util.Color;
+import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.FakeContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
@@ -35,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
-    private static final int CRUCIBLE_TICK_DELAY = 30; // The number of server ticks before the Crucible does its full calculations.
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     // The current total number of power units in the Crucible.
@@ -50,7 +50,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     // ----- Tick and related worker methods -----
     public static void tick(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         crucible.tick_counter++;
-        if(crucible.tick_counter >= CRUCIBLE_TICK_DELAY) {
+        if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
             if (!level.isClientSide()){
                 // Become empty when there's no water.
@@ -71,7 +71,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                     }
                     if (changed) {
                         crucible.setDirty(level, pos, state);
-                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.8F);
+                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
                     }
                 }
             }

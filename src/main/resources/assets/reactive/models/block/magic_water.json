@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "0": "reactive:block/water_magical",
+    "particle": "reactive:block/water_magical"
+  }
+}

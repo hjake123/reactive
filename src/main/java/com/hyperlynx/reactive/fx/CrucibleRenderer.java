@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.fx;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Color;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -27,6 +29,19 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         this.blockRenderDispatcher = context.getBlockRenderDispatcher();
     }
 
+    private TextureAtlasSprite getSprite(CrucibleBlockEntity crucible){
+        int theshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
+
+        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) > theshold || crucible.getPowerLevel(Registration.WARP_POWER.get()) > theshold){
+            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+        }
+        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) > theshold || crucible.getPowerLevel(Registration.LIGHT_POWER.get()) > theshold){
+            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+        }
+
+        return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+    }
+
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
@@ -34,7 +49,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         poseStack.translate(0, 0.5625, 0);
         poseStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
-            TextureAtlasSprite sprite = this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon();
+            TextureAtlasSprite sprite = getSprite(crucible);
             Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
             VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
             renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);

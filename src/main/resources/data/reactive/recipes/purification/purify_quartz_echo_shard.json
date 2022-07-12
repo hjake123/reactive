@@ -1,0 +1,9 @@
+{
+  "type": "reactive:purification",
+  "reactant": {
+    "item": "minecraft:echo_shard"
+  },
+  "product": {
+    "item": "reactive:quartz"
+  }
+}

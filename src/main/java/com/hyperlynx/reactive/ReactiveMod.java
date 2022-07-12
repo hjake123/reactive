@@ -30,8 +30,6 @@ public class ReactiveMod
 /*
 TODO LIST
 
-- Remove Blaze Power and replace with Blaze Power -> Ash purification recipe.
-
 - Reactions!
     - Catalyst reactions occur when certain items are dissolved and provide a different output for each item.
         - Requires items for different rxn outcomes.

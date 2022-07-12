@@ -1,6 +1,5 @@
 package com.hyperlynx.reactive.recipes;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

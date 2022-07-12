@@ -1,13 +1,9 @@
 package com.hyperlynx.reactive.recipes;
 
-import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -25,7 +21,6 @@ public class PurifyRecipe implements Recipe<Container> {
         this.reactant = reactant;
         this.product = product;
     }
-
 
     @Override
     public boolean matches(Container container, Level level) {

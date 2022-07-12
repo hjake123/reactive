@@ -77,11 +77,15 @@ public class Registration {
     public static final RegistryObject<Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse",0x2D231D));
     public static final RegistryObject<Power> LIGHT_POWER = POWERS.register("light", () -> new Power("light",0xF6DAB4));
     public static final RegistryObject<Power> WARP_POWER = POWERS.register("warp", () -> new Power("warp",0x118066));
-    //public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic",0x9D1E2D));
     public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital",0xFF0606));
     public static final RegistryObject<Power> BODY_POWER = POWERS.register("body", () -> new Power("body",0xAF5220));
     public static final RegistryObject<Power> VERDANT_POWER = POWERS.register("verdant", () -> new Power("verdant",0x3ADB00));
-    // TODO: Add Verdant power for moss and spore blossoms and flowers.
+
+    // Register dummy blocks for the weird water types.
+    public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static final RegistryObject<Block> DUMMY_NOISE_WATER = BLOCKS.register("noisy_water",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     //Register the recipe types and serializers.
     public static final RegistryObject<RecipeType<PurifyRecipe>> PURIFY_RECIPE_TYPE = RECIPE_TYPES.register("purification", () -> getRecipeType("purification"));
