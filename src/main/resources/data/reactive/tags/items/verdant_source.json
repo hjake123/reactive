@@ -7,6 +7,9 @@
     "minecraft:grass",
     "minecraft:fern",
     "minecraft:glow_lichen",
-    "#minecraft:saplings"
+    "#minecraft:saplings",
+    "#minecraft:flowers",
+    "minecraft:kelp",
+    "minecraft:sugar_cane"
   ]
 }
