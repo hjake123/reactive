@@ -2,10 +2,15 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ParticleUtils;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Random;
 
 public class CrucibleBlock extends Block implements EntityBlock {
 
@@ -82,7 +88,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
             if(ent instanceof CrucibleBlockEntity){
                 // Clear the crucible with shift-right-click.
                 if(player.isShiftKeyDown()){
-                    level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
+                    level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
                     level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
                 }
                 return InteractionResult.SUCCESS;
@@ -100,4 +106,5 @@ public class CrucibleBlock extends Block implements EntityBlock {
        }
        return null;
     }
+
 }

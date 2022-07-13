@@ -1,10 +1,12 @@
 package com.hyperlynx.reactive.util;
 
+import com.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Objects;
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -15,20 +17,34 @@ meant to be unique per instance. This also prevents drawing from the randomizer 
 */
 public class WorldSpecificValue {
 
-    public static int get(Level l, String alias, int max, int min){
+    public static int get(Level l, String alias, int min, int max){
         if(l.isClientSide()){
             return -1;
         }
-        return get(l.getServer().getLevel(Level.OVERWORLD), alias, max, min);
+        return get(l.getServer().getLevel(Level.OVERWORLD), alias, min, max);
     }
 
-    public static int get(ServerLevel l, String alias, int max, int min){
+    public static int get(ServerLevel l, String alias, int min, int max){
         if(l == null){
             return -1;
         }
         long world_seed = l.getSeed();
         Random rand = new Random(world_seed + alias.hashCode());
-        return rand.nextInt(max) + min;
+        System.err.println(alias + " " + min + ", " + max);
+        return rand.nextInt(max-min + 1) + min;
+    }
+
+    public static <T> T getFromCollection(Level l, String alias, Collection<T> c) {
+        int index = get(l, alias, 0, c.size()-1);
+        int p = 0;
+        for(T item : c){
+            if(p == index){
+                return item;
+            }
+            p++;
+        }
+        System.err.println("Impossibly tried to pick too high an index @ hyperlynx.reactive.util.WorldSpecificValue");
+        return null;
     }
 
 }

@@ -1,14 +1,18 @@
 package com.hyperlynx.reactive.be;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.alchemy.IPowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.rxn.Reaction;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.PurifyRecipe;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.FakeContainer;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -43,11 +47,15 @@ import java.util.List;
         - Check to see if there are new item entities.
             - If there are, check if they need to have any recipes applied, and do that if there are.
             - Otherwise, just dissolve them and add their Power to the pool.
+        - Use ReactionMan to run reactions.
  */
 public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
+
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
-    // The current total number of power units in the Crucible.
+    int stability = 100; // How 'stable' the crucible is at the moment. Certain powers and reactions decrease this.
+
+
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
@@ -67,6 +75,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                     // TODO: Create byproducts here.
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
+                    level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                 }
 
                 // Check for new items to dissolve into Power.
@@ -84,13 +93,32 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                         level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
                     }
                 }
-
-                // TODO: Attempt to perform any reactions.
             }
-        }else{
-            if (!state.getValue(CrucibleBlock.FULL)) {
-                crucible.expendPower();
-                crucible.setDirty(level, pos, state);
+            else {
+                if (!state.getValue(CrucibleBlock.FULL)) {
+                    // Repeated to make sure that the client side updates quickly.
+                    crucible.expendPower();
+                    crucible.setDirty(level, pos, state);
+                }
+            }
+
+            // Do reactions, if you can. This intentionally happens on both logical sides.
+            if(state.getValue(CrucibleBlock.FULL)) react(level, crucible);
+
+        }
+    }
+
+    // The method that actually performs reactions.
+    private static void react(Level level, CrucibleBlockEntity crucible){
+        System.out.println(crucible.powers);
+        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
+            if(r.conditionsMet(crucible)){
+                System.out.print(" -- reaction!");
+                if(level.isClientSide()){
+                    r.render((ClientLevel) level, crucible);
+                }else{
+                    r.run(crucible);
+                }
             }
         }
     }
@@ -104,9 +132,9 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             if(e instanceof ItemEntity){
                 items.add(((ItemEntity) e).getItem());
                 List<Power> p = Power.getSourcePower(((ItemEntity) e).getItem());
-                tryPurify(level, pos, state, crucible, ((ItemEntity) e));
-                // Only remove items that have a power assigned to them.
-                if(!(p.isEmpty())){
+                boolean purified = tryPurify(level, pos, state, crucible, ((ItemEntity) e));
+                // Only remove items that have a power assigned to them or were purified into something else.
+                if(!(p.isEmpty()) || purified){
                     e.remove(Entity.RemovalReason.KILLED);
                 }
             }
@@ -114,18 +142,25 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         return items;
     }
 
-    private static void tryPurify(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity){
+    // Attempts to find a purification recipe that matches the item. Returns whether it did.
+    private static boolean tryPurify(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity){
         List<PurifyRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PURIFY_RECIPE_TYPE.get());
         for(PurifyRecipe r : purify_recipes){
             if(r.matches(new FakeContainer(itemEntity.getItem()), level)){
                 ItemStack result = r.getResultItem();
                 result.setCount(itemEntity.getItem().getCount());
                 level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, result));
+                return true;
             }
         }
+        return false;
     }
 
     // ----- Helper and power management methods -----
+
+    public void setDirty(){
+        setDirty(this.getLevel(), this.getBlockPos(), this.getBlockState());
+    }
     public void setDirty(Level level, BlockPos pos, BlockState state){
         this.setChanged();
         level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
@@ -140,8 +175,10 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         if(p == null){
             return false;
         }
+        boolean all_deposited = true;
         if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
             amount = CRUCIBLE_MAX_POWER - getTotalPowerLevel();
+            all_deposited = false;
         }
 
         int prev = powers.getOrDefault(p, 0);
@@ -150,7 +187,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         else
             powers.put(p, amount);
 
-        return true;
+        return all_deposited;
     }
 
     @Override

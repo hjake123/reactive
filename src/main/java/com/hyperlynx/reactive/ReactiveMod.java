@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive;
 
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,12 +16,14 @@ import org.apache.logging.log4j.Logger;
 public class ReactiveMod
 {
     public static final Logger LOGGER = LogManager.getLogger();
+    public static final ReactionMan REACTION_MAN = new ReactionMan();
     public static final String MODID = "reactive";
 
     public ReactiveMod() {
         Registration.init();
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(REACTION_MAN);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
 
     }

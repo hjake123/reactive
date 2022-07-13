@@ -30,12 +30,12 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private TextureAtlasSprite getSprite(CrucibleBlockEntity crucible){
-        int theshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
+        int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
 
-        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) > theshold || crucible.getPowerLevel(Registration.WARP_POWER.get()) > theshold){
+        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) + crucible.getPowerLevel(Registration.WARP_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) > theshold || crucible.getPowerLevel(Registration.LIGHT_POWER.get()) > theshold){
+        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) + crucible.getPowerLevel(Registration.LIGHT_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
 
