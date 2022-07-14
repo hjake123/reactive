@@ -7,16 +7,6 @@ public class ConfigMan {
     public static class Common {
         public ForgeConfigSpec.IntValue crucibleTickDelay;
 
-        public ForgeConfigSpec.BooleanValue parachuteQuilt;
-        public ForgeConfigSpec.BooleanValue ragingBurning;
-        public ForgeConfigSpec.BooleanValue mourningTP;
-        public ForgeConfigSpec.IntValue mourningRange;
-        public ForgeConfigSpec.IntValue insomniaTicks;
-        public ForgeConfigSpec.IntValue quiltActivateHeight;
-        public ForgeConfigSpec.BooleanValue laserBlindness;
-        public ForgeConfigSpec.IntValue laserCatRange;
-
-
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Config Settings")
                     .push("config");

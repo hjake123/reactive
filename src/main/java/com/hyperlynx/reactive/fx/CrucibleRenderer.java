@@ -1,6 +1,9 @@
 package com.hyperlynx.reactive.fx;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.rxn.Reaction;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Color;
@@ -8,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -42,6 +46,12 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 
+    private void renderReactions(CrucibleBlockEntity crucible){
+        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel())){
+            if(r.conditionsMet(crucible)) r.render((ClientLevel) crucible.getLevel(), crucible);
+        }
+    }
+
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
@@ -55,6 +65,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);
         }
         poseStack.popPose();
+        renderReactions(crucible);
     }
 
     // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)

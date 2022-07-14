@@ -33,22 +33,6 @@ public class ReactiveMod
 /*
 TODO LIST
 
-- Reactions!
-    - Reactions (rnxs) will be stored in another custom registry, and then can be made like new block subtypes.
-    The Crucible will be able to search the whole registry for matching reactions so no problem here.
-
-    - Catalyst reactions occur when certain items are dissolved and provide a different output for each item.
-        - Requires items for different rxn outcomes.
-        - Most common crafting rxn
-        - Proportions should be random per world.
-            - If you do it with wrong contents, do something weird.
-        - Some effects summon custom entities to do crazy things.
-
-    - Ambient rxns have a chance to occur for mixtures of multiple Powers.
-        - Should cause effects on the world.
-        - Proportions AND effects be random per world.
-        - Some should be able to be mitigated i.e. with candles, runes, etc.
-
 - Useful results
     - Should be generally materials/items with bizarre properties. Ideas:
         - Stardust: Glowing powder that floats in a clump in the air. Under moonlight it glows brighter. In the End it scatters.

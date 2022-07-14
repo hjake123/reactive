@@ -20,7 +20,13 @@ public class ReactionMan {
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    public HashSet<Reaction> constructReactions(Level l){
+    private HashSet<Reaction> constructReactions(Level l){
+
+        // Add three assimilation reactions.
+        REACTIONS.add(new AssimilationReaction(l, "assimilation1"));
+        REACTIONS.add(new AssimilationReaction(l, "assimilation2"));
+        REACTIONS.add(new AssimilationReaction(l, "assimilation3"));
+
         // Add two annihilation reactions.
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1"));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation2"));

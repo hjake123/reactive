@@ -14,7 +14,7 @@ public class AnnihilationReaction extends Reaction{
 
     public AnnihilationReaction(Level l, String alias) {
         super(l, alias, 3);
-        rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
+        rate = WorldSpecificValue.get(l, alias+"rate", 5, 30);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class AnnihilationReaction extends Reaction{
 
     @Override
     public void render(ClientLevel l, CrucibleBlockEntity crucible) {
-        Helper.drawParticlesCrucibleTop(l, ParticleTypes.SMOKE, crucible.getBlockPos(), rate);
+        Helper.drawParticlesCrucibleTop(l, ParticleTypes.SMOKE, crucible.getBlockPos(), 0.2F);
     }
 }

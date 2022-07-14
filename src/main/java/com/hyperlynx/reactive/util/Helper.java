@@ -42,9 +42,9 @@ public class Helper {
         }
     }
 
-    public static void drawParticlesCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, int frequency){
+    public static void drawParticlesCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds){
         if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
+            if(level.random.nextFloat() < odds){
                 double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
                 double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
                 level.addParticle(opt, x, pos.getY() + 0.6, z, 0, 0, 0);

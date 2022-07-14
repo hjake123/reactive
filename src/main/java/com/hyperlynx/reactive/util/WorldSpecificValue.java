@@ -30,7 +30,6 @@ public class WorldSpecificValue {
         }
         long world_seed = l.getSeed();
         Random rand = new Random(world_seed + alias.hashCode());
-        System.err.println(alias + " " + min + ", " + max);
         return rand.nextInt(max-min + 1) + min;
     }
 

@@ -3,7 +3,6 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.util.Range;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
@@ -12,9 +11,9 @@ import java.util.HashMap;
 
 public abstract class Reaction {
 
-    protected HashMap<Power, Range> reagents = new HashMap<>();
+    protected HashMap<Power, Integer> reagents = new HashMap<>();
 
-    public Reaction(HashMap<Power, Range> reagents){
+    public Reaction(HashMap<Power, Integer> reagents){
         this.reagents = reagents;
     }
 
@@ -23,18 +22,17 @@ public abstract class Reaction {
         int reagent_count = WorldSpecificValue.get(l, alias+"reagent_count", 2, max_reagent_count);
         int i = 0;
 
-        while(reagents.size() <= reagent_count){
+        while(reagents.size() < reagent_count){
             Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, Registration.POWERS.getEntries()).get();
             int min = WorldSpecificValue.get(l, alias+"r"+i, 1, 400);
-            Range range = new Range(min, WorldSpecificValue.get(l, alias+"r"+i, 1, 500) + min + 50);
-            reagents.put(chosen_power, range);
+            reagents.put(chosen_power, min);
             i++;
         }
     }
 
     public boolean conditionsMet(CrucibleBlockEntity crucible){
         for(Power p : reagents.keySet()){
-            if(!reagents.get(p).inRange(crucible.getPowerLevel(p))){
+            if(reagents.get(p) > crucible.getPowerLevel(p)){
                 return false;
             }
         }

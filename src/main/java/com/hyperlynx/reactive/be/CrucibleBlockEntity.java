@@ -71,8 +71,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             crucible.tick_counter = 1;
             if (!level.isClientSide()){
                 // Become empty when there's no water.
-                if (!state.getValue(CrucibleBlock.FULL)) {
-                    // TODO: Create byproducts here.
+                if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
@@ -95,7 +94,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                 }
             }
             else {
-                if (!state.getValue(CrucibleBlock.FULL)) {
+                if (!state.getValue(CrucibleBlock.FULL)  && crucible.getTotalPowerLevel() > 0) {
                     // Repeated to make sure that the client side updates quickly.
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
@@ -110,15 +109,10 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
 
     // The method that actually performs reactions.
     private static void react(Level level, CrucibleBlockEntity crucible){
-        System.out.println(crucible.powers);
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
             if(r.conditionsMet(crucible)){
-                System.out.print(" -- reaction!");
-                if(level.isClientSide()){
-                    r.render((ClientLevel) level, crucible);
-                }else{
-                    r.run(crucible);
-                }
+                r.run(crucible);
+                crucible.setDirty();
             }
         }
     }
@@ -135,7 +129,8 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                 boolean purified = tryPurify(level, pos, state, crucible, ((ItemEntity) e));
                 // Only remove items that have a power assigned to them or were purified into something else.
                 if(!(p.isEmpty()) || purified){
-                    e.remove(Entity.RemovalReason.KILLED);
+                    if(!level.isClientSide)
+                        e.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }
