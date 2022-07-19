@@ -19,15 +19,26 @@ public abstract class Reaction {
 
     // Creates the reaction with a random set of reagents.
     public Reaction(Level l, String alias, int max_reagent_count){
-        int reagent_count = WorldSpecificValue.get(l, alias+"reagent_count", 2, max_reagent_count);
+        int reagent_count;
+        if(max_reagent_count < 3){
+            reagent_count = max_reagent_count;
+        }else{
+            reagent_count = WorldSpecificValue.get(l, alias+"reagent_count", 2, max_reagent_count);
+        }
         int i = 0;
 
         while(reagents.size() < reagent_count){
-            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, Registration.POWERS.getEntries()).get();
+            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, ReactionMan.BASE_POWER_LIST);
             int min = WorldSpecificValue.get(l, alias+"r"+i, 1, 400);
             reagents.put(chosen_power, min);
             i++;
         }
+    }
+
+    // Creates the reaction with two preset powers, but random minimum requirements.
+    public Reaction(Level l, String alias, Power p1, Power p2){
+        reagents.put(p1, WorldSpecificValue.get(l, alias+"r1", 1, 400));
+        reagents.put(p2, WorldSpecificValue.get(l, alias+"r2", 1, 400));
     }
 
     public boolean conditionsMet(CrucibleBlockEntity crucible){

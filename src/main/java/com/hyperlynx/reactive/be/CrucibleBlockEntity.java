@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.IPowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.PurifyRecipe;
 import com.hyperlynx.reactive.util.Color;
@@ -124,6 +125,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         }
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
             if(e instanceof ItemEntity){
+                SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
                 items.add(((ItemEntity) e).getItem());
                 List<Power> p = Power.getSourcePower(((ItemEntity) e).getItem());
                 boolean purified = tryPurify(level, pos, state, crucible, ((ItemEntity) e));
@@ -208,6 +210,17 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             return true;
         }
         return false;
+    }
+
+
+    public void expendAnyPowerExcept(Power immune_power, int amount) {
+        boolean expended = false;
+        for(Power p : powers.keySet()){
+            if(p != immune_power){
+                expended = expendPower(p, amount);
+            }
+            if(expended) return;
+        }
     }
 
     public void expendPower() {
@@ -315,4 +328,5 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             }
         }
     }
+
 }

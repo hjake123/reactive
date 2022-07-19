@@ -4,13 +4,16 @@ import com.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
+import org.checkerframework.checker.units.qual.A;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 /*
-This class represents a value unique to each world, as determined by world seed.
+This class represents a factory for values unique to each world, as determined by world seed.
 
 To ensure the values are different from each other, I add the value from a hash of a placeholder alias string, which is
 meant to be unique per instance. This also prevents drawing from the randomizer more than once.
@@ -46,4 +49,15 @@ public class WorldSpecificValue {
         return null;
     }
 
+    // 'Randomize' the order of a list.
+    public static <T> ArrayList<T> shuffle(Level l, String alias, ArrayList<T> list){
+        ArrayList<T> input = new ArrayList<>(list);
+        ArrayList<T> output = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            int x = get(l, alias+i, 0, input.size()-1);
+            output.add(input.get(x));
+            input.remove(x);
+        }
+        return output;
+    }
 }

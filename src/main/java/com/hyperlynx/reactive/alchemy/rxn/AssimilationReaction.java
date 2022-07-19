@@ -24,6 +24,16 @@ public class AssimilationReaction extends Reaction{
         consumedPower = reagents_copy.get(0);
         producedPower = reagents_copy.get(1);
         rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
+        reagents.replace(consumedPower, rate);
+    }
+
+    public AssimilationReaction(Level l, String alias, Power producedPower){
+        super(l, alias, 1);
+        consumedPower = reagents.keySet().stream().findFirst().get();
+        reagents.put(producedPower, WorldSpecificValue.get(l, alias+"r"+1, 1, 100));
+        this.producedPower = producedPower;
+        rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
+        reagents.replace(consumedPower, rate);
     }
 
     @Override

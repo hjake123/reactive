@@ -17,6 +17,11 @@ public class AnnihilationReaction extends Reaction{
         rate = WorldSpecificValue.get(l, alias+"rate", 5, 30);
     }
 
+    public AnnihilationReaction(Level l, String alias, Power p1, Power p2) {
+        super(l, alias, p1, p2);
+        rate = WorldSpecificValue.get(l, alias+"rate", 10, 60);
+    }
+
     @Override
     public void run(CrucibleBlockEntity crucible) {
         for(Power p : reagents.keySet()){
