@@ -36,11 +36,13 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private TextureAtlasSprite getSprite(CrucibleBlockEntity crucible){
         int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
 
-        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) + crucible.getPowerLevel(Registration.WARP_POWER.get()) > threshold){
+        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) + crucible.getPowerLevel(Registration.WARP_POWER.get()) + crucible.getPowerLevel(Registration.Z_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) + crucible.getPowerLevel(Registration.LIGHT_POWER.get()) > threshold){
+        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) + crucible.getPowerLevel(Registration.LIGHT_POWER.get()) + crucible.getPowerLevel(Registration.Y_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+        }else if(crucible.getPowerLevel(Registration.X_POWER.get()) > threshold){
+            return this.blockRenderDispatcher.getBlockModel(Blocks.LAVA.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
 
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);

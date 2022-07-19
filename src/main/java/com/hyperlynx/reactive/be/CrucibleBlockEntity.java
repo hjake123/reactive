@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -73,6 +74,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             if (!level.isClientSide()){
                 // Become empty when there's no water.
                 if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
+                    SpecialCaseMan.checkEmptySpecialCases(crucible);
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
@@ -172,10 +174,14 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         if(p == null){
             return false;
         }
-        boolean all_deposited = true;
         if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
-            amount = CRUCIBLE_MAX_POWER - getTotalPowerLevel();
-            all_deposited = false;
+            int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
+            expendAnyPowerExcept(p, excess); // Replace other powers if needed.
+            excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
+            if(excess > 0) {
+                System.out.println("Excess " + excess + ", amount " + amount);
+                amount -= excess;
+            }
         }
 
         int prev = powers.getOrDefault(p, 0);
@@ -184,7 +190,10 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         else
             powers.put(p, amount);
 
-        return all_deposited;
+        if(this.getLevel() != null && !this.getLevel().isClientSide)
+            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
+
+        return true;
     }
 
     @Override
@@ -206,9 +215,12 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             return true;
         }
         if (level == amount) {
-            powers.remove(t);
+            powers.put(t, 0);
             return true;
         }
+
+        // This implies that all power t wasn't enough to meet amount.
+        powers.put(t, 0);
         return false;
     }
 

@@ -54,13 +54,11 @@ public class ReactionMan {
         REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Registration.Z_POWER.get()));
 
         // Add synthesis reactions for other powers.
-        REACTIONS.add(new SynthesisReaction(l, "life_synthesis", Registration.VITAL_POWER.get()));
+        REACTIONS.add(new SynthesisReaction(l, "evil_synthesis", Registration.CURSE_POWER.get()));
         REACTIONS.add(new SynthesisReaction(l, "random_synthesis"));
 
         initialized = true;
 
-        // TODO: Debug output
-        System.err.println(REACTIONS);
         return REACTIONS;
     }
 
