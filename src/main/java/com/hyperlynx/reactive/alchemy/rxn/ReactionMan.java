@@ -2,14 +2,17 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.authlib.BaseAuthenticationService;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Function;
 
 // This class manages the world's reactions.
 // When the level unloads, it resets the cache of reaction.
@@ -20,6 +23,7 @@ public class ReactionMan {
     static boolean initialized = false;
     private static final HashSet<Reaction> REACTIONS = new HashSet<>();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
+    private final static int EFFECT_CHANCE_PERCENT = 100;
 
     public HashSet<Reaction> getReactions(Level l){
         return initialized || l.isClientSide() ? REACTIONS : constructReactions(l);
@@ -60,6 +64,18 @@ public class ReactionMan {
         initialized = true;
 
         return REACTIONS;
+    }
+
+    private Function<CrucibleBlockEntity, CrucibleBlockEntity> chooseEffect(Level l, String alias){
+        if(WorldSpecificValue.get(l, alias+"effect_roll", 0, 100) >= EFFECT_CHANCE_PERCENT){
+            return null; // Don't provide a function unless you roll the lucky chance.
+        }
+
+        int choice = WorldSpecificValue.get(l, alias+"effect", 0, 0);
+        if(choice == 0){
+            return ReactionEffects::discharge;
+        }
+        return null;
     }
 
     @SubscribeEvent

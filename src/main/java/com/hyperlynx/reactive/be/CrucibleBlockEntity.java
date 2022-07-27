@@ -2,18 +2,15 @@ package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.alchemy.IPowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
-import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.recipes.PurifyRecipe;
+import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.FakeContainer;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -22,19 +19,13 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -130,7 +121,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
                 items.add(((ItemEntity) e).getItem());
                 List<Power> p = Power.getSourcePower(((ItemEntity) e).getItem());
-                boolean purified = tryPurify(level, pos, state, crucible, ((ItemEntity) e));
+                boolean purified = tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
                 // Only remove items that have a power assigned to them or were purified into something else.
                 if(!(p.isEmpty()) || purified){
                     if(!level.isClientSide)
@@ -141,15 +132,18 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         return items;
     }
 
-    // Attempts to find a purification recipe that matches the item. Returns whether it did.
-    private static boolean tryPurify(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity){
-        List<PurifyRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PURIFY_RECIPE_TYPE.get());
-        for(PurifyRecipe r : purify_recipes){
+    // Attempts to find a transmutation recipe that matches the item. Returns whether it did.
+    private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity){
+        List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
+        for(TransmuteRecipe r : purify_recipes){
             if(r.matches(new FakeContainer(itemEntity.getItem()), level)){
-                ItemStack result = r.getResultItem();
-                result.setCount(itemEntity.getItem().getCount());
-                level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, result));
-                return true;
+                System.err.println("Checking power levels for " + r);
+                if(r.powerMet(crucible, level)){
+                    ItemStack result = r.getResultItem();
+                    result.setCount(itemEntity.getItem().getCount());
+                    level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
+                    return true;
+                }
             }
         }
         return false;

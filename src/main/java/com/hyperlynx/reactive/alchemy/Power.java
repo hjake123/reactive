@@ -39,6 +39,18 @@ public class Power {
         return ret;
     }
 
+    public static Power readPower(String s){
+        Power ret = null;
+        for(RegistryObject<Power> reg : Registration.POWERS.getEntries()){
+            if(reg.get().getName().equals(s)){
+                ret = reg.get();
+                break;
+            }
+        }
+        if(ret == null) System.err.println("Failed to read power. This will break things.");
+        return ret;
+    }
+
     public Color getColor(){
         return color;
     }

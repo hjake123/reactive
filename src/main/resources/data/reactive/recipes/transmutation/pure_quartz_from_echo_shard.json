@@ -1,9 +1,11 @@
 {
-  "type": "reactive:purification",
+  "type": "reactive:transmutation",
   "reactant": {
     "item": "minecraft:echo_shard"
   },
   "product": {
     "item": "reactive:quartz"
-  }
+  },
+  "reagents": ["reactive:blaze"],
+  "width": 250
 }

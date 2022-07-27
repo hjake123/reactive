@@ -4,8 +4,8 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.recipes.PurifyRecipe;
-import com.hyperlynx.reactive.recipes.PurifyRecipeSerializer;
+import com.hyperlynx.reactive.recipes.TransmuteRecipe;
+import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -93,8 +93,8 @@ public class Registration {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     //Register the recipe types and serializers.
-    public static final RegistryObject<RecipeType<PurifyRecipe>> PURIFY_RECIPE_TYPE = RECIPE_TYPES.register("purification", () -> getRecipeType("purification"));
-    public static final RegistryObject<RecipeSerializer<PurifyRecipe>> PURIFY_SERIALIZER = RECIPE_SERIALIZERS.register("purification", PurifyRecipeSerializer::new);
+    public static final RegistryObject<RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));
+    public static final RegistryObject<RecipeSerializer<TransmuteRecipe>> TRANS_SERIALIZER = RECIPE_SERIALIZERS.register("transmutation", TransmuteRecipeSerializer::new);
 
     // ----------------------- METHODS ------------------------
 

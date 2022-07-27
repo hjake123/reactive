@@ -64,7 +64,7 @@ public class SpecialCaseMan {
     private static void curseEscape(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
         AABB aoe = new AABB(c.getBlockPos());
-        aoe.inflate(5); // Inflate the AOE to be 3x the size of the crucible.
+        aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
         if(!c.getLevel().isClientSide()){
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for(LivingEntity e : nearby_ents){

@@ -6,12 +6,15 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 public abstract class Reaction {
 
     protected HashMap<Power, Integer> reagents = new HashMap<>();
+    protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
 
     public Reaction(HashMap<Power, Integer> reagents){
         this.reagents = reagents;
@@ -50,9 +53,17 @@ public abstract class Reaction {
         return true;
     }
 
-    public abstract void run(CrucibleBlockEntity crucible);
+    public void setEffect(Function<CrucibleBlockEntity, CrucibleBlockEntity> f){
+        effectFunction = f;
+    }
+
+    public void run(CrucibleBlockEntity crucible){
+        if(effectFunction != null) effectFunction.apply(crucible);
+    }
 
     public abstract void render(ClientLevel l, CrucibleBlockEntity crucible);
+
+
 
     @Override
     public String toString(){
