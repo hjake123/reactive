@@ -139,9 +139,10 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
             if(r.matches(new FakeContainer(itemEntity.getItem()), level)){
                 System.err.println("Checking power levels for " + r);
                 if(r.powerMet(crucible, level)){
-                    ItemStack result = r.getResultItem();
+                    ItemStack result = r.apply(crucible);
                     result.setCount(itemEntity.getItem().getCount());
                     level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
+                    crucible.setDirty(level, pos, state);
                     return true;
                 }
             }

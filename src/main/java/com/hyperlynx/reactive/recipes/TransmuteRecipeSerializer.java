@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -14,8 +13,6 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.charset.Charset;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +31,8 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
                 System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
         }
         int width = json.get("width").getAsInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width);
+        int cost = json.get("width").getAsInt();
+        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width, cost);
     }
 
     @Override
@@ -46,7 +44,8 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             reagents.add(buffer.readRegistryId());
         }
         int width = buffer.readInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width);
+        int cost = buffer.readInt();
+        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width, cost);
     }
 
     @Override
@@ -57,6 +56,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             buffer.writeRegistryId(Registration.POWER_SUPPLIER.get(), p);
         }
         buffer.writeInt(recipe.window_width);
+        buffer.writeInt(recipe.cost);
     }
 
 }

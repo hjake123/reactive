@@ -7,5 +7,6 @@
     "item": "reactive:quartz"
   },
   "reagents": ["reactive:blaze"],
-  "width": 1000
+  "width": -1,
+  "cost": 0
 }

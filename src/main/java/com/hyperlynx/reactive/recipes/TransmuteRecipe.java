@@ -21,29 +21,49 @@ public class TransmuteRecipe implements Recipe<Container> {
     protected final ItemStack reactant;
     protected final ItemStack product;
     protected final List<Power> reagents;
+    int cost;
+    // The distance between the minimum and maximum power levels to get the reaction to work. A value of -1 means that any amount will work.
     int window_width;
 
-    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int window_width) {
+    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int window_width, int cost) {
         this.id = id;
         this.group = group;
         this.reactant = reactant;
         this.product = product;
         this.reagents = reagents;
         this.window_width = window_width;
+        this.cost = cost;
     }
 
     public boolean powerMet(IPowerBearer bearer, Level level){
+        if(window_width == -1){
+            for(Power p : reagents){
+                if(bearer.getPowerLevel(p) == 0){
+                    return false;
+                }
+            }
+            return true;
+        }
+
         int min = WorldSpecificValue.get(level, id.getPath() + "_mincost", 1, CrucibleBlockEntity.CRUCIBLE_MAX_POWER - window_width);
         int max = min + window_width;
 
         System.err.println("[" + min + ", " + max + "]");
 
-        for(Power p : reagents){
-            if(bearer.getPowerLevel(p) < min || bearer.getPowerLevel(p) > max){
-                return false;
-            }
+        int power_level = 0;
+
+        for(Power p : reagents) {
+            power_level += bearer.getPowerLevel(p);
         }
-        return true;
+
+        return power_level > min && power_level < max;
+    }
+
+    public ItemStack apply(IPowerBearer bearer) {
+        for(Power p : reagents){
+            bearer.expendPower(p, cost/reagents.size());
+        }
+        return product.copy();
     }
 
     @Override

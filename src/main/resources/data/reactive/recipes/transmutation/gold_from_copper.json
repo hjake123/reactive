@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:copper_ingot"
+  },
+  "product": {
+    "item": "minecraft:gold_ingot"
+  },
+  "reagents": ["reactive:blaze", "reactive:mind", "reactive:light"],
+  "width": 200,
+  "cost": 50
+}
