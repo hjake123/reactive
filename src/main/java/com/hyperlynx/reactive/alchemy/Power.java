@@ -68,6 +68,7 @@ public class Power {
         if (i.is(AlchemyTags.soulSource)) stack_powers.add(Registration.SOUL_POWER.get());
         if (i.is(AlchemyTags.vitalSource)) stack_powers.add(Registration.VITAL_POWER.get());
         if (i.is(AlchemyTags.warpSource)) stack_powers.add(Registration.WARP_POWER.get());
+        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Registration.ACID_POWER.get());
         return stack_powers;
     }
 

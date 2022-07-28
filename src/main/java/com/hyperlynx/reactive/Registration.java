@@ -80,16 +80,19 @@ public class Registration {
     public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital",0xFF0606));
     public static final RegistryObject<Power> BODY_POWER = POWERS.register("body", () -> new Power("body",0xAF5220));
     public static final RegistryObject<Power> VERDANT_POWER = POWERS.register("verdant", () -> new Power("verdant",0x3ADB00));
+    public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic",0x9D1E2D));
 
     // These 'esoteric Powers' are formed from rare reactions and don't have an associated item tag.
-    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x",0xFFD600));
-    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y",0xD6FF00));
-    public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z",0xD600FF));
+    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x",0x0007C2));
+    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y",0xE5D059));
+    public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z",0xDACCE8));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
     public static final RegistryObject<Block> DUMMY_NOISE_WATER = BLOCKS.register("noisy_water",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static final RegistryObject<Block> DUMMY_FAST_WATER = BLOCKS.register("fast_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     //Register the recipe types and serializers.

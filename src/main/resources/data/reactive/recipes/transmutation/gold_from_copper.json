@@ -6,7 +6,7 @@
   "product": {
     "item": "minecraft:gold_ingot"
   },
-  "reagents": ["reactive:blaze", "reactive:mind", "reactive:light"],
-  "width": 200,
+  "reagents": ["reactive:blaze", "reactive:esoteric_y"],
+  "width": 500,
   "cost": 50
 }

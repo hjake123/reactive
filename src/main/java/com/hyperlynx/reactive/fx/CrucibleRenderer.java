@@ -41,8 +41,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         }
         else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) + crucible.getPowerLevel(Registration.LIGHT_POWER.get()) + crucible.getPowerLevel(Registration.Y_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
-        }else if(crucible.getPowerLevel(Registration.X_POWER.get()) > threshold){
-            return this.blockRenderDispatcher.getBlockModel(Blocks.LAVA.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+        }
+        else if(crucible.getPowerLevel(Registration.SOUL_POWER.get()) + crucible.getPowerLevel(Registration.X_POWER.get()) > threshold){
+            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_FAST_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
 
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);

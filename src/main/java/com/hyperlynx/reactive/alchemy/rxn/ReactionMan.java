@@ -50,16 +50,10 @@ public class ReactionMan {
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4)));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)));
 
-        REACTIONS.add(new AnnihilationReaction(l, "annihilationX"));
-
         // Add synthesis reactions for the three esoteric powers.
-        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Registration.X_POWER.get()));
-        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Registration.Y_POWER.get()));
-        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Registration.Z_POWER.get()));
-
-        // Add synthesis reactions for other powers.
-        REACTIONS.add(new SynthesisReaction(l, "evil_synthesis", Registration.CURSE_POWER.get()));
-        REACTIONS.add(new SynthesisReaction(l, "random_synthesis"));
+        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Registration.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)));
+        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Registration.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)));
+        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Registration.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)));
 
         initialized = true;
 

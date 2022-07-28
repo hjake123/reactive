@@ -31,7 +31,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
                 System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
         }
         int width = json.get("width").getAsInt();
-        int cost = json.get("width").getAsInt();
+        int cost = json.get("cost").getAsInt();
         return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width, cost);
     }
 

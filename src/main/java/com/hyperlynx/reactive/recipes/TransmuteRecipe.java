@@ -59,11 +59,25 @@ public class TransmuteRecipe implements Recipe<Container> {
         return power_level > min && power_level < max;
     }
 
-    public ItemStack apply(IPowerBearer bearer) {
-        for(Power p : reagents){
-            bearer.expendPower(p, cost/reagents.size());
+    public ItemStack apply(ItemStack input, IPowerBearer bearer, Level l) {
+        int max_tfs = Integer.MAX_VALUE;
+        if(cost > 0) {
+            for (Power p : reagents) {
+                max_tfs = Math.min(max_tfs, (bearer.getPowerLevel(p) / (cost / reagents.size())));
+                bearer.expendPower(p, cost / reagents.size() * input.getCount());
+            }
         }
-        return product.copy();
+        System.out.println("Max tfs is " + max_tfs + " with cost " + cost);
+        ItemStack result = product.copy();
+        result.setCount(Math.min(input.getCount(), max_tfs));
+
+        System.out.println("Output amount " + result.getCount());
+
+        input.setCount(input.getCount() - Math.min(input.getCount(), max_tfs));
+
+        System.out.println("Input amount, adjusted " + input.getCount());
+
+        return result;
     }
 
     @Override

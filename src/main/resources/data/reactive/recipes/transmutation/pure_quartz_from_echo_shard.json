@@ -6,7 +6,7 @@
   "product": {
     "item": "reactive:quartz"
   },
-  "reagents": ["reactive:blaze"],
+  "reagents": ["reactive:caustic"],
   "width": -1,
-  "cost": 0
+  "cost": 5
 }

@@ -3,7 +3,6 @@
   "values": [
     "minecraft:glistering_melon_slice",
     "minecraft:ghast_tear",
-    "minecraft:golden_apple",
-    "#forge:crops/beetroot"
+    "minecraft:golden_apple"
   ]
 }

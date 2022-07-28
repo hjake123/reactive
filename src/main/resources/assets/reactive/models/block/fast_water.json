@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "0": "reactive:block/water_fast",
+    "particle": "reactive:block/water_fast"
+  }
+}

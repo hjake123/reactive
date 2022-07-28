@@ -28,14 +28,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
     This is a complicated class, but each method should be pretty self-explanatory, or documented if not.
-    Overall, the crucible does these things every (configurable, defauly 30) ticks:
+    Overall, the crucible does these things every (configurable, default 30) ticks:
         - Check the blockstate to see if it should empty itself.
         - Check to see if there are new item entities.
             - If there are, check if they need to have any recipes applied, and do that if there are.
@@ -46,8 +45,6 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
-    int stability = 100; // How 'stable' the crucible is at the moment. Certain powers and reactions decrease this.
-
 
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
@@ -71,21 +68,12 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                 }
 
-                // Check for new items to dissolve into Power.
-                List<ItemStack> items = dissolveItemsInside(level, pos, state, crucible);
-                if (!items.isEmpty()) {
-                    boolean changed = false;
-                    for (ItemStack i : items) {
-                        List<Power> stack_power_list = Power.getSourcePower(i);
-                        for (Power p : stack_power_list) {
-                            changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.level) / stack_power_list.size());
-                        }
-                    }
-                    if (changed) {
-                        crucible.setDirty(level, pos, state);
-                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
-                    }
+                // Check for new items to dissolve into Power or transmute.
+                if (processItemsInside(level, pos, state, crucible)) {
+                    crucible.setDirty(level, pos, state);
+                    level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
                 }
+
             }
             else {
                 if (!state.getValue(CrucibleBlock.FULL)  && crucible.getTotalPowerLevel() > 0) {
@@ -111,36 +99,49 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         }
     }
 
-    private static List<ItemStack> dissolveItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
-        ArrayList<ItemStack> items = new ArrayList<>();
+    private static boolean processItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         if(!state.getValue(CrucibleBlock.FULL)){
-            return items;
+            return false;
         }
+        boolean changed = false;
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
             if(e instanceof ItemEntity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
-                items.add(((ItemEntity) e).getItem());
-                List<Power> p = Power.getSourcePower(((ItemEntity) e).getItem());
-                boolean purified = tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
-                // Only remove items that have a power assigned to them or were purified into something else.
-                if(!(p.isEmpty()) || purified){
-                    if(!level.isClientSide)
-                        e.remove(Entity.RemovalReason.KILLED);
+                changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
+                changed = changed || tryReduceToPower(((ItemEntity) e).getItem(), crucible);
+
+                // Remove entities that were completely transmuted or dissolved.
+                System.out.println("Item " + ((ItemEntity) e).getItem().getDescriptionId() + " had count " + ((ItemEntity) e).getItem().getCount());
+                if(((ItemEntity) e).getItem().getCount() == 0){
+                    e.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }
-        return items;
+        return changed;
+    }
+
+    public static boolean tryReduceToPower(ItemStack i, CrucibleBlockEntity crucible){
+        List<Power> stack_power_list = Power.getSourcePower(i);
+        boolean changed = false;
+        for (Power p : stack_power_list) {
+            int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(i, crucible.getLevel());
+            if(dissolve_capacity <= 0){
+                continue;
+            }
+            changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.getLevel()) / stack_power_list.size());
+            i.setCount(Math.max(i.getCount()-dissolve_capacity, 0));
+        }
+        return changed;
     }
 
     // Attempts to find a transmutation recipe that matches the item. Returns whether it did.
-    private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity){
+    private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
         List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
-        for(TransmuteRecipe r : purify_recipes){
-            if(r.matches(new FakeContainer(itemEntity.getItem()), level)){
+        for (TransmuteRecipe r : purify_recipes) {
+            if (r.matches(new FakeContainer(itemEntity.getItem()), level)) {
                 System.err.println("Checking power levels for " + r);
-                if(r.powerMet(crucible, level)){
-                    ItemStack result = r.apply(crucible);
-                    result.setCount(itemEntity.getItem().getCount());
+                if (r.powerMet(crucible, level)) {
+                    ItemStack result = r.apply(itemEntity.getItem(), crucible, level);
                     level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
                     crucible.setDirty(level, pos, state);
                     return true;
