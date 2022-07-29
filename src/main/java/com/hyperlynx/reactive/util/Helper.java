@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -29,6 +30,18 @@ public class Helper {
         return pLevel.clip(new ClipContext(vec3, vec31, pBlockMode, pFluidMode, pPlayer));
     }
 
+    public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency){
+        if(level.isClientSide()){
+            for(int i = 0; i < frequency; i++){
+                double x = x1 + (x2-x1) * level.random.nextDouble();
+                double y = y1 + (y2-y1) * level.random.nextDouble();
+                double z = z1 + (z2-z1) * level.random.nextDouble();
+
+                level.addParticle(opt, x, y, z, 0, 0, 0);
+            }
+        }
+    }
+
     public static void drawParticleRing(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
@@ -43,12 +56,26 @@ public class Helper {
         }
     }
 
-    public static void drawParticlesCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds){
+    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos){
+        drawParticleCrucibleTop(level, opt, pos, 1, 0, 0, 0);
+    }
+
+    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds){
+        drawParticleCrucibleTop(level, opt, pos, odds, 0, 0, 0);
+    }
+
+    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds, double xspeed, double yspeed, double zspeed){
         if(level.isClientSide()){
             if(level.random.nextFloat() < odds){
                 double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
                 double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                level.addParticle(opt, x, pos.getY() + 0.6, z, 0, 0, 0);
+                level.addParticle(opt, x, pos.getY() + 0.6, z, xspeed, yspeed, zspeed);
+            }
+        }else{
+            if(level.random.nextFloat() < odds){
+                double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+                double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+                ((ServerLevel) level).sendParticles(opt, x, pos.getY() + 0.6, z, 1, xspeed, yspeed, zspeed, 0.0);
             }
         }
     }

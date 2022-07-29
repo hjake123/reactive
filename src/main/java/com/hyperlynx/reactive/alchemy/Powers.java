@@ -28,8 +28,8 @@ public class Powers {
     public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic", 0x9D1E2D));
 
     // These 'esoteric Powers' are formed from rare reactions and don't have an associated item tag.
-    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x0007C2));
-    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xE5D059));
+    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF));
+    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12));
     public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8));
 
 }

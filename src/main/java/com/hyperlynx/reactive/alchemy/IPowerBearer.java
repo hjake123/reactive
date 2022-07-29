@@ -8,6 +8,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 public interface IPowerBearer extends INBTSerializable<CompoundTag> {
     boolean addPower(Power p, int amount);
     int getPowerLevel(Power t);
+    int getTotalPowerLevel();
     boolean expendPower(Power t, int amount);
+    void expendAnyPowerExcept(Power immune_power, int amount);
+    void expendPower();
     Color getCombinedColor(int base);
 }

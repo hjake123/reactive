@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,7 +15,6 @@ import java.util.function.Function;
 public abstract class Reaction {
 
     protected HashMap<Power, Integer> reagents = new HashMap<>();
-    protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
 
     public Reaction(HashMap<Power, Integer> reagents){
         this.reagents = reagents;
@@ -31,7 +31,7 @@ public abstract class Reaction {
         int i = 0;
 
         while(reagents.size() < reagent_count){
-            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, ReactionMan.BASE_POWER_LIST);
+            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, Powers.POWER_SUPPLIER.get().getValues());
             int min = WorldSpecificValue.get(l, alias+"r"+i, 1, 400);
             reagents.put(chosen_power, min);
             i++;
@@ -53,13 +53,8 @@ public abstract class Reaction {
         return true;
     }
 
-    public void setEffect(Function<CrucibleBlockEntity, CrucibleBlockEntity> f){
-        effectFunction = f;
-    }
 
-    public void run(CrucibleBlockEntity crucible){
-        if(effectFunction != null) effectFunction.apply(crucible);
-    }
+    public abstract void run(CrucibleBlockEntity crucible);
 
     public abstract void render(ClientLevel l, CrucibleBlockEntity crucible);
 

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:nether_quartz"
+  },
+  "product": {
+    "item": "reactive:pure_quartz"
+  },
+  "reagents": ["reactive:caustic"],
+  "width": -1,
+  "cost": 5
+}

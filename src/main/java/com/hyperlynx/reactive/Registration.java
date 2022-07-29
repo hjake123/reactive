@@ -1,14 +1,14 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.recipes.DissolveRecipe;
+import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -28,10 +28,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
-
-import java.util.function.Supplier;
-
-import static com.hyperlynx.reactive.alchemy.Powers.POWERS;
 
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
@@ -80,6 +76,10 @@ public class Registration {
     //Register the recipe types and serializers.
     public static final RegistryObject<RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));
     public static final RegistryObject<RecipeSerializer<TransmuteRecipe>> TRANS_SERIALIZER = RECIPE_SERIALIZERS.register("transmutation", TransmuteRecipeSerializer::new);
+
+    public static final RegistryObject<RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
+    public static final RegistryObject<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
+
 
     // ----------------------- METHODS ------------------------
 

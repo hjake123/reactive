@@ -32,6 +32,6 @@ public class AnnihilationReaction extends Reaction{
 
     @Override
     public void render(ClientLevel l, CrucibleBlockEntity crucible) {
-        Helper.drawParticlesCrucibleTop(l, ParticleTypes.SMOKE, crucible.getBlockPos(), 0.2F);
+        Helper.drawParticleCrucibleTop(l, ParticleTypes.SMOKE, crucible.getBlockPos(), 0.2F);
     }
 }

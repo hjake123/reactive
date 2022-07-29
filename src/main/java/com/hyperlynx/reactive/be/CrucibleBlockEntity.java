@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -107,11 +108,11 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
             if(e instanceof ItemEntity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
+                if(!e.isAlive()) continue;
                 changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
                 changed = changed || tryReduceToPower(((ItemEntity) e).getItem(), crucible);
 
                 // Remove entities that were completely transmuted or dissolved.
-                System.out.println("Item " + ((ItemEntity) e).getItem().getDescriptionId() + " had count " + ((ItemEntity) e).getItem().getCount());
                 if(((ItemEntity) e).getItem().getCount() == 0){
                     e.remove(Entity.RemovalReason.KILLED);
                 }
@@ -129,9 +130,22 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
                 continue;
             }
             changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.getLevel()) / stack_power_list.size());
+            tryDissolveWithByproduct(crucible.getLevel(), crucible.getBlockPos(), crucible.getBlockState(), crucible, i, Math.min(i.getCount(), dissolve_capacity));
             i.setCount(Math.max(i.getCount()-dissolve_capacity, 0));
         }
         return changed;
+    }
+
+    private static void tryDissolveWithByproduct(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemStack item, int count){
+        List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        for (DissolveRecipe r : purify_recipes) {
+            if(r.matches(new FakeContainer(item), level)){
+                ItemStack reactant = item.copy();
+                reactant.setCount(count);
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
+                return;
+            }
+        }
     }
 
     // Attempts to find a transmutation recipe that matches the item. Returns whether it did.

@@ -1,12 +1,9 @@
 {
-  "type": "reactive:transmutation",
+  "type": "reactive:dissolve",
   "reactant": {
     "item": "minecraft:echo_shard"
   },
   "product": {
     "item": "reactive:quartz"
-  },
-  "reagents": ["reactive:caustic"],
-  "width": -1,
-  "cost": 5
+  }
 }

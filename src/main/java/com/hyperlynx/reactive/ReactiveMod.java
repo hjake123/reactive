@@ -38,6 +38,7 @@ TODO LIST
         - Stardust: Glowing powder that floats in a clump in the air. Under moonlight it glows brighter. In the End it scatters.
         - Archmetal: A malleable metal that makes for slow but long-lasting tools.
         - Wizard's Wax: A substance that can be used in place of honeycomb to make candles.
+        - Prism/Lens/Runestone: An object that can be used to determine the power an object exhibits.
         -
 
  */

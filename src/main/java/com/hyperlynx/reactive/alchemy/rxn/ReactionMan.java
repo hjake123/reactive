@@ -53,21 +53,19 @@ public class ReactionMan {
         REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)));
         REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)));
 
+        // Special reactions.
+        REACTIONS.add(new BlazeBurnReaction(l, "blaze_burn"));
+
+        // Add effect reactions to do crazy things.
+        REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::vortex, Powers.CURSE_POWER.get()));
+        REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()));
+        REACTIONS.add(new EffectReaction(l, "luminescence_effect", ReactionEffects::luminescence, Powers.LIGHT_POWER.get()));
+        REACTIONS.add(new EffectReaction(l, "smoke_bomb_effect", ReactionEffects::sicklySmoke));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect_1", ReactionEffects::discharge));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge));
+
         initialized = true;
-
         return REACTIONS;
-    }
-
-    private Function<CrucibleBlockEntity, CrucibleBlockEntity> chooseEffect(Level l, String alias){
-        if(WorldSpecificValue.get(l, alias+"effect_roll", 0, 100) >= EFFECT_CHANCE_PERCENT){
-            return null; // Don't provide a function unless you roll the lucky chance.
-        }
-
-        int choice = WorldSpecificValue.get(l, alias+"effect", 0, 0);
-        if(choice == 0){
-            return ReactionEffects::discharge;
-        }
-        return null;
     }
 
     @SubscribeEvent
