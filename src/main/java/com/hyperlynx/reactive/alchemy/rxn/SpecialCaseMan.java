@@ -1,6 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
-import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -28,9 +28,9 @@ public class SpecialCaseMan {
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
-        if(c.getPowerLevel(Registration.SOUL_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "soul_escape_threshold", 300, 600))
+        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "soul_escape_threshold", 300, 600))
             soulEscape(c);
-        if(c.getPowerLevel(Registration.CURSE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "curse_escape_threshold", 1100, 1400))
+        if(c.getPowerLevel(Powers.CURSE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "curse_escape_threshold", 1100, 1400))
             curseEscape(c);
     }
 

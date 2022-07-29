@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,7 +15,7 @@ public class SynthesisReaction extends Reaction{
     public SynthesisReaction(Level l, String alias) {
         super(l, alias, 2);
         rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
-        resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Registration.POWERS.getEntries()).get();
+        resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Powers.POWERS.getEntries()).get();
         correctOpposingReagents();
     }
 

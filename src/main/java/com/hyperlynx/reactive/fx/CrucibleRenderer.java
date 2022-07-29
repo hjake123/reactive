@@ -2,8 +2,8 @@ package com.hyperlynx.reactive.fx;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
-import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Color;
@@ -36,13 +36,13 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private TextureAtlasSprite getSprite(CrucibleBlockEntity crucible){
         int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
 
-        if(crucible.getPowerLevel(Registration.CURSE_POWER.get()) + crucible.getPowerLevel(Registration.WARP_POWER.get()) + crucible.getPowerLevel(Registration.Z_POWER.get()) > threshold){
+        if(crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Registration.MIND_POWER.get()) + crucible.getPowerLevel(Registration.LIGHT_POWER.get()) + crucible.getPowerLevel(Registration.Y_POWER.get()) > threshold){
+        else if(crucible.getPowerLevel(Powers.MIND_POWER.get()) + crucible.getPowerLevel(Powers.LIGHT_POWER.get()) + crucible.getPowerLevel(Powers.Y_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Registration.SOUL_POWER.get()) + crucible.getPowerLevel(Registration.X_POWER.get()) > threshold){
+        else if(crucible.getPowerLevel(Powers.SOUL_POWER.get()) + crucible.getPowerLevel(Powers.X_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_FAST_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
 

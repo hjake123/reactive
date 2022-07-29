@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
         List<Power> reagents = new ArrayList<>();
         for(JsonElement j : json.get("reagents").getAsJsonArray()){
-            RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Registration.POWER_SUPPLIER.get());
+            RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
             if(powObj.isPresent())
                 reagents.add(powObj.get());
             else
@@ -53,7 +54,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         buffer.writeItem(recipe.reactant);
         buffer.writeItem(recipe.product);
         for(Power p : recipe.reagents){
-            buffer.writeRegistryId(Registration.POWER_SUPPLIER.get(), p);
+            buffer.writeRegistryId(Powers.POWER_SUPPLIER.get(), p);
         }
         buffer.writeInt(recipe.window_width);
         buffer.writeInt(recipe.cost);

@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
-import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -19,8 +18,8 @@ public class CurseAssimilationReaction extends Reaction{
 
     @Override
     public void run(CrucibleBlockEntity crucible) {
-        crucible.expendAnyPowerExcept(Registration.CURSE_POWER.get(), rate);
-        crucible.addPower(Registration.CURSE_POWER.get(), rate);
+        crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), rate);
+        crucible.addPower(Powers.CURSE_POWER.get(), rate);
     }
 
     @Override
@@ -30,8 +29,8 @@ public class CurseAssimilationReaction extends Reaction{
 
     @Override
     public boolean conditionsMet(CrucibleBlockEntity crucible){
-        boolean has_curse = crucible.getPowerLevel(Registration.CURSE_POWER.get()) > rate;
-        return crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Registration.CURSE_POWER.get()) + rate) && has_curse;
+        boolean has_curse = crucible.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
+        return crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse;
     }
 }
 

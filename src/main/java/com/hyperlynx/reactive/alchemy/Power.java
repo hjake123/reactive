@@ -29,7 +29,7 @@ public class Power {
     // Searches the Power Registry to locate the power referred to by the name in the tag.
     public static Power readPower(CompoundTag tag){
         Power ret = null;
-        for(RegistryObject<Power> reg : Registration.POWERS.getEntries()){
+        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
             if(reg.get().getName().equals(tag.getString("name"))){
                 ret = reg.get();
                 break;
@@ -41,7 +41,7 @@ public class Power {
 
     public static Power readPower(String s){
         Power ret = null;
-        for(RegistryObject<Power> reg : Registration.POWERS.getEntries()){
+        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
             if(reg.get().getName().equals(s)){
                 ret = reg.get();
                 break;
@@ -59,16 +59,16 @@ public class Power {
     // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        if (i.is(AlchemyTags.verdantSource)) stack_powers.add(Registration.VERDANT_POWER.get());
-        if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Registration.BLAZE_POWER.get());
-        if (i.is(AlchemyTags.bodySource)) stack_powers.add(Registration.BODY_POWER.get());
-        if (i.is(AlchemyTags.curseSource)) stack_powers.add(Registration.CURSE_POWER.get());
-        if (i.is(AlchemyTags.lightSource)) stack_powers.add(Registration.LIGHT_POWER.get());
-        if (i.is(AlchemyTags.mindSource)) stack_powers.add(Registration.MIND_POWER.get());
-        if (i.is(AlchemyTags.soulSource)) stack_powers.add(Registration.SOUL_POWER.get());
-        if (i.is(AlchemyTags.vitalSource)) stack_powers.add(Registration.VITAL_POWER.get());
-        if (i.is(AlchemyTags.warpSource)) stack_powers.add(Registration.WARP_POWER.get());
-        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Registration.ACID_POWER.get());
+        if (i.is(AlchemyTags.verdantSource)) stack_powers.add(Powers.VERDANT_POWER.get());
+        if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Powers.BLAZE_POWER.get());
+        if (i.is(AlchemyTags.bodySource)) stack_powers.add(Powers.BODY_POWER.get());
+        if (i.is(AlchemyTags.curseSource)) stack_powers.add(Powers.CURSE_POWER.get());
+        if (i.is(AlchemyTags.lightSource)) stack_powers.add(Powers.LIGHT_POWER.get());
+        if (i.is(AlchemyTags.mindSource)) stack_powers.add(Powers.MIND_POWER.get());
+        if (i.is(AlchemyTags.soulSource)) stack_powers.add(Powers.SOUL_POWER.get());
+        if (i.is(AlchemyTags.vitalSource)) stack_powers.add(Powers.VITAL_POWER.get());
+        if (i.is(AlchemyTags.warpSource)) stack_powers.add(Powers.WARP_POWER.get());
+        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Powers.ACID_POWER.get());
         return stack_powers;
     }
 

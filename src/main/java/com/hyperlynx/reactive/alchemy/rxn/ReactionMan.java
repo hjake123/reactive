@@ -1,14 +1,12 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
-import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import com.mojang.authlib.BaseAuthenticationService;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,12 +30,12 @@ public class ReactionMan {
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
     private HashSet<Reaction> constructReactions(Level l){
         // Set up the Base Power List.
-        BASE_POWER_LIST.add(Registration.BLAZE_POWER.get());
-        BASE_POWER_LIST.add(Registration.WARP_POWER.get());
-        BASE_POWER_LIST.add(Registration.SOUL_POWER.get());
-        BASE_POWER_LIST.add(Registration.LIGHT_POWER.get());
-        BASE_POWER_LIST.add(Registration.VITAL_POWER.get());
-        BASE_POWER_LIST.add(Registration.MIND_POWER.get());
+        BASE_POWER_LIST.add(Powers.BLAZE_POWER.get());
+        BASE_POWER_LIST.add(Powers.WARP_POWER.get());
+        BASE_POWER_LIST.add(Powers.SOUL_POWER.get());
+        BASE_POWER_LIST.add(Powers.LIGHT_POWER.get());
+        BASE_POWER_LIST.add(Powers.VITAL_POWER.get());
+        BASE_POWER_LIST.add(Powers.MIND_POWER.get());
         BASE_POWER_LIST = WorldSpecificValue.shuffle(l, "power_list_order", BASE_POWER_LIST);
 
         // Add assimilation reactions.
@@ -51,9 +49,9 @@ public class ReactionMan {
         REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)));
 
         // Add synthesis reactions for the three esoteric powers.
-        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Registration.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)));
-        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Registration.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)));
-        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Registration.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)));
+        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)));
+        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)));
+        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)));
 
         initialized = true;
 
