@@ -21,7 +21,6 @@ public class ReactionMan {
     static boolean initialized = false;
     private static final HashSet<Reaction> REACTIONS = new HashSet<>();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
-    private final static int EFFECT_CHANCE_PERCENT = 100;
 
     public HashSet<Reaction> getReactions(Level l){
         return initialized || l.isClientSide() ? REACTIONS : constructReactions(l);

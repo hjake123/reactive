@@ -32,4 +32,8 @@ public class Powers {
     public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12));
     public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8));
 
+    // These powers are special purpose and have special effects and relationships with others.
+    public static final RegistryObject<Power> CONDUIT_POWER = POWERS.register("conduit", () -> new Power("conduit", 0x1F96B1));
+    public static final RegistryObject<Power> PUMPKIN_POWER = POWERS.register("pumpkin", () -> new Power("pumpkin", 0xE38A1D));
+
 }

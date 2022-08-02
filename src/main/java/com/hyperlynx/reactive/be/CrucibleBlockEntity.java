@@ -2,7 +2,7 @@ package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.IPowerBearer;
+import com.hyperlynx.reactive.alchemy.PowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
@@ -44,7 +45,7 @@ import java.util.List;
         - Check for special cases along the way.
  */
 
-public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
+public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
@@ -174,6 +175,11 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
 
     public void setDirty(){
         setDirty(this.getLevel(), this.getBlockPos(), this.getBlockState());
+    }
+
+    @Override
+    public @NotNull Map<Power, Integer> getPowerMap() {
+        return powers;
     }
 
     // Causes a block update, which forces the client to synchronize the block entity data with the server.

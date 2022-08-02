@@ -1,9 +1,7 @@
 package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.IPowerBearer;
-import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.util.Color;
+import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,7 +11,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SymbolBlockEntity extends BlockEntity implements IPowerBearer {
+public class SymbolBlockEntity extends BlockEntity {
+
+    private int tick_counter = 0; // Used for counting active ticks. See tick().
 
     public Direction facing = Direction.DOWN;
     public Item symbol_item = Items.BARRIER;
@@ -32,43 +32,29 @@ public class SymbolBlockEntity extends BlockEntity implements IPowerBearer {
     }
     public void setItem(Item item){ this.symbol_item = item; }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, SymbolBlockEntity crucible) {
+    public static void tick(Level level, BlockPos pos, BlockState state, SymbolBlockEntity symbol) {
+        symbol.tick_counter++;
+        if(symbol.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get() * 3) {
+            symbol.tick_counter = 1;
+            if(symbol.symbol_item.getDefaultInstance().is(Registration.COPPER_SYMBOL_ITEM.get()))
+                copperTick(level, pos, state, symbol);
+            else if (symbol.symbol_item.getDefaultInstance().is(Registration.IRON_SYMBOL_ITEM.get()))
+                ironTick(level, pos, state, symbol);
+            else if (symbol.symbol_item.getDefaultInstance().is(Registration.GOLD_SYMBOL_ITEM.get()))
+                goldTick(level, pos, state, symbol);
+        }
+    }
+
+    protected static void copperTick(Level level, BlockPos pos, BlockState state, SymbolBlockEntity symbol){
 
     }
 
-    @Override
-    public boolean addPower(Power p, int amount) {
-        return false;
-    }
-
-    @Override
-    public int getPowerLevel(Power t) {
-        return 0;
-    }
-
-    @Override
-    public int getTotalPowerLevel() {
-        return 0;
-    }
-
-    @Override
-    public boolean expendPower(Power t, int amount) {
-        return false;
-    }
-
-    @Override
-    public void expendAnyPowerExcept(Power immune_power, int amount) {
+    protected static void ironTick(Level level, BlockPos pos, BlockState state, SymbolBlockEntity symbol){
 
     }
 
-    @Override
-    public void expendPower() {
+    protected static void goldTick(Level level, BlockPos pos, BlockState state, SymbolBlockEntity symbol){
 
-    }
-
-    @Override
-    public Color getCombinedColor(int base) {
-        return null;
     }
 
     @Override

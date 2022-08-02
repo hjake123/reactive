@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.recipes;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.IPowerBearer;
+import com.hyperlynx.reactive.alchemy.PowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -35,7 +35,7 @@ public class TransmuteRecipe implements Recipe<Container> {
         this.cost = cost;
     }
 
-    public boolean powerMet(IPowerBearer bearer, Level level){
+    public boolean powerMet(PowerBearer bearer, Level level){
         if(window_width == -1){
             for(Power p : reagents){
                 if(bearer.getPowerLevel(p) == 0){
@@ -59,7 +59,7 @@ public class TransmuteRecipe implements Recipe<Container> {
         return power_level > min && power_level < max;
     }
 
-    public ItemStack apply(ItemStack input, IPowerBearer bearer, Level l) {
+    public ItemStack apply(ItemStack input, PowerBearer bearer, Level l) {
         int max_tfs = Integer.MAX_VALUE;
         if(cost > 0) {
             for (Power p : reagents) {

@@ -41,7 +41,9 @@ public class SymbolBlock extends Block implements EntityBlock {
     protected static final VoxelShape NORTH_SHAPE = Block.box(2, 2, 15, 14, 14, 16);
     protected static final VoxelShape SOUTH_SHAPE = Block.box(2, 2, 0, 14, 14, 1);
 
-
+    public static BlockPos getAttachedBlock(BlockState state, BlockPos pos){
+        return pos.relative(state.getValue(FACING).getOpposite());
+    }
 
     public SymbolBlock(BlockBehaviour.Properties props) {
         super(props);
@@ -91,7 +93,7 @@ public class SymbolBlock extends Block implements EntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         SymbolBlockEntity symbol = new SymbolBlockEntity(pos, state, symbol_item);
-        symbol.setFacing(FACING.getValue("facing").orElseGet(() -> Direction.UP));
+        symbol.setFacing(FACING.getValue("facing").orElse(Direction.UP));
         return symbol;
     }
 
