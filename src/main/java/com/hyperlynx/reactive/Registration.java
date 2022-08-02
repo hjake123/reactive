@@ -1,13 +1,17 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.blocks.SymbolBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -26,6 +30,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.*;
 
@@ -60,6 +65,24 @@ public class Registration {
 
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
+
+    // Register the Symbol blocks, items, and the BE.
+    public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
+            () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = fromBlock(COPPER_SYMBOL, CreativeModeTab.TAB_MISC);
+
+    public static final RegistryObject<Block> IRON_SYMBOL = BLOCKS.register("iron_symbol",
+            () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> IRON_SYMBOL_ITEM = fromBlock(IRON_SYMBOL, CreativeModeTab.TAB_MISC);
+
+    public static final RegistryObject<Block> GOLD_SYMBOL = BLOCKS.register("gold_symbol",
+            () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, CreativeModeTab.TAB_MISC);
+
+
+
+    public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
+            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get()).build(null));
 
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
@@ -104,17 +127,27 @@ public class Registration {
     }
 
     // Various event handlers to set up different items.
-//    @SubscribeEvent
-//    public static void registerParticles(ParticleFactoryRegisterEvent evt) { // Broken in new Forge
-//    }
+
+//  @SubscribeEvent
+//  public static void registerParticles(ParticleFactoryRegisterEvent evt) { // Broken in new Forge
+//  }
+
+    @SubscribeEvent
+    public static void commonSetupHandler(FMLCommonSetupEvent evt){
+        ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
+        ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
+        ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
+    }
 
     @SubscribeEvent
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         evt.registerBlockEntityRenderer(CRUCIBLE_BE_TYPE.get(), CrucibleRenderer::new);
+        evt.registerBlockEntityRenderer(SYMBOL_BE_TYPE.get(), SymbolRenderer::new);
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
+
     }
 }

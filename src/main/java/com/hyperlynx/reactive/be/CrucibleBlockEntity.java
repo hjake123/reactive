@@ -41,7 +41,9 @@ import java.util.List;
             - If there are, check if they need to have any recipes applied, and do that if there are.
             - Otherwise, just dissolve them and add their Power to the pool.
         - Use ReactionMan to run reactions.
+        - Check for special cases along the way.
  */
+
 public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
@@ -100,6 +102,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         }
     }
 
+    // Used to gather and operate on items sitting inside the crucible.
     private static boolean processItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         if(!state.getValue(CrucibleBlock.FULL)){
             return false;
@@ -121,6 +124,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         return changed;
     }
 
+    // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible and it returns true.
     public static boolean tryReduceToPower(ItemStack i, CrucibleBlockEntity crucible){
         List<Power> stack_power_list = Power.getSourcePower(i);
         boolean changed = false;
@@ -136,6 +140,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         return changed;
     }
 
+    // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
     private static void tryDissolveWithByproduct(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemStack item, int count){
         List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for (DissolveRecipe r : purify_recipes) {
@@ -148,7 +153,7 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
         }
     }
 
-    // Attempts to find a transmutation recipe that matches the item. Returns whether it did.
+    // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
         List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
         for (TransmuteRecipe r : purify_recipes) {
@@ -170,6 +175,8 @@ public class CrucibleBlockEntity extends BlockEntity implements IPowerBearer {
     public void setDirty(){
         setDirty(this.getLevel(), this.getBlockPos(), this.getBlockState());
     }
+
+    // Causes a block update, which forces the client to synchronize the block entity data with the server.
     public void setDirty(Level level, BlockPos pos, BlockState state){
         this.setChanged();
         level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);

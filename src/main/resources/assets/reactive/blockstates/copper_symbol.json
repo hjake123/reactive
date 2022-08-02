@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "reactive:block/copper_symbol_placeholder"
+      }
+    }
+  ]
+}

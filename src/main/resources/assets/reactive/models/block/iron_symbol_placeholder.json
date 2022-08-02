@@ -1,0 +1,6 @@
+{
+  "textures": {
+    "0": "reactive:block/iron_symbol",
+    "particle": "reactive:block/iron_symbol"
+  }
+}
