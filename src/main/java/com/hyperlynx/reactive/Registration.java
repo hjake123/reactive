@@ -2,6 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
+import com.hyperlynx.reactive.blocks.BlazeRodBlock;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.blocks.SymbolBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
@@ -64,7 +65,7 @@ public class Registration {
     // Register the all-important Crucible.
     public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
             () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
-    public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, CreativeModeTab.TAB_MISC);
+    public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
@@ -72,24 +73,29 @@ public class Registration {
     // Register the Symbol blocks, items, and the BE.
     public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = fromBlock(COPPER_SYMBOL, CreativeModeTab.TAB_MISC);
+    public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = fromBlock(COPPER_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> IRON_SYMBOL = BLOCKS.register("iron_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> IRON_SYMBOL_ITEM = fromBlock(IRON_SYMBOL, CreativeModeTab.TAB_MISC);
+    public static final RegistryObject<Item> IRON_SYMBOL_ITEM = fromBlock(IRON_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> GOLD_SYMBOL = BLOCKS.register("gold_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, CreativeModeTab.TAB_MISC);
-
-
+    public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get()).build(null));
 
+    // Additional blocks
+    public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
+            () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
+    public static final RegistryObject<Item> BLAZE_ROD_ITEM = fromBlock(BLAZE_ROD, ReactiveMod.CREATIVE_TAB);
+
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
-            () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> ASH = ITEMS.register("ash",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

@@ -97,14 +97,14 @@ public class SymbolBlock extends Block implements EntityBlock {
         return symbol;
     }
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        if(type == Registration.SYMBOL_BE_TYPE.get()){
-            return (l, p, s, x) -> com.hyperlynx.reactive.be.SymbolBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.be.SymbolBlockEntity) x);
-        }
-        return null;
-    }
+//    @Nullable
+//    @Override
+//    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+//        if(type == Registration.SYMBOL_BE_TYPE.get()){
+//            return (l, p, s, x) -> com.hyperlynx.reactive.be.SymbolBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.be.SymbolBlockEntity) x);
+//        }
+//        return null;
+//    }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {

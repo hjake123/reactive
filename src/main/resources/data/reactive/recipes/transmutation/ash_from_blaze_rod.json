@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:blaze_rod"
+  },
+  "product": {
+    "item": "reactive:ash"
+  },
+  "reagents": [],
+  "width": -1,
+  "cost": 0
+}

@@ -4,14 +4,13 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.PowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
-import com.hyperlynx.reactive.util.Color;
-import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.FakeContainer;
+import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -25,8 +24,10 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
     HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
+    AreaMemory areaMemory; // Used to check for nearby blocks of interest.
 
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
@@ -56,6 +58,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
+        areaMemory = new AreaMemory(pos);
     }
 
     // ----- Tick and related worker methods -----
@@ -70,14 +73,16 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     crucible.expendPower();
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
-                }
+                }else{
+                    // Gather Power from the surroundings.
+                    gatherPower(level, crucible);
 
-                // Check for new items to dissolve into Power or transmute.
-                if (processItemsInside(level, pos, state, crucible)) {
-                    crucible.setDirty(level, pos, state);
-                    level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                    // Check for new items to dissolve into Power or transmute.
+                    if (processItemsInside(level, pos, state, crucible)) {
+                        crucible.setDirty(level, pos, state);
+                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                    }
                 }
-
             }
             else {
                 if (!state.getValue(CrucibleBlock.FULL)  && crucible.getTotalPowerLevel() > 0) {
@@ -90,6 +95,25 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             // Do reactions, if you can. This intentionally happens on both logical sides.
             if(state.getValue(CrucibleBlock.FULL)) react(level, crucible);
 
+        }
+    }
+
+    private static void gatherPower(Level level, CrucibleBlockEntity crucible){
+        // Only gather power if a Copper Symbol is nearby, but not an Iron one.
+        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get())){
+            if(!crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+                // Blaze Rods add blaze.
+                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
+                    crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
+                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                }
+
+                // End Rods add light.
+                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
+                    crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get(level, "end_rod_power_amount", 30, 100));
+                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                }
+            }
         }
     }
 
@@ -170,6 +194,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
         return false;
     }
+
+
 
     // ----- Helper and power management methods -----
 

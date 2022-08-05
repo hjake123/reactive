@@ -60,7 +60,7 @@ public class Power {
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
         if (i.is(AlchemyTags.verdantSource)) stack_powers.add(Powers.VERDANT_POWER.get());
-        if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Powers.BLAZE_POWER.get());
+        //if (i.is(AlchemyTags.blazeSource)) stack_powers.add(Powers.BLAZE_POWER.get()); You can't dissolve blaze anymore
         if (i.is(AlchemyTags.bodySource)) stack_powers.add(Powers.BODY_POWER.get());
         if (i.is(AlchemyTags.curseSource)) stack_powers.add(Powers.CURSE_POWER.get());
         if (i.is(AlchemyTags.lightSource)) stack_powers.add(Powers.LIGHT_POWER.get());

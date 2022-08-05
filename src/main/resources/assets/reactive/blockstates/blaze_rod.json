@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "reactive:block/blaze_rod",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "reactive:block/blaze_rod"
+    },
+    "axis=z": {
+      "model": "reactive:block/blaze_rod",
+      "x": 90
+    }
+  }
+}
