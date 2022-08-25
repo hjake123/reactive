@@ -39,31 +39,3 @@ public class ReactiveMod
     }
 
 }
-
-/*
-TODO LIST
-
-- Useful results
-    - Should be generally materials/items with bizarre properties. Ideas:
-        - Stardust: Glowing powder that floats in a clump in the air. Under moonlight it glows brighter. In the End it scatters.
-        - Wizard's Wax: A substance that can be used in place of honeycomb to make candles.
-        - Prism/Lens/Runestone: An object that can be used to determine the strength of the power an object exhibits.
-        - Lightstrand: Golden 'strands' that can be used to strengthen leather armor and maybe do other crafting.
-        - Crystal Iron: Crafting ingredient
-        - Quickiron: Liquid iron that changes shape in response to redstone signals
-        - Wyvern Snot: A substance that induces poison and hunger when held, but acts as an alternative to slimeballs for the sake of piston making.
-        Can be made into evil-looking purple goo blocks that are subjected to gravity, induce poison and hunger, and are extremely flammable.
-        - Verdflare Powder: A copper-based powder that can change fires into Green Fire. Green Fire hurts more but can't spread.
-
-- Apparatus: The main utility of the mod
-    - Device which can be customized to provide all sorts of useful effects.
-    - The exact effects are semi-random, and require some ingenuity to discover.
-    - Many parts can be added to it, made with ingredients from the mod.
-    - Each part also renders in the block if at all possible.\
-
-- Summoning:
-    - Soul or Vital + Candles = Summoning
-    - Various influences affect what happens: usually it's a vex or allay but other are possible
-    - Carved Pumpkins may be useful
-
- */

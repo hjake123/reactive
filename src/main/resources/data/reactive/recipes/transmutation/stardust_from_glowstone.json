@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:glowstone_dust"
+  },
+  "product": {
+    "item": "reactive:stardust"
+  },
+  "reagents": ["reactive:light", "reactive:mind"],
+  "width": 500,
+  "cost": 50
+}

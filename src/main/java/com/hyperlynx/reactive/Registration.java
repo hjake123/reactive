@@ -4,10 +4,12 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.BlazeRodBlock;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.blocks.StardustBlock;
 import com.hyperlynx.reactive.blocks.SymbolBlock;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
+import com.hyperlynx.reactive.items.StardustItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -26,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -91,11 +94,16 @@ public class Registration {
             () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
     public static final RegistryObject<Item> BLAZE_ROD_ITEM = fromBlock(BLAZE_ROD, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> STARDUST = BLOCKS.register("stardust",
+            () -> new StardustBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).lightLevel((BlockState s) -> 15)));
+
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> ASH = ITEMS.register("ash",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
+            () -> new StardustItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
