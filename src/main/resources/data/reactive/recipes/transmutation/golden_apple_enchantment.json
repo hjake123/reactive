@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:golden_apple"
+  },
+  "product": {
+    "item": "minecraft:enchanted_golden_apple"
+  },
+  "reagents": ["reactive:vital", "reactive:body"],
+  "width": 50,
+  "cost": 400
+}

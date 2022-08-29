@@ -36,6 +36,10 @@ public class WorldSpecificValue {
         return rand.nextInt(max-min + 1) + min;
     }
 
+    public static boolean getBool(ServerLevel l, String alias){
+        return get(l, alias, 0, 1) == 1;
+    }
+
     public static <T> T getFromCollection(Level l, String alias, Collection<T> c) {
         int index = get(l, alias, 0, c.size()-1);
         int p = 0;

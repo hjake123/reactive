@@ -6,7 +6,7 @@ import com.hyperlynx.reactive.alchemy.PowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
-import com.hyperlynx.reactive.alchemy.rxn.SpecialCaseMan;
+import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -49,8 +48,8 @@ import java.util.Map;
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
-    HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
-    AreaMemory areaMemory; // Used to check for nearby blocks of interest.
+    private HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
+    public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
 
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
@@ -136,7 +135,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
             if(e instanceof ItemEntity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
-                if(!e.isAlive()) continue;
+                if(!e.isAlive()) continue; // The special case may have removed the item entity.
                 changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
                 changed = changed || tryReduceToPower(((ItemEntity) e).getItem(), crucible);
 

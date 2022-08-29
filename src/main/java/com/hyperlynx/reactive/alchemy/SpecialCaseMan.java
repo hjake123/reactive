@@ -1,7 +1,10 @@
-package com.hyperlynx.reactive.alchemy.rxn;
+package com.hyperlynx.reactive.alchemy;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -12,11 +15,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 
@@ -28,10 +36,12 @@ import java.util.UUID;
 public class SpecialCaseMan {
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
-        if(e.getItem().is(Tags.Items.ENDER_PEARLS)) enderPearlDissolve(c.getLevel(), c.getBlockPos(), e);
+        if(e.getItem().is(Tags.Items.ENDER_PEARLS))
+            enderPearlDissolve(c.getLevel(), c.getBlockPos(), e);
         if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
             explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
-
+        if(e.getItem().is(Items.CARVED_PUMPKIN))
+            pumpkinMagic(c.getLevel(), e, c);
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
@@ -42,6 +52,36 @@ public class SpecialCaseMan {
             curseEscape(c);
         if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "blaze_escape_threshold", 20, 100))
             blazeEscape(c);
+    }
+
+    // Dissolving a carved pumpkin might have many effects.
+    private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
+        int cause = WorldSpecificValues.GOLEM_CAUSE.get(level);
+        BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
+        BlockPos ironSymbolPos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get());
+
+        if(level.isClientSide)
+            return;
+
+        if(cause == 1){ // SOUL is the cause. Spawn an Allay.
+            if(candlePos != null && ironSymbolPos == null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)){
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                e.kill();
+            }
+        }
+        else if(cause == 2){ // CURSE is the cause. Pollute the crucible or spawn a Vex.
+            if(candlePos != null){
+                if(ironSymbolPos == null){
+                    EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                    curseEscape(c);
+                }else{
+                    c.addPower(Powers.CURSE_POWER.get(), 666);
+                    c.setDirty();
+                    ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE, ironSymbolPos.getX() + 0.5, ironSymbolPos.getY() + 0.5, ironSymbolPos.getZ(), 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
+                }
+                e.kill();
+            }
+        }
     }
 
     // Dissolving an Ender Pearl teleports you onto the crucible.
@@ -59,6 +99,7 @@ public class SpecialCaseMan {
         }
     }
 
+    // Explode gunpowder due to blaze.
     private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
         l.explode(e, p.getX(), p.getY(), p.getZ(), 1.0F, Explosion.BlockInteraction.NONE);
         e.kill();
@@ -86,6 +127,7 @@ public class SpecialCaseMan {
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 1));
                 e.hurt(DamageSource.MAGIC, 10);
             }
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1, 1);
         }
     }
 

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:end_rod"
+  },
+  "product": {
+    "item": "reactive:stardust"
+  },
+  "reagents": ["reactive:light"],
+  "width": 1500,
+  "cost": 10
+}

@@ -34,6 +34,5 @@ public class Powers {
 
     // These powers are special purpose and have special effects and relationships with others.
     public static final RegistryObject<Power> CONDUIT_POWER = POWERS.register("conduit", () -> new Power("conduit", 0x1F96B1));
-    public static final RegistryObject<Power> PUMPKIN_POWER = POWERS.register("pumpkin", () -> new Power("pumpkin", 0xE38A1D));
 
 }
