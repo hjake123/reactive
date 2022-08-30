@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.level.LevelEvent;
@@ -10,7 +9,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.function.Function;
 
 // This class manages the world's reactions.
 // When the level unloads, it resets the cache of reaction.
@@ -51,9 +49,12 @@ public class ReactionMan {
         REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)));
 
         // Add synthesis reactions for the three esoteric powers.
-        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)));
-        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)));
-        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)));
+        REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
+                .setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+                .setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
+                .setStimulus(Reaction.Stimulus.ELECTRIC));
 
         // Special reactions.
         REACTIONS.add(new BlazeBurnReaction(l, "blaze_burn"));
@@ -63,8 +64,9 @@ public class ReactionMan {
         REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()));
         REACTIONS.add(new EffectReaction(l, "luminescence_effect", ReactionEffects::luminescence, Powers.LIGHT_POWER.get()));
         REACTIONS.add(new EffectReaction(l, "smoke_bomb_effect", ReactionEffects::sicklySmoke));
-        REACTIONS.add(new EffectReaction(l, "discharge_effect_1", ReactionEffects::discharge));
-        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect_1", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         initialized = true;
         return REACTIONS;

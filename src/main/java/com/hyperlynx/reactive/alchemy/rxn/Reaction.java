@@ -15,7 +15,7 @@ import java.util.Objects;
 public abstract class Reaction {
 
     protected HashMap<Power, Integer> reagents = new HashMap<>();
-    protected ReactionStimuli stimulus = ReactionStimuli.NONE;
+    protected Stimulus stimulus = Stimulus.NONE;
 
     public Reaction(HashMap<Power, Integer> reagents){
         this.reagents = reagents;
@@ -45,8 +45,9 @@ public abstract class Reaction {
         reagents.put(p2, WorldSpecificValue.get(l, alias+"r2", 1, 400));
     }
 
-    public void setStimulus(ReactionStimuli rxs){
+    public Reaction setStimulus(Stimulus rxs){
         this.stimulus = rxs;
+        return this;
     }
 
     public boolean conditionsMet(CrucibleBlockEntity crucible){
@@ -59,15 +60,15 @@ public abstract class Reaction {
     }
 
     private boolean checkStimulus(CrucibleBlockEntity c){
-        if(stimulus == ReactionStimuli.END){
+        if(stimulus == Stimulus.END){
             return Objects.requireNonNull(c.getLevel()).dimension().equals(Level.END);
-        }else if(stimulus == ReactionStimuli.GOLD_SYMBOL){
+        }else if(stimulus == Stimulus.GOLD_SYMBOL){
             return c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
-        }else if(stimulus == ReactionStimuli.ELECTRIC){
+        }else if(stimulus == Stimulus.ELECTRIC){
             return c.electricCharge > 0;
-        }else if(stimulus == ReactionStimuli.EXPLOSION){
-            return c.recentExplosion;
-        }else if(stimulus == ReactionStimuli.SACRIFICE){
+        }else if(stimulus == Stimulus.EXPLOSION){
+            return c.recentExplosion; // TODO: set recent explosion when in an explosion.
+        }else if(stimulus == Stimulus.SACRIFICE){ // TODO: sacrifices.
             return c.sacrificeCount >= WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), reagents.toString()+"_sacrifice_count", 1, 3);
         }else{
             return true;
@@ -78,7 +79,7 @@ public abstract class Reaction {
 
     public abstract void render(ClientLevel l, CrucibleBlockEntity crucible);
 
-    public enum ReactionStimuli {
+    public enum Stimulus {
         NONE,
         GOLD_SYMBOL,
         ELECTRIC,

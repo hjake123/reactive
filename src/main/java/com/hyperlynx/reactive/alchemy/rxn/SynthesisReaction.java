@@ -18,9 +18,6 @@ public class SynthesisReaction extends Reaction{
         rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
         resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Powers.POWERS.getEntries()).get();
         correctOpposingReagents();
-        if(WorldSpecificValues.ELECTRIC_EFFECT.get(l) == 2){
-            stimulus = ReactionStimuli.ELECTRIC;
-        }
     }
 
     public SynthesisReaction(Level l, String alias, Power resultPower) {

@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 // Just a holder class for the various reaction effect methods.
 public class ReactionEffects {
-    // TODO
+    // TODO: a lot of reaction effects
     public static CrucibleBlockEntity vortex(CrucibleBlockEntity c){
         return c;
     }

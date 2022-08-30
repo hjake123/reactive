@@ -19,9 +19,6 @@ public class EffectReaction extends Reaction{
         effectFunction = function;
         cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
         System.out.println(reagents + " - " + effectFunction.toString());
-        if(WorldSpecificValues.ELECTRIC_EFFECT.get(l) == 3){
-            stimulus = ReactionStimuli.ELECTRIC;
-        }
     }
 
     public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {

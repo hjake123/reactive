@@ -10,7 +10,4 @@ public class WorldSpecificValues {
     // Determines the reason that golems animate when a carved pumpkin in placed. The options are...
     // 1: SOUL is trapped by the pumpkin.
     // 2: CURSE manifests near the pumpkin.
-
-    public final static PrimedWSV ELECTRIC_EFFECT = new PrimedWSV("electric_effect", 1, 3);
-    // Determines whether electricity (1) causes annihilation reactions, (2) causes synthesis reactions, or (3) causes effect reactions.
 }
