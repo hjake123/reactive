@@ -55,6 +55,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
+    private boolean needsSync = false; // Determines when to call setDirty from inside tick. Used when calling setDirty directly doesn't work.
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public boolean recentExplosion = false; // Used for the EXPLOSION Reaction Stimulus. Set by nearby explosions.
@@ -68,8 +69,15 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // ----- Tick and related worker methods -----
     public static void tick(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         crucible.tick_counter++;
+        if(crucible.needsSync){
+            crucible.setDirty();
+            crucible.needsSync = false;
+        }
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
+            if(crucible.electricCharge > 0){
+                crucible.electricCharge--;
+            }
             if (!level.isClientSide()){
                 // Become empty when there's no water.
                 if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
@@ -205,6 +213,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
+    }
+
+    public void beHitByLightning(){
+        electricCharge = 20;
+        needsSync = true;
     }
 
     @Override
@@ -378,6 +391,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             power_list_tag.add(tag);
         }
         main_tag.put("powers", power_list_tag);
+        main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
     }
 
     @Override
@@ -392,6 +406,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 addPower(p, ((CompoundTag) power_tag).getInt("level"));
             }
         }
+        electricCharge = main_tag.getInt("electric_charge");
     }
 
 }

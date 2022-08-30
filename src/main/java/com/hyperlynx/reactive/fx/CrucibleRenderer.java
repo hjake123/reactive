@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Color;
+import com.hyperlynx.reactive.util.Helper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -20,6 +21,7 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
@@ -57,6 +59,18 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         }
     }
 
+    private void renderElectricity(CrucibleBlockEntity crucible){
+        float speedDivisor = 27F;
+        if(crucible.electricCharge > 0){
+            Helper.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.ELECTRIC_SPARK, crucible.getBlockPos(),
+                    0.05F,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor
+            );
+        }
+    }
+
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
@@ -71,6 +85,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         }
         poseStack.popPose();
         renderReactions(crucible);
+        renderElectricity(crucible);
     }
 
     // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)
