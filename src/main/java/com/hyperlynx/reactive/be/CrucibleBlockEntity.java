@@ -32,12 +32,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
     This is a complicated class, but each method should be pretty self-explanatory, or documented if not.
     Overall, the crucible does these things every (configurable, default 30) ticks:
-        - Check the blockstate to see if it should empty itself.
+        - Check the block state to see if it should empty itself.
         - Check to see if there are new item entities.
             - If there are, check if they need to have any recipes applied, and do that if there are.
             - Otherwise, just dissolve them and add their Power to the pool.
@@ -48,12 +49,16 @@ import java.util.Map;
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
-    private HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
+    private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
 
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
+
+    public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
+    public boolean recentExplosion = false; // Used for the EXPLOSION Reaction Stimulus. Set by nearby explosions.
+    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus. Increased by nearby deaths.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -148,7 +153,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         return changed;
     }
 
-    // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible and it returns true.
+    // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible, and it returns true.
     public static boolean tryReduceToPower(ItemStack i, CrucibleBlockEntity crucible){
         List<Power> stack_power_list = Power.getSourcePower(i);
         boolean changed = false;
@@ -158,14 +163,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 continue;
             }
             changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.getLevel()) / stack_power_list.size());
-            tryDissolveWithByproduct(crucible.getLevel(), crucible.getBlockPos(), crucible.getBlockState(), crucible, i, Math.min(i.getCount(), dissolve_capacity));
+            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), i, Math.min(i.getCount(), dissolve_capacity));
             i.setCount(Math.max(i.getCount()-dissolve_capacity, 0));
         }
         return changed;
     }
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
-    private static void tryDissolveWithByproduct(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemStack item, int count){
+    private static void tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack item, int count){
         List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for (DissolveRecipe r : purify_recipes) {
             if(r.matches(new FakeContainer(item), level)){
@@ -199,7 +204,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // ----- Helper and power management methods -----
 
     public void setDirty(){
-        setDirty(this.getLevel(), this.getBlockPos(), this.getBlockState());
+        setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
     }
 
     @Override
