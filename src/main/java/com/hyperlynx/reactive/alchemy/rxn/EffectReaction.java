@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,6 +19,9 @@ public class EffectReaction extends Reaction{
         effectFunction = function;
         cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
         System.out.println(reagents + " - " + effectFunction.toString());
+        if(WorldSpecificValues.ELECTRIC_EFFECT.get(l) == 3){
+            stimulus = ReactionStimuli.ELECTRIC;
+        }
     }
 
     public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {

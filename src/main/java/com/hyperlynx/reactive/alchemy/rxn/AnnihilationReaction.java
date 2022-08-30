@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -15,6 +16,9 @@ public class AnnihilationReaction extends Reaction{
     public AnnihilationReaction(Level l, String alias) {
         super(l, alias, 3);
         rate = WorldSpecificValue.get(l, alias+"rate", 5, 30);
+        if(WorldSpecificValues.ELECTRIC_EFFECT.get(l) == 1){
+            stimulus = ReactionStimuli.ELECTRIC;
+        }
     }
 
     public AnnihilationReaction(Level l, String alias, Power p1, Power p2) {

@@ -27,13 +27,22 @@ public class AssimilationReaction extends Reaction{
         reagents.replace(consumedPower, rate);
     }
 
-    public AssimilationReaction(Level l, String alias, Power producedPower){
-        super(l, alias, 1);
-        consumedPower = reagents.keySet().stream().findFirst().get();
+//    public AssimilationReaction(Level l, String alias, Power producedPower){
+//        super(l, alias, 1);
+//        consumedPower = reagents.keySet().stream().findFirst().get();
+//        reagents.put(producedPower, WorldSpecificValue.get(l, alias+"r"+1, 1, 100));
+//        this.producedPower = producedPower;
+//        rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
+//        reagents.replace(consumedPower, rate);
+//    }
+
+    public AssimilationReaction(Level l, String alias, Power producedPower, Power consumedPower){
+        super(l, alias, 0);
         reagents.put(producedPower, WorldSpecificValue.get(l, alias+"r"+1, 1, 100));
         this.producedPower = producedPower;
+        this.consumedPower = consumedPower;
         rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
-        reagents.replace(consumedPower, rate);
+        reagents.put(consumedPower, rate);
     }
 
     @Override
