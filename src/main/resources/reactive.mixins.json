@@ -5,7 +5,9 @@
   "refmap": "reactive.mixins.refmap.json",
   "package": "com.hyperlynx.reactive.mixin",
   "mixins": [
-    "LightningBoltMixin"
+    "AllayMixin",
+    "LightningBoltMixin",
+    "VexMixin"
   ],
   "injectors": {
     "defaultRequire": 1

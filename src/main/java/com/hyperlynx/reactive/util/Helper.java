@@ -31,13 +31,16 @@ public class Helper {
     }
 
     public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency){
-        if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
-                double x = x1 + (x2-x1) * level.random.nextDouble();
-                double y = y1 + (y2-y1) * level.random.nextDouble();
-                double z = z1 + (z2-z1) * level.random.nextDouble();
+        for(int i = 0; i < frequency; i++){
+            double u = level.random.nextDouble();
+            double x = (1-u) * x1 + u * x2;
+            double y = (1-u) * y1 + u * y2;
+            double z = (1-u) * z1 + u * z2;
 
+            if(level.isClientSide()) {
                 level.addParticle(opt, x, y, z, 0, 0, 0);
+            }else {
+                ((ServerLevel)level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
             }
         }
     }

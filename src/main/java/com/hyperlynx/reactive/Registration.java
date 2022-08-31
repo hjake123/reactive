@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.client.textures.ITextureAtlasSpriteLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -145,9 +146,10 @@ public class Registration {
 
     // Various event handlers to set up different items.
 
-//  @SubscribeEvent
-//  public static void registerParticles(ParticleFactoryRegisterEvent evt) { // Broken in new Forge
-//  }
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent evt) {
+        // Add custom particles.
+    }
 
     @SubscribeEvent
     public static void commonSetupHandler(FMLCommonSetupEvent evt){

@@ -91,7 +91,7 @@ public class SymbolBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         SymbolBlockEntity symbol = new SymbolBlockEntity(pos, state, symbol_item);
         symbol.setFacing(FACING.getValue("facing").orElse(Direction.UP));
         return symbol;
@@ -100,14 +100,11 @@ public class SymbolBlock extends Block implements EntityBlock {
 //    @Nullable
 //    @Override
 //    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-//        if(type == Registration.SYMBOL_BE_TYPE.get()){
-//            return (l, p, s, x) -> com.hyperlynx.reactive.be.SymbolBlockEntity.tick(l, p, s, (com.hyperlynx.reactive.be.SymbolBlockEntity) x);
-//        }
 //        return null;
 //    }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) {
+    public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.INVISIBLE;
     }
 }

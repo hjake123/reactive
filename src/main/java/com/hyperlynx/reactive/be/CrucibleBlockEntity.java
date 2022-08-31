@@ -114,6 +114,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
         if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get())){
             if(!crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+
                 // Blaze Rods add blaze.
                 if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
                     crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
@@ -123,6 +124,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 // End Rods add light.
                 if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
                     crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get(level, "end_rod_power_amount", 30, 100));
+                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                }
+
+                // Wither Skeleton Skulls add curse.
+                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
+                    crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 1, 4));
                     crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                 }
             }
