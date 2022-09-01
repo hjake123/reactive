@@ -55,7 +55,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
-    private boolean needsSync = false; // Determines when to call setDirty from inside tick. Used when calling setDirty directly doesn't work.
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public boolean recentExplosion = false; // Used for the EXPLOSION Reaction Stimulus. Set by nearby explosions.
@@ -69,10 +68,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // ----- Tick and related worker methods -----
     public static void tick(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         crucible.tick_counter++;
-        if(crucible.needsSync){
-            crucible.setDirty();
-            crucible.needsSync = false;
-        }
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
             if(crucible.electricCharge > 0){
@@ -129,7 +124,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
                 // Wither Skeleton Skulls add curse.
                 if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
-                    crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 1, 4));
+                    crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 50, 400));
                     crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                 }
             }
@@ -226,7 +221,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public void beHitByLightning(){
         electricCharge = 50;
-        needsSync = true;
+        setDirty();
     }
 
     @Override
@@ -234,10 +229,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         return powers;
     }
 
-    // Causes a block update, which forces the client to synchronize the block entity data with the server.
+    // Causes a block update, which should force the client to synchronize the block entity data with the server.
     public void setDirty(Level level, BlockPos pos, BlockState state){
-        this.setChanged();
-        level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+        if(!level.isClientSide) {
+            this.setChanged();
+            level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
+        }
     }
 
     public float getOpacity() {
@@ -385,6 +382,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @Override
     protected void saveAdditional(@NotNull CompoundTag main_tag) {
         super.saveAdditional(main_tag);
+        main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
+
+        // Powers must be saved last.
         if(powers == null || powers.isEmpty()){
             return;
         }
@@ -400,7 +400,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             power_list_tag.add(tag);
         }
         main_tag.put("powers", power_list_tag);
-        main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
     }
 
     @Override

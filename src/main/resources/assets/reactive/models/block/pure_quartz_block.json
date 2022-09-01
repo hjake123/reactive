@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "ambientocclusion": false,
+  "render_type": "translucent",
+  "textures": {
+    "all": "reactive:block/pure_quartz_block",
+    "particle": "reactive:block/pure_quartz_block"
+  }
+}

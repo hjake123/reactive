@@ -13,8 +13,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SymbolBlockEntity extends BlockEntity {
 
-    private final int tick_counter = 0; // Used for counting active ticks. See tick().
-
     public Direction facing = Direction.DOWN;
     public Item symbol_item = Items.BARRIER;
 
