@@ -2,11 +2,8 @@ package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.PowerBearer;
-import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
-import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -26,13 +23,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
@@ -126,6 +122,21 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
                     crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 50, 400));
                     crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                }
+
+                // Active conduits give add either soul or warp, depending on the world.
+                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT)){
+                    Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT), BlockEntityType.CONDUIT);
+                    if(maybe_conduit.isPresent() && maybe_conduit.get().isActive()){
+                        if(WorldSpecificValues.CONDUIT_POWER.get(level) == 1){
+                            crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
+                            crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                        }else{
+                            crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 120, 140));
+                            crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                        }
+                    }
+
                 }
             }
         }
