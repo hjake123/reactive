@@ -7,6 +7,6 @@
     "item": "reactive:stardust"
   },
   "reagents": ["reactive:light"],
-  "width": 1500,
+  "min": 1000,
   "cost": 10
 }

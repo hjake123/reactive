@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:enchanted_book"
+  },
+  "product": {
+    "item": "minecraft:book"
+  }
+}

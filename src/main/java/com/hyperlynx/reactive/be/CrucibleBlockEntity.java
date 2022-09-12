@@ -289,7 +289,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     @Override
     public boolean expendPower(Power t, int amount) {
-        if(powers.isEmpty()){
+        if(powers.isEmpty() || !powers.containsKey(t)){
             return false;
         }
         int level = powers.get(t);

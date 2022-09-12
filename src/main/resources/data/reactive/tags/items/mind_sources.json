@@ -7,6 +7,7 @@
     "#forge:dusts/redstone",
     "#forge:dusts/prismarine",
     "#forge:enchanting_fuels",
-    "minecraft:crying_obsidian"
+    "minecraft:crying_obsidian",
+    "minecraft:enchanted_book"
   ]
 }

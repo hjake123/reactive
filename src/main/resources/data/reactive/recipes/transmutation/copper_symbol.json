@@ -7,6 +7,6 @@
     "item": "reactive:copper_symbol"
   },
   "reagents": ["reactive:caustic"],
-  "width": 1200,
+  "min": 500,
   "cost": 50
 }

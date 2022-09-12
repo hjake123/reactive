@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.recipes;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
@@ -23,6 +22,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public TransmuteRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
         ItemStack reactant = CraftingHelper.getItemStack(json.get("reactant").getAsJsonObject(), false);
         ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
+        JsonElement altp_maybe = json.get("alt_product");
         List<Power> reagents = new ArrayList<>();
         for(JsonElement j : json.get("reagents").getAsJsonArray()){
             RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
@@ -31,9 +31,9 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             else
                 System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
         }
-        int width = json.get("width").getAsInt();
+        int min = json.get("min").getAsInt();
         int cost = json.get("cost").getAsInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width, cost);
+        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
     }
 
     @Override
@@ -44,9 +44,9 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         while(buffer.isReadable()){
             reagents.add(buffer.readRegistryId());
         }
-        int width = buffer.readInt();
+        int min = buffer.readInt();
         int cost = buffer.readInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, width, cost);
+        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         for(Power p : recipe.reagents){
             buffer.writeRegistryId(Powers.POWER_SUPPLIER.get(), p);
         }
-        buffer.writeInt(recipe.window_width);
+        buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
     }
 

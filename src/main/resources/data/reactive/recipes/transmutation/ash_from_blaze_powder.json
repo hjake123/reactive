@@ -7,6 +7,6 @@
     "item": "reactive:ash"
   },
   "reagents": [],
-  "width": -1,
+  "min": -1,
   "cost": 0
 }

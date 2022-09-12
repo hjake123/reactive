@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,41 +23,30 @@ public class TransmuteRecipe implements Recipe<Container> {
     protected final ItemStack product;
     protected final List<Power> reagents;
     int cost;
-    // The distance between the minimum and maximum power levels to get the reaction to work. A value of -1 means that any amount will work.
-    int window_width;
+    int minimum;
 
-    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int window_width, int cost) {
+    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost) {
         this.id = id;
         this.group = group;
         this.reactant = reactant;
         this.product = product;
         this.reagents = reagents;
-        this.window_width = window_width;
+        this.minimum = min;
         this.cost = cost;
     }
 
     public boolean powerMet(PowerBearer bearer, Level level){
-        if(window_width == -1){
-            for(Power p : reagents){
-                if(bearer.getPowerLevel(p) == 0){
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        int min = WorldSpecificValue.get(level, id.getPath() + "_mincost", 1, CrucibleBlockEntity.CRUCIBLE_MAX_POWER - window_width);
-        int max = min + window_width;
-
-        System.err.println("[" + min + ", " + max + "]");
-
+        System.err.println("[" + minimum + "]");
         int power_level = 0;
-
+        boolean has_all_reagents = true;
         for(Power p : reagents) {
+            if(bearer.getPowerLevel(p) == 0){
+                has_all_reagents = false;
+                break;
+            }
             power_level += bearer.getPowerLevel(p);
         }
-
-        return power_level > min && power_level < max;
+        return has_all_reagents && power_level > minimum;
     }
 
     public ItemStack apply(ItemStack input, PowerBearer bearer, Level l) {
@@ -67,6 +57,7 @@ public class TransmuteRecipe implements Recipe<Container> {
                 bearer.expendPower(p, cost / reagents.size() * input.getCount());
             }
         }
+
         System.out.println("Max tfs is " + max_tfs + " with cost " + cost);
         ItemStack result = product.copy();
         result.setCount(Math.min(input.getCount(), max_tfs));
@@ -81,7 +72,7 @@ public class TransmuteRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(Container container, @NotNull Level level) {
         return container.getItem(0).is(reactant.getItem());
     }
 

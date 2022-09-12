@@ -1,12 +1,11 @@
 {
   "replace": false,
   "values": [
-    "#forge:rods/blaze",
     "#forge:gems/prismarine",
     "minecraft:phantom_membrane",
-    "minecraft:golden_apple",
     "minecraft:ghast_tear",
     "#forge:ender_pearls",
-    "minecraft:echo_shard"
+    "minecraft:echo_shard",
+    "minecraft:enchanted_book"
   ]
 }

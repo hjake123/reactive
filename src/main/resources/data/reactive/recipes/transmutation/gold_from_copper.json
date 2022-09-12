@@ -7,6 +7,6 @@
     "item": "minecraft:gold_ingot"
   },
   "reagents": ["reactive:blaze", "reactive:esoteric_y"],
-  "width": 500,
+  "min": 700,
   "cost": 50
 }
