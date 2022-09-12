@@ -1,5 +1,7 @@
 {
   "values": [
-    "reactive:crucible"
+    "reactive:crucible",
+    "reactive:blaze_rod",
+    "reactive:pure_quartz_block"
   ]
 }

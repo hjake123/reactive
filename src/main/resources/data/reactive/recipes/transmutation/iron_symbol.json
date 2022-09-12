@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:iron_ingot"
+  },
+  "product": {
+    "item": "reactive:iron_symbol"
+  },
+  "reagents": ["reactive:caustic"],
+  "width": 1000,
+  "cost": 50
+}

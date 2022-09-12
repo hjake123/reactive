@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "reactive:blaze_rod"
+        }
+      ],
+      "name": "blaze_rod",
+      "rolls": 1.0
+    }
+  ]
+}

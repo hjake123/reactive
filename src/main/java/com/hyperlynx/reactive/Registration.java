@@ -6,6 +6,8 @@ import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
+import com.hyperlynx.reactive.items.AlchemyScroll;
+import com.hyperlynx.reactive.items.AshItem;
 import com.hyperlynx.reactive.items.StardustItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
@@ -20,6 +22,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -106,9 +109,12 @@ public class Registration {
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> ASH = ITEMS.register("ash",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+            () -> new AshItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
             () -> new StardustItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> SCROLL = ITEMS.register("scroll",
+            () -> new AlchemyScroll(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
+                    .stacksTo(1).rarity(Rarity.RARE)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

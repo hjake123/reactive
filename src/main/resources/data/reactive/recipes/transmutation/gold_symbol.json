@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:gold_ingot"
+  },
+  "product": {
+    "item": "reactive:gold_symbol"
+  },
+  "reagents": ["reactive:caustic", "reactive:light"],
+  "width": 1100,
+  "cost": 50
+}

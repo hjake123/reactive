@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:copper_ingot"
+  },
+  "product": {
+    "item": "reactive:copper_symbol"
+  },
+  "reagents": ["reactive:caustic"],
+  "width": 1200,
+  "cost": 50
+}

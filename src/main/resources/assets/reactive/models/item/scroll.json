@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "render_type": "glint",
+  "textures": {
+    "layer0": "reactive:item/magic_paper"
+  }
+}
