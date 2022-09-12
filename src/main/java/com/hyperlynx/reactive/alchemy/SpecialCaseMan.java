@@ -1,14 +1,15 @@
 package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -42,6 +43,8 @@ public class SpecialCaseMan {
             explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
         if(e.getItem().is(Items.CARVED_PUMPKIN))
             pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
+        if(e.getItem().is(Items.WRITABLE_BOOK))
+            waterWriting(c, e);
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
@@ -109,6 +112,40 @@ public class SpecialCaseMan {
     private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
         l.explode(e, p.getX(), p.getY(), p.getZ(), 1.0F, Explosion.BlockInteraction.NONE);
         e.kill();
+    }
+
+    // Putting a writable book in a crucible with Mind will fill it with gibberish.
+    private static void waterWriting(CrucibleBlockEntity c, ItemEntity e){
+        if(c.getPowerLevel(Powers.MIND_POWER.get()) < WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "water_write_threshold",
+                WorldSpecificValue.get(e.level, "water_write_cost", 20, 50), 700)) {
+            return;
+        }
+
+        String CHAR_LIST = "abcdefhijklmnopqstuvwxyz, -;6'";
+
+        CompoundTag book_tag = e.getItem().getTag();
+        if(book_tag == null) {
+            e.getItem().addTagElement("pages", new ListTag());
+            book_tag = e.getItem().getTag();
+        }
+
+        ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
+        int pagecount = Math.max(c.getPowerLevel(Powers.MIND_POWER.get()) / 220, pages.size());
+        for(int i = 0; i < pagecount; i++){
+            StringBuilder gibberish = new StringBuilder();
+            for(int j = 0; j < 200; j++){
+                gibberish.append(CHAR_LIST.charAt(e.level.random.nextInt(CHAR_LIST.length())));
+            }
+            if(i < pages.size())
+                pages.set(i, StringTag.valueOf(gibberish.toString()));
+            else
+                pages.add(i, StringTag.valueOf(gibberish.toString()));
+        }
+
+        e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+        e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
+        c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get(e.level, "water_write_cost", 20, 50));
+        c.setDirty();
     }
 
     private static void soulEscape(CrucibleBlockEntity c){
