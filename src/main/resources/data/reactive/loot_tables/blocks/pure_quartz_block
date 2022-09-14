@@ -3,27 +3,13 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:match_tool",
-          "predicate": {
-            "enchantments": [
-              {
-                "enchantment": "minecraft:silk_touch",
-                "levels": {
-                  "min": 1
-                }
-              }
-            ]
-          }
-        }
-      ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "reactive:pure_quartz_block"
         }
       ],
+      "name": "pure_quartz_block",
       "rolls": 1.0
     }
   ]

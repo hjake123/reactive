@@ -5,7 +5,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
@@ -32,7 +31,7 @@ public class AlchemyScroll extends Item {
                 }
             }else{
                 context.getLevel().setBlock(context.getClickedPos(), Registration.CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-                context.getLevel().playSound((Player) null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
+                context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.8F);
             }
             context.getItemInHand().shrink(1);
