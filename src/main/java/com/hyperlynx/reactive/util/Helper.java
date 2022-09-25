@@ -1,16 +1,12 @@
 package com.hyperlynx.reactive.util;
 
-import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -30,12 +26,16 @@ public class Helper {
         return pLevel.clip(new ClipContext(vec3, vec31, pBlockMode, pFluidMode, pPlayer));
     }
 
-    public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency){
+    public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise){
         for(int i = 0; i < frequency; i++){
             double u = level.random.nextDouble();
             double x = (1-u) * x1 + u * x2;
             double y = (1-u) * y1 + u * y2;
             double z = (1-u) * z1 + u * z2;
+
+            x += (level.random.nextFloat()-0.5) * noise;
+            y += (level.random.nextFloat()-0.5) * noise;
+            z += (level.random.nextFloat()-0.5) * noise;
 
             if(level.isClientSide()) {
                 level.addParticle(opt, x, y, z, 0, 0, 0);

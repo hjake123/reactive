@@ -8,6 +8,7 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 // This class manages the world's reactions.
@@ -35,6 +36,9 @@ public class ReactionMan {
         BASE_POWER_LIST.add(Powers.MIND_POWER.get());
         BASE_POWER_LIST = WorldSpecificValue.shuffle(l, "power_list_order", BASE_POWER_LIST);
 
+        //TODO DEBUG PRINT
+        System.out.println(Arrays.toString(BASE_POWER_LIST.toArray()));
+
         // Add assimilation reactions.
         REACTIONS.add(new AssimilationReaction(l, "assimilationX"));
         REACTIONS.add(new CurseAssimilationReaction(l, "curse_assimilation"));
@@ -44,9 +48,9 @@ public class ReactionMan {
 
         // Add annihilation reactions for each 'counteracting' pair of powers.
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
-        REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3)));
-        REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4)));
-        REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)));
+        REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::formation));
+        REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4), ReactionEffects::sicklySmoke));
+        REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::discharge));
 
         // Add synthesis reactions for the three esoteric powers.
         REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
@@ -61,12 +65,8 @@ public class ReactionMan {
 
         // Add effect reactions to do crazy things.
         REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::vortex, Powers.CURSE_POWER.get()));
-        REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()));
         REACTIONS.add(new EffectReaction(l, "luminescence_effect", ReactionEffects::luminescence, Powers.LIGHT_POWER.get()));
-        REACTIONS.add(new EffectReaction(l, "smoke_bomb_effect", ReactionEffects::sicklySmoke));
-        REACTIONS.add(new EffectReaction(l, "discharge_effect_1", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new EffectReaction(l, "discharge_effect_2", ReactionEffects::discharge).setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new EffectReaction(l, "discharge_effect", ReactionEffects::discharge, 4).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         initialized = true;
         return REACTIONS;

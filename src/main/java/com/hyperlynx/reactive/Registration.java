@@ -1,23 +1,17 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.items.AlchemyScroll;
-import com.hyperlynx.reactive.items.AshItem;
 import com.hyperlynx.reactive.items.StardustItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,7 +22,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,14 +29,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.textures.ITextureAtlasSpriteLoader;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.*;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
@@ -108,13 +102,14 @@ public class Registration {
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> ASH = ITEMS.register("ash",
-            () -> new AshItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
             () -> new StardustItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SCROLL = ITEMS.register("scroll",
             () -> new AlchemyScroll(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .stacksTo(1).rarity(Rarity.RARE)));
+
+    // Register Power bottles.
+
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
@@ -137,11 +132,6 @@ public class Registration {
     // Helper method for BlockItem registration
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab tab) {
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
-    }
-
-    // Helper method for BlockItem registration without a tab
-    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
     // Helper method for Recipe Types.

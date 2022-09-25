@@ -81,7 +81,7 @@ public class SpecialCaseMan {
             e.kill();
             Helper.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
                     c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
-                    candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20);
+                    candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20, 0.01);
 
             for(int i = 0; i < 10; i++) {
                 ((ServerLevel) level).sendParticles(ParticleTypes.POOF,
@@ -162,7 +162,7 @@ public class SpecialCaseMan {
     private static void curseEscape(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
         AABB aoe = new AABB(c.getBlockPos());
-        aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
+        aoe = aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
         if(!c.getLevel().isClientSide()){
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for(LivingEntity e : nearby_ents){

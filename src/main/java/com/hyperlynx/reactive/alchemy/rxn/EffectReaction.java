@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,10 +13,10 @@ public class EffectReaction extends Reaction{
     protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
     int cost;
 
-    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function) {
-        super(l, alias, 4);
+    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, int numReagents) {
+        super(l, alias, numReagents);
         effectFunction = function;
-        cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
+        cost = WorldSpecificValue.get(l, alias+"cost", 10, 30);
         System.out.println(reagents + " - " + effectFunction.toString());
     }
 
@@ -33,9 +32,11 @@ public class EffectReaction extends Reaction{
     public void run(CrucibleBlockEntity crucible) {
         effectFunction.apply(crucible);
         for(Power p : reagents.keySet()){
-            crucible.expendPower(p, cost/reagents.size());
+            crucible.expendPower(p, (int) ((double) cost/reagents.size()) + 1);
             crucible.setDirty();
+            System.out.println(crucible.getPowerLevel(p));
         }
+
     }
 
     @Override

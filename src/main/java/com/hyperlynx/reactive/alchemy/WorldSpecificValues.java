@@ -15,4 +15,7 @@ public class WorldSpecificValues {
     // Determines which power Conduit Power breaks down into in the crucible.
     // 1: SOUL
     // 2: WARP
+
+    public final static PrimedWSV ANNIHILATION_THRESHOLD = new PrimedWSV("annihilation_threshold", 50, 200);
+    // Determines the minimum power balance for Annihilation reactions to occur.
 }
