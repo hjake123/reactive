@@ -18,4 +18,11 @@ public class WorldSpecificValues {
 
     public final static PrimedWSV ANNIHILATION_THRESHOLD = new PrimedWSV("annihilation_threshold", 50, 200);
     // Determines the minimum power balance for Annihilation reactions to occur.
+
+    public final static PrimedWSV BEST_SACRIFICE = new PrimedWSV("best_sacrifice", 1, 4);
+    // Determines which of these categories gives the most Vital Power when sacrificed.
+    // 1: Livestock
+    // 2: Villagers/Illagers
+    // 3: Piglin/Hoglin
+    // 4: Spiders and Creepers
 }

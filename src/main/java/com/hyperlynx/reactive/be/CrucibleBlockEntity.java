@@ -17,7 +17,13 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
+import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +32,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -42,6 +52,7 @@ import java.util.*;
         - Check for special cases along the way.
  */
 
+@Mod.EventBusSubscriber
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
 
@@ -58,6 +69,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
+        MinecraftForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }
 
@@ -235,6 +247,44 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public void beHitByLightning(){
         electricCharge = 50;
         setDirty();
+    }
+
+    // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
+    @SubscribeEvent
+    public void onDeath(LivingDeathEvent event) {
+        if(!event.getEntity().level.isClientSide){
+            if(event.getEntity().blockPosition().distSqr(this.worldPosition) < ConfigMan.COMMON.crucibleRange.get()
+                    && !areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+                sacrificeCount++;
+                if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
+                    addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(event.getEntity().level, "undead_curse_strength", 30, 300));
+                    return;
+                }
+                int power;
+                int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
+                if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
+                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+                } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
+                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+                } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
+                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+                } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
+                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+                } else {
+                    power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
+                }
+                if(areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_ROSE)){
+                    power *= 2;
+                }
+                addPower(Powers.VITAL_POWER.get(), power);
+                if(sacrificeCount > WorldSpecificValue.get(event.getEntity().level, "max_sacrifices", 6, 7)){
+                    addPower(Powers.CURSE_POWER.get(), 666);
+                    event.getEntity().level.playSound(null, this.getBlockPos(), SoundEvents.AMBIENT_NETHER_WASTES_MOOD, SoundSource.BLOCKS, 0.4F, 0.65F+(event.getEntity().level.getRandom().nextFloat()/5));
+                    sacrificeCount = 0;
+                }
+                setDirty();
+            }
+        }
     }
 
     @Override
