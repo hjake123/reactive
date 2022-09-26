@@ -43,6 +43,8 @@ public class ReactionMan {
         REACTIONS.add(new AssimilationReaction(l, "assimilationX"));
         REACTIONS.add(new CurseAssimilationReaction(l, "curse_assimilation"));
         REACTIONS.add(new AssimilationReaction(l, "verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
+        REACTIONS.add(new AssimilationReaction(l, "verdant_kill", Powers.ACID_POWER.get(), Powers.VERDANT_POWER.get()));
+        REACTIONS.add(new AssimilationReaction(l, "vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
         REACTIONS.add(new AssimilationReaction(l, "verdant_burn", Powers.BLAZE_POWER.get(), Powers.VERDANT_POWER.get()));
         REACTIONS.add(new AssimilationReaction(l, "body_consume", Powers.BODY_POWER.get(), Powers.VITAL_POWER.get()));
 

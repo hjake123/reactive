@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "forge:ingots/iron"
+    },
+    "a": {
+      "tag": "reactive:acid_bottle"
+    },
+    "l": {
+      "tag": "minecraft:lightning_rod"
+    }
+  },
+  "pattern": [
+    "l l",
+    "iii",
+    "aia"
+  ],
+  "result": {
+    "item": "reactive:volt_cell"
+  }
+}

@@ -19,5 +19,6 @@
   "block.reactive.iron_symbol": "Iron Symbol",
   "block.reactive.gold_symbol": "Gold Symbol",
   "block.reactive.blaze_rod": "Mounted Blaze Rod",
-  "block.reactive.pure_quartz_block": "Pure Quartz Block"
+  "block.reactive.pure_quartz_block": "Pure Quartz Block",
+  "block.reactive.volt_cell": "Volt Cell"
 }

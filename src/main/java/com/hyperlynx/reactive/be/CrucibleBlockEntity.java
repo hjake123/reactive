@@ -65,7 +65,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public boolean recentExplosion = false; // Used for the EXPLOSION Reaction Stimulus. Set by nearby explosions.
-    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus. Increased by nearby deaths.
+    public int sacrificeCount = 0; // Used for the sacrifice curse side effect.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -78,9 +78,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         crucible.tick_counter++;
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
-            if(crucible.electricCharge > 0){
+
+            // Deal with electricity.
+            if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
+                crucible.electricCharge = 20;
+            }else if(crucible.electricCharge > 0){
                 crucible.electricCharge--;
             }
+
             if (!level.isClientSide()){
                 // Become empty when there's no water.
                 if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
@@ -255,11 +260,13 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(!event.getEntity().level.isClientSide){
             if(event.getEntity().blockPosition().distSqr(this.worldPosition) < ConfigMan.COMMON.crucibleRange.get()
                     && !areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
-                sacrificeCount++;
+
                 if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
                     addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(event.getEntity().level, "undead_curse_strength", 30, 300));
                     return;
                 }
+                sacrificeCount++;
+
                 int power;
                 int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
                 if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
