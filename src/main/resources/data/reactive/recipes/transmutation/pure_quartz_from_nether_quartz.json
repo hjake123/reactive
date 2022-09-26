@@ -7,6 +7,6 @@
     "item": "reactive:quartz"
   },
   "reagents": ["reactive:caustic"],
-  "min": -1,
-  "cost": 5
+  "min": 500,
+  "cost": 15
 }

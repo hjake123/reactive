@@ -107,9 +107,32 @@ public class Registration {
     public static final RegistryObject<Item> SCROLL = ITEMS.register("scroll",
             () -> new AlchemyScroll(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register Power bottles.
+    public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+    public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
 
+//    // Bottles of mixed powers with and without reactions.
+//    public static final RegistryObject<Item> VOLATILE_BOTTLE = ITEMS.register("volatile_bottle",
+//            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+//    public static final RegistryObject<Item> STABLE_BOTTLE = ITEMS.register("stable_bottle",
+//            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

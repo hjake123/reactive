@@ -33,18 +33,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+// It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
 public class SpecialCaseMan {
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         if(e.getItem().is(Tags.Items.ENDER_PEARLS))
-            enderPearlDissolve(c.getLevel(), c.getBlockPos(), e);
-        if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
+            enderPearlDissolve(c.getLevel(), c.getBlockPos(), e, c);
+        else if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
             explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
-        if(e.getItem().is(Items.CARVED_PUMPKIN))
+        else if(e.getItem().is(Items.CARVED_PUMPKIN))
             pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
-        if(e.getItem().is(Items.WRITABLE_BOOK))
+        else if(e.getItem().is(Items.WRITABLE_BOOK))
             waterWriting(c, e);
+
+        tryEmptyPowerBottle(e, c);
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
@@ -55,6 +58,23 @@ public class SpecialCaseMan {
             curseEscape(c);
         if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "blaze_escape_threshold", 20, 100))
             blazeEscape(c);
+    }
+
+    private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
+        final int BOTTLE_RETURN = 950;
+        boolean changed = false;
+        for(Power p : Powers.POWER_SUPPLIER.get()){
+            if(p.matchesBottle(e.getItem())){
+                c.addPower(p, BOTTLE_RETURN);
+                e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                changed = true;
+            }
+        }
+
+        if(changed){
+            c.setDirty();
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(c.getLevel().getRandom().nextFloat()/5));
+        }
     }
 
     // Dissolving a carved pumpkin might have many effects.
@@ -93,8 +113,13 @@ public class SpecialCaseMan {
         }
     }
 
-    // Dissolving an Ender Pearl teleports you onto the crucible.
-    private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e){
+    // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.
+    private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
+        float chance = (float) c.getPowerLevel(Powers.WARP_POWER.get()) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
+        if(l.random.nextFloat() > chance){
+            return;
+        }
+
         for(int i = 0; i < 32; ++i) {
             ((ServerLevel) l).sendParticles(ParticleTypes.PORTAL, e.getX(), e.getY() + l.random.nextDouble() * 2.0, e.getZ(), 1, l.random.nextGaussian(), 0.0, l.random.nextGaussian(), 0.0);
         }
@@ -102,7 +127,7 @@ public class SpecialCaseMan {
         UUID thrower = e.getThrower();
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower);
-            if(player != null){
+            if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
                 player.teleportTo(p.getX()+0.5, p.getY() + 0.85, p.getZ() + 0.5);
             }
         }

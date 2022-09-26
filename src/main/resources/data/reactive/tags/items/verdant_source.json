@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "#forge:crops",
     "minecraft:moss_block",
     "minecraft:moss_carpet",
     "minecraft:grass",

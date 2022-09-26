@@ -78,12 +78,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                 }else{
                     // Gather Power from the surroundings.
-                    gatherPower(level, crucible);
+                    if(state.getValue(CrucibleBlock.FULL)){
+                        gatherPower(level, crucible);
 
-                    // Check for new items to dissolve into Power or transmute.
-                    if (processItemsInside(level, pos, state, crucible)) {
-                        crucible.setDirty(level, pos, state);
-                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                        // Check for new items to dissolve into Power or transmute.
+                        if (processItemsInside(level, pos, state, crucible)) {
+                            crucible.setDirty(level, pos, state);
+                            level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                        }
                     }
                 }
             }

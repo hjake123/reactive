@@ -1,21 +1,21 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.util.Helper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ParticleUtils;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Random;
 
 public class CrucibleBlock extends Block implements EntityBlock {
 
@@ -85,11 +84,47 @@ public class CrucibleBlock extends Block implements EntityBlock {
 
         if(state.getValue(FULL)){
             BlockEntity ent = level.getBlockEntity(pos);
-            if(ent instanceof CrucibleBlockEntity){
+            if(ent instanceof CrucibleBlockEntity c){
                 // Clear the crucible with shift-right-click.
                 if(player.isShiftKeyDown()){
                     level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
                     level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+                }
+
+                if(player.getItemInHand(hand).is(Items.GLASS_BOTTLE)){
+                    int amount = player.getItemInHand(hand).getCount();
+                    amount = Math.min(amount, 3);
+                    for(int i = 0; i < amount; i++) {
+                        if (c.getTotalPowerLevel() == 0) {
+                            player.addItem(Items.POTION.getDefaultInstance());
+                        } else {
+                            ItemStack potion = Items.POTION.getDefaultInstance();
+                            if (c.getPowerLevel(Powers.BODY_POWER.get()) > 10) {
+                                PotionUtils.setPotion(potion, Potions.THICK);
+                            } else if (c.getPowerLevel(Powers.ACID_POWER.get()) > 50) {
+                                PotionUtils.setPotion(potion, Potions.AWKWARD);
+                            } else {
+                                PotionUtils.setPotion(potion, Potions.MUNDANE);
+                            }
+                            player.addItem(potion);
+                        }
+                    }
+                    player.getItemInHand(hand).shrink(amount);
+                    level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1F, 1F);
+                    level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+                }
+
+                // Collect bottles of mundane Powers.
+                if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
+                    for(Power p : c.getPowerMap().keySet()){
+                        if(c.getPowerLevel(p) == c.getTotalPowerLevel() && c.getPowerLevel(p) > 1000){
+                            c.expendPower(p, 1000);
+                            player.addItem(p.getBottle());
+                            player.getItemInHand(hand).shrink(1);
+                            level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
+                        }
+                    }
+                    c.setDirty();
                 }
                 return InteractionResult.SUCCESS;
             }

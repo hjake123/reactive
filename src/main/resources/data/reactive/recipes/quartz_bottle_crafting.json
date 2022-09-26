@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "q": {
+      "item": "reactive:quartz"
+    }
+  },
+  "pattern": [
+    "q q",
+    " q "
+  ],
+  "result": {
+    "item": "reactive:quartz_bottle"
+  }
+}

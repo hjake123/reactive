@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "reactive:item/ash"
+    "layer0": "reactive:item/warp_bottle"
   }
 }
