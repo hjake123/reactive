@@ -91,6 +91,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
                     SpecialCaseMan.checkEmptySpecialCases(crucible);
                     crucible.expendPower();
+                    crucible.sacrificeCount = 0;
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                 }else{
@@ -280,15 +281,22 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 } else {
                     power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
                 }
+
                 if(areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_ROSE)){
                     power *= 2;
+                    if(sacrificeCount > WorldSpecificValue.get(event.getEntity().level, "max_sacrifices", 4, 9)){
+                        addPower(Powers.CURSE_POWER.get(), 666);
+                        event.getEntity().level.playSound(null, this.getBlockPos(), SoundEvents.AMBIENT_NETHER_WASTES_MOOD, SoundSource.BLOCKS, 0.4F, 0.65F+(event.getEntity().level.getRandom().nextFloat()/5));
+                        sacrificeCount = 0;
+                    }
                 }
-                addPower(Powers.VITAL_POWER.get(), power);
-                if(sacrificeCount > WorldSpecificValue.get(event.getEntity().level, "max_sacrifices", 6, 7)){
-                    addPower(Powers.CURSE_POWER.get(), 666);
-                    event.getEntity().level.playSound(null, this.getBlockPos(), SoundEvents.AMBIENT_NETHER_WASTES_MOOD, SoundSource.BLOCKS, 0.4F, 0.65F+(event.getEntity().level.getRandom().nextFloat()/5));
-                    sacrificeCount = 0;
+
+                if(getPowerLevel(Powers.CURSE_POWER.get()) > 10){
+                    addPower(Powers.CURSE_POWER.get(), power);
+                }else{
+                    addPower(Powers.VITAL_POWER.get(), power);
                 }
+
                 setDirty();
             }
         }
