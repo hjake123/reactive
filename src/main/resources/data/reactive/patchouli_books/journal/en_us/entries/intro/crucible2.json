@@ -1,0 +1,21 @@
+{
+  "name": "Using the Crucible",
+  "icon": "reactive:crucible",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Power Crucible is the Essential Tool of Alchemy. Its unique capability to convert matter into its raw Alchemical Power enables easy access to these powers.($br2)Additionally, it acts as an ideal medium for Transmutations (read on)."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:crucible",
+      "text": "Using the Crucible is simple. The Device must be placed In-World. Then, the Device may be filled with Water by hand. Due to the Warded Nature of its sides, Automated Piping regrettably cannot access its interiors.$(br2)$(o)You can empty it with a shift right click."
+    },
+    {
+      "type": "patchouli:text",
+      "item": "reactive:crucible",
+      "text": "When Items that bear Power are added to the Crucible, their Power is extracted. Usually, this leads to the Existential Collapse of the item in questiom, but in certain cases a byproduct is created. $(br2)The presence of Power in the Crucible can be noted by the tone of the water inside. If Particles begin to escape or surround the crucible, this is evidence of a Reaction taking place!"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Making the Crucible",
+  "icon": "reactive:scroll",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(o)Transcribe the following with glowing ink mixed with redstone onto a clean paper.$(br2)Then, simply apply the result to a Cauldron.$(br2)Detailed instructions are beyond the page turn."
+    },
+    {
+      "type": "patchouli:image",
+      "images": ["reactive:textures/gui/scroll_glyph.png"]
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:alchemy_scroll_crafting",
+      "text": "$(o)A simple crafting operation will suffice. Do not fear: the risk of damaging or losing this journal in the process is slim to none."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)The meaning of the glyphs is not important. Know only that the scroll's power is not derived from its writing, but in equal parts from the intrinsic properties of the ink, and from you, the writer. By taking the effort to transcribe these words, you agree to everything that will happen from now on."
+    }
+  ]
+}

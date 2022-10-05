@@ -59,4 +59,9 @@ public class SynthesisReaction extends Reaction{
             reagents.put(ReactionMan.BASE_POWER_LIST.get(3), amount);
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " - synthesis reaction";
+    }
 }

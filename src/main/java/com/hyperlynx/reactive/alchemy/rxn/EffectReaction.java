@@ -17,30 +17,39 @@ public class EffectReaction extends Reaction{
         super(l, alias, numReagents);
         effectFunction = function;
         cost = WorldSpecificValue.get(l, alias+"cost", 10, 30);
-        System.out.println(reagents + " - " + effectFunction.toString());
     }
 
     public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
-        super(l, alias, 3);
+        super(l, alias, 2);
         effectFunction = function;
         cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
         reagents.put(required_power, WorldSpecificValue.get(l, alias+"required", 1, 400));
-        System.out.println(reagents + " - " + effectFunction.toString());
+    }
+
+    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, int num_additionals) {
+        super(l, alias, num_additionals);
+        effectFunction = function;
+        cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
+        reagents.put(required_power, WorldSpecificValue.get(l, alias+"required", 1, 400));
     }
 
     @Override
     public void run(CrucibleBlockEntity crucible) {
-        effectFunction.apply(crucible);
+        if(effectFunction != null)
+            effectFunction.apply(crucible);
         for(Power p : reagents.keySet()){
             crucible.expendPower(p, (int) ((double) cost/reagents.size()) + 1);
             crucible.setDirty();
-            System.out.println(crucible.getPowerLevel(p));
         }
-
     }
 
     @Override
     public void render(ClientLevel l, CrucibleBlockEntity crucible) {
         effectFunction.apply(crucible);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " - effect reaction";
     }
 }

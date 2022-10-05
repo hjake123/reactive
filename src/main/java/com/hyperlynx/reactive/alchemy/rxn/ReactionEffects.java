@@ -21,33 +21,18 @@ import java.util.List;
 public class ReactionEffects {
 
     // TODO: a lot of reaction effects
+
+    // Will attract entities towards the gold symbol.
     public static CrucibleBlockEntity vortex(CrucibleBlockEntity c){
         if(!c.getLevel().isClientSide)
             System.out.println("*sounds of spiraling*");
         return c;
     }
 
+    // Creates various items or blocks depending on the surroundings.
     public static CrucibleBlockEntity formation(CrucibleBlockEntity c){
         if(!c.getLevel().isClientSide)
             System.out.println("Gogograhgrah!");
-        return c;
-    }
-
-    public static CrucibleBlockEntity luminescence(CrucibleBlockEntity c){
-        if(c.getLevel() == null) return c;
-        AABB aoe = new AABB(c.getBlockPos());
-        aoe.inflate(3); // Inflate the AOE to be 5x the size of the crucible.
-        if(!c.getLevel().isClientSide()){
-            List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
-            for(LivingEntity e : nearby_ents){
-                e.addEffect(new MobEffectInstance(MobEffects.GLOWING, 500, 1));
-                e.hurt(DamageSource.MAGIC, 1);
-            }
-        }
-        Helper.drawParticleLine(c.getLevel(), ParticleTypes.END_ROD,
-                c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5, c.getBlockPos().getZ() + 0.5,
-                c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 30.5, c.getBlockPos().getZ() + 0.5,
-                2, 0);
         return c;
     }
 
@@ -55,7 +40,7 @@ public class ReactionEffects {
         if(!c.getLevel().isClientSide) {
             if(c.getLevel().random.nextFloat() < 0.4) {
                 AABB aoe = new AABB(c.getBlockPos());
-                aoe.inflate(3); // Inflate the AOE to be 5x the size of the crucible.
+                aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for(LivingEntity e : nearby_ents){
                     e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 1));
@@ -63,6 +48,22 @@ public class ReactionEffects {
             }
         }else {
             Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.LARGE_SMOKE, c.getBlockPos(), 0.3F);
+        }
+        return c;
+    }
+
+    public static CrucibleBlockEntity weakeningSmoke(CrucibleBlockEntity c){
+        if(!c.getLevel().isClientSide) {
+            if(c.getLevel().random.nextFloat() < 0.4) {
+                AABB aoe = new AABB(c.getBlockPos());
+                aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
+                List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+                for(LivingEntity e : nearby_ents){
+                    e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
+                }
+            }
+        }else {
+            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.ASH, c.getBlockPos(), 0.3F);
         }
         return c;
     }
@@ -101,4 +102,13 @@ public class ReactionEffects {
         return c;
     }
 
+    // Makes nearby entities not fall down. The levitation core can only be crafted while this reaction is occuring.
+    public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
+        return c;
+    }
+
+    // Causes nearby bonemeal-ables to be fertilized occasionally.
+    public static CrucibleBlockEntity growth(CrucibleBlockEntity c) {
+        return c;
+    }
 }

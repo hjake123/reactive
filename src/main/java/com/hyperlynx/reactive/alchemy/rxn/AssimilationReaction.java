@@ -55,4 +55,9 @@ public class AssimilationReaction extends Reaction{
     public void render(ClientLevel l, CrucibleBlockEntity crucible) {
         //Helper.drawParticlesCrucibleTop(l, ParticleTypes.ENCHANTED_HIT, crucible.getBlockPos(), 0.2F);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " - assimilation reaction";
+    }
 }

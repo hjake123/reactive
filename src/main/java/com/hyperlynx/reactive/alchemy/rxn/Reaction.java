@@ -32,7 +32,7 @@ public abstract class Reaction {
         int i = 0;
 
         while(reagents.size() < reagent_count){
-            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, Powers.POWER_SUPPLIER.get().getValues());
+            Power chosen_power = WorldSpecificValue.getFromCollection(l, alias+"r"+i, ReactionMan.BASE_POWER_LIST);
             int min = WorldSpecificValue.get(l, alias+"r"+i, 1, 400);
             reagents.put(chosen_power, min);
             i++;

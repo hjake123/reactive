@@ -39,7 +39,7 @@ public class SpecialCaseMan {
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         if(e.getItem().is(Tags.Items.ENDER_PEARLS))
-            enderPearlDissolve(c.getLevel(), c.getBlockPos(), e, c);
+            enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
         else if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
             explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
         else if(e.getItem().is(Items.CARVED_PUMPKIN))

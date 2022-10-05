@@ -15,10 +15,12 @@
   "item.reactive.body_bottle": "Bottle of Stock",
   "item.reactive.unnamed": "Unnamed Substance",
   "item.reactive.stardust": "Star Dust",
+  "item.reactive.journal": "Accumulated Journal of Alchemical Knowledge",
   "block.reactive.copper_symbol": "Copper Symbol",
   "block.reactive.iron_symbol": "Iron Symbol",
   "block.reactive.gold_symbol": "Gold Symbol",
   "block.reactive.blaze_rod": "Mounted Blaze Rod",
   "block.reactive.pure_quartz_block": "Pure Quartz Block",
-  "block.reactive.volt_cell": "Volt Cell"
+  "block.reactive.volt_cell": "Volt Cell",
+  "enchantment.reactive.alchemy": "Secret Power"
 }

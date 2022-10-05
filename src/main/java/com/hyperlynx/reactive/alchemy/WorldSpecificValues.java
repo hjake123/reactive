@@ -25,4 +25,8 @@ public class WorldSpecificValues {
     // 2: Villagers/Illagers
     // 3: Piglin/Hoglin
     // 4: Spiders and Creepers
+
+    public final static PrimedWSV EFFECT_ORDER = new PrimedWSV("effect_order", 1, 3);
+    // Determines which of three orders the Effect Reactions require, which decides which esoteric each requires.
+
 }

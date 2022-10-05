@@ -29,7 +29,6 @@ public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
     @Override
     public void render(SymbolBlockEntity symbol, float partialTicks, PoseStack matrix, MultiBufferSource mbs, int light, int overlay) {
         matrix.pushPose();
-
         if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.UP)){
             matrix.translate(0.5, 0.02, 0.5);
             matrix.mulPose(Vector3f.XP.rotationDegrees(90f));

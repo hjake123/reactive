@@ -1,0 +1,27 @@
+{
+  "name": "Introduction",
+  "icon": "minecraft:paper",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Alchemy, more formally Reactive Alchemy, is the exploration of the various Alchemical Powers latent throughout the world.$(br2)These Powers are responsible for many of the bizarre effects and apparitions that we observe in our daily lives, from the magic of Enchantment to the spontaneous movement of the Endermen."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The true Nature of these Powers is as a raw ontological force that interacts with material based on their essential properties. Outside of special containers, they quickly degrade into various particles and effects. As such, they can only bind to particular objects."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "However, throughout ages, it has been thought that these Powers might be released and captured by another material. Indeed, an aqueous solution has proven suitable for this purpose due to its reflexivity and indefinite capacity. In order to successfully transfer Power into solution, a Ritual Setup is required. First, inscribe the symbol of"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(italic)I've taken the liberty of cutting him off there. Read the next entry for an updated procedure."
+    },
+    {
+      "type": "patchouli:image",
+      "images": ["reactive:textures/gui/rune_circle.png"]
+    }
+  ]
+}

@@ -6,13 +6,14 @@ import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
-import com.hyperlynx.reactive.items.AlchemyScroll;
-import com.hyperlynx.reactive.items.StardustItem;
+import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,7 +41,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import vazkii.patchouli.api.PatchouliAPI;
 
+import java.util.Objects;
+
+@SuppressWarnings("unused")
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
@@ -62,7 +69,6 @@ public class Registration {
     }
 
     // ----------------------- REGISTRATION ------------------------
-
     // Register the all-important Crucible.
     public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
             () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
@@ -119,7 +125,7 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new BlazeBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
@@ -131,7 +137,7 @@ public class Registration {
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new LightBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
 
 //    // Bottles of mixed powers with and without reactions.
 //    public static final RegistryObject<Item> VOLATILE_BOTTLE = ITEMS.register("volatile_bottle",
@@ -153,7 +159,6 @@ public class Registration {
 
     public static final RegistryObject<RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
     public static final RegistryObject<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
-
 
     // ----------------------- METHODS ------------------------
 

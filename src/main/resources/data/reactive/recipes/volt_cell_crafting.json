@@ -5,10 +5,10 @@
       "tag": "forge:ingots/iron"
     },
     "a": {
-      "tag": "reactive:acid_bottle"
+      "item": "reactive:acid_bottle"
     },
     "l": {
-      "tag": "minecraft:lightning_rod"
+      "item": "minecraft:lightning_rod"
     }
   },
   "pattern": [
