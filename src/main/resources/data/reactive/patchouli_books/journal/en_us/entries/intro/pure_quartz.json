@@ -1,0 +1,24 @@
+{
+  "name": "Pure Quartz",
+  "icon": "reactive:quartz",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:quartz",
+      "text": "Pure Quartz is a raw, clear version of the Quartz mineral. It is the byproduct of releasing the Power latent to $(item)Amethyst Shards$(0) or $(item)Echo Shards$(0)."
+    },
+    {
+      "type": "reactive:tf",
+      "recipe_type": "Power Release",
+      "reactant": "minecraft:amethyst_shard",
+      "product": "reactive:quartz",
+      "text": "$(o)Amethyst goes in, Pure Quartz comes out.$()$(br2)It may also be Manufactured through use of an $(#9d1e2d)Acidic Substance$(0) and $(item)Nether Quartz$(0)."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:pure_quartz_block_crafting",
+      "text": "Pure Quartz can be made into a remarkably transparent and resilient form of glass. There are likely other uses for it as well due to its inert alchemical properties."
+    }
+  ]
+}

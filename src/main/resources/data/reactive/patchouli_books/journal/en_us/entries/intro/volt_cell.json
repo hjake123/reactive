@@ -1,0 +1,17 @@
+{
+  "name": "Volt Cell",
+  "icon": "reactive:volt_cell",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:volt_cell",
+      "text": "The Volt Cell is a device capable of producing $(thing)electric charge$(0) using a chemical effect within bottles of $(#9d1e2d)Acid$(0)."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:volt_cell_crafting",
+      "text": "Aside from damaging Creatures that pass on top of it, placing it below a Crucible charges it with $(thing)Electricity$(0). I wonder what additional kinds of reactions might be possible with such Stimulus?"
+    }
+  ]
+}

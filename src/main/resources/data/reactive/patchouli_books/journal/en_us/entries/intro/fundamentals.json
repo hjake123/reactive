@@ -1,27 +1,37 @@
 {
   "name": "Introduction",
-  "icon": "minecraft:paper",
+  "icon": "reactive:scroll",
   "category": "reactive:intro",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Alchemy, more formally Reactive Alchemy, is the exploration of the various Alchemical Powers latent throughout the world.$(br2)These Powers are responsible for many of the bizarre effects and apparitions that we observe in our daily lives, from the magic of Enchantment to the spontaneous movement of the Endermen."
+      "text": "Alchemy, more formally Reactive Alchemy, is the exploration of the various $(l:reactive:intro/powers)Alchemical Powers$() latent throughout the world.$(br2)These Powers are responsible for many of the bizarre effects and apparitions that we observe in our daily lives, from the magic of Enchantment to the spontaneous movement of the Endermen."
     },
     {
       "type": "patchouli:text",
-      "text": "The true Nature of these Powers is as a raw ontological force that interacts with material based on their essential properties. Outside of special containers, they quickly degrade into various particles and effects. As such, they can only bind to particular objects."
+      "text": "The true Nature of these $(l:reactive:intro/powers)Powers$() is as a raw ontological force that interacts with material based on their essential properties. Outside of special containers, they quickly degrade into various particles and effects. As such, they can only bind to particular objects."
     },
     {
       "type": "patchouli:text",
-      "text": "However, throughout ages, it has been thought that these Powers might be released and captured by another material. Indeed, an aqueous solution has proven suitable for this purpose due to its reflexivity and indefinite capacity. In order to successfully transfer Power into solution, a Ritual Setup is required. First, inscribe the symbol of"
+      "text": "However, throughout ages, it has been thought that these $(l:reactive:intro/powers)Powers$() might be released and captured by another material. Indeed, an aqueous solution has proven suitable for this purpose due to its reflexivity and indefinite capacity. In order to successfully transfer $(l:reactive:intro/powers)Power$() into solution, a Ritual Setup is required. First, inscribe the symbol of"
     },
     {
       "type": "patchouli:text",
-      "text": "$(italic)I've taken the liberty of cutting him off there. Read the next entry for an updated procedure."
+      "text": "$(o)I've taken the liberty of cutting him off there. Here is an updated procedure: $(br2)Transcribe the following, using glowing ink mixed with redstone, onto a clean paper.$(br2)Then, simply apply the result to a Cauldron."
     },
     {
       "type": "patchouli:image",
-      "images": ["reactive:textures/gui/rune_circle.png"]
+      "images": ["reactive:textures/gui/scroll_glyph.png"]
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:alchemy_scroll_crafting",
+      "text": "$(o)A simple crafting operation will suffice. Do not fear: the risk of damaging or losing this journal in the process is slim to none."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)The meaning of the glyphs is not important. Know only that the scroll's power is not derived from its writing, but in equal parts from the intrinsic properties of the ink, and from you. By taking the effort to transcribe these words, you bring about everything that will happen from now on."
     }
   ]
 }

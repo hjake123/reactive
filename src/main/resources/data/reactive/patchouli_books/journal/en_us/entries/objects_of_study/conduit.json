@@ -1,0 +1,15 @@
+{
+  "name": "The Power of the Sea",
+  "icon": "minecraft:heart_of_the_sea",
+  "category": "reactive:objects_of_study",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "I have heard tell of a powerful Artifact encountered on the High Seas. Indeed, my colleagues describe it as an Orb containing Immense Powers. I, regrettably, have not earned one myself, but surely such an Item would be a marvelous Boon to any Alchemist's profession."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Addendum to the prior: I have been able to inspect this so-called \"Heart of the Sea\". Indeed, it seems as inert as a piece of Lapis! Some Magic Artifact it turned out to be. If there truly were a way to $(4)unleash its hidden power$(0), it is cryptic and elusive. Perhaps in the future the $(4)same procedure to gather Power from Blaze Rods$(0) -- whatever Marvelous Thing that turns out to be -- will work here as well."
+    }
+  ]
+}

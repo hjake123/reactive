@@ -1,24 +1,24 @@
 {
-  "name": "Making the Crucible",
-  "icon": "reactive:scroll",
+  "name": "Crucible",
+  "icon": "reactive:crucible",
   "category": "reactive:intro",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)Transcribe the following with glowing ink mixed with redstone onto a clean paper.$(br2)Then, simply apply the result to a Cauldron.$(br2)Detailed instructions are beyond the page turn."
+      "text": "The $(item)Power Crucible$() is the $(thing)Essential Tool of Alchemy$(). Its unique capability to convert matter into its raw $(thing)Alchemical Power$() enables easy access to these powers.$(br2)Additionally, it acts as an ideal medium for $(l:reactive:intro/transmutations)Transmutations$()."
     },
     {
-      "type": "patchouli:image",
-      "images": ["reactive:textures/gui/scroll_glyph.png"]
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "reactive:alchemy_scroll_crafting",
-      "text": "$(o)A simple crafting operation will suffice. Do not fear: the risk of damaging or losing this journal in the process is slim to none."
+      "type": "patchouli:spotlight",
+      "item": "reactive:crucible",
+      "text": "Using $(item)the Crucible$() is simple. The $(item)Device$() must be placed $(thing)In-World$(). Then, the $(item)Device$() may be filled with Water by hand. Due to the Warded Nature of its sides, $(thing)Automated Piping$() regrettably cannot access its interiors.$(br2)$(o)You can empty it with a shift right click."
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)The meaning of the glyphs is not important. Know only that the scroll's power is not derived from its writing, but in equal parts from the intrinsic properties of the ink, and from you, the writer. By taking the effort to transcribe these words, you agree to everything that will happen from now on."
+      "text": "When Items that bear $(thing)Power$() are added to the $(item)Crucible$(), their $(thing)Power$() is extracted. Usually, this leads to the $(thing)Existential Collapse$() of the item in question, but in certain cases a byproduct is created. $(br2)The presence of $(thing)Power$() in the $(item)Crucible$() can be noted by the tone of the water inside. If Particles begin to escape or surround the crucible, this is evidence of a $(thing)Reaction$() taking place!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)Certain Powers, while within the crucible, may interact with the world around it. This is especially true in the presence of certain theological symbols. Artifacts with sufficient spiritual power may even allow the Crucible to accumulate power. $(br2)$(o)$(0)Do not be deceived, however; this is a process easily explained by metallurgic studies."
     }
   ]
 }
