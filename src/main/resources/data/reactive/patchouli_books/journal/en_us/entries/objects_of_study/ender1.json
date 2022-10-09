@@ -2,6 +2,7 @@
   "name": "Ender Teleportation",
   "icon": "minecraft:ender_pearl",
   "category": "reactive:objects_of_study",
+  "advancement": "reactive:dissolve_tp_advancement",
   "pages": [
     {
       "type": "patchouli:text",
@@ -9,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "However! I have discovered another method for activating this Mysterious Abiliy; the Dissolution of a Pearl in a Crucible! Indeed, even a pearl haphazardly placed inside will shatter upon depositiing its Warp, and in doing so, bring the one who last touched it directly atop the Crucble!"
+      "text": "However! I have discovered another method for activating this Mysterious Abiliy; the Dissolution of a Pearl in a Crucible! Indeed, even a pearl haphazardly placed inside will shatter upon depositiing its Warp, and in doing so, bring the one who last touched it directly atop the Crucible!"
     },
     {
       "type": "patchouli:text",

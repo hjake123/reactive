@@ -1,7 +1,8 @@
 {
-  "name": "Ender Accumulation",
+  "name": "Ender Vortex",
   "icon": "minecraft:ender_pearl",
   "category": "reactive:objects_of_study",
+  "advancement": "reactive:dissolve_tp_advancement",
   "pages": [
     {
       "type": "patchouli:text",

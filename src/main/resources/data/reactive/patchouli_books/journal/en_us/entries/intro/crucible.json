@@ -20,5 +20,8 @@
       "type": "patchouli:text",
       "text": "$(1)Certain Powers, while within the crucible, may interact with the world around it. This is especially true in the presence of certain theological symbols. Artifacts with sufficient spiritual power may even allow the Crucible to accumulate power. $(br2)$(o)$(0)Do not be deceived, however; this is a process easily explained by metallurgic studies."
     }
-  ]
+  ],
+  "extra_recipe_mappings": {
+      "reactive:crucible": 1
+  }
 }

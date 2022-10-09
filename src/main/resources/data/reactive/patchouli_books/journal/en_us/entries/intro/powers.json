@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)These Powers might $(thing)react$(0) with each other. Reactions make themselves evident by changing the color of the solution and releasing particles into the air. Sometimes, more violent effects arise as well -- though nothing that damages the surroundings. $(br2)The most common reaction is $(thing)annihilation$(0), wherein Powers destroy each other, releasing smoke or energy into the surroundings."
+      "text": "$(o)These Powers might $(thing)react$(0) with each other. Reactions make themselves evident by changing the color of the solution and releasing particles into the air. Sometimes, more violent effects arise as well -- though nothing that damages the surroundings. $(br2)The most common reaction is $(thing)annihilation$(0), wherein Powers destroy each other, releasing smoke or energy into the air around them."
     },
     {
       "type": "patchouli:text",

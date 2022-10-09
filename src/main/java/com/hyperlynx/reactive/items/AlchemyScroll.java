@@ -24,14 +24,6 @@ public class AlchemyScroll extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack stack, Level level, Player player) {
-        super.onCraftedBy(stack, level, player);
-        if(!PatchouliAPI.get().isStub()){
-            player.addItem(PatchouliAPI.get().getBookStack(Objects.requireNonNull(ResourceLocation.tryParse("reactive:journal"))));
-        }
-    }
-
-    @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().getBlockState(context.getClickedPos()).is(Blocks.CAULDRON)){
             if(context.getLevel().isClientSide){

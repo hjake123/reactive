@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.progression.TeleportedCriterion;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -11,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -127,6 +129,8 @@ public class SpecialCaseMan {
         UUID thrower = e.getThrower();
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower);
+            if(!l.isClientSide)
+                Registration.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
             if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
                 player.teleportTo(p.getX()+0.5, p.getY() + 0.85, p.getZ() + 0.5);
             }

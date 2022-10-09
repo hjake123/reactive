@@ -1,0 +1,21 @@
+{
+  "name": "Star Dust",
+  "icon": "reactive:stardust",
+  "category": "reactive:results",
+  "pages": [
+    {
+      "type": "reactive:tf",
+      "recipe_type": "Transmutation",
+      "reactant": "minecraft:glowstone_dust",
+      "product": "reactive:stardust",
+      "text": "This Mystical Substance is our Profession's response to the Ceaseless Inquiries for an Intangible Light Source. By bolstering Glowstone with the Power of Light and Mind, we create a truly unique Powder. Truly a noble Discovery!"
+    },{
+      "type": "reactive:tf",
+      "recipe_type": "Transmutation",
+      "reactant": "minecraft:end_rod",
+      "product": "reactive:stardust",
+      "text": "$(o)For much less Power, it can be made using an End Rod as well. This variant recipe doesn't even use Mind power."
+    }
+
+  ]
+}

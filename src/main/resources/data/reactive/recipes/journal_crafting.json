@@ -1,0 +1,15 @@
+{
+  "type": "patchouli:shapeless_book_recipe",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "book": "reactive:journal"
+}

@@ -1,15 +1,19 @@
 {
   "name": "Spirit Summoning",
-  "icon": "minecraft:paper",
+  "icon": "minecraft:white_candle",
   "category": "reactive:results",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(1)It should be possible to summon forth spirits using a Crucible. While one might imagine that simply releasing Soul would acomplish this, the truth seems, as ever to be somewhat more involved."
+      "text": "$(1)It should be possible to summon forth spirits using a Crucible. While one might imagine that simply releasing Soul would acomplish this, the truth seems, as ever to be somewhat more involved. $(br2)It is my belief that certain spiritually important objects would aid such a process:"
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)It is my belief that certain spiritally important objects would aid such a process: $(l1)Skulls $(li)Candles $(li)Paintings $(li)Brewing Stands"
+      "text": "$(1)$(li)Skulls $(li)Candles $(li)Paintings $(li)Brewing Stands $(br2)Additionally, the manner of the spirit summoned might be random; if so, it might be changed for the better with Mind Power."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)The Cursed Power, naturally, would almost guarantee the summoning of a malicious spirit."
     }
     ]
 }

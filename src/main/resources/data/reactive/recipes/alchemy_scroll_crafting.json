@@ -1,21 +1,20 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "p": {
       "item": "minecraft:paper"
     },
-    {
+    "g": {
       "item": "minecraft:glow_ink_sac"
     },
-    {
-      "item": "minecraft:redstone"
-    },
-    {
-      "item": "patchouli:guide_book",
-      "nbt": {
-        "patchouli:book": "reactive:journal"
-      }
+    "r": {
+      "tag": "forge:dusts/redstone"
     }
+  },
+  "pattern": [
+    "rg ",
+    " pg",
+    " rg"
   ],
   "result": {
     "item": "reactive:scroll"

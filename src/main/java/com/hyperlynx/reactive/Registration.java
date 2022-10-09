@@ -7,10 +7,12 @@ import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.items.*;
+import com.hyperlynx.reactive.progression.TeleportedCriterion;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -120,6 +122,8 @@ public class Registration {
                     .stacksTo(1).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register Power bottles.
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
@@ -160,6 +164,9 @@ public class Registration {
     public static final RegistryObject<RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
     public static final RegistryObject<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
 
+    //Register advancement criteria for the book
+    public static final TeleportedCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new TeleportedCriterion();
+
     // ----------------------- METHODS ------------------------
 
     // Helper method for BlockItem registration
@@ -189,6 +196,7 @@ public class Registration {
         ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
+        evt.enqueueWork(() -> CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
     }
 
     @SubscribeEvent

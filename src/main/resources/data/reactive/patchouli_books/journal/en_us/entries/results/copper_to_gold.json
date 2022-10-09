@@ -1,0 +1,14 @@
+{
+  "name": "Copper Into Gold",
+  "icon": "minecraft:gold_ingot",
+  "category": "reactive:results",
+  "pages": [
+    {
+      "type": "reactive:tf",
+      "recipe_type": "Transmutation",
+      "reactant": "minecraft:copper_ingot",
+      "product": "minecraft:gold_ingot",
+      "text": "What is nobler for an Alchemist than the ability to convert Basic Metals into Gold? Indeed, such a feat is possible! You will know you are close when the Crucible contains a yellow-green Power, unique to itself. Add Blaze to complete the necessary Solution."
+    }
+  ]
+}
