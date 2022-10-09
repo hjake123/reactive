@@ -1,0 +1,11 @@
+{
+  "name": "Ender Pearl Power",
+  "icon": "minecraft:ender_pearl",
+  "category": "reactive:objects_of_study",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Ender Pearls seem a perfect source of the Warp Power, but given their unstable nature, I have calculated that the process will likely have some $(4)unintended side-effects$(0). Hm... well, only one way to find out, I suppose!"
+    }
+  ]
+}

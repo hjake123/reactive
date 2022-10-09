@@ -1,0 +1,27 @@
+{
+  "name": "Protoplasm",
+  "icon": "reactive:protoplasm",
+  "category": "reactive:results",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:protoplasm",
+      "text": "$(o)Protoplasm is an ethereal substance that doesn't abide by some of the laws of physics. In its item form, it floats weightlessly in the air."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:flying_boat_crafting"
+      "text": "$(o)By applying this substance to a boat, it will gain the ability to float through the air, at least until the coating wears off."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:flying_arrow_crafting"
+      "text": "$(o)Coating an arrow in it will produce arrows that do not fall with distance."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:flying_lead_crafting"
+      "text": "$(o)Finally, attaching sacs of this substance to a lether vest allows us to achieve true Levitation! While wearing the vest, a person will not be subject to gravity. However, once airborn, they cannot change their height nor vertial momentum."
+    }
+  ]
+}

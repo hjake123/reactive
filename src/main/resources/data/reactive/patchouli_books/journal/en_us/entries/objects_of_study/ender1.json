@@ -1,0 +1,19 @@
+{
+  "name": "Ender Teleportation",
+  "icon": "minecraft:ender_pearl",
+  "category": "reactive:objects_of_study",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "I have just experienced something most unexpected. The fact that Ender Pearls convey the capacity of teleportation is nothing new; indeed, it is perhaps their best known prperty. However, one must usually fling them with great force to achieve this Effect."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "However! I have discovered another method for activating this Mysterious Abiliy; the Dissolution of a Pearl in a Crucible! Indeed, even a pearl haphazardly placed inside will shatter upon depositiing its Warp, and in doing so, bring the one who last touched it directly atop the Crucble!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "This opens some very interesting possibilities on its own, but I believe further experimentation is in order. For instance; what happens when a Pearl is dissolved $(4)by mechanical hands$(0)?"
+    }
+  ]
+}

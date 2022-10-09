@@ -1,0 +1,15 @@
+{
+  "name": "Spirit Summoning",
+  "icon": "minecraft:paper",
+  "category": "reactive:results",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(1)It should be possible to summon forth spirits using a Crucible. While one might imagine that simply releasing Soul would acomplish this, the truth seems, as ever to be somewhat more involved."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(1)It is my belief that certain spiritally important objects would aid such a process: $(l1)Skulls $(li)Candles $(li)Paintings $(li)Brewing Stands"
+    }
+    ]
+}
