@@ -3,12 +3,16 @@ package com.hyperlynx.reactive.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.List;
 
 public class Helper {
     // Taken from getPOVPlayerLook()
@@ -82,4 +86,12 @@ public class Helper {
             }
         }
     }
+
+    public static void triggerForNearbyPlayers(ServerLevel l, FlagCriterion crit, BlockPos center, int range){
+        List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
+        for(Player p : nearby_players) {
+            crit.trigger((ServerPlayer) p);
+        }
+    }
+
 }

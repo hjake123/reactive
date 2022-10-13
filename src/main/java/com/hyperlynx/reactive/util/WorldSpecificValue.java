@@ -1,15 +1,12 @@
 package com.hyperlynx.reactive.util;
 
-import com.hyperlynx.reactive.alchemy.Power;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.registries.RegistryObject;
-import org.checkerframework.checker.units.qual.A;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 /*
@@ -36,8 +33,27 @@ public class WorldSpecificValue {
         return rand.nextInt(max-min + 1) + min;
     }
 
-    public static boolean getBool(ServerLevel l, String alias){
-        return get(l, alias, 0, 1) == 1;
+    public static int get(BlockGetter b, String alias, int min, int max){
+        long world_seed = b.getBlockState(BlockPos.ZERO).getSeed(BlockPos.ZERO); // Does this actually work...?
+        System.out.println(world_seed);
+        Random rand = new Random(world_seed + alias.hashCode());
+        return rand.nextInt(max-min + 1) + min;
+    }
+
+    public static boolean getBool(ServerLevel l, String alias, float chance){
+        if(l == null){
+            return false;
+        }
+        long world_seed = l.getSeed();
+        Random rand = new Random(world_seed + alias.hashCode());
+        return rand.nextFloat() < chance;
+    }
+
+    public static boolean getBool(BlockGetter b, String alias, float chance){
+        long world_seed = b.getBlockState(BlockPos.ZERO).getSeed(BlockPos.ZERO);
+        System.out.println(world_seed);
+        Random rand = new Random(world_seed + alias.hashCode());
+        return rand.nextFloat() < chance;
     }
 
     public static <T> T getFromCollection(Level l, String alias, Collection<T> c) {

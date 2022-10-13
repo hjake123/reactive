@@ -13,7 +13,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)The Cursed Power, naturally, would almost guarantee the summoning of a malicious spirit."
+      "text": "$(o)A $(l:intro/curse)certain other power$(/l), naturally, would almost guarantee the summoning of a malicious spirit."
     }
     ]
 }

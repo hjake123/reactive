@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.progression.TeleportedCriterion;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -21,7 +20,11 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
@@ -56,14 +59,14 @@ public class SpecialCaseMan {
         if(c.getLevel() == null) return;
         if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "soul_escape_threshold", 300, 600))
             soulEscape(c);
-        if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 666)
+        if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 665)
             curseEscape(c);
         if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "blaze_escape_threshold", 20, 100))
             blazeEscape(c);
     }
 
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
-        final int BOTTLE_RETURN = 950;
+        final int BOTTLE_RETURN = WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "bottle_return", 850, 950);
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){
@@ -193,11 +196,27 @@ public class SpecialCaseMan {
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
         if(!c.getLevel().isClientSide()){
+            if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 1400){
+                Monster m;
+                if(c.getLevel().getRandom().nextFloat() < 0.35){
+                    m = new Skeleton(EntityType.SKELETON, c.getLevel());
+                }else{
+                   m = new Zombie(EntityType.ZOMBIE, c.getLevel());
+                }
+                m.setSilent(true);
+                m.setPos(aoe.getCenter().add(WorldSpecificValue.get(c.getLevel(), "monster_summon_x", -5, 5), 1, WorldSpecificValue.get(c.getLevel(), "monster_summon_z", -5, 5)));
+                c.getLevel().addFreshEntity(m);
+            }
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for(LivingEntity e : nearby_ents){
+                if(e.getMobType().equals(MobType.UNDEAD))
+                    continue;
                 e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 300, 1));
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 1));
                 e.hurt(DamageSource.MAGIC, 10);
+                if(e instanceof Player){
+                    Registration.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
+                }
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1, 1);
         }

@@ -3,10 +3,10 @@ package com.hyperlynx.reactive.util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.AABB;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 // This class provides a way to check the contents of the surrounding area with a cache.
 // It should be instantiated by classes that use it.
@@ -42,11 +42,7 @@ public class AreaMemory {
     // Scan for a compatible block. This is expensive! If there is none, returns null.
     private BlockPos findAndAddNearest(Level l, int radius, Block target){
         Optional<BlockPos> found_maybe = BlockPos.findClosestMatch(hostPos, radius, radius, blockPos -> l.getBlockState(blockPos).is(target));
-
-        if(!found_maybe.isPresent())
-            return null;
-
-        return found_maybe.get();
+        return found_maybe.orElse(null);
     }
 
 //    // Positions are ordered based on their distance from the host, closer first.

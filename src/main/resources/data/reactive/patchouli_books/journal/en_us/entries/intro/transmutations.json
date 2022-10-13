@@ -1,6 +1,6 @@
 {
   "name": "Transmutations",
-  "icon": "reactive:textures/item/ash.png",
+  "icon": "reactive:stardust",
   "category": "reactive:intro",
   "pages": [
     {

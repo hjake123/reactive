@@ -9,18 +9,22 @@ import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -32,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,8 +69,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
-    public boolean recentExplosion = false; // Used for the EXPLOSION Reaction Stimulus. Set by nearby explosions.
-    public int sacrificeCount = 0; // Used for the sacrifice curse side effect.
+    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -81,7 +85,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
             // Deal with electricity.
             if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
-                crucible.electricCharge = 20;
+                crucible.electricCharge = 15;
             }else if(crucible.electricCharge > 0){
                 crucible.electricCharge--;
             }
@@ -156,9 +160,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                         }
                     }
-
                 }
             }
+        }
+        // Slowly gather Light when under skylight.
+        if(Objects.requireNonNull(crucible.getLevel()).canSeeSky(crucible.getBlockPos()) && crucible.getLevel().isDay()){
+            crucible.addPower(Powers.LIGHT_POWER.get(), 1);
         }
     }
 
@@ -258,8 +265,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(!event.getEntity().level.isClientSide){
-            if(event.getEntity().blockPosition().distSqr(this.worldPosition) < ConfigMan.COMMON.crucibleRange.get()
+        if(this.getBlockState().getValue(CrucibleBlock.FULL) && !event.getEntity().level.isClientSide && !Objects.requireNonNull(this.getLevel()).isClientSide){
+            double dist = Math.sqrt(Math.pow(event.getEntity().getX() - this.getBlockPos().getX(), 2)
+                    + Math.pow(event.getEntity().getY() - this.getBlockPos().getY(), 2)
+                    + Math.pow(event.getEntity().getZ() - this.getBlockPos().getZ(), 2));
+            if(dist < ConfigMan.COMMON.crucibleRange.get()
                     && !areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
 
                 if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
@@ -267,7 +277,26 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     return;
                 }
                 sacrificeCount++;
+                Helper.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, Registration.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
 
+                double x = event.getEntity().getX();
+                double y = event.getEntity().getY();
+                double z = event.getEntity().getZ();
+
+                // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
+                if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get(getLevel()) && getPowerLevel(Powers.MIND_POWER.get()) > 0
+                && !(event.getEntity() instanceof Phantom)){
+                    Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
+                    p.setPos(new Vec3(x, y+2, z));
+                    getLevel().addFreshEntity(p);
+                    Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y+2, z, 20, 0.1);
+                }else{
+                    Helper.drawParticleLine(level, ParticleTypes.CLOUD,
+                            getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.4, getBlockPos().getZ() + 0.5,
+                            x, y, z, 15, 0.4);
+                }
+
+                // Add Vital due to sacrifices.
                 int power;
                 int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
                 if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
@@ -281,22 +310,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 } else {
                     power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
                 }
-
-                if(areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_ROSE)){
-                    power *= 2;
-                    if(sacrificeCount > WorldSpecificValue.get(event.getEntity().level, "max_sacrifices", 4, 9)){
-                        addPower(Powers.CURSE_POWER.get(), 666);
-                        event.getEntity().level.playSound(null, this.getBlockPos(), SoundEvents.AMBIENT_NETHER_WASTES_MOOD, SoundSource.BLOCKS, 0.4F, 0.65F+(event.getEntity().level.getRandom().nextFloat()/5));
-                        sacrificeCount = 0;
-                    }
-                }
-
-                if(getPowerLevel(Powers.CURSE_POWER.get()) > 10){
-                    addPower(Powers.CURSE_POWER.get(), power);
-                }else{
-                    addPower(Powers.VITAL_POWER.get(), power);
-                }
-
+                addPower(Powers.VITAL_POWER.get(), power);
                 setDirty();
             }
         }
@@ -378,7 +392,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public void expendAnyPowerExcept(Power immune_power, int amount) {
         boolean expended = false;
         for(Power p : powers.keySet()){
-            if(p != immune_power){
+            if(p != immune_power && p != Powers.CURSE_POWER.get()){
                 expended = expendPower(p, amount);
             }
             if(expended) return;

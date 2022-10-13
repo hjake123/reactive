@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "item": "reactive:body_bottle"
+    },
+    "s": {
+      "item": "minecraft:sugar"
+    },
+    "u": {
+      "item": "minecraft:bowl"
+    }
+  },
+  "pattern": [
+    "usu",
+    "ubu",
+    "uuu"
+  ],
+  "result": {
+    "item": "reactive:soup",
+    "count": 7
+  }
+}

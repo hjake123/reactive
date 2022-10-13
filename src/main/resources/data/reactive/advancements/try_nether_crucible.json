@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:try_nether_crucible_criterion"
+    }
+  }
+}

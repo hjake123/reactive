@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:be_cursed_criterion"
+    }
+  }
+}

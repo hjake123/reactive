@@ -62,8 +62,7 @@ public class ReactionMan {
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
         // Add effect reactions to do crazy things.
-
-        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1));
+        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get()));
 
         int order = WorldSpecificValues.EFFECT_ORDER.get(l);
         switch (order) {

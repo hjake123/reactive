@@ -9,8 +9,9 @@
     {
       "type": "patchouli:item",
       "item": "#reactant",
-      "x": 20,
-      "y": 15
+      "x": 15,
+      "y": 15,
+      "framed": true
     },
     {
       "type": "patchouli:item",

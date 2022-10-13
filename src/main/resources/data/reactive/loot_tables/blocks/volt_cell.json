@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "reactive:volt_cell"
+        }
+      ],
+      "name": "volt_cell",
+      "rolls": 1.0
+    }
+  ]
+}

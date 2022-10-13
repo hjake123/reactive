@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These behave much like Powers, but they are unlikely to be involved in reactions. One such substance is $(#9d1e2d)Acid$(0), which is needed for many basic alchemical purposes. $(#9d1e2d)Acid$(0) can be obtained most easily from $(item)Gunpowder$(0) and $(item)Nether Wart$(0), but other sources do exist."
+      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These behave much like Powers, but they are unlikely to be involved in reactions. One such substance is $(#9d1e2d)Acid$(0), which is needed for many basic alchemical purposes. $(#9d1e2d)Acid$(0) can be obtained from $(item)Spider Eyes$(0), but other sources do exist."
     },
     {
       "type": "patchouli:text",
@@ -19,11 +19,6 @@
     {
       "type": "patchouli:text",
       "text":"$(o)It is natural to question which items source which powers. The answer to this is unknown in general, but typically the associations are obvious. A touch of critical thinking and note taking will go a long way here. $(br2)Note that $(4)anything that vanishes when put in the Crucible$(0) does so because a Power was released from it."
-    },
-    {
-      "type": "patchouli:image",
-      "images": ["reactive:textures/gui/rune_circle.png"],
-      "text": "$(o)Supposedly, this diagram relates to the six basic Powers in some way."
     }
   ]
 }

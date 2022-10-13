@@ -2,6 +2,7 @@
   "values": [
     "reactive:crucible",
     "reactive:blaze_rod",
-    "reactive:pure_quartz_block"
+    "reactive:pure_quartz_block",
+    "reactive:volt_cell"
   ]
 }

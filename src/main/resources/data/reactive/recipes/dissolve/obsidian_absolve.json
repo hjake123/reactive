@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:crying_obsidian"
+  },
+  "product": {
+    "item": "minecraft:obsidian"
+  }
+}

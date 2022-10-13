@@ -20,7 +20,7 @@ public class EffectReaction extends Reaction{
     }
 
     public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
-        super(l, alias, 2);
+        super(l, alias, 1);
         effectFunction = function;
         cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
         reagents.put(required_power, WorldSpecificValue.get(l, alias+"required", 1, 400));

@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "see_synthesis": {
+      "trigger": "reactive:see_synthesis_criterion"
+    }
+  }
+}

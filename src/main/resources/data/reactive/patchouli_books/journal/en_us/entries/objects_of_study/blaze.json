@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Of the Essential Powers, Four are Trivial, if not in the acquisition of their materials, at least in their emplacement in the Crucible. Yet the power of the Blaze Rod still eludes us. $(br2)It is clear that Blaze is one of those that forms a vertex on the Essential Diagram, but given its adverse reaction to water, capturing that power seems impossible..."
+      "text": "Of the Essential Powers, Four are Trivial, if not in the acquisition of their materials, at least in their emplacement in the Crucible. Yet the power of the Blaze Rod still eludes us. $(br2)It is clear that Blaze is Important, but given its adverse reaction to water, capturing that power seems impossible..."
     },
     {
       "type": "patchouli:crafting",

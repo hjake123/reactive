@@ -70,7 +70,7 @@ public class ReactionEffects {
 
     public static CrucibleBlockEntity discharge(CrucibleBlockEntity c){
         c.electricCharge += 5;
-        if(c.electricCharge > 20){
+        if(c.electricCharge > 21){
             BlockPos potential_rod = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Blocks.LIGHTNING_ROD);
             if(potential_rod != null){
                 if(!c.getLevel().isClientSide) {
@@ -102,7 +102,7 @@ public class ReactionEffects {
         return c;
     }
 
-    // Makes nearby entities not fall down. The levitation core can only be crafted while this reaction is occuring.
+    // Makes nearby entities not fall down. Protoplasm can only be crafted while this reaction is occuring.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
         return c;
     }

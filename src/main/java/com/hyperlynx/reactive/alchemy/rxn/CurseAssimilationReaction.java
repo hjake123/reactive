@@ -1,9 +1,9 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Helper;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
@@ -13,7 +13,7 @@ public class CurseAssimilationReaction extends Reaction{
 
     public CurseAssimilationReaction(Level l, String alias){
         super(l, alias, 0);
-        rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
+        rate = WorldSpecificValues.CURSE_RATE.get(l);
     }
 
     @Override

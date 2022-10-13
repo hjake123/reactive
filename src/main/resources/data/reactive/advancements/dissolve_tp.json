@@ -1,7 +1,7 @@
 {
   "criteria": {
     "get_dissolve_teleported": {
-      "trigger": "reactive:teleport_criterion"
+      "trigger": "reactive:dissolve_tp_criterion"
     }
   }
 }

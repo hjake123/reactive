@@ -3,29 +3,32 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+
+import java.util.Objects;
 
 public class SynthesisReaction extends Reaction{
     Power resultPower;
     int rate;
 
-    public SynthesisReaction(Level l, String alias) {
-        super(l, alias, 2);
-        rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
-        resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Powers.POWERS.getEntries()).get();
-        correctOpposingReagents();
-    }
-
-    public SynthesisReaction(Level l, String alias, Power resultPower) {
-        super(l, alias, 2);
-        rate = WorldSpecificValue.get(l, alias+"rate", 20, 50);
-        this.resultPower = resultPower;
-        correctOpposingReagents();
-    }
+//    public SynthesisReaction(Level l, String alias) {
+//        super(l, alias, 2);
+//        rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
+//        resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Powers.POWERS.getEntries()).get();
+//        correctOpposingReagents();
+//    }
+//
+//    public SynthesisReaction(Level l, String alias, Power resultPower) {
+//        super(l, alias, 2);
+//        rate = WorldSpecificValue.get(l, alias+"rate", 20, 50);
+//        this.resultPower = resultPower;
+//        correctOpposingReagents();
+//    }
 
     public SynthesisReaction(Level l, String alias, Power resultPower, Power reagent1, Power reagent2) {
         super(l, alias, reagent1, reagent2);
@@ -39,6 +42,8 @@ public class SynthesisReaction extends Reaction{
             crucible.expendPower(p, (int) Math.ceil(rate/(double) reagents.size()));
         }
         crucible.addPower(resultPower, rate);
+        if(!Objects.requireNonNull(crucible.getLevel()).isClientSide)
+            Helper.triggerForNearbyPlayers((ServerLevel) crucible.getLevel(), Registration.SEE_SYNTHESIS_TRIGGER, crucible.getBlockPos(), 8);
     }
 
     @Override

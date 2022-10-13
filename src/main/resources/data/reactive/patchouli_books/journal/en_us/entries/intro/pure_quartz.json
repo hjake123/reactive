@@ -13,7 +13,14 @@
       "recipe_type": "Power Release",
       "reactant": "minecraft:amethyst_shard",
       "product": "reactive:quartz",
-      "text": "$(o)Amethyst goes in, Pure Quartz comes out.$()$(br2)It may also be Manufactured through use of an $(#9d1e2d)Acidic Substance$(0) and $(item)Nether Quartz$(0)."
+      "text": "$(o)Amethyst goes in, Pure Quartz comes out."
+    },
+    {
+      "type": "reactive:tf",
+      "recipe_type": "Transmutation",
+      "reactant": "minecraft:quartz",
+      "product": "reactive:quartz",
+      "text": "It may also be Manufactured through use of an $(#9d1e2d)Acidic Substance$(0) and $(item)Nether Quartz$(0)."
     },
     {
       "type": "patchouli:crafting",

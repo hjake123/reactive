@@ -16,7 +16,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Waiting for Phantoms to appear naturally is a pain. Let me offer an alternative. There is a Power unlike the others, a dark Power which assimilates any other. While Mind is being consumed by it, any death near the Crucible will bring a Phantom about."
+      "text": "$(o)Waiting for Phantoms to appear naturally is a pain. Let me offer an alternative. There is a Power unlike the others, a $(l:intro/curse)dark Power$(/l). While Mind is being consumed by it, any death near the Crucible will bring a Phantom about."
     }
   ]
 }

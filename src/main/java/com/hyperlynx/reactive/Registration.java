@@ -7,7 +7,7 @@ import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.items.*;
-import com.hyperlynx.reactive.progression.TeleportedCriterion;
+import com.hyperlynx.reactive.util.FlagCriterion;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -15,16 +15,11 @@ import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -43,9 +38,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import vazkii.patchouli.api.PatchouliAPI;
-
-import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Registration {
@@ -124,6 +116,9 @@ public class Registration {
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
+            () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64)
+                    .food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
 
     // Register Power bottles.
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
@@ -139,15 +134,9 @@ public class Registration {
     public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new BodyBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
-            () -> new LightBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
-
-//    // Bottles of mixed powers with and without reactions.
-//    public static final RegistryObject<Item> VOLATILE_BOTTLE = ITEMS.register("volatile_bottle",
-//            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-//    public static final RegistryObject<Item> STABLE_BOTTLE = ITEMS.register("stable_bottle",
-//            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
@@ -165,7 +154,13 @@ public class Registration {
     public static final RegistryObject<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
 
     //Register advancement criteria for the book
-    public static final TeleportedCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new TeleportedCriterion();
+    public static final FlagCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
+    public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
+    public static final FlagCriterion BE_CURSED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
+    public static final FlagCriterion TRY_NETHER_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
+    public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"));
+    public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
+
 
     // ----------------------- METHODS ------------------------
 
@@ -185,7 +180,6 @@ public class Registration {
     }
 
     // Various event handlers to set up different items.
-
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
         // Add custom particles.
@@ -197,6 +191,11 @@ public class Registration {
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         evt.enqueueWork(() -> CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(BE_CURSED_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(TRY_NETHER_CRUCIBLE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(TRY_LAVA_CRUCIBLE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
     }
 
     @SubscribeEvent

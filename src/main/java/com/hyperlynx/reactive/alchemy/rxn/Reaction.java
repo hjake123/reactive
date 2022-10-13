@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -66,9 +65,7 @@ public abstract class Reaction {
             return c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
         }else if(stimulus == Stimulus.ELECTRIC){
             return c.electricCharge > 0;
-        }else if(stimulus == Stimulus.EXPLOSION){
-            return c.recentExplosion; // TODO: set recent explosion when in an explosion.
-        }else if(stimulus == Stimulus.SACRIFICE){ // TODO: sacrifices.
+        }else if(stimulus == Stimulus.SACRIFICE){
             return c.sacrificeCount >= WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), reagents.toString()+"_sacrifice_count", 1, 3);
         }else{
             return true;
@@ -84,7 +81,6 @@ public abstract class Reaction {
         GOLD_SYMBOL,
         ELECTRIC,
         SACRIFICE,
-        EXPLOSION,
         END
     }
 

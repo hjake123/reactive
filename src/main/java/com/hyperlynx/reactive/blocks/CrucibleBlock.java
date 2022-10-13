@@ -4,7 +4,9 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.util.Helper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -73,13 +76,27 @@ public class CrucibleBlock extends Block implements EntityBlock {
             return InteractionResult.SUCCESS;
         }
         if(player.getItemInHand(hand).is(Items.WATER_BUCKET) && !state.getValue(FULL)){
-            level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
-            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
-            if(player instanceof ServerPlayer) {
+            if(level.dimensionType().ultraWarm()){
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
+                for(int i = 0; i < 5; i++)
+                    Helper.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
+                Registration.TRY_NETHER_CRUCIBLE_TRIGGER.trigger((ServerPlayer)player);
+            }else{
+                level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
+                level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
+            }
+            if(player instanceof ServerPlayer){
                 if(((ServerPlayer) player).gameMode.isSurvival()){
                     player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
                 }
             }
+        }else if(player.getItemInHand(hand).is(Items.LAVA_BUCKET) && !state.getValue(FULL)){
+            level.playSound(null, pos, SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 0.5F, 1.0F);
+            level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 1.0F);
+            for(int i = 0; i < 5; i++)
+                Helper.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
+            level.setBlock(pos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
+            Registration.TRY_LAVA_CRUCIBLE_TRIGGER.trigger((ServerPlayer)player);
         }
 
         if(state.getValue(FULL)){

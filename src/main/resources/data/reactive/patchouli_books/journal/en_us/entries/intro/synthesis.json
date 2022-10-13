@@ -1,0 +1,16 @@
+{
+  "name": "Synthesis",
+  "icon": "minecraft:paper",
+  "category": "reactive:intro",
+  "advancement": "reactive:see_synthesis",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Using $(thing)Electrical Stimulation$(0), it is possible to Synthesize certain pairs of Adjacent Essential Powers together. $(br2)I call the results $(3)Esoteric Powers$(0). Who knows what properties these elusive Powers might bring about?"
+    },
+    {
+      "type": "patchouli:image",
+      "images": ["reactive:textures/gui/rune_circle.png"]
+    }
+  ]
+}
