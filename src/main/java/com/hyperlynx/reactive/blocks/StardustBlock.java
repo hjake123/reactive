@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -37,8 +37,8 @@ public class StardustBlock extends Block {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) { // TODO: custom particle
-        level.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
+        level.addParticle(Registration.STARDUST_PARTICLE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
 
     @Override
@@ -56,14 +56,14 @@ public class StardustBlock extends Block {
     }
 
     @Override
-    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) { // TODO: custom particle
-        for(int i = 0; i < 5; i++){
-            level.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
+        for(int i = 0; i < 7; i++){
+            level.addParticle(Registration.STARDUST_PARTICLE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
         }
     }
 
     @Override
     public Item asItem() {
-        return super.asItem();
+        return Registration.STARDUST_ITEM.get();
     }
 }

@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
+import com.hyperlynx.reactive.fx.StardustParticle;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.util.FlagCriterion;
@@ -13,9 +14,10 @@ import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
@@ -23,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -94,7 +97,7 @@ public class Registration {
     public static final RegistryObject<Item> BLAZE_ROD_ITEM = fromBlock(BLAZE_ROD, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> STARDUST = BLOCKS.register("stardust",
-            () -> new StardustBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).lightLevel((BlockState s) -> 15)));
+            () -> new StardustBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).lightLevel((BlockState s) -> 15).sound(SoundType.WOOL)));
 
     public static final RegistryObject<Block> PURE_QUARTZ_BLOCK = BLOCKS.register("pure_quartz_block",
             () -> new PureQuartzBlock(BlockBehaviour.Properties.copy(Blocks.QUARTZ_BLOCK)));
@@ -138,6 +141,11 @@ public class Registration {
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+
+    // Register particles
+    public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
+    public static final RegistryObject<ParticleType<SimpleParticleType>> STARDUST_PARTICLE_TYPE = PARTICLES.register("stardust",
+            () -> STARDUST_PARTICLE);
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
@@ -183,7 +191,7 @@ public class Registration {
     // Various event handlers to set up different items.
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
-        // Add custom particles.
+        Minecraft.getInstance().particleEngine.register(STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
     }
 
     @SubscribeEvent

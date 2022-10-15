@@ -137,6 +137,9 @@ public class SpecialCaseMan {
             if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
                 player.teleportTo(p.getX()+0.5, p.getY() + 0.85, p.getZ() + 0.5);
             }
+            e.kill();
+        }else{
+            // TODO: Summon a distortion.
         }
     }
 
