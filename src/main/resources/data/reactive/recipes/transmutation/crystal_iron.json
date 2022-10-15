@@ -4,9 +4,9 @@
     "item": "minecraft:iron_ingot"
   },
   "product": {
-    "item": "reactive:iron_symbol"
+    "item": "reactive:crystal_iron"
   },
-  "reagents": ["reactive:caustic"],
-  "min": 700,
-  "cost": 50
+  "reagents": ["reactive:body, reactive:soul"],
+  "min": 1300,
+  "cost": 1000
 }

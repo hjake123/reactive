@@ -156,16 +156,16 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
                             crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                         }else{
-                            crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 120, 140));
+                            crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
                             crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                         }
                     }
                 }
             }
         }
-        // Slowly gather Light when under skylight.
-        if(Objects.requireNonNull(crucible.getLevel()).canSeeSky(crucible.getBlockPos()) && crucible.getLevel().isDay()){
-            crucible.addPower(Powers.LIGHT_POWER.get(), 1);
+        // Slowly dilute powers in the rain.
+        if(level.canSeeSky(crucible.getBlockPos()) && level.isRainingAt(crucible.getBlockPos())){
+                crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
         }
     }
 
@@ -438,6 +438,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
             Color pow_color = p.getColor();
             float pow_weight = getPowerLevel(p) / (float) getTotalPowerLevel();
+            if(pow_weight < 0.05F) // Set a minimum color for each power.
+                    pow_weight = 0.05F;
             mix_color.red += pow_color.red * pow_weight;
             mix_color.green += pow_color.green * pow_weight;
             mix_color.blue += pow_color.blue * pow_weight;

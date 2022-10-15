@@ -1,0 +1,23 @@
+{
+  "name": "Emptiness",
+  "icon": "minecraft:black_concrete_powder",
+  "category": "reactive:objects_of_study",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The 'Nothingness' between blocks is a mysterious thing indeed. There are two main Theories of its Nature. $(br2)One theory imagines blocks of a substance called 'Air'. This 'Air' discriminates its effects: 'animate' objects can move through it freely, but Blocks are usually held firmly in place by it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The opposing theory predicts the presence of a 'World-Grid' that binds all Blocks to their place in the world. The Grid is also responsible for blocks' rigid set of possible Positions and Orientations."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Key to all of this are those Semi-Stable Blocks which can Fall as Entities if left unsupported. $(br2)If there truly is Air, this formation event should be accompanied by some manner of energy."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Meanwhile, if there is a Grid, it would assert its effect when the block reaches its destination. $(br2)In either case, there will be $(4)a measurable energetic effect$(0) as a result."
+    }
+  ]
+}

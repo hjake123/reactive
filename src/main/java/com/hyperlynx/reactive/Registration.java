@@ -15,6 +15,7 @@ import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
@@ -114,29 +115,29 @@ public class Registration {
                     .stacksTo(1).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
+            () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
-            () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64)
-                    .food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
+            () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
 
-    // Register Power bottles.
+
+    // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
-            () -> new BlazeBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new BlazeBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
-            () -> new BodyBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

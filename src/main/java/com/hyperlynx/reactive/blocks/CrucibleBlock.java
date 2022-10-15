@@ -134,8 +134,8 @@ public class CrucibleBlock extends Block implements EntityBlock {
                 // Collect bottles of mundane Powers.
                 if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
                     for(Power p : c.getPowerMap().keySet()){
-                        if(c.getPowerLevel(p) == c.getTotalPowerLevel() && c.getPowerLevel(p) > 1000){
-                            c.expendPower(p, 1000);
+                        if(c.getPowerLevel(p) > 850){
+                            c.expendPower(p, 850);
                             player.addItem(p.getBottle());
                             player.getItemInHand(hand).shrink(1);
                             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);

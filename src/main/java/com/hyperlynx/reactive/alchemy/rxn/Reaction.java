@@ -16,10 +16,6 @@ public abstract class Reaction {
     protected HashMap<Power, Integer> reagents = new HashMap<>();
     protected Stimulus stimulus = Stimulus.NONE;
 
-    public Reaction(HashMap<Power, Integer> reagents){
-        this.reagents = reagents;
-    }
-
     // Creates the reaction with a random set of reagents.
     public Reaction(Level l, String alias, int max_reagent_count){
         int reagent_count;

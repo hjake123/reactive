@@ -51,20 +51,6 @@ public class SynthesisReaction extends Reaction{
         // No need.
     }
 
-    // Make it so that no synthesis reaction will use opposing Base Powers.
-    private void correctOpposingReagents(){
-        if(reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(0)) && reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(3))){
-            int amount = reagents.remove(ReactionMan.BASE_POWER_LIST.get(3));
-            reagents.put(ReactionMan.BASE_POWER_LIST.get(1), amount);
-        }else if(reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(1)) && reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(4))){
-            int amount = reagents.remove(ReactionMan.BASE_POWER_LIST.get(4));
-            reagents.put(ReactionMan.BASE_POWER_LIST.get(2), amount);
-        }else if(reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(2)) && reagents.containsKey(ReactionMan.BASE_POWER_LIST.get(5))){
-            int amount = reagents.remove(ReactionMan.BASE_POWER_LIST.get(5));
-            reagents.put(ReactionMan.BASE_POWER_LIST.get(3), amount);
-        }
-    }
-
     @Override
     public String toString() {
         return super.toString() + " - synthesis reaction";

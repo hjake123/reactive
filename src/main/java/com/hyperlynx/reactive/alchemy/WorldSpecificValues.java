@@ -30,4 +30,19 @@ public class WorldSpecificValues {
     // Determines which of three orders the Effect Reactions require, which decides which esoteric each requires.
 
     public final static PrimedWSV CURSE_RATE = new PrimedWSV("curse_assimilation_rate", 10, 20);
+
+    public final static PrimedWSV VERDANT_VITAL_RELATIONSHIP = new PrimedWSV("verdant_vital_relation", 1, 5);
+    // Determines the relationship Verdant and Vital power have.
+    // 1: No reaction
+    // 2: Verdant consumes Vital
+    // 3: Vital consumes Verdant
+    // 4: Vital is Verdant + Light
+    // 5: Verdant is Vital + Light
+
+    public final static PrimedWSV CRYSTAL_IRON_UTILITY = new PrimedWSV("crystal_iron_utility", 0, 3);
+    // Determines what kinds of effects Crystal Iron can absorb without being damaged.
+    // 0 or 1: Crucible effects
+    // 2: Health-draining effects (Poison, Wither)
+    // 3: Other debuffs
+
 }

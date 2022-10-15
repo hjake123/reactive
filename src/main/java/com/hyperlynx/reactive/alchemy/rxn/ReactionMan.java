@@ -33,33 +33,48 @@ public class ReactionMan {
         BASE_POWER_LIST.add(Powers.WARP_POWER.get());
         BASE_POWER_LIST.add(Powers.SOUL_POWER.get());
         BASE_POWER_LIST.add(Powers.LIGHT_POWER.get());
-        BASE_POWER_LIST.add(Powers.VITAL_POWER.get());
         BASE_POWER_LIST.add(Powers.MIND_POWER.get());
+        BASE_POWER_LIST.add(Powers.VITAL_POWER.get());
         BASE_POWER_LIST = WorldSpecificValue.shuffle(l, "power_list_order", BASE_POWER_LIST);
 
         //TODO DEBUG PRINT
         System.out.println(Arrays.toString(BASE_POWER_LIST.toArray()));
 
         // Add assimilation reactions.
-        REACTIONS.add(new AssimilationReaction(l, "assimilationX"));
         REACTIONS.add(new CurseAssimilationReaction(l, "curse_assimilation"));
-        REACTIONS.add(new AssimilationReaction(l, "verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
         REACTIONS.add(new AssimilationReaction(l, "vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
-        REACTIONS.add(new AssimilationReaction(l, "body_consume", Powers.BODY_POWER.get(), Powers.VITAL_POWER.get()));
+
+        switch (WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get(l)) {
+            case 2 ->
+                    REACTIONS.add(new AssimilationReaction(l, "verdant_consume", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
+            case 3 ->
+                    REACTIONS.add(new AssimilationReaction(l, "vital_consume", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get()));
+            case 4 ->
+                    REACTIONS.add(new SynthesisReaction(l, "verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get(), Powers.LIGHT_POWER.get()));
+            case 5 ->
+                    REACTIONS.add(new SynthesisReaction(l, "vital_growth", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get(), Powers.LIGHT_POWER.get()));
+        }
+
 
         // Add annihilation reactions for each 'counteracting' pair of powers.
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
-        REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::weakeningSmoke));
+        REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::discharge));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4), ReactionEffects::sicklySmoke));
-        REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::discharge));
+        if(WorldSpecificValue.getBool(l, "unbroken_hexagon", 0.4F)) // There is a chance for one pair of opposite powers to not annihilate.
+            REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::weakeningSmoke));
 
         // Add synthesis reactions for the three esoteric powers.
         REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
         REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
-                .setStimulus(Reaction.Stimulus.ELECTRIC));
+
+        if(WorldSpecificValue.getBool(l, "unbroken_hexagon", 0.4F)) {
+            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.ELECTRIC));
+        }
+        else { // If they don't annihilate, they synthesize instead.
+            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.ELECTRIC));
+        }
 
         // Add effect reactions to do crazy things.
         REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get()));
@@ -83,8 +98,6 @@ public class ReactionMan {
             }
         }
 
-        System.out.println(Arrays.toString(REACTIONS.toArray()));
-
         initialized = true;
         return REACTIONS;
     }
@@ -93,5 +106,6 @@ public class ReactionMan {
     public void worldUnload(LevelEvent.Unload event){
         initialized = false;
         REACTIONS.clear();
+        BASE_POWER_LIST.clear();
     }
 }

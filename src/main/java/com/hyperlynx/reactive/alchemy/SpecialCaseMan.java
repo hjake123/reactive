@@ -66,7 +66,7 @@ public class SpecialCaseMan {
     }
 
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
-        final int BOTTLE_RETURN = WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "bottle_return", 850, 950);
+        final int BOTTLE_RETURN = WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "bottle_return", 750, 840);
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){
@@ -225,7 +225,7 @@ public class SpecialCaseMan {
     private static void blazeEscape(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
         AABB blast_zone = new AABB(c.getBlockPos());
-        blast_zone.inflate(0, 3, 0); // Inflate the AOE to be 5x the size of the crucible.
+        blast_zone.inflate(1, 3, 1); // Inflate the AOE to be 5x the size of the crucible.
         if(!c.getLevel().isClientSide()){
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
             for(LivingEntity e : nearby_ents){

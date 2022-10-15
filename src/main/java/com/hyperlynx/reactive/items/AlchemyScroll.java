@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SimpleFoiledItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +19,7 @@ import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.Objects;
 
-public class AlchemyScroll extends Item {
+public class AlchemyScroll extends SimpleFoiledItem {
     public AlchemyScroll(Properties props) {
         super(props);
     }

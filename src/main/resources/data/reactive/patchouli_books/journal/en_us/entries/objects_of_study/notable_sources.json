@@ -17,7 +17,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(item)Soul Sand$(0) should be a perfect source of Soul power -- it's right in the Name, after all! But, something seems... $(l:intro/curse)wrong$(/l) about the resulting substance. I would like to recommend that Soul Sand is not used in any further Alchemical Experimentation."
+      "text": "$(item)Soul Sand$(0) should be a perfect source of Soul power -- it's right in the Name, after all! But, something seems... $(l:intro/curse)off$(/l) about the resulting substance. I would like to recommend that Soul Sand is not used in any further Alchemical Experimentation."
     },
     {
       "type": "patchouli:text",

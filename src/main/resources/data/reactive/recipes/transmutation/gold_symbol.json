@@ -7,6 +7,6 @@
     "item": "reactive:gold_symbol"
   },
   "reagents": ["reactive:caustic"],
-  "min": 1300,
+  "min": 1000,
   "cost": 50
 }

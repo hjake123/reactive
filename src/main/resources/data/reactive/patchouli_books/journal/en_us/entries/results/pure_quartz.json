@@ -1,7 +1,7 @@
 {
   "name": "Pure Quartz",
   "icon": "reactive:quartz",
-  "category": "reactive:intro",
+  "category": "reactive:results",
   "pages": [
     {
       "type": "patchouli:spotlight",
