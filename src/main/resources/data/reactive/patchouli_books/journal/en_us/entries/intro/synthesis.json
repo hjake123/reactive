@@ -1,6 +1,6 @@
 {
   "name": "Synthesis",
-  "icon": "minecraft:paper",
+  "icon": "reactive:textures/gui/synthesis.png",
   "category": "reactive:intro",
   "advancement": "reactive:see_synthesis",
   "pages": [
@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)They go on about this for like 20 pages, and it's not relevant to you anyway. Test these reactions for yourself and keep track of what happens."
+      "text": "$(o)They go on about this for like 20 pages, and it's not relevant to you anyway. Test these reactions for yourself and keep track of what happens. $(br2)If you find $(4)a pair of the six Basic Powers that doesn't annihilate with anything$(0), that would be evidence that this model is wrong."
     }
   ]
 }

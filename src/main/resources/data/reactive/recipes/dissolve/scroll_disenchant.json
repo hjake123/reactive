@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "reactive:scroll"
+  },
+  "product": {
+    "item": "minecraft:paper"
+  }
+}

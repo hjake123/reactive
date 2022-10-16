@@ -4,30 +4,32 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Helper {
     // Taken from getPOVPlayerLook()
-    public static BlockHitResult playerRayTrace(Level pLevel, Player pPlayer, ClipContext.Fluid pFluidMode, ClipContext.Block pBlockMode, double range) {
-        float f = pPlayer.getXRot();
-        float f1 = pPlayer.getYRot();
-        Vec3 vec3 = pPlayer.getEyePosition();
-        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
-        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        Vec3 vec31 = vec3.add((double)f6 * range, (double)f5 * range, (double)f7 * range);
-        return pLevel.clip(new ClipContext(vec3, vec31, pBlockMode, pFluidMode, pPlayer));
+//    public static BlockHitResult playerRayTrace(Level pLevel, Player pPlayer, ClipContext.Fluid pFluidMode, ClipContext.Block pBlockMode, double range) {
+//        float f = pPlayer.getXRot();
+//        float f1 = pPlayer.getYRot();
+//        Vec3 vec3 = pPlayer.getEyePosition();
+//        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+//        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
+//        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
+//        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
+//        float f6 = f3 * f4;
+//        float f7 = f2 * f4;
+//        Vec3 vec31 = vec3.add((double)f6 * range, (double)f5 * range, (double)f7 * range);
+//        return pLevel.clip(new ClipContext(vec3, vec31, pBlockMode, pFluidMode, pPlayer));
+//    }
+
+    public static double distance(double x1, double y1, double z1, double x2, double y2, double z2){
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
     }
 
     public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise){
@@ -46,6 +48,62 @@ public class Helper {
             }else {
                 ((ServerLevel)level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
             }
+        }
+    }
+
+    public static void drawParticleZigZag(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, int segments, double noise){
+        double prev_x = x1;
+        double prev_y = y1;
+        double prev_z = z1;
+
+        // For each line segment:
+        // - Find a minimum and maximum length ('progress')
+        // - Choose an actual length with these as bounds
+        // - Adjust x y and z by the chosen progress
+        // - Deflect x y and z by a random amount
+        for(int i = 0; i < segments; i++){
+            double next_x;
+            double next_y;
+            double next_z;
+
+            if(i == segments-1){
+                next_x = x2;
+                next_y = y2;
+                next_z = z2;
+            }else{
+                double min_progress = 1.0/(segments+3);
+                double max_progress = 1.0/(segments-3);
+                double actual_progress = ThreadLocalRandom.current().nextDouble(min_progress, max_progress);
+
+                double x_dist = Math.abs(x2 - prev_x) * actual_progress;
+                double y_dist = Math.abs(y2 - prev_y) * actual_progress;
+                double z_dist = Math.abs(z2 - prev_z) * actual_progress;
+
+                // These need to be EXACTLY LIKE THIS for the zigzag to not move away from the target. Don't know why.
+                if (x2 > 0)
+                    next_x = x2 > prev_x ? prev_x + x_dist : prev_x - x_dist;
+                else
+                    next_x = x2 < prev_x ? prev_x - x_dist : prev_x + x_dist;
+
+                if (y2 > 0)
+                    next_y = y2 > prev_y ? prev_y + y_dist : prev_y - y_dist;
+                else
+                    next_y = y2 < prev_y ? prev_y - y_dist : prev_y + y_dist;
+
+                if (z2 > 0)
+                    next_z = z2 > prev_z ? prev_z + z_dist : prev_z - z_dist;
+                else
+                    next_z = z2 < prev_z ? prev_z - z_dist : prev_z + z_dist;
+
+                next_x += (level.random.nextFloat()-0.5) * noise;
+                next_y += (level.random.nextFloat()-0.5) * noise;
+                next_z += (level.random.nextFloat()-0.5) * noise;
+            }
+            drawParticleLine(level, opt, prev_x, prev_y, prev_z, next_x, next_y, next_z, frequency, 0);
+
+            prev_x = next_x;
+            prev_y = next_y;
+            prev_z = next_z;
         }
     }
 

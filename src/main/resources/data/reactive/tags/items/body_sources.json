@@ -8,6 +8,7 @@
     "#forge:bones",
     "#forge:leather",
     "minecraft:sugar",
-    "minecraft:honeycomb"
+    "minecraft:honeycomb",
+    "minecraft:paper"
   ]
 }

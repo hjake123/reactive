@@ -70,9 +70,16 @@ public class SpecialCaseMan {
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){
-                c.addPower(p, BOTTLE_RETURN);
-                e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                changed = true;
+                if(c.addPower(p, BOTTLE_RETURN)) {
+                    if (e.getItem().getCount() == 1)
+                        e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                    else {
+                        e.getItem().shrink(1);
+                        ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        e.getLevel().addFreshEntity(empty_bottle);
+                    }
+                    changed = true;
+                }
             }
         }
 

@@ -21,4 +21,12 @@ public class Color {
         blue = 0;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        boolean obj_equals = super.equals(obj);
+        if(obj instanceof Color){
+            return red == ((Color) obj).red && green == ((Color) obj).green && blue == ((Color) obj).blue;
+        }
+        return obj_equals;
+    }
 }

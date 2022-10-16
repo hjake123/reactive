@@ -6,7 +6,7 @@
   "product": {
     "item": "reactive:crystal_iron"
   },
-  "reagents": ["reactive:body, reactive:soul"],
+  "reagents": ["reactive:body", "reactive:soul"],
   "min": 1300,
   "cost": 1000
 }

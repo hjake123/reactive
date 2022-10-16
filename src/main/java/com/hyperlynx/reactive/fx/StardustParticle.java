@@ -36,7 +36,7 @@ public class StardustParticle extends TextureSheetParticle {
     @Override
     @NotNull
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
     public static class StardustParticleProvider implements ParticleProvider<SimpleParticleType> {

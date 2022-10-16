@@ -49,7 +49,7 @@ public class ReactionEffects {
                 aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
-                    if (effectNotBlocked(c.getLevel(), e)) {
+                    if (effectNotBlocked(c.getLevel(), e, 1)) {
                         e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 1));
                         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                     }
@@ -68,7 +68,7 @@ public class ReactionEffects {
                 aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
-                    if (effectNotBlocked(c.getLevel(), e)) {
+                    if (effectNotBlocked(c.getLevel(), e, 2)) {
                         e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
                         e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
                     }
@@ -87,9 +87,9 @@ public class ReactionEffects {
             if (potential_rod != null) {
                 if (!c.getLevel().isClientSide) {
                     ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(c.getLevel().getBlockState(potential_rod), c.getLevel(), potential_rod);
-                    Helper.drawParticleLine(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
+                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
-                            potential_rod.getX(), potential_rod.getY() + 0.5F, potential_rod.getZ(), 16, 0.3);
+                            potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
                     c.getLevel().playSound(null, potential_rod, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 0.1F, 1.3F);
                 }
             } else {
@@ -102,11 +102,11 @@ public class ReactionEffects {
                 LivingEntity victim = nearby_ents.get(0);
 
                 if (!c.getLevel().isClientSide) {
-                    if(effectNotBlocked(c.getLevel(), victim))
+                    if(effectNotBlocked(c.getLevel(), victim, 2))
                         victim.hurt(DamageSource.MAGIC, 12);
-                    Helper.drawParticleLine(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
+                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
-                            victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 16, 0.3);
+                            victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
                 }
             }
             c.electricCharge = 0;
@@ -125,20 +125,22 @@ public class ReactionEffects {
         return c;
     }
 
-    private static boolean effectNotBlocked(Level level, LivingEntity e) {
-        if (WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) < 2 && e.isHolding(Registration.CRYSTAL_IRON.get())) {
-            if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
+    private static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
+        if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
+            if(WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1) {
                 if (e.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
-                    e.getOffhandItem().hurtAndBreak(1, e, (LivingEntity l) -> {});
+                    e.getOffhandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
                 } else {
-                    e.getMainHandItem().hurtAndBreak(1, e, (LivingEntity l) -> {});
+                    e.getMainHandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
                 }
-                return false;
-            }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> {return stack.is(Registration.CRYSTAL_IRON.get());})){
-                int slot = ((Player) e).getInventory().findSlotMatchingItem(Registration.CRYSTAL_IRON.get().getDefaultInstance());
-                ((Player) e).getInventory().getItem(slot).hurt(1, level.random, (ServerPlayer) e);
-                return false;
             }
+            return false;
+        }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
+            if(WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1){
+                int slot = ((Player) e).getInventory().findSlotMatchingItem(Registration.CRYSTAL_IRON.get().getDefaultInstance());
+                ((Player) e).getInventory().getItem(slot).hurt(cost, level.random, (ServerPlayer) e);
+            }
+            return false;
         }
         return true;
     }

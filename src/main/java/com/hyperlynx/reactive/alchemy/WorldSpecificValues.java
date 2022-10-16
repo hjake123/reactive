@@ -28,6 +28,7 @@ public class WorldSpecificValues {
 
     public final static PrimedWSV EFFECT_ORDER = new PrimedWSV("effect_order", 1, 3);
     // Determines which of three orders the Effect Reactions require, which decides which esoteric each requires.
+    // Refer to ReactionMan::constructReactions for details.
 
     public final static PrimedWSV CURSE_RATE = new PrimedWSV("curse_assimilation_rate", 10, 20);
 

@@ -6,6 +6,7 @@
     "minecraft:ghast_tear",
     "#forge:ender_pearls",
     "minecraft:echo_shard",
-    "minecraft:enchanted_book"
+    "minecraft:enchanted_book",
+    "reactive:scroll"
   ]
 }

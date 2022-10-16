@@ -67,6 +67,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
+    private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
+    private boolean color_initialized = false; // This is set to true when mix_color is
+
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
@@ -82,9 +85,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         crucible.tick_counter++;
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
+            System.out.println(crucible.powers);
 
             // Deal with electricity.
-            if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
+            if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15){
                 crucible.electricCharge = 15;
             }else if(crucible.electricCharge > 0){
                 crucible.electricCharge--;
@@ -266,9 +270,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
         if(this.getBlockState().getValue(CrucibleBlock.FULL) && !event.getEntity().level.isClientSide && !Objects.requireNonNull(this.getLevel()).isClientSide){
-            double dist = Math.sqrt(Math.pow(event.getEntity().getX() - this.getBlockPos().getX(), 2)
-                    + Math.pow(event.getEntity().getY() - this.getBlockPos().getY(), 2)
-                    + Math.pow(event.getEntity().getZ() - this.getBlockPos().getZ(), 2));
+            double dist = Helper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
             if(dist < ConfigMan.COMMON.crucibleRange.get()
                     && !areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
 
@@ -338,12 +340,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(p == null){
             return false;
         }
+        if(getPowerLevel(p) == CRUCIBLE_MAX_POWER){
+            return false;
+        }
         if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
             int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
             expendAnyPowerExcept(p, excess); // Replace other powers if needed.
             excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
             if(excess > 0) {
-                System.out.println("Excess " + excess + ", amount " + amount);
                 amount -= excess;
             }
         }
@@ -354,8 +358,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         else
             powers.put(p, amount);
 
-        if(this.getLevel() != null && !this.getLevel().isClientSide)
-            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
+//        if(this.getLevel() != null && !this.getLevel().isClientSide)
+//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
 
         return true;
     }
@@ -402,6 +406,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public void expendPower() {
         powers.clear();
         color_changed = true;
+        mix_color.reset();
+        next_mix_color.reset();
+        color_initialized = false;
     }
 
     public int getTotalPowerLevel(){
@@ -423,6 +430,20 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(color_changed){
             updateColor(water_color);
         }
+        if(!color_initialized){
+            mix_color.red = water_color.red;
+            mix_color.green = water_color.green;
+            mix_color.blue = water_color.blue;
+            color_initialized = true;
+        }
+        if(!mix_color.equals(next_mix_color)){ // Smoothly change the mix color to match the new color.
+            int delta_red = Math.min(Math.abs(next_mix_color.red - mix_color.red), 2);
+            int delta_green = Math.min(Math.abs(next_mix_color.green - mix_color.green), 2);
+            int delta_blue = Math.min(Math.abs(next_mix_color.blue - mix_color.blue), 2);
+            mix_color.red = next_mix_color.red > mix_color.red ? mix_color.red + delta_red : mix_color.red - delta_red;
+            mix_color.green = next_mix_color.green > mix_color.green ? mix_color.green + delta_green : mix_color.green - delta_green;
+            mix_color.blue = next_mix_color.blue > mix_color.blue ? mix_color.blue + delta_blue : mix_color.blue - delta_blue;
+        }
         return mix_color;
     }
 
@@ -431,25 +452,23 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return;
         }
         // Iterate through each power and add its tint to the total, adjusted for its actual prevalence.
-        mix_color.reset();
+        next_mix_color.reset();
         for (Power p : powers.keySet()) {
             if(p == null){
                 continue; // Skip any invalid values if they exist.
             }
             Color pow_color = p.getColor();
             float pow_weight = getPowerLevel(p) / (float) getTotalPowerLevel();
-            if(pow_weight < 0.05F) // Set a minimum color for each power.
-                    pow_weight = 0.05F;
-            mix_color.red += pow_color.red * pow_weight;
-            mix_color.green += pow_color.green * pow_weight;
-            mix_color.blue += pow_color.blue * pow_weight;
+            next_mix_color.red += pow_color.red * pow_weight;
+            next_mix_color.green += pow_color.green * pow_weight;
+            next_mix_color.blue += pow_color.blue * pow_weight;
         }
 
         // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
         float tint_alpha = (float) getTotalPowerLevel()/ (float) CRUCIBLE_MAX_POWER;
-        mix_color.red = (int) (water_color.red * (1 - tint_alpha) + mix_color.red * (tint_alpha));
-        mix_color.green = (int) (water_color.green * (1 - tint_alpha) + mix_color.green * (tint_alpha));
-        mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + mix_color.blue * (tint_alpha));
+        next_mix_color.red = (int) (water_color.red * (1 - tint_alpha) + next_mix_color.red * (tint_alpha));
+        next_mix_color.green = (int) (water_color.green * (1 - tint_alpha) + next_mix_color.green * (tint_alpha));
+        next_mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + next_mix_color.blue * (tint_alpha));
         color_changed = false;
     }
 

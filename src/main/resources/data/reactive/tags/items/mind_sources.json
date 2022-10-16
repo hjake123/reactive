@@ -8,6 +8,7 @@
     "#forge:dusts/prismarine",
     "#forge:enchanting_fuels",
     "minecraft:crying_obsidian",
-    "minecraft:enchanted_book"
+    "minecraft:enchanted_book",
+    "reactive:scroll"
   ]
 }
