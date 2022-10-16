@@ -107,6 +107,10 @@ public class Registration {
             () -> new VoltCellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
     public static final RegistryObject<Item> VOLT_CELL_ITEM = fromBlock(VOLT_CELL, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> WARP_SPONGE = BLOCKS.register("warp_sponge",
+            () -> new WarpSpongeBlock(BlockBehaviour.Properties.copy(Blocks.WET_SPONGE)));
+    public static final RegistryObject<Item> WARP_SPONGE_ITEM = fromBlock(WARP_SPONGE, ReactiveMod.CREATIVE_TAB);
+
 
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
@@ -120,6 +124,8 @@ public class Registration {
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
             () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
+    public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
 

@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:dirt"
+  },
+  "product": {
+    "item": "minecraft:mud"
+  }
+}

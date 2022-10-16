@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:tube_coral"
+  },
+  "reagents": ["reactive:soul"],
+  "min": 100,
+  "cost": 20
+}

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:bubble_coral"
+  },
+  "reagents": ["reactive:vital"],
+  "min": 100,
+  "cost": 20
+}

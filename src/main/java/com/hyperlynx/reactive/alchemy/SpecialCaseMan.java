@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.MossBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 
@@ -63,6 +65,8 @@ public class SpecialCaseMan {
             curseEscape(c);
         if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "blaze_escape_threshold", 20, 100))
             blazeEscape(c);
+        if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "verdant_escape_threshold", 1300, 1500))
+            verdantEscape(c);
     }
 
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
@@ -136,23 +140,29 @@ public class SpecialCaseMan {
             ((ServerLevel) l).sendParticles(ParticleTypes.PORTAL, e.getX(), e.getY() + l.random.nextDouble() * 2.0, e.getZ(), 1, l.random.nextGaussian(), 0.0, l.random.nextGaussian(), 0.0);
         }
 
+        boolean foundTarget = false;
+
         UUID thrower = e.getThrower();
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower);
             if(!l.isClientSide)
                 Registration.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
             if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
-                player.teleportTo(p.getX()+0.5, p.getY() + 0.85, p.getZ() + 0.5);
+                if(ReactionEffects.effectNotBlocked(l, player, 2)) {
+                    player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
+                    foundTarget = true;
+                }
             }
-            e.kill();
-        }else{
-            // TODO: Summon a distortion.
         }
+        if(!foundTarget){
+           // TODO: rift
+        }
+        e.kill();
     }
 
     // Explode gunpowder due to blaze.
     private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
-        l.explode(e, p.getX(), p.getY(), p.getZ(), 1.0F, Explosion.BlockInteraction.NONE);
+        l.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
         e.kill();
     }
 
@@ -246,5 +256,10 @@ public class SpecialCaseMan {
             for(int i = 0; i < 10; i++)
                 Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
         }
+    }
+
+    private static void verdantEscape(CrucibleBlockEntity c) {
+        if(c.getLevel() == null || c.getLevel().isClientSide) return;
+        ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 }

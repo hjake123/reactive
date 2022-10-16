@@ -1,8 +1,6 @@
 package com.hyperlynx.reactive.util;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -33,13 +31,6 @@ public class WorldSpecificValue {
         return rand.nextInt(max-min + 1) + min;
     }
 
-    public static int get(BlockGetter b, String alias, int min, int max){
-        long world_seed = b.getBlockState(BlockPos.ZERO).getSeed(BlockPos.ZERO); // Does this actually work...?
-        System.out.println(world_seed);
-        Random rand = new Random(world_seed + alias.hashCode());
-        return rand.nextInt(max-min + 1) + min;
-    }
-
     public static boolean getBool(ServerLevel l, String alias, float chance){
         if(l == null){
             return false;
@@ -49,12 +40,12 @@ public class WorldSpecificValue {
         return rand.nextFloat() < chance;
     }
 
-    public static boolean getBool(BlockGetter b, String alias, float chance){
-        long world_seed = b.getBlockState(BlockPos.ZERO).getSeed(BlockPos.ZERO);
-        System.out.println(world_seed);
-        Random rand = new Random(world_seed + alias.hashCode());
-        return rand.nextFloat() < chance;
-    }
+//    public static boolean getBool(BlockGetter b, String alias, float chance){
+//        long world_seed = b.getBlockState(BlockPos.ZERO).getSeed(BlockPos.ZERO);
+//        System.out.println(world_seed);
+//        Random rand = new Random(world_seed + alias.hashCode());
+//        return rand.nextFloat() < chance;
+//    }
 
     public static <T> T getFromCollection(Level l, String alias, Collection<T> c) {
         int index = get(l, alias, 0, c.size()-1);

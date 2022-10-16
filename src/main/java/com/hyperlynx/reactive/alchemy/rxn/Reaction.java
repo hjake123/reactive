@@ -36,8 +36,8 @@ public abstract class Reaction {
 
     // Creates the reaction with two preset powers, but random minimum requirements.
     public Reaction(Level l, String alias, Power p1, Power p2){
-        reagents.put(p1, WorldSpecificValue.get(l, alias+"r1", 1, 400));
-        reagents.put(p2, WorldSpecificValue.get(l, alias+"r2", 1, 400));
+        reagents.put(p1, WorldSpecificValue.get(l, alias+"r1", 1, 100));
+        reagents.put(p2, WorldSpecificValue.get(l, alias+"r2", 1, 100));
     }
 
     public Reaction setStimulus(Stimulus rxs){

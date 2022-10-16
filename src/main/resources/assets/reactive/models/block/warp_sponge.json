@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "reactive:block/warp_sponge",
+    "particle": "reactive:block/warp_sponge"
+  }
+}

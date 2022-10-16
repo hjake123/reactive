@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:fire_coral"
+  },
+  "reagents": ["reactive:blaze"],
+  "min": 100,
+  "cost": 20
+}

@@ -85,7 +85,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         crucible.tick_counter++;
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
-            System.out.println(crucible.powers);
 
             // Deal with electricity.
             if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15){
@@ -95,13 +94,18 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
 
             if (!level.isClientSide()){
-                // Become empty when there's no water.
                 if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
+                    // Become empty when there's no water.
                     SpecialCaseMan.checkEmptySpecialCases(crucible);
                     crucible.expendPower();
                     crucible.sacrificeCount = 0;
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
+                }else if(!state.getValue(CrucibleBlock.FULL) // Check for Effusive Sponges and fill if there is one.
+                        && Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.75
+                        && crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())){
+                    crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+                    level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                 }else{
                     // Gather Power from the surroundings.
                     if(state.getValue(CrucibleBlock.FULL)){
@@ -241,7 +245,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
         for (TransmuteRecipe r : purify_recipes) {
             if (r.matches(new FakeContainer(itemEntity.getItem()), level)) {
-                System.err.println("Checking power levels for " + r);
                 if (r.powerMet(crucible, level)) {
                     ItemStack result = r.apply(itemEntity.getItem(), crucible, level);
                     level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
@@ -290,12 +293,13 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 && !(event.getEntity() instanceof Phantom)){
                     Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
                     p.setPos(new Vec3(x, y+2, z));
+                    p.setPhantomSize(this.getLevel().random.nextInt(1, 4));
                     getLevel().addFreshEntity(p);
-                    Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y+2, z, 20, 0.1);
+                    Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y+2, z, 25, 0.1);
                 }else{
                     Helper.drawParticleLine(level, ParticleTypes.CLOUD,
                             getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.4, getBlockPos().getZ() + 0.5,
-                            x, y, z, 15, 0.4);
+                            x, y, z, 15, 0.3);
                 }
 
                 // Add Vital due to sacrifices.

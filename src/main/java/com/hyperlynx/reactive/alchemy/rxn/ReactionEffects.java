@@ -125,9 +125,13 @@ public class ReactionEffects {
         return c;
     }
 
-    private static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
+    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
+        return effectNotBlocked(level, e, cost, false);
+    }
+
+    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost, boolean unblockable) {
         if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
-            if(WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1) {
+            if(unblockable || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1) {
                 if (e.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
                     e.getOffhandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
                 } else {
@@ -136,7 +140,7 @@ public class ReactionEffects {
             }
             return false;
         }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
-            if(WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1){
+            if(unblockable || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1){
                 int slot = ((Player) e).getInventory().findSlotMatchingItem(Registration.CRYSTAL_IRON.get().getDefaultInstance());
                 ((Player) e).getInventory().getItem(slot).hurt(cost, level.random, (ServerPlayer) e);
             }

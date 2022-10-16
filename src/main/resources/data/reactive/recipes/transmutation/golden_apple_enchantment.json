@@ -6,7 +6,7 @@
   "product": {
     "item": "minecraft:enchanted_golden_apple"
   },
-  "reagents": ["reactive:vital", "reactive:body"],
+  "reagents": ["reactive:vital", "reactive:esoteric_x"],
   "min": 1300,
   "cost": 400
 }

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:moss_block"
+  },
+  "reagents": ["reactive:verdant"],
+  "min": 100,
+  "cost": 20
+}

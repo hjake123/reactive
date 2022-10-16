@@ -8,5 +8,5 @@
   },
   "reagents": ["reactive:blaze", "reactive:esoteric_y"],
   "min": 700,
-  "cost": 50
+  "cost": 5
 }

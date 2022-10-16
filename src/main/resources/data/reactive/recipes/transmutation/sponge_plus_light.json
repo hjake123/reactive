@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:horn_coral"
+  },
+  "reagents": ["reactive:light"],
+  "min": 100,
+  "cost": 20
+}

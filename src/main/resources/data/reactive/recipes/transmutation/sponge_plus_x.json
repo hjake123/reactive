@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "minecraft:lily_pad"
+  },
+  "reagents": ["reactive:esoteric_x"],
+  "min": 100,
+  "cost": 20
+}

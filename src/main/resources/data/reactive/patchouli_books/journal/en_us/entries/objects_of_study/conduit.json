@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Addendum to the prior: I have been able to inspect this so-called \"Heart of the Sea\". Indeed, it seems as inert as a piece of Lapis! Some Magic Artifact it turned out to be. If there truly were a way to $(4)unleash its hidden power$(0), it is cryptic and elusive. Perhaps in the future the $(4)same procedure to gather Power from Blaze Rods$(0) -- whatever Marvelous Thing that turns out to be -- will work here as well."
+      "text": "Addendum to the prior: I have been able to inspect this so-called \"$(item)Heart of the Sea$(0)\". Indeed, it seems as inert as a piece of $(item)Lapis$(0)! Some $(thing)Magic Artifact$(0) it turned out to be. If there truly were a way to $(4)unleash its hidden power$(0), it is cryptic and elusive. Perhaps in the future the $(4)same procedure to gather Power from Blaze Rods$(0) -- whatever $(thing)Marvelous Thing$(0) that turns out to be -- will work here as well."
     }
   ]
 }

@@ -4,12 +4,12 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 // This class manages the world's reactions.
@@ -37,9 +37,6 @@ public class ReactionMan {
         BASE_POWER_LIST.add(Powers.VITAL_POWER.get());
         BASE_POWER_LIST = WorldSpecificValue.shuffle(l, "power_list_order", BASE_POWER_LIST);
 
-        //TODO DEBUG PRINT
-        System.out.println(Arrays.toString(BASE_POWER_LIST.toArray()));
-
         // Add assimilation reactions.
         REACTIONS.add(new CurseAssimilationReaction(l, "curse_assimilation"));
         REACTIONS.add(new AssimilationReaction(l, "vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
@@ -60,19 +57,23 @@ public class ReactionMan {
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
         REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::discharge));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4), ReactionEffects::sicklySmoke));
-        if(WorldSpecificValue.getBool(l, "unbroken_hexagon", 0.4F)) // There is a chance for one pair of opposite powers to not annihilate.
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.4F)) // There is a chance for one pair of opposite powers to not annihilate.
             REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::weakeningSmoke));
 
         // Add synthesis reactions for the three esoteric powers.
         REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
-                .setStimulus(Reaction.Stimulus.ELECTRIC));
 
-        if(WorldSpecificValue.getBool(l, "unbroken_hexagon", 0.4F)) {
-            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.ELECTRIC));
+
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.4F)) {
+            REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+                    .setStimulus(Reaction.Stimulus.ELECTRIC));
+            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+                    .setStimulus(Reaction.Stimulus.ELECTRIC));
         }
-        else { // If they don't annihilate, they synthesize instead.
+        else{
+            REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(3), BASE_POWER_LIST.get(4))
+                    .setStimulus(Reaction.Stimulus.ELECTRIC));
             REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.ELECTRIC));
         }
 

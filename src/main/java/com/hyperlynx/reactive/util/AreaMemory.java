@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.util;
 
+import com.hyperlynx.reactive.blocks.WarpSpongeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -43,6 +44,23 @@ public class AreaMemory {
     private BlockPos findAndAddNearest(Level l, int radius, Block target){
         Optional<BlockPos> found_maybe = BlockPos.findClosestMatch(hostPos, radius, radius, blockPos -> l.getBlockState(blockPos).is(target));
         return found_maybe.orElse(null);
+    }
+
+    // Like exists, but only for blocks right above hostPos.
+    public boolean existsAbove(Level l, int range, Block target){
+        return fetchAbove(l, range, target) != null;
+    }
+
+    // Scan for a compatible block right above. This is a little expensive and doesn't use a cache! If there is none, returns null.
+    public BlockPos fetchAbove(Level l, int range, Block target){
+        for(int i = 1; i < range; i++){
+            if(l.getBlockState(hostPos.above(i)).is(target)){
+                return hostPos.above(i);
+            }else if(WarpSpongeBlock.stateIsBlocking(l.getBlockState(hostPos.above(i)))){ // Note that this is too specific.
+                return null;
+            }
+        }
+        return null;
     }
 
 //    // Positions are ordered based on their distance from the host, closer first.

@@ -79,7 +79,6 @@ public class Helper {
                 double y_dist = Math.abs(y2 - prev_y) * actual_progress;
                 double z_dist = Math.abs(z2 - prev_z) * actual_progress;
 
-                // These need to be EXACTLY LIKE THIS for the zigzag to not move away from the target. Don't know why.
                 if (x2 > 0)
                     next_x = x2 > prev_x ? prev_x + x_dist : prev_x - x_dist;
                 else

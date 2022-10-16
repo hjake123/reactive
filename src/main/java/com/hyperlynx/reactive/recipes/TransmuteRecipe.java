@@ -1,10 +1,8 @@
 package com.hyperlynx.reactive.recipes;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.PowerBearer;
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.hyperlynx.reactive.alchemy.PowerBearer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -58,15 +56,15 @@ public class TransmuteRecipe implements Recipe<Container> {
             }
         }
 
-        System.out.println("Max tfs is " + max_tfs + " with cost " + cost);
+        //System.out.println("Max tfs is " + max_tfs + " with cost " + cost);
         ItemStack result = product.copy();
-        result.setCount(Math.min(input.getCount(), max_tfs));
+        result.setCount(Math.min(input.getCount(), max_tfs)*result.getCount());
 
-        System.out.println("Output amount " + result.getCount());
+        //System.out.println("Output amount " + result.getCount());
 
         input.setCount(input.getCount() - Math.min(input.getCount(), max_tfs));
 
-        System.out.println("Input amount, adjusted " + input.getCount());
+        //System.out.println("Input amount, adjusted " + input.getCount());
 
         return result;
     }

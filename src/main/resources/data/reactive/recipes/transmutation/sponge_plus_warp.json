@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:wet_sponge"
+  },
+  "product": {
+    "item": "reactive:warp_sponge"
+  },
+  "reagents": ["reactive:warp"],
+  "min": 100,
+  "cost": 100
+}

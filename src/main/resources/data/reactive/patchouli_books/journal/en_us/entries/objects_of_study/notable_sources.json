@@ -2,6 +2,7 @@
   "name": "Notable Power Sources",
   "icon": "reactive:gold_symbol",
   "category": "reactive:objects_of_study",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",
@@ -9,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(item)Ender Pearls$(0) seem a perfect source of the Warp Power, but given their unstable nature, I have calculated that the process will likely have some $(4)unintended side-effects$(0). Hm... well, only one way to find out, I suppose!"
+      "text": "$(item)Ender Pearls$(0) seem a perfect source of the Warp Power, but given their unstable nature, I believe that the process will likely have some $(4)unintended side-effects if Warp is already present$(0). Hm... well, only one way to find out, I suppose!"
     },
     {
       "type": "patchouli:text",
