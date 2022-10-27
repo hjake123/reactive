@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.Helper;
 import net.minecraft.core.BlockPos;
@@ -137,7 +138,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
                     for(Power p : c.getPowerMap().keySet()){
                         if(c.getPowerLevel(p) > 850){
                             c.expendPower(p, 850);
-                            player.addItem(p.getBottle());
+                            player.addItem(SpecialCaseMan.checkBottleSpecialCases(c, p.getBottle()));
                             player.getItemInHand(hand).shrink(1);
                             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
                         }

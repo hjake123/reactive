@@ -73,6 +73,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
+    public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -83,6 +84,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // ----- Tick and related worker methods -----
     public static void tick(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         crucible.tick_counter++;
+
+        // Each tick, deal with ender rift if needed.
+        if(!level.isClientSide && crucible.enderRiftStrength > 0){
+            crucible.enderRiftStrength = SpecialCaseMan.tryTeleportNearbyEntity(crucible.getBlockPos(), crucible.getLevel(), crucible.getBlockPos(), true) ? 0 : crucible.enderRiftStrength-1;
+            ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5625 + level.random.nextDouble() * 2.0, pos.getZ()+ 0.5, 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
+        }
+
+        // Perfome the main Crucible Tick every (tick delay) ticks.
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
 
@@ -110,7 +119,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Gather Power from the surroundings.
                     if(state.getValue(CrucibleBlock.FULL)){
                         gatherPower(level, crucible);
-
                         // Check for new items to dissolve into Power or transmute.
                         if (processItemsInside(level, pos, state, crucible)) {
                             crucible.setDirty(level, pos, state);
@@ -168,6 +176,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                         }
                     }
+                }
+
+                // The Rift effect slowly generates Warp.
+                if(crucible.enderRiftStrength > 0){
+                    crucible.addPower(Powers.WARP_POWER.get(), 10);
                 }
             }
         }
@@ -290,12 +303,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
                 // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
                 if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get(getLevel()) && getPowerLevel(Powers.MIND_POWER.get()) > 0
-                && !(event.getEntity() instanceof Phantom)){
-                    Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
-                    p.setPos(new Vec3(x, y+2, z));
-                    p.setPhantomSize(this.getLevel().random.nextInt(1, 4));
-                    getLevel().addFreshEntity(p);
-                    Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y+2, z, 25, 0.1);
+                && !(event.getEntity() instanceof Phantom)
+                && (event.getEntity().getLevel().isNight())){
+                    spawnPhantom(x, y, z);
                 }else{
                     Helper.drawParticleLine(level, ParticleTypes.CLOUD,
                             getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.4, getBlockPos().getZ() + 0.5,
@@ -320,6 +330,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 setDirty();
             }
         }
+    }
+
+    private void spawnPhantom(double x, double y, double z) {
+        Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
+        p.setPos(new Vec3(x, y +2, z));
+        p.setPhantomSize(this.getLevel().random.nextInt(1, 4));
+        getLevel().addFreshEntity(p);
+        Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
     }
 
     @Override

@@ -5,14 +5,14 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)Waiting for Phantoms to appear naturally is a pain. Let me offer an alternative. There is a Power unlike the others, a $(l:intro/curse)dark Power$(/l). While Mind is being consumed by it, any death near the Crucible will bring a Phantom about."
+      "text": "$(o)Waiting for Phantoms to appear naturally is a pain. Let me offer an alternative. There is a Power unlike the others, a $(l:intro/curse)dark Power$(/l). While Mind is being consumed by it under the shadow of the night, any death near the Crucible will bring a Phantom about. $(br2)Their flesh makes for a good renewable source of Mind, and the byproduct is quite sticky."
     },
     {
       "type": "reactive:tf",
       "recipe_type": "Power Release",
       "reactant": "minecraft:phantom_membrane",
       "product": "reactive:phantom_residue",
-      "text": "$(o)Their flesh makes for a good renewable source of Mind, and the byproduct is quite sticky. I wonder if it could be $(4)transmuted into something useful$(0)? $(br2)If so, the best bet would be to experiment with $(4)dissolved plants$(0)."
+      "text": "$(o)I wonder if it could be $(4)transmuted into something useful$(0)? $(br2)If so, the best bet would be to experiment with $(4)dissolved plants$(0)."
     }
   ]
 }

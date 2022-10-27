@@ -1,34 +1,34 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
-import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
+import java.util.Objects;
 
 // Just a holder class for the various reaction effect methods.
 public class ReactionEffects {
 
     // TODO: a lot of reaction effects
 
-    // Will attract entities towards the gold symbol.
+    // Will attract entities towards a memorized gold symbol.
     public static CrucibleBlockEntity vortex(CrucibleBlockEntity c) {
         if (!c.getLevel().isClientSide)
             System.out.println("*sounds of spiraling*");
@@ -49,7 +49,7 @@ public class ReactionEffects {
                 aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
-                    if (effectNotBlocked(c.getLevel(), e, 1)) {
+                    if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 1)) {
                         e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 1));
                         e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
                     }
@@ -68,7 +68,7 @@ public class ReactionEffects {
                 aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
-                    if (effectNotBlocked(c.getLevel(), e, 2)) {
+                    if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 2)) {
                         e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
                         e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
                     }
@@ -102,7 +102,7 @@ public class ReactionEffects {
                 LivingEntity victim = nearby_ents.get(0);
 
                 if (!c.getLevel().isClientSide) {
-                    if(effectNotBlocked(c.getLevel(), victim, 2))
+                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), victim, 2))
                         victim.hurt(DamageSource.MAGIC, 12);
                     Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
@@ -115,8 +115,33 @@ public class ReactionEffects {
         return c;
     }
 
-    // Makes nearby entities not fall down. Protoplasm can only be crafted while this reaction is occuring.
+    // Either apply levitation to nearby entities, apply slow falling, or shoot a shulker bullet.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
+        AABB aoe = new AABB(c.getBlockPos());
+        aoe.inflate(6); // Inflate the AOE to be 6x the size of the crucible.
+        List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+        switch(WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "levitation_reaction_effect", 1, 3)){
+            case 1:
+                for(LivingEntity e : nearby_ents){
+                    e.addEffect(new MobEffectInstance(MobEffects.LEVITATION));
+                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
+                            c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5625, c.getBlockPos().getZ() + 0.5,
+                            e.getX(), e.getEyeY(), e.getZ(), 10, 7, 0.3);
+                }
+                break;
+            case 2:
+                for(LivingEntity e : nearby_ents){
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING));
+                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+                            c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5625, c.getBlockPos().getZ() + 0.5,
+                            e.getX(), e.getEyeY(), e.getZ(), 5, 12, 0.7);
+                }
+                break;
+            case 3:
+                ShulkerBullet bullet = new ShulkerBullet(EntityType.SHULKER_BULLET, c.getLevel());
+                bullet.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.3, 0));
+                c.getLevel().addFreshEntity(bullet);
+        }
         return c;
     }
 
@@ -125,27 +150,4 @@ public class ReactionEffects {
         return c;
     }
 
-    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
-        return effectNotBlocked(level, e, cost, false);
-    }
-
-    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost, boolean unblockable) {
-        if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
-            if(unblockable || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1) {
-                if (e.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
-                    e.getOffhandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
-                } else {
-                    e.getMainHandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
-                }
-            }
-            return false;
-        }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
-            if(unblockable || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1){
-                int slot = ((Player) e).getInventory().findSlotMatchingItem(Registration.CRYSTAL_IRON.get().getDefaultInstance());
-                ((Player) e).getInventory().getItem(slot).hurt(cost, level.random, (ServerPlayer) e);
-            }
-            return false;
-        }
-        return true;
-    }
 }

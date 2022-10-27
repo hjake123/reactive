@@ -1,8 +1,9 @@
 package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.items.CrystalIronItem;
+import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -36,6 +38,7 @@ import net.minecraft.world.level.block.MossBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -69,14 +72,24 @@ public class SpecialCaseMan {
             verdantEscape(c);
     }
 
+    public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack bottle){
+        if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
+            return makeRiftBottle(c, bottle);
+        return bottle;
+    }
+
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
         final int BOTTLE_RETURN = WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "bottle_return", 750, 840);
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){
                 if(c.addPower(p, BOTTLE_RETURN)) {
-                    if (e.getItem().getCount() == 1)
+                    if(e.getItem().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(e.getItem())){
+                        c.enderRiftStrength = 2000;
+                    }
+                    if (e.getItem().getCount() == 1) {
                         e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                    }
                     else {
                         e.getItem().shrink(1);
                         ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
@@ -129,7 +142,7 @@ public class SpecialCaseMan {
         }
     }
 
-    // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.
+    // Dissolving an Ender Pearl teleports you onto the crucible if there's not too much Warp.
     private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
         float chance = (float) c.getPowerLevel(Powers.WARP_POWER.get()) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
         if(l.random.nextFloat() > chance){
@@ -148,16 +161,51 @@ public class SpecialCaseMan {
             if(!l.isClientSide)
                 Registration.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
             if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
-                if(ReactionEffects.effectNotBlocked(l, player, 2)) {
-                    player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
-                    foundTarget = true;
-                }
+                player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
+                foundTarget = true;
             }
         }
         if(!foundTarget){
-           // TODO: rift
+            Helper.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER, p, 20);
+            c.enderRiftStrength = 2000;
         }
         e.kill();
+    }
+
+    // Attempts to teleport an entity with Crucible range of pos to the destination.
+    public static boolean tryTeleportNearbyEntity(BlockPos pos, Level level, BlockPos destination, boolean can_teleport_players){
+        AABB aoe = new AABB(pos);
+        aoe = aoe.inflate(ConfigMan.COMMON.crucibleRange.get());
+        List<LivingEntity> nearby_ents = Objects.requireNonNull(level).getEntitiesOfClass(LivingEntity.class, aoe);
+
+        List<LivingEntity> to_be_excluded = new ArrayList<>();
+
+        for(LivingEntity e : nearby_ents){
+            if(ConfigMan.COMMON.doNotTeleport.get().contains(e.getEncodeId())){
+                to_be_excluded.add(e);
+            }
+            if(e instanceof Player && !can_teleport_players){
+                to_be_excluded.add(e);
+            }
+        }
+
+        nearby_ents.removeAll(to_be_excluded);
+
+        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(level, nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0, true)){
+            nearby_ents.get(0).teleportTo(destination.getX() + 0.5, destination.getY() + 0.85, destination.getZ() + 0.5);
+            return true;
+        }
+        return false;
+    }
+
+    // Make a Warp Bottle into a Rift Bottle.
+    public static ItemStack makeRiftBottle(CrucibleBlockEntity c, ItemStack bottle){
+        if(bottle.getTag() == null){
+            bottle.setTag(new CompoundTag());
+        }
+        WarpBottleItem.addTeleportTags(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos(), bottle.getTag());
+        c.enderRiftStrength = 0;
+        return bottle;
     }
 
     // Explode gunpowder due to blaze.
@@ -259,7 +307,7 @@ public class SpecialCaseMan {
     }
 
     private static void verdantEscape(CrucibleBlockEntity c) {
-        if(c.getLevel() == null || c.getLevel().isClientSide) return;
+        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool((ServerLevel) c.getLevel(), "no_moss", 0.5F)) return;
         ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 }

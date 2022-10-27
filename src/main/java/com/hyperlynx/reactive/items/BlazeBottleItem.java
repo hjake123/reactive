@@ -1,12 +1,9 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -24,7 +21,7 @@ public class BlazeBottleItem extends PowerBottleItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int tick, boolean unknown) {
         super.inventoryTick(stack, level, entity, tick, unknown);
         if(!level.isClientSide){
-            if(entity instanceof Player && !((Player) entity).isCreative()){
+            if(entity instanceof Player && !((Player) entity).isCreative() && ((Player) entity).isHolding(Registration.BLAZE_BOTTLE.get())){
                 tick_count++;
                 if(tick_count > 20){
                     entity.hurt(DamageSource.IN_FIRE, 2);
@@ -39,6 +36,6 @@ public class BlazeBottleItem extends PowerBottleItem {
     @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
     {
-        return 16000;
+        return 8000;
     }
 }

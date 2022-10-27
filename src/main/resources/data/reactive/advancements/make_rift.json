@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "see_synthesis": {
+      "trigger": "reactive:make_rift_criterion"
+    }
+  }
+}

@@ -65,7 +65,7 @@ public class Power {
     public static int getSourceLevel(ItemStack i, Level level) {
         return WorldSpecificValue.get(
                 level, "power_" + i.getItem().getDescriptionId(),
-                i.is(AlchemyTags.highPower) ? 150: 15,
+                i.is(AlchemyTags.highPower) ? 250: 25,
                 i.is(AlchemyTags.highPower) ? 500: 50);
     }
 

@@ -140,7 +140,7 @@ public class Registration {
     public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+            () -> new WarpBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
@@ -175,6 +175,8 @@ public class Registration {
     public static final FlagCriterion TRY_NETHER_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
     public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"));
     public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
+    public static final FlagCriterion MAKE_RIFT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"));
+
 
 
     // ----------------------- METHODS ------------------------
@@ -211,6 +213,7 @@ public class Registration {
         evt.enqueueWork(() -> CriteriaTriggers.register(TRY_NETHER_CRUCIBLE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(TRY_LAVA_CRUCIBLE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
     }
 
     @SubscribeEvent
