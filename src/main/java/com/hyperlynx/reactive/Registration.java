@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
@@ -111,6 +112,16 @@ public class Registration {
             () -> new WarpSpongeBlock(BlockBehaviour.Properties.copy(Blocks.WET_SPONGE)));
     public static final RegistryObject<Item> WARP_SPONGE_ITEM = fromBlock(WARP_SPONGE, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> GOLD_FOAM = BLOCKS.register("gold_foam",
+            () -> new GoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)
+                    .jumpFactor(0.7F).sound(SoundType.WOOL).speedFactor(1.15F)));
+    public static final RegistryObject<Item> GOLD_FOAM_ITEM = fromBlock(GOLD_FOAM, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
+            () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
+
+    public static final RegistryObject<BlockEntityType<ActiveFoamBlockEntity>> ACTIVE_GOLD_FOAM_BE = TILES.register("active_gold_foam_be",
+            () -> BlockEntityType.Builder.of(ActiveFoamBlockEntity::new, ACTIVE_GOLD_FOAM.get()).build(null));
 
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",

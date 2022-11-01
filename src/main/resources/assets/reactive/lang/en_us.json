@@ -10,7 +10,7 @@
   "item.reactive.soul_bottle": "Bottle of Soul",
   "item.reactive.warp_bottle": "Bottle of Warp",
   "item.reactive.light_bottle": "Bottle of Light",
-  "item.reactive.verdant_bottle": "Bottle of Biomass",
+  "item.reactive.verdant_bottle": "Bottle of Green",
   "item.reactive.body_bottle": "Bottle of Stock",
   "item.reactive.soup": "Witch's Stew",
   "item.reactive.crystal_iron": "Ferrous Crystal",
@@ -24,5 +24,7 @@
   "block.reactive.blaze_rod": "Mounted Blaze Rod",
   "block.reactive.pure_quartz_block": "Pure Quartz Block",
   "block.reactive.volt_cell": "Volt Cell",
-  "block.reactive.warp_sponge": "Effusive Sponge"
+  "block.reactive.warp_sponge": "Effusive Sponge",
+  "block.reactive.gold_foam": "Gold Foam",
+  "block.reactive.active_gold_foam": "Active Gold Foam"
 }

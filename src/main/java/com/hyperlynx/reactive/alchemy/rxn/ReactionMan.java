@@ -83,17 +83,17 @@ public class ReactionMan {
         int order = WorldSpecificValues.EFFECT_ORDER.get(l);
         switch (order) {
             case 1 -> {
-                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::vortex, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 2 -> {
-                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::vortex, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 3 -> {
-                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::vortex, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }

@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_all",
+	"textures": {
+		"all": "reactive:block/active_gold_foam",
+		"particle": "reactive:block/active_gold_foam"
+	}
+}

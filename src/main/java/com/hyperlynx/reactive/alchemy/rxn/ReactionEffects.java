@@ -1,5 +1,8 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
+import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
+import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -15,6 +18,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.phys.AABB;
@@ -26,19 +31,40 @@ import java.util.Objects;
 // Just a holder class for the various reaction effect methods.
 public class ReactionEffects {
 
-    // TODO: a lot of reaction effects
+    // TODO: testing
 
-    // Will attract entities towards a memorized gold symbol.
-    public static CrucibleBlockEntity vortex(CrucibleBlockEntity c) {
-        if (!c.getLevel().isClientSide)
-            System.out.println("*sounds of spiraling*");
+    // Destroys the Crucible and some connected Symbols.
+    public static CrucibleBlockEntity explosion(CrucibleBlockEntity c) {
+        if (!c.getLevel().isClientSide){
+            BlockPos pos = c.getBlockPos();
+            SpecialCaseMan.checkEmptySpecialCases(c);
+            c.expendPower();
+
+            if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+                c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()), true);
+            }else{
+                if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()))
+                    c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()), true);
+                if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()))
+                    c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), true);
+            }
+
+            c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
+            c.getLevel().removeBlock(pos, true);
+        }
         return c;
     }
 
-    // Creates various items or blocks depending on the surroundings.
+    // Changes the Gold Symbol into Active Gold Foam, which spreads outwards for a limited distance and leaves Gold Foam behind.
     public static CrucibleBlockEntity formation(CrucibleBlockEntity c) {
-        if (!c.getLevel().isClientSide)
-            System.out.println("Gogograhgrah!");
+        BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        if (!c.getLevel().isClientSide){
+            c.getLevel().setBlock(symbol_position, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        }else{
+            Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.EFFECT,
+                    c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
+                    symbol_position.getX()+0.5, symbol_position.getY()+0.5, symbol_position.getZ()+0.5, 12, 7,0.4);
+        }
         return c;
     }
 

@@ -43,7 +43,6 @@ public class CrystalIronItem extends Item {
                 for(ItemStack stack : ((Player) e).getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){
                         stack.hurtAndBreak(cost, (ServerPlayer) e, (ServerPlayer s) -> {});
-                        System.out.println("Gotcha!");
                         return false;
                     }
                 }

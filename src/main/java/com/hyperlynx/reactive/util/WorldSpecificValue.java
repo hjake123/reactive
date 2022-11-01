@@ -31,6 +31,22 @@ public class WorldSpecificValue {
         return rand.nextInt(max-min + 1) + min;
     }
 
+    public static float get(Level l, String alias, float min, float max){
+        if(l.isClientSide()){
+            return -1;
+        }
+        return get(l.getServer().getLevel(Level.OVERWORLD), alias, min, max);
+    }
+
+    public static float get(ServerLevel l, String alias, float min, float max){
+        if(l == null){
+            return -1;
+        }
+        long world_seed = l.getSeed();
+        Random rand = new Random(world_seed + alias.hashCode());
+        return rand.nextFloat(min, max);
+    }
+
     public static boolean getBool(ServerLevel l, String alias, float chance){
         if(l == null){
             return false;

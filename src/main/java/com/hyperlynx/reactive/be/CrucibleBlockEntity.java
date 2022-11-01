@@ -91,7 +91,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5625 + level.random.nextDouble() * 2.0, pos.getZ()+ 0.5, 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
         }
 
-        // Perfome the main Crucible Tick every (tick delay) ticks.
+        // Perform the main Crucible Tick every (tick delay) ticks.
         if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
             crucible.tick_counter = 1;
 

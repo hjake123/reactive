@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "patchouli:guide_book"
+  },
+  "product": {
+    "item": "minecraft:book"
+  }
+}

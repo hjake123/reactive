@@ -9,6 +9,7 @@
     "#forge:enchanting_fuels",
     "minecraft:crying_obsidian",
     "minecraft:enchanted_book",
-    "reactive:scroll"
+    "reactive:scroll",
+    "patchouli:guide_book"
   ]
 }
