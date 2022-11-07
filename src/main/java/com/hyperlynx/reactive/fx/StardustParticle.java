@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.fx;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,9 +22,19 @@ public class StardustParticle extends TextureSheetParticle {
         this.setSpriteFromAge(pSprites);
     }
 
-    @Override
-    protected int getLightColor(float pPartialTick) {
-        return 0xffffff;
+    // Copied from net.minecraft.client.particle.GlowParticle
+    public int getLightColor(float p_172146_) {
+        float f = ((float)this.age + p_172146_) / (float)this.lifetime;
+        f = Mth.clamp(f, 0.0F, 1.0F);
+        int i = super.getLightColor(p_172146_);
+        int j = i & 255;
+        int k = i >> 16 & 255;
+        j += (int)(f * 15.0F * 16.0F);
+        if (j > 240) {
+            j = 240;
+        }
+
+        return j | k << 16;
     }
 
     @Override
