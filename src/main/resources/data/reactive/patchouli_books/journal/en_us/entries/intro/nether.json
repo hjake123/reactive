@@ -3,6 +3,7 @@
   "icon": "minecraft:netherrack",
   "category": "reactive:intro",
   "advancement": "reactive:try_nether_crucible",
+  "secret": true,
   "pages": [
     {
       "type": "patchouli:text",

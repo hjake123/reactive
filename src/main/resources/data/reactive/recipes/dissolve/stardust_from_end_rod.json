@@ -1,12 +1,9 @@
 {
-  "type": "reactive:transmutation",
+  "type": "reactive:dissolve",
   "reactant": {
     "item": "minecraft:end_rod"
   },
   "product": {
     "item": "reactive:stardust"
-  },
-  "reagents": ["reactive:light"],
-  "min": 100,
-  "cost": 10
+  }
 }

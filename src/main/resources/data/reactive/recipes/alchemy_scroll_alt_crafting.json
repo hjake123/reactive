@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "p": {
+      "item": "minecraft:paper"
+    },
+    "i": {
+      "item": "minecraft:ink_sac"
+    },
+    "r": {
+      "tag": "forge:dusts/redstone"
+    },
+    "g": {
+      "tag": "forge:dusts/glowstone"
+    }
+  },
+  "pattern": [
+    "rig",
+    "gpi",
+    "gri"
+  ],
+  "result": {
+    "item": "reactive:scroll"
+  }
+}

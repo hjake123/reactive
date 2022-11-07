@@ -9,11 +9,9 @@
       "text": "$(1)The Ferrous Crystal is a wonderful gemstone that promotes health in whomsoever holds it. $(br2)Specifically, its warding properties allow it to remove numerous kinds of magical and mundane ailments, including those inflicted by reckless Crucible work."
     },
     {
-      "type": "reactive:tf",
-      "recipe_type": "Transmutation",
-      "reactant": "minecraft:iron_ingot",
-      "product": "reactive:crystal_iron",
-      "text": "$(1)To create this item, combine the ingot with the powers of the body and the soul in high concentration."
+      "type": "reactive:transmute",
+      "recipe": "crystal_iron",
+      "text": "$(1)Bathe the stone in the power of body and soul, for it will bolster each."
     }
   ]
 }

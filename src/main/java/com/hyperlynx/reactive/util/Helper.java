@@ -28,27 +28,30 @@ public class Helper {
 //        return pLevel.clip(new ClipContext(vec3, vec31, pBlockMode, pFluidMode, pPlayer));
 //    }
 
-    public static double distance(double x1, double y1, double z1, double x2, double y2, double z2){
+    public static double distance(double x1, double y1, double z1, double x2, double y2, double z2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
     }
 
-    public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise){
-        for(int i = 0; i < frequency; i++){
+    public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise) {
+        for (int i = 0; i < frequency; i++) {
             double u = level.random.nextDouble();
-            double x = (1-u) * x1 + u * x2;
-            double y = (1-u) * y1 + u * y2;
-            double z = (1-u) * z1 + u * z2;
+            double x = (1 - u) * x1 + u * x2;
+            double y = (1 - u) * y1 + u * y2;
+            double z = (1 - u) * z1 + u * z2;
 
-            x += (level.random.nextFloat()-0.5) * noise;
-            y += (level.random.nextFloat()-0.5) * noise;
-            z += (level.random.nextFloat()-0.5) * noise;
+            x += (level.random.nextFloat() - 0.5) * noise;
+            y += (level.random.nextFloat() - 0.5) * noise;
+            z += (level.random.nextFloat() - 0.5) * noise;
 
-            if(level.isClientSide()) {
+            if (level.isClientSide()) {
                 level.addParticle(opt, x, y, z, 0, 0, 0);
-            }else {
-                ((ServerLevel)level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+            } else {
+                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
             }
         }
+    }
+    public static void drawParticleZigZag(Level level, ParticleOptions opt, BlockPos a, BlockPos b, int frequency, int segments, double noise){
+        drawParticleZigZag(level, opt, a.getX()+0.5, a.getY()+0.5, a.getZ()+0.5, b.getX()+0.5, b.getY()+0.5, b.getZ()+0.5, frequency, segments, noise);
     }
 
     public static void drawParticleZigZag(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, int segments, double noise){

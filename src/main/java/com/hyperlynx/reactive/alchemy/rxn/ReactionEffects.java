@@ -1,56 +1,68 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LightningRodBlock;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 // Just a holder class for the various reaction effect methods.
 public class ReactionEffects {
 
     // TODO: testing
 
-    // Destroys the Crucible and some connected Symbols.
+    // Destroys the contents of the Crucible and some connected Symbols unless there is an Iron Symbol.
     public static CrucibleBlockEntity explosion(CrucibleBlockEntity c) {
         if (!c.getLevel().isClientSide){
             BlockPos pos = c.getBlockPos();
-            SpecialCaseMan.checkEmptySpecialCases(c);
-            c.expendPower();
+
+            Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, pos, c.areaMemory.fetch(c.getLevel(),
+                    ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), 20, 7, 0.8F);
 
             if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
-                c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()), true);
+                Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, c.areaMemory.fetch(c.getLevel(),
+                        ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), c.areaMemory.fetch(c.getLevel(),
+                        ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()), 20, 7, 0.8F);
             }else{
-                if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()))
-                    c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()), true);
+                SpecialCaseMan.checkEmptySpecialCases(c);
+                c.expendPower();
+                c.getLevel().setBlock(pos, c.getLevel().getBlockState(pos).setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+                c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
+
                 if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()))
                     c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), true);
             }
 
-            c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
-            c.getLevel().removeBlock(pos, true);
         }
         return c;
     }
@@ -146,26 +158,36 @@ public class ReactionEffects {
         AABB aoe = new AABB(c.getBlockPos());
         aoe.inflate(6); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+
+        BlockPos origin_pos = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        if(origin_pos == null){
+            origin_pos = c.getBlockPos();
+        }
+
         switch(WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "levitation_reaction_effect", 1, 3)){
             case 1:
                 for(LivingEntity e : nearby_ents){
-                    e.addEffect(new MobEffectInstance(MobEffects.LEVITATION));
-                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
-                            c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5625, c.getBlockPos().getZ() + 0.5,
-                            e.getX(), e.getEyeY(), e.getZ(), 10, 7, 0.3);
+                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
+                        e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+                    }
+                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+                            origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
+                            e.getX(),e.getEyeY()-0.1, e.getZ(), 10, 7, 0.3);
                 }
                 break;
             case 2:
                 for(LivingEntity e : nearby_ents){
-                    e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING));
+                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
+                        e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
+                    }
                     Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
-                            c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5625, c.getBlockPos().getZ() + 0.5,
-                            e.getX(), e.getEyeY(), e.getZ(), 5, 12, 0.7);
+                            origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
+                            e.getX(), e.getEyeY()-0.1, e.getZ(), 5, 12, 0.7);
                 }
                 break;
             case 3:
                 ShulkerBullet bullet = new ShulkerBullet(EntityType.SHULKER_BULLET, c.getLevel());
-                bullet.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.3, 0));
+                bullet.setPos(Vec3.atCenterOf(origin_pos).add(0, 0.3, 0));
                 c.getLevel().addFreshEntity(bullet);
         }
         return c;
@@ -173,7 +195,53 @@ public class ReactionEffects {
 
     // Causes nearby bonemeal-ables to be fertilized occasionally.
     public static CrucibleBlockEntity growth(CrucibleBlockEntity c) {
+        if(c.getLevel().isClientSide){
+            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos());
+        }else {
+            Random random = new Random();
+            BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), -1, random.nextInt(-4, 4));
+            if (Objects.requireNonNull(c.getLevel()).getBlockState(target).getBlock() instanceof BonemealableBlock) {
+                ((BonemealableBlock) c.getLevel().getBlockState(target).getBlock()).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, target, c.getLevel().getBlockState(target));
+            }
+        }
         return c;
     }
 
+    // Shoot flames from the crucible!
+    public static CrucibleBlockEntity flamethrower(CrucibleBlockEntity c) {
+        if(c.getLevel() == null) return c;
+
+        AABB blast_zone = new AABB(c.getBlockPos());
+        blast_zone.inflate(3, 5, 3);
+
+        if(c.getLevel().isClientSide){
+            if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
+                Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
+            }else{
+                Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
+            }
+        }else {
+            List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
+            for(LivingEntity e : nearby_ents){
+                e.hurt(DamageSource.IN_FIRE, 12);
+                e.setSecondsOnFire(7);
+            }
+        }
+        return c;
+    }
+
+    // Cause blocks to fall down near the Crucible.
+    public static CrucibleBlockEntity gridbreak(CrucibleBlockEntity c) {
+        Level level = c.getLevel();
+        RandomSource random = level.random;
+        BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), random.nextInt(-4, 4), random.nextInt(-4, 4));
+        if(target == c.getBlockPos()) return c;
+
+        if(!level.isClientSide){
+            FallingBlockEntity.fall(level, target, level.getBlockState(target));
+        }else{
+            Helper.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
+        }
+        return c;
+    }
 }

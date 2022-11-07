@@ -8,10 +8,8 @@
       "text": "When seeking the Power of the Mind, a Book seems the optimal place to start. I wonder $(4)what kinds of books might yield Mind power?$(0)"
     },
     {
-      "type": "reactive:tf",
-      "recipe_type": "Power Release",
+      "type": "reactive:dissolve",
       "reactant": "minecraft:enchanted_book",
-      "product": "minecraft:book",
       "text": "Enchanted books are obvious, but even mundane writing seems to interact with the Crucible somehow. Perhaps we can save ourselves some expense by using $(4)mundane books$(0)?"
     }
   ]

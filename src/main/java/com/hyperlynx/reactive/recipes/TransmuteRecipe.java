@@ -84,6 +84,10 @@ public class TransmuteRecipe implements Recipe<Container> {
         return product;
     }
 
+    public ItemStack getReactant(){ return reactant; }
+
+    public List<Power> getReagents(){ return reagents;}
+
     @Override
     public ResourceLocation getId() {
         return id;

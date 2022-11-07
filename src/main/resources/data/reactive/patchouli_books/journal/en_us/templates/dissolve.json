@@ -1,8 +1,9 @@
 {
+  "processor": "com.hyperlynx.reactive.recipes.docs.DissolveComponentProcessor",
   "components": [
     {
       "type": "patchouli:header",
-      "text": "#recipe_type",
+      "text": "Power Release",
       "x": -1,
       "y": -1
     },

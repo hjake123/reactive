@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "product": {
+    "item": "reactive:phantom_residue"
+  }
+}

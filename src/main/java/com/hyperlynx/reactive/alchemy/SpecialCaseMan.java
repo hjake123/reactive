@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.StructureTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
@@ -56,6 +58,10 @@ public class SpecialCaseMan {
             pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
         else if(e.getItem().is(Items.WRITABLE_BOOK))
             waterWriting(c, e);
+        else if(e.getItem().is(Tags.Items.INGOTS_COPPER) && c.getPowerLevel(Powers.ACID_POWER.get()) > 10)
+            copperCharging(c);
+        else if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get()) < 10)
+            enderEyeFlyAway(c, e);
 
         tryEmptyPowerBottle(e, c);
     }
@@ -103,6 +109,28 @@ public class SpecialCaseMan {
         if(changed){
             c.setDirty();
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(c.getLevel().getRandom().nextFloat()/5));
+        }
+    }
+
+    // Copper ingots in acid charge the Crucible.
+    private static void copperCharging(CrucibleBlockEntity c) {
+        if(c.electricCharge < 20)
+            c.electricCharge += 2;
+    }
+
+    // Ender eyes that are thrown into the Crucible without Curse are launched as if used.
+    private static void enderEyeFlyAway(CrucibleBlockEntity c, ItemEntity e) {
+        ServerLevel serverlevel = (ServerLevel) c.getLevel();
+        BlockPos blockpos = serverlevel.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
+        if (blockpos != null) {
+            EyeOfEnder eyeofender = new EyeOfEnder(c.getLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
+            eyeofender.setItem(e.getItem());
+            eyeofender.signalTo(blockpos);
+            c.getLevel().addFreshEntity(eyeofender);
+            c.getLevel().playSound(null, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.5, c.getBlockPos().getZ()+0.5, SoundEvents.ENDER_EYE_LAUNCH, SoundSource.NEUTRAL, 0.5F, 0.4F / (c.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
+            e.getItem().shrink(1);
+            if(e.getItem().getCount() < 1)
+                e.kill();
         }
     }
 
@@ -301,8 +329,13 @@ public class SpecialCaseMan {
                 e.setSecondsOnFire(3);
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
-            for(int i = 0; i < 10; i++)
-                Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
+            for(int i = 0; i < 10; i++) {
+                if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
+                    Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                }else{
+                    Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                }
+            }
         }
     }
 

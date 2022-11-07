@@ -4,11 +4,9 @@
   "category": "reactive:results",
   "pages": [
     {
-      "type": "reactive:tf",
-      "recipe_type": "Transmutation",
-      "reactant": "minecraft:glowstone_dust",
-      "product": "reactive:stardust",
-      "text": "This Mystical Substance is our Profession's response to the Ceaseless Inquiries for an Intangible Light Source. By bolstering Glowstone with the Power of Light and Mind, we create a truly unique Powder. Truly a noble Discovery!"
+      "type": "reactive:transmute",
+      "recipe": "stardust_from_glowstone",
+      "text": "This Mystical Substance is our Profession's response to the Ceaseless Inquiries for a Floating, Intangible Light Source. Indeed, it can even be Placed in Mid-Air. Truly a noble Discovery!"
     }
   ]
 }

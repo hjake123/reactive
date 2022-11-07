@@ -12,7 +12,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)I hope nothing burned down... Hm, now I feel kind of bad. Tell you what, I'll give you a hint in return. This one's not a trick. $(4)Spirits and Phantoms that pass near an Iron Symbol are damaged.$(0) Why? How should I know?? $(br2)Anyway, best of luck have fun stay safe etc."
+      "text": "$(o)I hope nothing burned down... Hm, now I feel kind of bad. Tell you what, I'll give you a hint in return. This one's not a trick. $(4)Spirits and Phantoms that pass near an Iron Symbol are damaged.$(0) Why? How should I know? Is this even a science? $(br2)Anyway, best of luck have fun stay safe etc."
     }
   ]
 }

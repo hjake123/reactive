@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(item)Gunpowder$(0) is Acidic, but something tells me that using an Ingredient so obviously Volatile may be Dangerous under the right conditions. For a safe alternative, use $(item)Nether Wart$(0) or some $(item)Crimson Flora$(0) from the Netherworld."
+      "text": "$(item)Gunpowder$(0) is Acidic, but something tells me that using an Ingredient so obviously Volatile may be Dangerous under the right conditions. For a safe alternative, use $(item)Nether Wart$(0) or some $(item)Crimson Flora$(0) from the Netherworld. $(br2)$(o)Personally, I like to use $(item)Spider Eyes$(0)."
     },
     {
       "type": "patchouli:text",
@@ -22,7 +22,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The ingredients for Vital Power are quite rare, but just yesterday, I discovered that some had entered my Crucible out of nowhere! I checked my supplies, but nothing was missing, so the $(thing)Exterminator$(0) who came through last night is unlikely the cause. How could the power of Life Itself have appeared $(4)without using items at all?$(0)"
+      "text": "The ingredients for Vital Power are quite rare, but just yesterday, I discovered that some had entered my Crucible out of nowhere! I checked my supplies, but nothing was missing, so the $(thing)Exterminator$(0) who came through last night is unlikely the cause. $(br2How could the power of Life Itself have appeared $(l:reactive:intro/sacrifice)without using items at all?$(0)"
     }
   ]
 }

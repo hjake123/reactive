@@ -5,29 +5,22 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(item)Symbols$(1) are a method of communicating one's intention to a higher power. By forming the metals into distinctive shapes, one can invoke the gods and have them do your bidding. $(0)$(br2)$(o)You can see what I'm working with here... Let me summarize. $(br2)$(#9d1e2d)Acid$(0) is the reagent for each of these transmutations."
+      "text": "$(item)Symbols$(1) are a method of communicating one's intention to a higher power. By forming the metals into distinctive shapes, one can invoke the gods and have them do your bidding. $(0)$(br2)$(o)You can see what I'm working with here... Let me summarize."
     },
     {
-      "type": "reactive:tf",
-      "reactant": "minecraft:copper_ingot",
-      "product": "reactive:copper_symbol",
-      "recipe_type": "Transmutation",
-      "text": "$(o)A $(item)Copper Symbol$(0) will promote the movement of Power to or from a nearby Crucible."
+      "type": "reactive:transmute",
+      "recipe": "copper_symbol",
+      "text": "$(o)A $(item)Copper Symbol$(0) brings out the changing nature of Copper to promote the movement of Power into a Crucible."
     },
     {
-      "type": "reactive:tf",
-      "reactant": "minecraft:iron_ingot",
-      "product": "reactive:iron_symbol",
-
-      "recipe_type": "Transmutation",
-      "text": "$(o)An $(item)Iron Symbol$(0) will restrict the movement of Power."
+      "type": "reactive:transmute",
+      "recipe": "iron_symbol",
+      "text": "$(o)An $(item)Iron Symbol$(0) brings out the protective nature of Iron to prevent movement of Power."
     },
     {
-      "type": "reactive:tf",
-      "reactant": "minecraft:gold_ingot",
-      "product": "reactive:gold_symbol",
-      "recipe_type": "Transmutation",
-      "text": "$(o)A $(item)Gold Symbol$(0) will bring about the expression of Power in certain reactions."
+      "type": "reactive:transmute",
+      "recipe": "gold_symbol",
+      "text": "$(o)A $(item)Gold Symbol$(0) will bring out Gold's radiance to make certain Reactions possible that otherwise would not occur."
     },
     {
       "type": "patchouli:text",

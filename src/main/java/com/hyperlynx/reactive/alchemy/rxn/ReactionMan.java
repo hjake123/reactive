@@ -57,7 +57,7 @@ public class ReactionMan {
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
         REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::discharge));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4), ReactionEffects::sicklySmoke));
-        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.4F)) // There is a chance for one pair of opposite powers to not annihilate.
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.8F)) // There is a chance for one pair of opposite powers to not annihilate.
             REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::weakeningSmoke));
 
         // Add synthesis reactions for the three esoteric powers.
@@ -65,10 +65,10 @@ public class ReactionMan {
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
 
-        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.4F)) {
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.8F)) {
             REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
                     .setStimulus(Reaction.Stimulus.ELECTRIC));
-            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
                     .setStimulus(Reaction.Stimulus.ELECTRIC));
         }
         else{
@@ -78,7 +78,9 @@ public class ReactionMan {
         }
 
         // Add effect reactions to do crazy things.
-        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get()));
+        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction(l, "flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction(l, "fall_effect", ReactionEffects::gridbreak, Powers.WARP_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
 
         int order = WorldSpecificValues.EFFECT_ORDER.get(l);
         switch (order) {

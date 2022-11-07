@@ -14,26 +14,36 @@ import java.util.List;
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
     private final Color color;
+    private final String id;
     private final String name;
     private final Item bottle;
 
-    public Power(String name, int color, Item bottle){
-        this.name = name;
+    public Power(String id, int color, Item bottle){
+        this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
+        this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
     }
 
-    public Power(String name, Color color, Item bottle){
+    public Power(String id, int color, String name, Item bottle){
+        this.id = id;
+        this.color = new Color(color);
+        this.bottle = bottle;
         this.name = name;
+    }
+
+    public Power(String id, Color color, String name, Item bottle){
+        this.id = id;
         this.color = color;
         this.bottle = bottle;
+        this.name = name;
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
     public static Power readPower(CompoundTag tag){
         Power ret = null;
         for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if(reg.get().getName().equals(tag.getString("name"))){
+            if(reg.get().getId().equals(tag.getString("name"))){
                 ret = reg.get();
                 break;
             }
@@ -45,7 +55,8 @@ public class Power {
     public Color getColor(){
         return color;
     }
-    public String getName() { return name; }
+    public String getId() { return id; }
+    public String getName(){return name;}
 
     // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {

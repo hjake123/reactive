@@ -4,11 +4,9 @@
   "category": "reactive:results",
   "pages": [
     {
-      "type": "reactive:tf",
-      "recipe_type": "Transmutation",
-      "reactant": "minecraft:golden_apple",
-      "product": "minecraft:enchanted_golden_apple",
-      "text": "The method of creating these Shining Fruits, often likened to God-like Items, has been a closely kept secret of our Profession. The Vital Power is crucial to it, as is a $(l:reactive:intro/synthesis)secret power$(/l) which shines vibrant Purple in color."
+      "type": "reactive:transmute",
+      "recipe": "golden_apple_enchantment",
+      "text": "The method of creating these Shining Fruits, often likened to God-like Items, has been a closely kept secret of our Profession. The Key is a $(l:reactive:intro/synthesis)Secret Power$(/l) which shines vibrant Purple in color."
     }
   ]
 }

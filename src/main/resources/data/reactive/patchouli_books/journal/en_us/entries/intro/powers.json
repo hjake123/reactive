@@ -6,15 +6,15 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)There are six basic kinds of alchemical power. $(li)BLAZE, the power of heat and fire. $(li)LIGHT, the power of... well, light. $(li)MIND, the power of enchantments and thought. $(li)SOUL, the power of the spirit. $(o)$(li)WARP, the power of teleportation. $(li)VITAL, the power of life."
+      "text": "$(o)There are six basic kinds of alchemical power. $(li)$(4)BLAZE$(0), the power of heat and fire. $(li)$(4)LIGHT$(0), the power of... well, light. $(li)$(4)MIND$(0), the power of enchantments and thought. $(li)$(4)SOUL$(0), the power of the spirit. $(o)$(li)$(4)WARP$(0), the power of teleportation. $(li)$(4)VITAL$(0), the power of life."
     },
     {
       "type": "patchouli:text",
-      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These behave much like Powers, but they are unlikely to be involved in reactions. One such substance is $(#9d1e2d)Acid$(0), which is needed for many basic alchemical purposes. $(#9d1e2d)Acid$(0) can be obtained from $(item)Spider Eyes$(0), but other sources do exist."
+      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These include $(#9d1e2d)Acid$(0), which is needed for many basic alchemical purposes."
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)These Powers might $(thing)react$(0) with each other. Reactions make themselves evident by changing the color of the solution and releasing particles into the air. Sometimes, more violent effects arise as well -- though nothing that damages the surroundings. $(br2)The most common reaction is $(thing)annihilation$(0), wherein Powers destroy each other, releasing smoke or energy into the air around them."
+      "text": "$(o)In solution, Powers might $(thing)react$(0) with each other. Reactions make themselves evident by changing the color of the solution and releasing particles into the air. Sometimes, more violent effects arise as well -- though nothing that damages the surroundings. $(br2)The most common reaction is $(thing)annihilation$(0), wherein Powers destroy each other, releasing smoke or energy in the process."
     },
     {
       "type": "patchouli:text",

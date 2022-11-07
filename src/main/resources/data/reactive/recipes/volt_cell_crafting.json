@@ -4,6 +4,9 @@
     "i": {
       "tag": "forge:ingots/iron"
     },
+    "c": {
+      "tag": "forge:ingots/copper"
+    },
     "a": {
       "item": "reactive:acid_bottle"
     },
@@ -13,7 +16,7 @@
   },
   "pattern": [
     "l l",
-    "iii",
+    "ici",
     "aia"
   ],
   "result": {
