@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:smooth_stone"
+  },
+  "product": {
+    "item": "minecraft:tuff"
+  },
+  "reagents": ["reactive:warp"],
+  "min": 1000,
+  "cost": 10
+}

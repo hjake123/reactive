@@ -2,12 +2,15 @@ package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.Helper;
+import com.hyperlynx.reactive.util.HyperPortalShape;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -40,10 +43,7 @@ import net.minecraft.world.level.block.MossBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.Tags;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
@@ -76,6 +76,8 @@ public class SpecialCaseMan {
             blazeEscape(c);
         if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "verdant_escape_threshold", 1300, 1500))
             verdantEscape(c);
+        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.STAFF_OF_POWER.get()))
+            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.STAFF_OF_POWER.get()));
     }
 
     public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack bottle){
@@ -170,9 +172,9 @@ public class SpecialCaseMan {
         }
     }
 
-    // Dissolving an Ender Pearl teleports you onto the crucible if there's not too much Warp.
+    // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.
     private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
-        float chance = (float) c.getPowerLevel(Powers.WARP_POWER.get()) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
+        float chance = ((float) c.getPowerLevel(Powers.WARP_POWER.get())) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
         if(l.random.nextFloat() > chance){
             return;
         }
@@ -219,7 +221,7 @@ public class SpecialCaseMan {
 
         nearby_ents.removeAll(to_be_excluded);
 
-        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(level, nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0, true)){
+        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(level, nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0)){
             nearby_ents.get(0).teleportTo(destination.getX() + 0.5, destination.getY() + 0.85, destination.getZ() + 0.5);
             return true;
         }
@@ -321,7 +323,7 @@ public class SpecialCaseMan {
     private static void blazeEscape(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
         AABB blast_zone = new AABB(c.getBlockPos());
-        blast_zone.inflate(1, 3, 1); // Inflate the AOE to be 5x the size of the crucible.
+        blast_zone.inflate(1.5, 3, 1.5);
         if(!c.getLevel().isClientSide()){
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
             for(LivingEntity e : nearby_ents){
@@ -340,7 +342,23 @@ public class SpecialCaseMan {
     }
 
     private static void verdantEscape(CrucibleBlockEntity c) {
-        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool((ServerLevel) c.getLevel(), "no_moss", 0.5F)) return;
+        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool((ServerLevel) c.getLevel(), "no_moss", 0.5F))
+            return;
         ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
+    }
+
+    public static void solidifyPortal(Level l, BlockPos p, Direction.Axis axis){
+        HyperPortalShape portal = new HyperPortalShape(l, p, axis);
+        if(portal.isComplete()){
+            portal.createSolidPortalBlocks();
+        }
+    }
+
+    public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
+        for(Power p : c.getPowerMap().keySet()){
+            if(c.getPowerLevel(p) > 1400){
+                IncompleteStaffBlock.tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
+            }
+        }
     }
 }

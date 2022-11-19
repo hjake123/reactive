@@ -3,7 +3,6 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
-import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.items.CrystalIronItem;
@@ -22,10 +21,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -196,10 +192,10 @@ public class ReactionEffects {
     // Causes nearby bonemeal-ables to be fertilized occasionally.
     public static CrucibleBlockEntity growth(CrucibleBlockEntity c) {
         if(c.getLevel().isClientSide){
-            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos());
+            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos(), 0.1F);
         }else {
             Random random = new Random();
-            BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), -1, random.nextInt(-4, 4));
+            BlockPos target = c.getBlockPos().offset(random.nextInt(-32, 32), random.nextInt(-1, 0), random.nextInt(-32, 32));
             if (Objects.requireNonNull(c.getLevel()).getBlockState(target).getBlock() instanceof BonemealableBlock) {
                 ((BonemealableBlock) c.getLevel().getBlockState(target).getBlock()).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, target, c.getLevel().getBlockState(target));
             }
@@ -231,7 +227,7 @@ public class ReactionEffects {
     }
 
     // Cause blocks to fall down near the Crucible.
-    public static CrucibleBlockEntity gridbreak(CrucibleBlockEntity c) {
+    public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
         RandomSource random = level.random;
         BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), random.nextInt(-4, 4), random.nextInt(-4, 4));

@@ -1,0 +1,16 @@
+{
+  "name": "Spiraling Abyss",
+  "icon": "reactive:solid_portal",
+  "category": "reactive:objects_of_study",
+  "advancement": "reactive:portal_trade",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(1)Bizarrely, it seems that the Portal actually absorbs Power when connected via a Copper Sign to the Crucible. I can't imagine a use for such a phenomenon, so I suppose the exploration ends here..."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)Hello again. Yes, this seems like a dead end, but I wonder what might happen if you flood the Portal with $(4)a large amount of the same kind of Power it is made of?$(0) $(br2)The result might be $(4)delicate$(0)..."
+    }
+  ]
+}

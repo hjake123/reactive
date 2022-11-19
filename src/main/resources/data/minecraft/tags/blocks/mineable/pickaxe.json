@@ -3,6 +3,8 @@
     "reactive:crucible",
     "reactive:blaze_rod",
     "reactive:pure_quartz_block",
-    "reactive:volt_cell"
+    "reactive:volt_cell",
+    "reactive:solid_portal",
+    "reactive:runestone"
   ]
 }

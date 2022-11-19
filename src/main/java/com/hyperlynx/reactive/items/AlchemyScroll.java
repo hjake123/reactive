@@ -1,6 +1,8 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.util.Helper;
+import com.ibm.icu.text.MessagePattern;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -9,6 +11,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SimpleFoiledItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -28,21 +31,14 @@ public class AlchemyScroll extends SimpleFoiledItem {
     public @NotNull InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().getBlockState(context.getClickedPos()).is(Blocks.CAULDRON)){
             if(context.getLevel().isClientSide){
-                for(int i = 0; i < 30; i++){
-                    context.getLevel().addParticle(ParticleTypes.ENCHANT,
-                            context.getClickedPos().getX() + context.getLevel().random.nextFloat()/1.2,
-                            context.getClickedPos().getY() + context.getLevel().random.nextFloat()/1.4 + 1,
-                            context.getClickedPos().getZ() + context.getLevel().random.nextFloat()/1.2,
-                            context.getLevel().random.nextFloat() - 0.5,
-                            context.getLevel().random.nextFloat() - 0.5,
-                            context.getLevel().random.nextFloat() - 0.5);
-                }
+                Helper.drawParticleRing(context.getLevel(), Registration.RUNE_PARTICLE, context.getClickedPos(), 0.7, 0.9, 50);
             }else{
                 context.getLevel().setBlock(context.getClickedPos(), Registration.CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.8F);
             }
-            context.getItemInHand().shrink(1);
+            if(!context.getPlayer().isCreative())
+                context.getPlayer().setItemInHand(context.getHand(), Items.PAPER.getDefaultInstance());
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;

@@ -11,6 +11,18 @@
     {
       "type": "patchouli:empty",
       "draw_filler": false
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": false
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": false
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)Did I scare you? Seriously, though, it's a good source of Vital Power."
     }
   ]
 }

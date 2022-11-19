@@ -1,12 +1,11 @@
 {
   "replace": false,
   "values": [
-    "#forge:gems/prismarine",
     "minecraft:phantom_membrane",
     "minecraft:ghast_tear",
     "#forge:ender_pearls",
     "minecraft:echo_shard",
     "minecraft:enchanted_book",
-    "reactive:scroll"
+    "reactive:solid_portal"
   ]
 }

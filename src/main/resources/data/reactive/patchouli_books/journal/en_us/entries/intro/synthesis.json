@@ -16,12 +16,12 @@
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle_a1.png"],
-      "text": "These diamonds represent the $(4)Basic Powers$(0)."
+      "text": "Opposing $(4)Basic Powers$(0) may annihilate."
     },
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle_a2.png"],
-      "text": "These, the $(3)Esoteric Powers$(0) each can Synthesize."
+      "text": "Certain adjacent powers may form $(3)Esoteric Powers$(0)."
     },
     {
       "type": "patchouli:text",
@@ -30,6 +30,11 @@
     {
       "type": "patchouli:text",
       "text": "$(o)They go on about this for like 20 pages, and it's not relevant to you anyway. Test these reactions for yourself and keep track of what happens. $(br2)If you find $(4)a pair of the six Basic Powers that doesn't annihilate with anything$(0), that would be evidence that this model is wrong. $(br2)Otherwise, treat the diagram as fact."
+    },
+    {
+      "type": "patchouli:image",
+      "images": ["reactive:textures/gui/rune_circle_alt.png"],
+      "text": "$(o)If you find a pair that doesn't annihilate, use this diagram."
     }
   ]
 }

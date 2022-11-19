@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,15 +21,11 @@ public class CrystalIronItem extends Item {
         super(props);
     }
 
-    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
-        return effectNotBlocked(level, e, cost, false);
-    }
-
     // Return whether the given entity should be subjected to an effect (i.e. if there was no Crystal Iron blocking it.
     // Also damages the item if necessary.
-    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost, boolean always_damages_protector) { // TODO: doesn't break in inventory??
+    public static boolean effectNotBlocked(Level level, LivingEntity e, int cost) {
         if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
-            if(cost > 0 && (always_damages_protector || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1)) {
+            if(cost > 0) {
                 if (e.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
                     e.getOffhandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
                 } else {
@@ -39,7 +34,7 @@ public class CrystalIronItem extends Item {
             }
             return false;
         }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
-            if(cost > 0 && (always_damages_protector || WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) > 1)){
+            if(cost > 0){
                 for(ItemStack stack : ((Player) e).getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){
                         stack.hurtAndBreak(cost, (ServerPlayer) e, (ServerPlayer s) -> {});
@@ -63,22 +58,22 @@ public class CrystalIronItem extends Item {
             for(MobEffectInstance mei : holder.getActiveEffects()) {
                 if(mei.getEffect().equals(MobEffects.WITHER)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 2);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.POISON)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 2);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.HUNGER) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_hunger", 0.7F)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 3);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.BAD_OMEN)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 3);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_slow", 0.3F)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 3);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.WEAKNESS) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_weakness", 0.5F)){
                     toBeRemoved = mei.getEffect();
-                    tryToGetHurt(stack, level, holder, 3);
+                    getHurt(stack, holder);
                 }
             }
 
@@ -88,9 +83,7 @@ public class CrystalIronItem extends Item {
         }
     }
 
-    private void tryToGetHurt(ItemStack stack, Level level, LivingEntity holder, int category){
-        if(WorldSpecificValues.CRYSTAL_IRON_UTILITY.get(level) != category){
-            stack.hurtAndBreak(1, holder, (LivingEntity l) -> {});
-        }
+    private void getHurt(ItemStack stack, LivingEntity holder){
+        stack.hurtAndBreak(1, holder, (LivingEntity l) -> {});
     }
 }

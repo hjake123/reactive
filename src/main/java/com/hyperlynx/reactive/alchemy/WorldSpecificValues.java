@@ -40,10 +40,4 @@ public class WorldSpecificValues {
     // 4: Vital is Verdant + Light
     // 5: Verdant is Vital + Light
 
-    public final static PrimedWSV CRYSTAL_IRON_UTILITY = new PrimedWSV("crystal_iron_utility", 0, 3);
-    // Determines what kinds of effects Crystal Iron can absorb without being damaged.
-    // 0 or 1: Crucible effects
-    // 2: Health-draining effects (Poison, Wither)
-    // 3: Other debuffs
-
 }

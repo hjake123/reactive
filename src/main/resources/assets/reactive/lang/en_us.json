@@ -15,6 +15,8 @@
   "item.reactive.soup": "Witch's Stew",
   "item.reactive.crystal_iron": "Ferrous Crystal",
   "item.reactive.phantom_residue": "Phantom Residue",
+  "item.reactive.ether": "Ether",
+  "item.reactive.active_ether": "Luminous Ether",
   "block.reactive.unnamed": "Unnamed Substance",
   "item.reactive.stardust": "Star Dust",
   "item.reactive.journal": "Accumulated Journal of Alchemical Knowledge",
@@ -26,5 +28,8 @@
   "block.reactive.volt_cell": "Volt Cell",
   "block.reactive.warp_sponge": "Effusive Sponge",
   "block.reactive.gold_foam": "Gold Foam",
-  "block.reactive.active_gold_foam": "Active Gold Foam"
+  "block.reactive.active_gold_foam": "Active Gold Foam",
+  "block.reactive.incomplete_staff": "Staff of Power",
+  "block.reactive.solid_portal": "Crystallized Nether Portal",
+  "block.reactive.runestone": "Runestone"
 }

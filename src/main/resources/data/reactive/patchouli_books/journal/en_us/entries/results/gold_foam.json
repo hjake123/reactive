@@ -2,11 +2,12 @@
   "name": "Gold Foam",
   "icon": "reactive:gold_foam",
   "category": "reactive:results",
+  "advancement": "reactive:see_synthesis",
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "reactive:gold_foam",
-      "text": "This Material is an Enigma: Precious Metal turned to an Aerated, Slippery Foam-Like Substance. $(br2)Due to its Squishy nature, it also limits Jumping Height. $(br2)One of those $(l:reactive:intro/synthesis)Secret Powers$(/l) may bring it about under the Visage of a $(4)Golden Symbol$(0)."
+      "text": "This Material is an Enigma: Precious Metal turned to an Aerated, Slippery Foam-Like Substance. $(br2)Due to its Squishy nature, it also limits Jumping Height. $(br2)One of those $(l:reactive:intro/synthesis)Esoteric Powers$(/l) may bring it about under the Visage of a $(4)Golden Symbol$(0)."
     }
-    ]
+  ]
 }

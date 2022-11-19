@@ -57,15 +57,16 @@ public class ReactionMan {
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
         REACTIONS.add(new AnnihilationReaction(l, "annihilation0v3", BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(3), ReactionEffects::discharge));
         REACTIONS.add(new AnnihilationReaction(l, "annihilation1v4", BASE_POWER_LIST.get(1), BASE_POWER_LIST.get(4), ReactionEffects::sicklySmoke));
-        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.8F)) // There is a chance for one pair of opposite powers to not annihilate.
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.8F)) {
+            // There is a chance for one pair of opposite powers to not annihilate.
             REACTIONS.add(new AnnihilationReaction(l, "annihilation2v5", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::weakeningSmoke));
+        }
 
         // Add synthesis reactions for the three esoteric powers.
         REACTIONS.add(new SynthesisReaction(l, "x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
-
-        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.8F)) {
+        if(WorldSpecificValue.getBool((ServerLevel) l, "unbroken_hexagon", 0.7F)) {
             REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
                     .setStimulus(Reaction.Stimulus.ELECTRIC));
             REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
@@ -74,30 +75,31 @@ public class ReactionMan {
         else{
             REACTIONS.add(new SynthesisReaction(l, "y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(3), BASE_POWER_LIST.get(4))
                     .setStimulus(Reaction.Stimulus.ELECTRIC));
-            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.ELECTRIC));
+            REACTIONS.add(new SynthesisReaction(l, "z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5))
+                    .setStimulus(Reaction.Stimulus.ELECTRIC));
         }
 
         // Add effect reactions to do crazy things.
-        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new EffectReaction(l, "flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new EffectReaction(l, "fall_effect", ReactionEffects::gridbreak, Powers.WARP_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1));
+        REACTIONS.add(new FreeEffectReaction(l, "flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get()));
+        REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, 3));
 
         int order = WorldSpecificValues.EFFECT_ORDER.get(l);
         switch (order) {
             case 1 -> {
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 2 -> {
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 3 -> {
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
         }
 

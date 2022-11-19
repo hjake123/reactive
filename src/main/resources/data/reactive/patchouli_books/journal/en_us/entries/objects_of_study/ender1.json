@@ -1,5 +1,5 @@
 {
-  "name": "Ender Teleportation",
+  "name": "Ender Pearls",
   "icon": "minecraft:ender_pearl",
   "category": "reactive:objects_of_study",
   "advancement": "reactive:dissolve_tp",

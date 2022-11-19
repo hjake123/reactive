@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
+import com.hyperlynx.reactive.fx.RuneParticle;
 import com.hyperlynx.reactive.fx.StardustParticle;
 import com.hyperlynx.reactive.fx.SymbolRenderer;
 import com.hyperlynx.reactive.items.*;
@@ -117,6 +118,25 @@ public class Registration {
                     .jumpFactor(0.7F).sound(SoundType.WOOL).speedFactor(1.15F)));
     public static final RegistryObject<Item> GOLD_FOAM_ITEM = fromBlock(GOLD_FOAM, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> SOLID_PORTAL = BLOCKS.register("solid_portal",
+            () -> new SolidPortalBlock(BlockBehaviour.Properties.copy(Blocks.GLOWSTONE)));
+    public static final RegistryObject<Item> SOLID_PORTAL_ITEM = fromBlock(SOLID_PORTAL, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> RUNESTONE = BLOCKS.register("runestone",
+            () -> new RunestoneBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE)));
+    public static final RegistryObject<Item> RUNESTONE_ITEM = fromBlock(RUNESTONE, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> STAFF_OF_POWER = BLOCKS.register("incomplete_staff",
+            () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
+    public static final RegistryObject<Item> STAFF_OF_POWER_ITEM = ITEMS.register(STAFF_OF_POWER.getId().getPath(),
+            () -> new BlockItem(STAFF_OF_POWER.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+
+    public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
+    public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_POWER.getId().getPath(),
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::radiance));
+
+    // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
             () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
 
@@ -139,7 +159,6 @@ public class Registration {
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
-
 
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
@@ -164,6 +183,10 @@ public class Registration {
     public static final RegistryObject<ParticleType<SimpleParticleType>> STARDUST_PARTICLE_TYPE = PARTICLES.register("stardust",
             () -> STARDUST_PARTICLE);
 
+    public static final SimpleParticleType RUNE_PARTICLE = new SimpleParticleType(false);
+    public static final RegistryObject<ParticleType<SimpleParticleType>> RUNE_PARTICLE_TYPE = PARTICLES.register("runes",
+            () -> RUNE_PARTICLE);
+
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
@@ -187,8 +210,7 @@ public class Registration {
     public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"));
     public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
     public static final FlagCriterion MAKE_RIFT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"));
-
-
+    public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
 
     // ----------------------- METHODS ------------------------
 
@@ -211,6 +233,7 @@ public class Registration {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
         Minecraft.getInstance().particleEngine.register(STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(RUNE_PARTICLE_TYPE.get(), RuneParticle.RuneParticleProvider::new);
     }
 
     @SubscribeEvent
@@ -225,6 +248,7 @@ public class Registration {
         evt.enqueueWork(() -> CriteriaTriggers.register(TRY_LAVA_CRUCIBLE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_TRADE_TRIGGER));
     }
 
     @SubscribeEvent

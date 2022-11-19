@@ -40,17 +40,20 @@ public class WarpBottleItem extends PowerBottleItem{
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         if(isRiftBottle(player.getItemInHand(hand))){
             CompoundTag tag = player.getItemInHand(hand).getTag();
+            boolean warp_occurred = false;
+
             if(tag != null && level.dimension().equals(getTeleportDimension(tag).orElse(null))){
                 GlobalPos destination = getTeleportPosition(tag);
                 if(destination != null) {
                     if (CrystalIronItem.effectNotBlocked(level, player, 1)) {
                         player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
                     } else {
-                        SpecialCaseMan.tryTeleportNearbyEntity(player.getOnPos(), level, destination.pos(), false);
+                        warp_occurred = SpecialCaseMan.tryTeleportNearbyEntity(player.getOnPos(), level, destination.pos(), false);
                     }
                 }
             }
-            player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+            if(warp_occurred && !player.isCreative())
+                player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
         return super.use(level, player, hand);

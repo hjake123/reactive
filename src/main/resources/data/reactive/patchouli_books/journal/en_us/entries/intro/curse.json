@@ -27,8 +27,8 @@
       "draw_filler": false
     },
     {
-      "type": "patchouli:image",
-      "images": ["reactive:textures/gui/eye.png"]
+      "type": "reactive:transmute",
+      "recipe": "soul_sand_from_red_sand"
     }
   ]
 }

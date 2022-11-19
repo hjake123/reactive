@@ -10,6 +10,7 @@
     "minecraft:crying_obsidian",
     "minecraft:enchanted_book",
     "reactive:scroll",
-    "patchouli:guide_book"
+    "patchouli:guide_book",
+    "reactive:solid_portal"
   ]
 }

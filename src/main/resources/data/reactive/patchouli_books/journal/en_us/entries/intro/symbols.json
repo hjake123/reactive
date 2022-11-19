@@ -20,7 +20,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "gold_symbol",
-      "text": "$(o)A $(item)Gold Symbol$(0) will bring out Gold's radiance to make certain Reactions possible that otherwise would not occur."
+      "text": "$(o)A $(item)Gold Symbol$(0) brings out Gold's radiance to make certain Reactions possible that otherwise would not occur."
     },
     {
       "type": "patchouli:text",

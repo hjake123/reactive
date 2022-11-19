@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:smooth_stone"
+  },
+  "product": {
+    "item": "reactive:runestone"
+  },
+  "reagents": ["reactive:mind", "reactive:soul"],
+  "min": 900,
+  "cost": 50
+}

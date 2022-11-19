@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
@@ -146,6 +148,21 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get())){
             if(!crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
 
+                // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
+                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL)){
+                    if(crucible.getTotalPowerLevel() > 400) {
+                        if (crucible.getPowerLevel(Powers.MIND_POWER.get()) == CRUCIBLE_MAX_POWER) {
+                            BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL);
+                            SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
+                            crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        }
+
+                        crucible.expendAnyPowerExcept(null, 400);
+                        Helper.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                    }
+                }
+
                 // Blaze Rods add blaze.
                 if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
                     crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
@@ -186,11 +203,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
         // Slowly dilute powers in the rain.
         if(level.canSeeSky(crucible.getBlockPos()) && level.isRainingAt(crucible.getBlockPos())){
-                crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
+            crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
         }
     }
 
-    // The method that actually performs reactions.
+    // The method that performs reactions.
     private static void react(Level level, CrucibleBlockEntity crucible){
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
             if(level.getRandom().nextFloat() > crucible.getPowerLevel(Powers.BODY_POWER.get()) * 0.7F/CRUCIBLE_MAX_POWER) { // Body suppresses reactions.
