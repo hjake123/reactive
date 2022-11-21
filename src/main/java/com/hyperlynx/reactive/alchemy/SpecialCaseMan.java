@@ -356,7 +356,7 @@ public class SpecialCaseMan {
 
     public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
         for(Power p : c.getPowerMap().keySet()){
-            if(c.getPowerLevel(p) > 1400){
+            if(c.getPowerLevel(p) > 800){
                 IncompleteStaffBlock.tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
             }
         }

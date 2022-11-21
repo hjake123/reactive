@@ -10,6 +10,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,13 +59,15 @@ public class IncompleteStaffBlock extends StaffBlock{
 
         }else{
             l.removeBlock(pos, true);
+            ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.STAFF_OF_POWER_ITEM.get().getDefaultInstance());
+            l.addFreshEntity(dropped_staff);
             l.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
         }
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
-        if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05){
+        if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
             Helper.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, state.getValue(PROGRESS) * 0.2 + 0.2, 1);
         }
     }

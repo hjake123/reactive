@@ -16,12 +16,12 @@
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle_a1.png"],
-      "text": "Opposing $(4)Basic Powers$(0) may annihilate."
+      "text": "Opposing $(4)Basic Powers$(0) annihilate."
     },
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle_a2.png"],
-      "text": "Certain adjacent powers may form $(3)Esoteric Powers$(0)."
+      "text": "Adjacent pairs synthesize $(3)Esoteric Powers$(0)."
     }
   ]
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "reactive:incomplete_staff"
+        }
+      ],
+      "name": "staff",
+      "rolls": 1.0
+    }
+  ]
+}

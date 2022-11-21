@@ -1,7 +1,19 @@
 {
-  "variants":{
-    "":{
+  "variants": {
+    "facing=north": {
       "model": "reactive:block/runestone"
+    },
+    "facing=west": {
+      "model": "reactive:block/runestone",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "reactive:block/runestone",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "reactive:block/runestone",
+      "y": 270
     }
   }
 }
