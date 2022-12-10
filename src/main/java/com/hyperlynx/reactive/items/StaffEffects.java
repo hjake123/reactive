@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -67,6 +66,24 @@ public class StaffEffects {
             ParticleScribe.drawParticleLine(user.level, ParticleTypes.ELECTRIC_SPARK,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                     beam_end.x, beam_end.y, beam_end.z, 10, 0.1);
+        }
+        return user;
+    }
+
+    public static Player blazing(Player user){
+        var blockHit = Helper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
+        var blockHitPos = blockHit.getLocation();
+        var start = user.getEyePosition();
+        start = start.add(0, -0.3, 0);
+
+        if(user instanceof ServerPlayer) {
+            AABB aoe = new AABB(start, blockHitPos);
+            for(LivingEntity victim : user.level.getEntitiesOfClass(LivingEntity.class, aoe)){
+                victim.setRemainingFireTicks(1000);
+                victim.hurt(DamageSource.IN_FIRE, 2);
+            }
+        }else{
+            ParticleScribe.drawParticleStream(user.level, ParticleTypes.FLAME, start, user.getLookAngle(), 5);
         }
         return user;
     }

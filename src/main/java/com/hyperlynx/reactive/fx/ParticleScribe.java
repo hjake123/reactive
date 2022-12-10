@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -121,6 +122,14 @@ public class ParticleScribe {
                 double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
                 ((ServerLevel) level).sendParticles(opt, x, pos.getY() + 0.6, z, 1, xspeed, yspeed, zspeed, 0.0);
             }
+        }
+    }
+
+    public static void drawParticleStream(Level level, ParticleOptions opt, Vec3 start, Vec3 angle, int frequency){
+        angle.normalize();
+        angle.multiply(0.0003, 0.0003, 0.0003);
+        for(int i = 0; i < frequency; i++){
+            level.addParticle(opt, start.x, start.y, start.z, angle.x, angle.y, angle.z);
         }
     }
 }
