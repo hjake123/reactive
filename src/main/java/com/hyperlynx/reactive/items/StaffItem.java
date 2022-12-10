@@ -21,10 +21,12 @@ import java.util.function.Function;
 
 public class StaffItem extends BlockItem {
     Function<Player, Player> effectFunction;
+    boolean beam; // Whether the effect should render as a beam (true) or zap (false).
 
-    public StaffItem(Block block, Properties props, Function<Player, Player> effect) {
+    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam) {
         super(block, props);
         effectFunction = effect;
+        this.beam = beam;
     }
 
     @Override
@@ -34,11 +36,18 @@ public class StaffItem extends BlockItem {
 
     @Override
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
-        if(!level.isClientSide && ticks % 10 == 1)
-            effectFunction.apply((Player) player);
+        if(ticks % 10 == 1) {
+            if(level.isClientSide && !beam)
+                effectFunction.apply((Player) player);
+
+            if(!level.isClientSide)
+                effectFunction.apply((Player) player);
+
+        }
 
         if(level.isClientSide) {
-            effectFunction.apply((Player) player);
+            if(beam)
+                effectFunction.apply((Player) player);
             return;
         }
 

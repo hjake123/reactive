@@ -3,14 +3,12 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
-import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -45,8 +43,8 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(ClientLevel l, CrucibleBlockEntity crucible) {
-        Helper.drawParticleRing(l, ParticleTypes.ASH, crucible.getBlockPos(), 0.45, 0.7, 1);
+    public void render(final ClientLevel l, final CrucibleBlockEntity crucible) {
+        ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, crucible.getBlockPos(), 0.45, 0.7, 1);
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.util.Helper;
+import com.hyperlynx.reactive.fx.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -81,7 +81,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
             if(level.dimensionType().ultraWarm()){
                 level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
                 for(int i = 0; i < 5; i++)
-                    Helper.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
+                    ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
                 Registration.TRY_NETHER_CRUCIBLE_TRIGGER.trigger((ServerPlayer)player);
             }else{
                 level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
@@ -96,7 +96,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
             level.explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
             level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 1.0F);
             for(int i = 0; i < 5; i++)
-                Helper.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
+                ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
             level.setBlock(pos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
             Registration.TRY_LAVA_CRUCIBLE_TRIGGER.trigger((ServerPlayer)player);
         }

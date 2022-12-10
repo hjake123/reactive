@@ -131,10 +131,16 @@ public class Registration {
     public static final RegistryObject<Item> STAFF_OF_POWER_ITEM = ITEMS.register(STAFF_OF_POWER.getId().getPath(),
             () -> new BlockItem(STAFF_OF_POWER.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
 
+    // Register staves
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::radiance));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::radiance, true));
+
+    public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
+    public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
+            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3500), StaffEffects::warping, false));
 
     // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",

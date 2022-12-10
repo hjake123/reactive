@@ -7,7 +7,6 @@ import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.util.Color;
-import com.hyperlynx.reactive.util.Helper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
@@ -60,7 +59,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private void renderElectricity(CrucibleBlockEntity crucible){
         float speedDivisor = 27F;
         if(crucible.electricCharge > 0){
-            Helper.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.ELECTRIC_SPARK, crucible.getBlockPos(),
+            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.ELECTRIC_SPARK, crucible.getBlockPos(),
                     0.05F,
                     (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
                     (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,

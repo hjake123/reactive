@@ -5,9 +5,9 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.Helper;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,11 +42,11 @@ public class ReactionEffects {
         if (!c.getLevel().isClientSide){
             BlockPos pos = c.getBlockPos();
 
-            Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, pos, c.areaMemory.fetch(c.getLevel(),
+            ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, pos, c.areaMemory.fetch(c.getLevel(),
                     ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), 20, 7, 0.8F);
 
             if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
-                Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, c.areaMemory.fetch(c.getLevel(),
+                ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, c.areaMemory.fetch(c.getLevel(),
                         ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), c.areaMemory.fetch(c.getLevel(),
                         ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()), 20, 7, 0.8F);
             }else{
@@ -69,7 +69,7 @@ public class ReactionEffects {
         if (!c.getLevel().isClientSide){
             c.getLevel().setBlock(symbol_position, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         }else{
-            Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.EFFECT,
+            ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.EFFECT,
                     c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                     symbol_position.getX()+0.5, symbol_position.getY()+0.5, symbol_position.getZ()+0.5, 12, 7,0.4);
         }
@@ -90,7 +90,7 @@ public class ReactionEffects {
                 }
             }
         } else {
-            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.LARGE_SMOKE, c.getBlockPos(), 0.3F);
+            ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.LARGE_SMOKE, c.getBlockPos(), 0.3F);
         }
         return c;
     }
@@ -109,7 +109,7 @@ public class ReactionEffects {
                 }
             }
         } else {
-            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.ASH, c.getBlockPos(), 0.3F);
+            ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.ASH, c.getBlockPos(), 0.3F);
         }
         return c;
     }
@@ -121,7 +121,7 @@ public class ReactionEffects {
             if (potential_rod != null) {
                 if (!c.getLevel().isClientSide) {
                     ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(c.getLevel().getBlockState(potential_rod), c.getLevel(), potential_rod);
-                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
+                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
                     c.getLevel().playSound(null, potential_rod, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 0.1F, 1.3F);
@@ -138,7 +138,7 @@ public class ReactionEffects {
                 if (!c.getLevel().isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(c.getLevel(), victim, 2))
                         victim.hurt(DamageSource.MAGIC, 12);
-                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
+                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
                 }
@@ -166,7 +166,7 @@ public class ReactionEffects {
                     if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
                         e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                     }
-                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
                             origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
                             e.getX(),e.getEyeY()-0.1, e.getZ(), 10, 7, 0.3);
                 }
@@ -176,7 +176,7 @@ public class ReactionEffects {
                     if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
                         e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                     }
-                    Helper.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
                             origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
                             e.getX(), e.getEyeY()-0.1, e.getZ(), 5, 12, 0.7);
                 }
@@ -192,7 +192,7 @@ public class ReactionEffects {
     // Causes nearby bonemeal-ables to be fertilized occasionally.
     public static CrucibleBlockEntity growth(CrucibleBlockEntity c) {
         if(c.getLevel().isClientSide){
-            Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos(), 0.1F);
+            ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos(), 0.1F);
         }else {
             Random random = new Random();
             BlockPos target = c.getBlockPos().offset(random.nextInt(-32, 32), random.nextInt(-1, 0), random.nextInt(-32, 32));
@@ -212,9 +212,9 @@ public class ReactionEffects {
 
         if(c.getLevel().isClientSide){
             if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
-                Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
+                ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
             }else{
-                Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
+                ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
             }
         }else {
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
@@ -236,7 +236,7 @@ public class ReactionEffects {
         if(!level.isClientSide){
             FallingBlockEntity.fall(level, target, level.getBlockState(target));
         }else{
-            Helper.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
+            ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
         }
         return c;
     }

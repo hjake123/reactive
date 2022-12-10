@@ -31,6 +31,7 @@
   "block.reactive.active_gold_foam": "Active Gold Foam",
   "block.reactive.incomplete_staff": "Staff of Power",
   "block.reactive.light_staff": "Radiant Staff of Power",
+  "block.reactive.warp_staff": "Warped Staff of Power",
   "block.reactive.solid_portal": "Crystallized Nether Portal",
   "block.reactive.runestone": "Runestone"
 }

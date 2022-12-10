@@ -3,12 +3,10 @@ package com.hyperlynx.reactive.alchemy;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
+import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
-import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.Helper;
-import com.hyperlynx.reactive.util.HyperPortalShape;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -158,7 +156,7 @@ public class SpecialCaseMan {
                     EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             }
             e.kill();
-            Helper.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
+            ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
                     c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
                     candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20, 0.01);
 
@@ -196,7 +194,7 @@ public class SpecialCaseMan {
             }
         }
         if(!foundTarget){
-            Helper.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER, p, 20);
+            FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER, p, 20);
             c.enderRiftStrength = 2000;
         }
         e.kill();
@@ -333,9 +331,9 @@ public class SpecialCaseMan {
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
             for(int i = 0; i < 10; i++) {
                 if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
-                    Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                    ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
                 }else{
-                    Helper.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                    ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
                 }
             }
         }

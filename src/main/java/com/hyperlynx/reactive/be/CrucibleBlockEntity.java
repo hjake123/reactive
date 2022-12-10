@@ -4,8 +4,8 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
-import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
@@ -113,7 +113,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     crucible.setDirty(level, pos, state);
                     level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
                 }else if(!state.getValue(CrucibleBlock.FULL) // Check for Effusive Sponges and fill if there is one.
-                        && Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.75
+                        && crucible.getLevel().random.nextFloat() < 0.75
                         && crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())){
                     crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                     level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
@@ -158,7 +158,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        Helper.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                         crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                     }
                 }
@@ -225,16 +225,18 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return false;
         }
         boolean changed = false;
-        for(Entity e : CrucibleBlock.getEntitesInside(pos, level)){
-            if(e instanceof ItemEntity){
-                SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) e);
-                if(!e.isAlive()) continue; // The special case may have removed the item entity.
-                changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) e));
-                changed = changed || tryReduceToPower(((ItemEntity) e).getItem(), crucible);
+        for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
+            if(entity_inside instanceof ItemEntity){
+                SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
+                // The special case may have removed the item entity; check if it has died.
+                if(!entity_inside.isAlive()) continue;
+
+                changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
+                changed = changed || tryReduceToPower(((ItemEntity) entity_inside).getItem(), crucible);
 
                 // Remove entities that were completely transmuted or dissolved.
-                if(((ItemEntity) e).getItem().getCount() == 0){
-                    e.remove(Entity.RemovalReason.KILLED);
+                if(((ItemEntity) entity_inside).getItem().getCount() == 0){
+                    entity_inside.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }
@@ -242,27 +244,27 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible, and it returns true.
-    public static boolean tryReduceToPower(ItemStack i, CrucibleBlockEntity crucible){
-        List<Power> stack_power_list = Power.getSourcePower(i);
+    public static boolean tryReduceToPower(ItemStack stack, CrucibleBlockEntity crucible){
+        List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
         for (Power p : stack_power_list) {
-            int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(i, crucible.getLevel());
+            int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(stack, crucible.getLevel());
             if(dissolve_capacity <= 0){
                 continue;
             }
-            changed = changed || crucible.addPower(p, i.getCount() * Power.getSourceLevel(i, crucible.getLevel()) / stack_power_list.size());
-            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), i, Math.min(i.getCount(), dissolve_capacity));
-            i.setCount(Math.max(i.getCount()-dissolve_capacity, 0));
+            changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack, crucible.getLevel()) / stack_power_list.size());
+            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity));
+            stack.setCount(Math.max(stack.getCount()-dissolve_capacity, 0));
         }
         return changed;
     }
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
-    private static void tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack item, int count){
+    private static void tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count){
         List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for (DissolveRecipe r : purify_recipes) {
-            if(r.matches(new FakeContainer(item), level)){
-                ItemStack reactant = item.copy();
+            if(r.matches(new FakeContainer(stack), level)){
+                ItemStack reactant = stack.copy();
                 reactant.setCount(count);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
                 return;
@@ -302,51 +304,54 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(this.getBlockState().getValue(CrucibleBlock.FULL) && !event.getEntity().level.isClientSide && !Objects.requireNonNull(this.getLevel()).isClientSide){
-            double dist = Helper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-            if(dist < ConfigMan.COMMON.crucibleRange.get()
-                    && !areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
-
-                if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
-                    addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(event.getEntity().level, "undead_curse_strength", 30, 300));
-                    return;
-                }
-                sacrificeCount++;
-                Helper.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, Registration.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
-
-                double x = event.getEntity().getX();
-                double y = event.getEntity().getY();
-                double z = event.getEntity().getZ();
-
-                // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
-                if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get(getLevel()) && getPowerLevel(Powers.MIND_POWER.get()) > 0
-                && !(event.getEntity() instanceof Phantom)
-                && (event.getEntity().getLevel().isNight())){
-                    spawnPhantom(x, y, z);
-                }else{
-                    Helper.drawParticleLine(level, ParticleTypes.CLOUD,
-                            getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.4, getBlockPos().getZ() + 0.5,
-                            x, y, z, 15, 0.3);
-                }
-
-                // Add Vital due to sacrifices.
-                int power;
-                int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
-                if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
-                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
-                } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
-                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
-                } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
-                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
-                } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
-                    power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
-                } else {
-                    power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
-                }
-                addPower(Powers.VITAL_POWER.get(), power);
-                setDirty();
-            }
+        if(!this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level.isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
+            return;
         }
+
+        double dist = Helper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
+        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())) {
+            return;
+        }
+
+        if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
+            addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(event.getEntity().level, "undead_curse_strength", 30, 300));
+            return;
+        }
+
+        sacrificeCount++;
+        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, Registration.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
+
+        double x = event.getEntity().getX();
+        double y = event.getEntity().getY();
+        double z = event.getEntity().getZ();
+
+        // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
+        if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get(getLevel()) && getPowerLevel(Powers.MIND_POWER.get()) > 0
+        && !(event.getEntity() instanceof Phantom)
+        && (event.getEntity().getLevel().isNight())){
+            spawnPhantom(x, y, z);
+        }else{
+            ParticleScribe.drawParticleLine(level, ParticleTypes.CLOUD,
+                    getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.4, getBlockPos().getZ() + 0.5,
+                    x, y, z, 15, 0.3);
+        }
+
+        // Add Vital due to sacrifices.
+        int power;
+        int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
+        if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
+            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+        } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
+            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+        } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
+            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+        } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
+            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+        } else {
+            power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
+        }
+        addPower(Powers.VITAL_POWER.get(), power);
+        setDirty();
     }
 
     private void spawnPhantom(double x, double y, double z) {
@@ -354,7 +359,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         p.setPos(new Vec3(x, y +2, z));
         p.setPhantomSize(this.getLevel().random.nextInt(1, 4));
         getLevel().addFreshEntity(p);
-        Helper.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
+        ParticleScribe.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
     }
 
     @Override
@@ -373,6 +378,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public float getOpacity() {
         return 0.7F + (.3F * getTotalPowerLevel()/CRUCIBLE_MAX_POWER);
     }
+
+    // These methods manage power in the Crucible. They might be extracted to an interface later.
 
     @Override
     public boolean addPower(Power p, int amount) {

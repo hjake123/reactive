@@ -44,7 +44,7 @@ public class EffectReaction extends Reaction{
     }
 
     @Override
-    public void render(ClientLevel l, CrucibleBlockEntity crucible) {
+    public void render(final ClientLevel l, final CrucibleBlockEntity crucible) {
         effectFunction.apply(crucible);
     }
 
