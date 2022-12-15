@@ -33,6 +33,9 @@
   "block.reactive.light_staff": "Radiant Staff of Power",
   "block.reactive.warp_staff": "Warping Staff of Power",
   "block.reactive.blaze_staff": "Blazing Staff of Power",
+  "block.reactive.soul_staff": "Spectral Staff of Power",
+  "block.reactive.mind_staff": "Arcane Staff of Power",
+  "block.reactive.vital_staff": "Living Staff of Power",
   "block.reactive.solid_portal": "Crystallized Nether Portal",
   "block.reactive.runestone": "Runestone"
 }

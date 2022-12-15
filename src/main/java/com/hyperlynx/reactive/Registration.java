@@ -3,6 +3,7 @@ package com.hyperlynx.reactive;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.be.StaffBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.CrucibleRenderer;
@@ -126,26 +127,44 @@ public class Registration {
             () -> new RunestoneBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE)));
     public static final RegistryObject<Item> RUNESTONE_ITEM = fromBlock(RUNESTONE, ReactiveMod.CREATIVE_TAB);
 
-    public static final RegistryObject<Block> STAFF_OF_POWER = BLOCKS.register("incomplete_staff",
-            () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
-    public static final RegistryObject<Item> STAFF_OF_POWER_ITEM = ITEMS.register(STAFF_OF_POWER.getId().getPath(),
-            () -> new BlockItem(STAFF_OF_POWER.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
-
     // Register staves
+    public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
+            () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
+    public static final RegistryObject<Item> INCOMPLETE_STAFF_ITEM = ITEMS.register(INCOMPLETE_STAFF.getId().getPath(),
+            () -> new BlockItem(INCOMPLETE_STAFF.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(1)));
+
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::radiance, true));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2500), StaffEffects::radiance, true));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
-            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3500), StaffEffects::warping, false));
+            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::warping, false));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
-            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2500), StaffEffects::blazing, true));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::blazing, true));
+
+    public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
+    public static final RegistryObject<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2000), StaffEffects::spectral, false));
+
+    public static final RegistryObject<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
+    public static final RegistryObject<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3500), StaffEffects::missile, false));
+
+    public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
+            () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
+    public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2000), StaffEffects::living, true));
+
+    public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
+            () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get()).build(null));
 
     // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",

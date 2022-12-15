@@ -12,11 +12,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
-public class IncompleteStaffBlock extends StaffBlock{
+public class IncompleteStaffBlock extends BaseStaffBlock{
 
     public static final IntegerProperty PROGRESS = IntegerProperty.create("progress", 0, 3);
     private static final double RING_HEIGHT = 1.1;
@@ -42,7 +43,17 @@ public class IncompleteStaffBlock extends StaffBlock{
         if(state.getValue(PROGRESS) == 3){
             // Then complete the staff!
             // TODO: make different staves depending on power exposure.
-            l.setBlock(pos, Registration.STAFF_OF_LIGHT.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+
+            Block staff_to_become = Blocks.FIRE;
+
+            if(exposed_power == Powers.LIGHT_POWER.get())
+                staff_to_become = Registration.STAFF_OF_LIGHT.get();
+            else if(exposed_power == Powers.WARP_POWER.get())
+                staff_to_become = Registration.STAFF_OF_WARP.get();
+            else if(exposed_power == Powers.BLAZE_POWER.get())
+                staff_to_become = Registration.STAFF_OF_BLAZE.get();
+
+            l.setBlock(pos, staff_to_become.defaultBlockState(), Block.UPDATE_CLIENTS);
             l.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 1.0F, 1.0F);
             ParticleScribe.drawParticleRing(l, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, 1, 40);
             return;
@@ -57,7 +68,7 @@ public class IncompleteStaffBlock extends StaffBlock{
 
         }else{
             l.removeBlock(pos, true);
-            ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.STAFF_OF_POWER_ITEM.get().getDefaultInstance());
+            ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.INCOMPLETE_STAFF_ITEM.get().getDefaultInstance());
             l.addFreshEntity(dropped_staff);
             l.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
         }

@@ -74,8 +74,8 @@ public class SpecialCaseMan {
             blazeEscape(c);
         if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "verdant_escape_threshold", 1300, 1500))
             verdantEscape(c);
-        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.STAFF_OF_POWER.get()))
-            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.STAFF_OF_POWER.get()));
+        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
+            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
     }
 
     public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack bottle){

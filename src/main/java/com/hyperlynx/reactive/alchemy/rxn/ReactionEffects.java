@@ -80,7 +80,7 @@ public class ReactionEffects {
         if (!c.getLevel().isClientSide) {
             if (c.getLevel().random.nextFloat() < 0.4) {
                 AABB aoe = new AABB(c.getBlockPos());
-                aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
+                aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
                     if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 1)) {
@@ -99,7 +99,7 @@ public class ReactionEffects {
         if (!c.getLevel().isClientSide) {
             if (c.getLevel().random.nextFloat() < 0.4) {
                 AABB aoe = new AABB(c.getBlockPos());
-                aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
+                aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity e : nearby_ents) {
                     if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 2)) {
@@ -152,7 +152,7 @@ public class ReactionEffects {
     // Either apply levitation to nearby entities, apply slow falling, or shoot a shulker bullet.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
         AABB aoe = new AABB(c.getBlockPos());
-        aoe.inflate(6); // Inflate the AOE to be 6x the size of the crucible.
+        aoe = aoe.inflate(6); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
 
         BlockPos origin_pos = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
