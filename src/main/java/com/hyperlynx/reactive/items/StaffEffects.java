@@ -193,7 +193,7 @@ public class StaffEffects {
         double b = (float)(k & 255) / 255.0F;
 
         for(int i = 0; i < 10; i++){
-            user.level.addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(2.0),
+            user.level.addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
                     user.getRandomZ(5.0), 0, 0, 0);
         }
 

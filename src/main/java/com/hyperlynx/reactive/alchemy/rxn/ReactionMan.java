@@ -12,6 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+// Uh-oh, looks like ReactionMan's on the hunt!
 // This class manages the world's reactions.
 // When the level unloads, it resets the cache of reaction.
 // When reactions are first asked for (likely by a ticking Crucible BE), it will calculate them.
