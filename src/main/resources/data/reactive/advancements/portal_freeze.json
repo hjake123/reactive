@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:portal_freeze_criterion"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "l": {
+      "item": "minecraft:lightning_rod"
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "q": {
+      "item": "reactive:pure_quartz_block"
+    },
+    "p": {
+      "item": "reactive:solid_portal"
+    }
+  },
+  "pattern": [
+    "pq ",
+    "gl ",
+    "lg "
+  ],
+  "result": {
+    "item": "reactive:incomplete_staff"
+  }
+}

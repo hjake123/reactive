@@ -9,6 +9,7 @@
     "#minecraft:saplings",
     "#minecraft:flowers",
     "minecraft:kelp",
-    "minecraft:sugar_cane"
+    "minecraft:sugar_cane",
+    "#minecraft:leaves"
   ]
 }

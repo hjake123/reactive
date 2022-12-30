@@ -10,7 +10,10 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Hello again. Yes, this seems like a dead end, but I wonder what might happen if you flood the Portal with $(4)a large amount of the same kind of Power it is made of?$(0) $(br2)The result might be $(4)delicate$(0)..."
+      "text": "$(o)Hello again. Yes, this seems like a dead end, but I wonder what might happen if you flood the Portal with $(4)a large amount of the same kind of Power it is made of?$(0) $(br2)The result might be $(4)delicate if the portal frame remains intact$(0)."
     }
-  ]
+  ],
+  "extra_recipe_mappings": {
+    "reactive:solid_portal": 1
+  }
 }

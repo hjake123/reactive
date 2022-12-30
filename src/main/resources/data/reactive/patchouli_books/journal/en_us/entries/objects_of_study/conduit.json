@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "I have heard tell of a powerful Artifact encountered on the High Seas. Indeed, my colleagues describe it as an Orb containing Immense Powers. $(br2)I, regrettably, have not earned one myself, but surely such an Item would be a marvelous Boon to any Alchemist's profession."
+      "text": "I have heard tell of a $(thing)powerful Artifact$(0) encountered on the High Seas. Indeed, my colleagues describe it as $(thing)an Orb containing Immense Powers$(0). $(br2)I, regrettably, have not earned one myself, but surely such an Item would be a marvelous Boon to any Alchemist's profession."
     },
     {
       "type": "patchouli:text",

@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These are referred to as $(#9d1e2d)Acid$(0), $(#9d1e2d)Body(0), and $(#9d1e2d)Verdant(0)."
+      "text":"$(o)It is worth noting that other kinds of substances can also appear in the Crucible. These are referred to as $(#9d1e2d)Acid$(0), $(#9d1e2d)Body$(0), and $(#9d1e2d)Verdant$(0)."
     },
     {
       "type": "patchouli:text",

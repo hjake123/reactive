@@ -63,16 +63,4 @@ public class AreaMemory {
         return null;
     }
 
-//    // Positions are ordered based on their distance from the host, closer first.
-//    class ProximityComparator implements Comparator<BlockPos>{
-//        @Override
-//        public int compare(BlockPos o1, BlockPos o2) {
-//            if(o1.distManhattan(hostPos) > o2.distManhattan(hostPos))
-//                return 1;
-//            else if(o1.distManhattan(hostPos) < o2.distManhattan(hostPos))
-//                return -1;
-//            return 0;
-//        }
-//    }
-
 }
