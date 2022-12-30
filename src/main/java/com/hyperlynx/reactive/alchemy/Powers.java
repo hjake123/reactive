@@ -30,4 +30,6 @@ public class Powers {
     public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF, "Secret",null));
     public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12, "Secret",null));
     public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8, "Secret",null));
+
+    public static final RegistryObject<Power> PRIMAL_POWER = POWERS.register("primal", () -> new Power("primal", 0xFFFFFF, "Primal", null));
 }

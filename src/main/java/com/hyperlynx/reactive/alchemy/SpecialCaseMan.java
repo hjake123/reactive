@@ -28,6 +28,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.MossBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 
 import java.util.*;
@@ -60,6 +62,8 @@ public class SpecialCaseMan {
             copperCharging(c);
         else if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get()) < 10)
             enderEyeFlyAway(c, e);
+        else if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700)
+            residualSlime(c, e);
 
         tryEmptyPowerBottle(e, c);
     }
@@ -276,6 +280,17 @@ public class SpecialCaseMan {
         c.setDirty();
     }
 
+    // Phantom residue + verdant = summon a slime.
+    private static void residualSlime(CrucibleBlockEntity c, ItemEntity e) {
+        c.expendPower(Powers.VERDANT_POWER.get(), 400);
+        c.setDirty();
+        e.kill();
+        Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.getLevel()));
+        slime.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.1, 0));
+        slime.setSize(1, true);
+        c.getLevel().addFreshEntity(slime);
+    }
+
     private static void soulEscape(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
         if(c.getLevel().isClientSide()){
@@ -307,8 +322,8 @@ public class SpecialCaseMan {
             for(LivingEntity e : nearby_ents){
                 if(e.getMobType().equals(MobType.UNDEAD))
                     continue;
-                e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 300, 1));
-                e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 1));
+                e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 300, 0));
+                e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 0));
                 e.hurt(DamageSource.MAGIC, 10);
                 if(e instanceof Player){
                     Registration.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
@@ -349,6 +364,8 @@ public class SpecialCaseMan {
         HyperPortalShape portal = new HyperPortalShape(l, p, axis);
         if(portal.isComplete()){
             portal.createSolidPortalBlocks();
+            if(!l.isClientSide)
+                FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, Registration.PORTAL_FREEZE_TRIGGER, p, 9);
         }
     }
 

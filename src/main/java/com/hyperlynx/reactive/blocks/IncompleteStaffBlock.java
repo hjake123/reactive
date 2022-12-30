@@ -42,9 +42,8 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
 
         if(state.getValue(PROGRESS) == 3){
             // Then complete the staff!
-            // TODO: make different staves depending on power exposure.
 
-            Block staff_to_become = Blocks.FIRE;
+            Block staff_to_become = Blocks.AIR;
 
             if(exposed_power == Powers.LIGHT_POWER.get())
                 staff_to_become = Registration.STAFF_OF_LIGHT.get();
@@ -52,6 +51,17 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
                 staff_to_become = Registration.STAFF_OF_WARP.get();
             else if(exposed_power == Powers.BLAZE_POWER.get())
                 staff_to_become = Registration.STAFF_OF_BLAZE.get();
+            else if(exposed_power == Powers.MIND_POWER.get())
+                staff_to_become = Registration.STAFF_OF_MIND.get();
+            else if(exposed_power == Powers.VITAL_POWER.get())
+                staff_to_become = Registration.STAFF_OF_LIFE.get();
+            else if(exposed_power == Powers.SOUL_POWER.get())
+                staff_to_become = Registration.STAFF_OF_SOUL.get();
+
+            if(staff_to_become == Blocks.AIR){
+                dropAsItem(l, pos);
+                return;
+            }
 
             l.setBlock(pos, staff_to_become.defaultBlockState(), Block.UPDATE_CLIENTS);
             l.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -67,11 +77,15 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
             ParticleScribe.drawParticleRing(l, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, state.getValue(PROGRESS) * 0.2 + 0.2, 5);
 
         }else{
-            l.removeBlock(pos, true);
-            ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.INCOMPLETE_STAFF_ITEM.get().getDefaultInstance());
-            l.addFreshEntity(dropped_staff);
-            l.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
+            dropAsItem(l, pos);
         }
+    }
+
+    private static void dropAsItem(Level l, BlockPos pos){
+        l.removeBlock(pos, true);
+        ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.INCOMPLETE_STAFF_ITEM.get().getDefaultInstance());
+        l.addFreshEntity(dropped_staff);
+        l.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
     }
 
     @Override

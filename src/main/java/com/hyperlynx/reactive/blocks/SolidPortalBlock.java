@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.portal.PortalShape;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -55,13 +56,19 @@ public class SolidPortalBlock extends Block {
 
 
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity irrelevant, ItemStack stack) {
-        super.playerDestroy(level, player, pos, state, irrelevant, stack);
         if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
             HyperPortalShape attempted_portal = new HyperPortalShape(level, pos, state.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
             if(attempted_portal.isValid()){
                 attempted_portal.createPortalBlocks();
+                return;
             }
         }
+        super.playerDestroy(level, player, pos, state, irrelevant, stack);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState state) {
+        return PushReaction.DESTROY;
     }
 
     @Override

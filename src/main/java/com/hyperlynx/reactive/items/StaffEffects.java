@@ -67,9 +67,9 @@ public class StaffEffects {
                 if(entityHit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(DamageSource.IN_FIRE, 7);
+                        victim.hurt(DamageSource.playerAttack(user).setIsFall(), 7);
                     }
-                    victim.hurt(DamageSource.MAGIC, 3);
+                    victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                 }
             }
         }else{
@@ -92,7 +92,7 @@ public class StaffEffects {
                 if(victim.equals(user))
                     continue;
                 victim.setRemainingFireTicks(1000);
-                victim.hurt(DamageSource.IN_FIRE, 1);
+                victim.hurt(DamageSource.playerAttack(user).setIsFire(), 1);
             }
             if(user.level.getBlockState(blockHit.getBlockPos().above()).isAir())
                 user.level.setBlockAndUpdate(blockHit.getBlockPos().above(), Blocks.FIRE.defaultBlockState());
@@ -144,7 +144,7 @@ public class StaffEffects {
             BlockState hit_state = user.level.getBlockState(blockHit.getBlockPos());
             if(entityHit != null){
                 if(entityHit.getEntity() instanceof LivingEntity victim){
-                    victim.hurt(DamageSource.MAGIC, 5);
+                    victim.hurt(DamageSource.playerAttack(user).setMagic(), 5);
                 }
             }
             if(canMineBlock(user.level, user, blockHit.getBlockPos(), user.level.getBlockState(blockHit.getBlockPos()))){
@@ -170,7 +170,7 @@ public class StaffEffects {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level.random.nextInt(0, nearby_ents.size()));
-                victim.hurt(DamageSource.MAGIC, 3);
+                victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                 ParticleScribe.drawParticleZigZag(user.level, ParticleTypes.ELECTRIC_SPARK, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
             }

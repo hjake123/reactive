@@ -164,7 +164,7 @@ public class Registration {
             () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2000), StaffEffects::living, true));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
-            () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get()).build(null));
+            () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
 
     // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
@@ -241,6 +241,7 @@ public class Registration {
     public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
     public static final FlagCriterion MAKE_RIFT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"));
     public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
+    public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
 
     // ----------------------- METHODS ------------------------
 
@@ -279,6 +280,7 @@ public class Registration {
         evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_TRADE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_FREEZE_TRIGGER));
     }
 
     @SubscribeEvent

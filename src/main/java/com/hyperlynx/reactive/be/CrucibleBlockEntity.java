@@ -23,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Phantom;
@@ -43,6 +44,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -72,10 +74,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
     private boolean color_initialized = false; // This is set to true when mix_color is
 
-
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
+
+    public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
+    public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -104,36 +108,27 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 crucible.electricCharge--;
             }
 
+            // Become empty when there's no water.
+            if (!state.getValue(CrucibleBlock.FULL)) {
+                empty(level, pos, state, crucible);
+            }
+
             if (!level.isClientSide()){
-                if (!state.getValue(CrucibleBlock.FULL) && crucible.getTotalPowerLevel() > 0) {
-                    // Become empty when there's no water.
-                    SpecialCaseMan.checkEmptySpecialCases(crucible);
-                    crucible.expendPower();
-                    crucible.sacrificeCount = 0;
-                    crucible.setDirty(level, pos, state);
-                    level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
-                }else if(!state.getValue(CrucibleBlock.FULL) // Check for Effusive Sponges and fill if there is one.
+                // Check for Effusive Sponges and fill if there is one.
+                if(!state.getValue(CrucibleBlock.FULL)
                         && crucible.getLevel().random.nextFloat() < 0.75
                         && crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())){
                     crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                     level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
-                }else{
-                    // Gather Power from the surroundings.
-                    if(state.getValue(CrucibleBlock.FULL)){
-                        gatherPower(level, crucible);
-                        // Check for new items to dissolve into Power or transmute.
-                        if (processItemsInside(level, pos, state, crucible)) {
-                            crucible.setDirty(level, pos, state);
-                            level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
-                        }
-                    }
                 }
-            }
-            else {
-                if (!state.getValue(CrucibleBlock.FULL)  && crucible.getTotalPowerLevel() > 0) {
-                    // Repeated to make sure that the client side updates quickly.
-                    crucible.expendPower();
-                    crucible.setDirty(level, pos, state);
+                if(state.getValue(CrucibleBlock.FULL)){
+                    // Gather Power from the surroundings.
+                    gatherPower(level, crucible);
+                    // Check for new items to dissolve into Power or transmute.
+                    if (processItemsInside(level, pos, state, crucible)) {
+                        crucible.setDirty(level, pos, state);
+                        level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                    }
                 }
             }
 
@@ -143,64 +138,82 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
     }
 
+    public static void empty(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        if(crucible.getTotalPowerLevel() > 0) {
+            SpecialCaseMan.checkEmptySpecialCases(crucible);
+            crucible.expendPower();
+            crucible.resetColor();
+            crucible.setDirty(level, pos, state);
+            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.6F, 1F);
+        }
+        if(crucible.linked_crystal != null) {
+            crucible.unlinkCrystal(level, pos, state);
+        }
+    }
+
+    // Only call this method when linked_crystal isn't null please and thank you.
+    private void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
+        linked_crystal.setBeamTarget(null);
+        linked_crystal = null;
+        setDirty(level, pos, state);
+    }
+
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
-        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get())){
-            if(!crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+            // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
+            if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL)){
+                if(crucible.getTotalPowerLevel() > 400) {
+                    if (crucible.getPowerLevel(Powers.MIND_POWER.get()) == CRUCIBLE_MAX_POWER) {
+                        BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL);
+                        SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
+                        crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    }
 
-                // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
-                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL)){
-                    if(crucible.getTotalPowerLevel() > 400) {
-                        if (crucible.getPowerLevel(Powers.MIND_POWER.get()) == CRUCIBLE_MAX_POWER) {
-                            BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL);
-                            SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
-                            crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        }
+                    crucible.expendAnyPowerExcept(null, 400);
+                    FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                }
+            }
 
-                        crucible.expendAnyPowerExcept(null, 400);
-                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+            // Blaze Rods add blaze.
+            if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
+                crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
+                crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+            }
+
+            // End Rods add light.
+            if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
+                crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get(level, "end_rod_power_amount", 30, 100));
+                crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+            }
+
+            // Wither Skeleton Skulls add curse.
+            if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
+                crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 50, 400));
+                crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+            }
+
+            // Active conduits give add either soul or warp, depending on the world.
+            if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT)){
+                Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT), BlockEntityType.CONDUIT);
+                if(maybe_conduit.isPresent() && maybe_conduit.get().isActive()){
+                    if(WorldSpecificValues.CONDUIT_POWER.get(level) == 1){
+                        crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
+                        crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
+                    }else{
+                        crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
                         crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
                     }
                 }
+            }
 
-                // Blaze Rods add blaze.
-                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
-                    crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
-                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
-                }
-
-                // End Rods add light.
-                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
-                    crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get(level, "end_rod_power_amount", 30, 100));
-                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
-                }
-
-                // Wither Skeleton Skulls add curse.
-                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
-                    crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 50, 400));
-                    crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
-                }
-
-                // Active conduits give add either soul or warp, depending on the world.
-                if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT)){
-                    Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT), BlockEntityType.CONDUIT);
-                    if(maybe_conduit.isPresent() && maybe_conduit.get().isActive()){
-                        if(WorldSpecificValues.CONDUIT_POWER.get(level) == 1){
-                            crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
-                            crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
-                        }else{
-                            crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
-                            crucible.setDirty(level, crucible.getBlockPos(), crucible.getBlockState());
-                        }
-                    }
-                }
-
-                // The Rift effect slowly generates Warp.
-                if(crucible.enderRiftStrength > 0){
-                    crucible.addPower(Powers.WARP_POWER.get(), 10);
-                }
+            // The Rift effect slowly generates Warp.
+            if(crucible.enderRiftStrength > 0){
+                crucible.addPower(Powers.WARP_POWER.get(), 10);
             }
         }
+
         // Slowly dilute powers in the rain.
         if(level.canSeeSky(crucible.getBlockPos()) && level.isRainingAt(crucible.getBlockPos())){
             crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
@@ -209,6 +222,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     // The method that performs reactions.
     private static void react(Level level, CrucibleBlockEntity crucible){
+        crucible.used_crystal_this_cycle = false;
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
             if(level.getRandom().nextFloat() > crucible.getPowerLevel(Powers.BODY_POWER.get()) * 0.7F/CRUCIBLE_MAX_POWER) { // Body suppresses reactions.
                 if (r.conditionsMet(crucible)) {
@@ -217,6 +231,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 }
             }
         }
+        if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null)
+            crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
     }
 
     // Used to gather and operate on items sitting inside the crucible.
@@ -288,8 +304,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         return false;
     }
 
-
-
     // ----- Helper and power management methods -----
 
     public void setDirty(){
@@ -304,7 +318,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(!this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level.isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
+        if(this.getLevel() == null || !this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level.isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
             return;
         }
 
@@ -373,10 +387,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             this.setChanged();
             level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);
         }
-    }
-
-    public float getOpacity() {
-        return 0.7F + (.3F * getTotalPowerLevel()/CRUCIBLE_MAX_POWER);
     }
 
     // These methods manage power in the Crucible. They might be extracted to an interface later.
@@ -518,6 +528,17 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         color_changed = false;
     }
 
+    private void resetColor() {
+        color_changed = true;
+        color_initialized = false;
+        mix_color.reset();
+        next_mix_color.reset();
+    }
+
+    public float getOpacity() {
+        return 0.7F + (.3F * getTotalPowerLevel()/CRUCIBLE_MAX_POWER);
+    }
+
     // ----- Data management methods -----
 
     @Override
@@ -542,6 +563,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     protected void saveAdditional(@NotNull CompoundTag main_tag) {
         super.saveAdditional(main_tag);
         main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
+        if(linked_crystal != null)
+            main_tag.put("LinkedCrystal", IntTag.valueOf(linked_crystal.getId()));
 
         // Powers must be saved last.
         if(powers == null || powers.isEmpty()){
@@ -564,6 +587,13 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @Override
     public void load(@NotNull CompoundTag main_tag) {
         super.load(main_tag);
+        if(main_tag.contains("LinkedCrystal")){
+            int crystal_id = main_tag.getInt("LinkedCrystal");
+            if(level.getEntity(crystal_id) instanceof EndCrystal)
+                linked_crystal = (EndCrystal) level.getEntity(crystal_id);
+        }else{
+            linked_crystal = null;
+        }
         // Powers tag is guaranteed to be a list.
         ListTag power_list_tag = (ListTag) main_tag.get("powers");
         powers.clear();

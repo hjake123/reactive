@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "reactive:staff"
+          "name": "reactive:incomplete_staff"
         }
       ],
       "name": "staff",

@@ -6,9 +6,16 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Reaction {
@@ -34,10 +41,11 @@ public abstract class Reaction {
         }
     }
 
-    // Creates the reaction with two preset powers, but random minimum requirements.
-    public Reaction(Level l, String alias, Power p1, Power p2){
-        reagents.put(p1, WorldSpecificValue.get(l, alias+"r1", 1, 100));
-        reagents.put(p2, WorldSpecificValue.get(l, alias+"r2", 1, 100));
+    // Creates the reaction with preset powers, but random minimum requirements.
+    public Reaction(Level l, String alias, Power... powers){
+        for(Power p : powers){
+            reagents.put(p, WorldSpecificValue.get(l, alias+p.getName(), 1, 400));
+        }
     }
 
     public Reaction setStimulus(Stimulus rxs){
@@ -54,18 +62,39 @@ public abstract class Reaction {
         return checkStimulus(crucible);
     }
 
-    private boolean checkStimulus(CrucibleBlockEntity c){
-        if(stimulus == Stimulus.END){
-            return Objects.requireNonNull(c.getLevel()).dimension().equals(Level.END);
-        }else if(stimulus == Stimulus.GOLD_SYMBOL){
-            return c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
-        }else if(stimulus == Stimulus.ELECTRIC){
-            return c.electricCharge > 0;
-        }else if(stimulus == Stimulus.SACRIFICE){
-            return c.sacrificeCount >= WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), reagents.toString()+"_sacrifice_count", 1, 3);
-        }else{
+    private boolean checkStimulus(CrucibleBlockEntity crucible){
+        return switch (stimulus) {
+            case END_CRYSTAL -> checkEndCrystal(crucible);
+            case GOLD_SYMBOL -> crucible.areaMemory.exists(crucible.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+            case ELECTRIC -> crucible.electricCharge > 0;
+            case NO_ELECTRIC -> crucible.electricCharge == 0;
+            case SACRIFICE -> crucible.sacrificeCount >= 10;
+            default -> false;
+        };
+    }
+
+    private boolean checkEndCrystal(CrucibleBlockEntity crucible){
+        Level level = crucible.getLevel();
+        if(crucible.linked_crystal != null && !crucible.linked_crystal.isRemoved()) {
+            crucible.used_crystal_this_cycle = true;
             return true;
         }
+        if(level.isClientSide) {
+            return false;
+        }
+        if(((ServerLevel) level).dragonFight() != null) {
+            return false;
+        }
+
+        int range = ConfigMan.COMMON.crucibleRange.get();
+        AABB aoe = new AABB(crucible.getBlockPos().offset(-range, -range, -range), crucible.getBlockPos().offset(range, range, range));
+        List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
+        if(end_crystals.isEmpty())
+            return false;
+        end_crystals.get(0).setBeamTarget(crucible.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        crucible.linked_crystal = end_crystals.get(0);
+        crucible.used_crystal_this_cycle = true;
+        return true;
     }
 
     public abstract void run(CrucibleBlockEntity crucible);
@@ -76,8 +105,9 @@ public abstract class Reaction {
         NONE,
         GOLD_SYMBOL,
         ELECTRIC,
+        NO_ELECTRIC,
         SACRIFICE,
-        END
+        END_CRYSTAL
     }
 
     @Override

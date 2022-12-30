@@ -102,8 +102,8 @@ public class CrucibleBlock extends Block implements EntityBlock {
         }
 
         if(state.getValue(FULL)){
-            BlockEntity ent = level.getBlockEntity(pos);
-            if(ent instanceof CrucibleBlockEntity c){
+            BlockEntity crucible = level.getBlockEntity(pos);
+            if(crucible instanceof CrucibleBlockEntity c){
                 // Clear the crucible with shift-right-click.
                 if(player.isShiftKeyDown()){
                     level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
@@ -150,6 +150,18 @@ public class CrucibleBlock extends Block implements EntityBlock {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity && !level.isClientSide){
+            CrucibleBlockEntity crucible = (CrucibleBlockEntity) level.getBlockEntity(pos);
+            // Unlink any end crystals when the crucible is removed.
+            if(crucible.linked_crystal != null)
+                crucible.linked_crystal.setBeamTarget(null);
+        }
+
+        super.onRemove(state, level, pos, new_state, p_60519_);
     }
 
     @Nullable

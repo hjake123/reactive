@@ -41,6 +41,8 @@ public class ReactionMan {
         // Add assimilation reactions.
         REACTIONS.add(new CurseAssimilationReaction(l, "curse_assimilation"));
         REACTIONS.add(new AssimilationReaction(l, "vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
+        REACTIONS.add(new AssimilationReaction(l, "vital_eat", Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
+
 
         switch (WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get(l)) {
             case 2 ->
@@ -52,7 +54,6 @@ public class ReactionMan {
             case 5 ->
                     REACTIONS.add(new SynthesisReaction(l, "vital_growth", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get(), Powers.LIGHT_POWER.get()));
         }
-
 
         // Add annihilation reactions for each 'counteracting' pair of powers.
         // Imagine the base powers to be arranged in a hexagon, numbered clockwise. The opposites are counteracting.
@@ -71,26 +72,40 @@ public class ReactionMan {
         // Add effect reactions to do crazy things.
         REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1));
         REACTIONS.add(new FreeEffectReaction(l, "flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get()));
-        REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, 3));
+        REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, 3).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
 
+        // Add end crystal conversion reactions
+        switch (WorldSpecificValues.CONDUIT_POWER.get(l)) {
+            case 1 -> REACTIONS.add(new DecomposeReaction(l, "soul_to_warp", Powers.SOUL_POWER.get(), Powers.WARP_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+            case 2 -> REACTIONS.add(new DecomposeReaction(l, "warp_to_soul", Powers.WARP_POWER.get(), Powers.SOUL_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+        }
+
+        // Add esoteric effect reactions and make one of them degrade when not electrified.
         int order = WorldSpecificValues.EFFECT_ORDER.get(l);
         switch (order) {
             case 1 -> {
+                REACTIONS.add(new DecomposeReaction(l, "compound_degradation", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 2 -> {
+                REACTIONS.add(new DecomposeReaction(l, "compound_degradation", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 3 -> {
+                REACTIONS.add(new DecomposeReaction(l, "compound_degradation", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
                 REACTIONS.add(new EffectReaction(l, "vortex_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "formation_effect", ReactionEffects::formation, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction(l, "falling_effect", ReactionEffects::blockfall, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
         }
+
+        // Add the sacrificial reactions.
+        REACTIONS.add(new DecomposeReaction(l, "necromancy_1", Powers.SOUL_POWER.get(), Powers.CURSE_POWER.get()).setStimulus(Reaction.Stimulus.SACRIFICE));
+        REACTIONS.add(new DecomposeReaction(l, "necromancy_2", Powers.VITAL_POWER.get(), Powers.CURSE_POWER.get()).setStimulus(Reaction.Stimulus.SACRIFICE));
 
         initialized = true;
         return REACTIONS;

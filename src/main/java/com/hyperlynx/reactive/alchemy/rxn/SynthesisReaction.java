@@ -15,22 +15,8 @@ public class SynthesisReaction extends Reaction{
     Power resultPower;
     int rate;
 
-//    public SynthesisReaction(Level l, String alias) {
-//        super(l, alias, 2);
-//        rate = WorldSpecificValue.get(l, alias+"rate", 1, 10);
-//        resultPower = WorldSpecificValue.getFromCollection(l, alias+"result", Powers.POWERS.getEntries()).get();
-//        correctOpposingReagents();
-//    }
-//
-//    public SynthesisReaction(Level l, String alias, Power resultPower) {
-//        super(l, alias, 2);
-//        rate = WorldSpecificValue.get(l, alias+"rate", 20, 50);
-//        this.resultPower = resultPower;
-//        correctOpposingReagents();
-//    }
-
-    public SynthesisReaction(Level l, String alias, Power resultPower, Power reagent1, Power reagent2) {
-        super(l, alias, reagent1, reagent2);
+    public SynthesisReaction(Level l, String alias, Power resultPower, Power... reagents) {
+        super(l, alias, reagents);
         rate = WorldSpecificValue.get(l, alias+"rate", 20, 50);
         this.resultPower = resultPower;
     }
