@@ -140,38 +140,61 @@ public class SpecialCaseMan {
 
     // Dissolving a carved pumpkin might have many effects.
     private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
-        if (level.isClientSide)
+        if (level.isClientSide || c.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()))
             return;
+
+        BlockPos blazeRodPos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get());
+        if(blazeRodPos != null){
+            conjureBlaze(level, e, c, blazeRodPos);
+            return;
+        }
 
         int cause = WorldSpecificValues.GOLEM_CAUSE.get(level);
         BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
-        boolean ironSymbol = c.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get());
 
-        if (candlePos != null && !ironSymbol && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
-            if (cause == 1) { // It's most likely that an Allay will spawn.
-                if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20))
-                    EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-                else
-                    EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-            } else if (cause == 2) { // It's most likely that a Vex will spawn.
-                if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                    EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-                else
-                    EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-            }
-            e.kill();
-            ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
-                    c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
-                    candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20, 0.01);
-
-            for(int i = 0; i < 10; i++) {
-                ((ServerLevel) level).sendParticles(ParticleTypes.POOF,
-                        candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5,
-                        1, 0, 0, 0, 0.0);
-            }
-
-            level.playSound(null, candlePos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
+            conjureSpirit(level, e, c, cause, candlePos);
         }
+    }
+
+    private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
+        EntityType.BLAZE.spawn((ServerLevel) level, null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
+        e.kill();
+        ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
+                c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
+                blazeRodPos.getX() + 0.5, blazeRodPos.getY() + 0.38, blazeRodPos.getZ() + 0.5, 20, 0.01);
+        for(int i = 0; i < 10; i++) {
+            ((ServerLevel) level).sendParticles(ParticleTypes.POOF,
+                    blazeRodPos.getX() + 0.5, blazeRodPos.getY() + 0.38, blazeRodPos.getZ() + 0.5,
+                    1, 0, 0, 0, 0.0);
+        }
+        level.playSound(null, blazeRodPos, SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
+        if (cause == 1) { // It's most likely that an Allay will spawn.
+            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20))
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+            else
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+        } else if (cause == 2) { // It's most likely that a Vex will spawn.
+            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+            else
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+        }
+        e.kill();
+        ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
+                c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
+                candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20, 0.01);
+
+        for(int i = 0; i < 10; i++) {
+            ((ServerLevel) level).sendParticles(ParticleTypes.POOF,
+                    candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5,
+                    1, 0, 0, 0, 0.0);
+        }
+
+        level.playSound(null, candlePos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.

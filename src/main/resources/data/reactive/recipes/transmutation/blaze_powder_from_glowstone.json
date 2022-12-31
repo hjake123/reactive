@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:glowstone_dust"
+  },
+  "product": {
+    "item": "minecraft:blaze_powder"
+  },
+  "reagents": ["reactive:blaze"],
+  "min": 800,
+  "cost": 300
+}
