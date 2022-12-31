@@ -230,13 +230,13 @@ public class ReactionEffects {
     public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
         RandomSource random = level.random;
-        BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), random.nextInt(-4, 4), random.nextInt(-4, 4));
-        if(target == c.getBlockPos()) return c;
-
-        if(!level.isClientSide){
-            FallingBlockEntity.fall(level, target, level.getBlockState(target));
-        }else{
-            ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
+        for(int i = 0; i < 10; i++) {
+            BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), random.nextInt(0, 4), random.nextInt(-4, 4));
+            if (target == c.getBlockPos()) continue;
+            if (!level.isClientSide && !level.getBlockState(target).isAir()) {
+                FallingBlockEntity.fall(level, target, level.getBlockState(target));
+                ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
+            }
         }
         return c;
     }

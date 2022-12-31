@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
@@ -51,7 +53,8 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private void renderReactions(CrucibleBlockEntity crucible){
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel())){
+        HashSet<Reaction> reactions = ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel());
+        for(Reaction r : reactions){
             if(r.conditionsMet(crucible)) r.render((ClientLevel) crucible.getLevel(), crucible);
         }
     }
