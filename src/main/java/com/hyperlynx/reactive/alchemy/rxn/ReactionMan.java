@@ -27,6 +27,10 @@ public class ReactionMan {
         return initialized || l.isClientSide() ? REACTIONS : constructReactions(l);
     }
 
+    public boolean isInitialized(){
+        return initialized;
+    }
+
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
     private HashSet<Reaction> constructReactions(Level l){
         // Set up the Base Power List.
@@ -73,6 +77,9 @@ public class ReactionMan {
         REACTIONS.add(new EffectReaction(l, "growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1));
         REACTIONS.add(new FreeEffectReaction(l, "flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get()));
         REACTIONS.add(new EffectReaction(l, "levitation_effect", ReactionEffects::levitation, 3).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+
+        // Add metal transmutations
+        REACTIONS.add(new SynthesisReaction(l, "copper_to_gold", Powers.GOLD_SOLUTION.get(), Powers.COPPER_SOLUTION.get(), Powers.Y_POWER.get()));
 
         // Add end crystal conversion reactions
         switch (WorldSpecificValues.CONDUIT_POWER.get(l)) {

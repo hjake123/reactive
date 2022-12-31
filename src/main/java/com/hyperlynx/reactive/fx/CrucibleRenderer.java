@@ -53,8 +53,10 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private void renderReactions(CrucibleBlockEntity crucible){
-        HashSet<Reaction> reactions = ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel());
-        for(Reaction r : reactions){
+        if(!ReactiveMod.REACTION_MAN.isInitialized())
+            return;
+
+        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel())){
             if(r.conditionsMet(crucible)) r.render((ClientLevel) crucible.getLevel(), crucible);
         }
     }
