@@ -13,7 +13,7 @@ public class ConfigMan {
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
 
         Common(ForgeConfigSpec.Builder builder){
-            builder.comment("Performance Settings")
+            builder.comment("Options:")
                     .push("config");
             crucibleTickDelay = builder.comment("The crucible performs its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 30]")
                     .defineInRange("crucibleTickDelay", 30, 1, 900);

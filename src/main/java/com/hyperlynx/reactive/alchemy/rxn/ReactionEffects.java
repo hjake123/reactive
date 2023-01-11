@@ -64,7 +64,7 @@ public class ReactionEffects {
     }
 
     // Changes the Gold Symbol into Active Gold Foam, which spreads outwards for a limited distance and leaves Gold Foam behind.
-    public static CrucibleBlockEntity formation(CrucibleBlockEntity c) {
+    public static CrucibleBlockEntity foaming(CrucibleBlockEntity c) {
         BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
         if (!c.getLevel().isClientSide){
             c.getLevel().setBlock(symbol_position, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
@@ -76,7 +76,7 @@ public class ReactionEffects {
         return c;
     }
 
-    public static CrucibleBlockEntity sicklySmoke(CrucibleBlockEntity c) {
+    public static CrucibleBlockEntity smoke(CrucibleBlockEntity c) {
         if (!c.getLevel().isClientSide) {
             if (c.getLevel().random.nextFloat() < 0.4) {
                 AABB aoe = new AABB(c.getBlockPos());
@@ -85,7 +85,8 @@ public class ReactionEffects {
                 for (LivingEntity e : nearby_ents) {
                     if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 1)) {
                         e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 1));
-                        e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1));
+                        e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
+                        e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
                     }
                 }
             }
@@ -95,22 +96,8 @@ public class ReactionEffects {
         return c;
     }
 
-    public static CrucibleBlockEntity weakeningSmoke(CrucibleBlockEntity c) {
-        if (!c.getLevel().isClientSide) {
-            if (c.getLevel().random.nextFloat() < 0.4) {
-                AABB aoe = new AABB(c.getBlockPos());
-                aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
-                List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
-                for (LivingEntity e : nearby_ents) {
-                    if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 2)) {
-                        e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
-                        e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
-                    }
-                }
-            }
-        } else {
-            ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.ASH, c.getBlockPos(), 0.3F);
-        }
+    public static CrucibleBlockEntity formation(CrucibleBlockEntity c) {
+        // TODO: create Glowing Nodule blocks in a radius of the Crucible.
         return c;
     }
 
@@ -152,7 +139,7 @@ public class ReactionEffects {
     // Either apply levitation to nearby entities, apply slow falling, or shoot a shulker bullet.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
         AABB aoe = new AABB(c.getBlockPos());
-        aoe = aoe.inflate(6); // Inflate the AOE to be 6x the size of the crucible.
+        aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
 
         BlockPos origin_pos = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
@@ -160,31 +147,13 @@ public class ReactionEffects {
             origin_pos = c.getBlockPos();
         }
 
-        switch(WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "levitation_reaction_effect", 1, 3)){
-            case 1:
-                for(LivingEntity e : nearby_ents){
-                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
-                        e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
-                    }
-                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
-                            origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                            e.getX(),e.getEyeY()-0.1, e.getZ(), 10, 7, 0.3);
-                }
-                break;
-            case 2:
-                for(LivingEntity e : nearby_ents){
-                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
-                        e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
-                    }
-                    ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
-                            origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                            e.getX(), e.getEyeY()-0.1, e.getZ(), 5, 12, 0.7);
-                }
-                break;
-            case 3:
-                ShulkerBullet bullet = new ShulkerBullet(EntityType.SHULKER_BULLET, c.getLevel());
-                bullet.setPos(Vec3.atCenterOf(origin_pos).add(0, 0.3, 0));
-                c.getLevel().addFreshEntity(bullet);
+        for(LivingEntity e : nearby_ents){
+            if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
+                e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+            }
+            ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+                    origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
+                    e.getX(),e.getEyeY()-0.1, e.getZ(), 10, 7, 0.3);
         }
         return c;
     }

@@ -12,6 +12,7 @@ import java.util.Random;
 public class RuneParticle extends TextureSheetParticle {
     static final Random RANDOM = new Random();
     private final SpriteSet sprites;
+    protected float base_size;
 
     protected RuneParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(level, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
@@ -21,6 +22,7 @@ public class RuneParticle extends TextureSheetParticle {
         this.hasPhysics = false;
         this.age = RANDOM.nextInt(0, 5);
         this.setSpriteFromAge(sprites);
+        this.base_size = 1.2F;
     }
 
     // Copied from net.minecraft.client.particle.GlowParticle
@@ -42,7 +44,7 @@ public class RuneParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
-        this.setSize(1.2f - ((float) this.age / (float) this.lifetime), 1.2f - ((float) this.age / (float) this.lifetime));
+        this.setSize(base_size - ((float) this.age / (float) this.lifetime), base_size - ((float) this.age / (float) this.lifetime));
     }
 
     @Override

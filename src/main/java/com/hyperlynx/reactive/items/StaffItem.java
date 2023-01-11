@@ -1,7 +1,10 @@
 package com.hyperlynx.reactive.items;
 
+import com.google.common.collect.Multimap;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.StaffBlockEntity;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -11,7 +14,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -45,26 +52,19 @@ public class StaffItem extends BlockItem {
     @Override
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
         if(ticks % 10 == 1) {
-            if(level.isClientSide && !beam)
+            if(player instanceof LocalPlayer && !beam)
                 effectFunction.apply((Player) player);
 
-            if(!level.isClientSide)
+            if(player instanceof ServerPlayer) {
                 effectFunction.apply((Player) player);
-
+                if (player.getOffhandItem().is(stack.getItem())) {
+                    player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
+                } else {
+                    player.getMainHandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
+                }
+            }
         }
-
-        if(level.isClientSide) {
-            if(beam)
-                effectFunction.apply((Player) player);
-            return;
-        }
-
-        if (player.getOffhandItem().is(stack.getItem())) {
-            player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
-        } else {
-            player.getMainHandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
-        }
-
+        if (player instanceof LocalPlayer && beam) effectFunction.apply((Player) player);
     }
 
     @Override

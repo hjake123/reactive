@@ -34,7 +34,6 @@ public class TransmuteRecipe implements Recipe<Container> {
     }
 
     public boolean powerMet(PowerBearer bearer, Level level){
-        System.err.println("[" + minimum + "]");
         int power_level = 0;
         boolean has_all_reagents = true;
         for(Power p : reagents) {
@@ -47,7 +46,7 @@ public class TransmuteRecipe implements Recipe<Container> {
         return has_all_reagents && power_level > minimum;
     }
 
-    public ItemStack apply(ItemStack input, PowerBearer bearer, Level l) {
+    public ItemStack apply(ItemStack input, PowerBearer bearer, Level level) {
         int max_tfs = Integer.MAX_VALUE;
         if(cost > 0) {
             for (Power p : reagents) {
@@ -55,17 +54,9 @@ public class TransmuteRecipe implements Recipe<Container> {
                 bearer.expendPower(p, cost / reagents.size() * input.getCount());
             }
         }
-
-        //System.out.println("Max tfs is " + max_tfs + " with cost " + cost);
         ItemStack result = product.copy();
         result.setCount(Math.min(input.getCount(), max_tfs)*result.getCount());
-
-        //System.out.println("Output amount " + result.getCount());
-
         input.setCount(input.getCount() - Math.min(input.getCount(), max_tfs));
-
-        //System.out.println("Input amount, adjusted " + input.getCount());
-
         return result;
     }
 

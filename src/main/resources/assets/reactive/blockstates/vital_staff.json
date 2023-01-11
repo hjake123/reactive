@@ -1,7 +1,7 @@
 {
   "variants":{
     "":{
-      "model": "reactive:block/staff"
+      "model": "reactive:block/vital_staff"
     }
   }
 }

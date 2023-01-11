@@ -6,10 +6,7 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.StaffBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
-import com.hyperlynx.reactive.fx.CrucibleRenderer;
-import com.hyperlynx.reactive.fx.RuneParticle;
-import com.hyperlynx.reactive.fx.StardustParticle;
-import com.hyperlynx.reactive.fx.SymbolRenderer;
+import com.hyperlynx.reactive.fx.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.util.FlagCriterion;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
@@ -136,32 +133,32 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2500), StaffEffects::radiance, true));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::radiance, true));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3000), StaffEffects::warping, false));
+            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::warping, false));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::blazing, true));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500).fireResistant(), StaffEffects::blazing, true));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2000), StaffEffects::spectral, false));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::spectral, false));
 
     public static final RegistryObject<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(3500), StaffEffects::missile, false));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::missile, false));
 
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(2000), StaffEffects::living, true));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::living, true));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -217,6 +214,10 @@ public class Registration {
     public static final RegistryObject<ParticleType<SimpleParticleType>> RUNE_PARTICLE_TYPE = PARTICLES.register("runes",
             () -> RUNE_PARTICLE);
 
+    public static final SimpleParticleType SMALL_RUNE_PARTICLE = new SimpleParticleType(false);
+    public static final RegistryObject<ParticleType<SimpleParticleType>> SMALL_RUNE_PARTICLE_TYPE = PARTICLES.register("small_runes",
+            () -> SMALL_RUNE_PARTICLE);
+
     // Register dummy blocks for the weird water types.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
@@ -260,11 +261,12 @@ public class Registration {
         };
     }
 
-    // Various event handlers to set up different items.
+    // Various event handlers
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
         Minecraft.getInstance().particleEngine.register(STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(RUNE_PARTICLE_TYPE.get(), RuneParticle.RuneParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(SMALL_RUNE_PARTICLE_TYPE.get(), SmallRuneParticle.SmallRuneParticleProvider::new);
     }
 
     @SubscribeEvent
