@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
+import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
@@ -64,6 +65,7 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
+    // Don't change this without updating the recipes.
 
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
@@ -244,7 +246,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
             if(entity_inside instanceof ItemEntity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
-                // The special case may have removed the item entity; check if it has died.
+                // The special case may have removed the item entity; continue to the next if it has died.
                 if(!entity_inside.isAlive()) continue;
 
                 changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
@@ -256,6 +258,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 }
             }
         }
+        changed = changed || tryPrecipitate(level, pos, state, crucible);
+
         return changed;
     }
 
@@ -304,7 +308,21 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         return false;
     }
 
-    // ----- Helper and power management methods -----
+    // Attempts to find a precipitation recipe that matches, and if it does, adds the output as a new item entity and returns true.
+    private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        List<PrecipitateRecipe> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
+        for(PrecipitateRecipe r : creation_recipes){
+            if(r.powerMet(crucible, level)){
+                ItemStack result = r.apply(crucible, level);
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
+                crucible.setDirty(level, pos, state);
+                return true;
+            }
+        }
+        return false;
+    }
+
+        // ----- Helper and power management methods -----
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());

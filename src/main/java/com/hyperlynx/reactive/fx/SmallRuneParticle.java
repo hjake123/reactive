@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 public class SmallRuneParticle extends RuneParticle{
     protected SmallRuneParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(level, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pSprites);
-        this.base_size = 0.6F;
+        this.base_size = 0.5F;
     }
 
     public static class SmallRuneParticleProvider implements ParticleProvider<SimpleParticleType> {

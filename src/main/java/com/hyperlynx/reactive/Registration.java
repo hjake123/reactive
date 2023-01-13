@@ -8,11 +8,8 @@ import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.*;
 import com.hyperlynx.reactive.items.*;
+import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.FlagCriterion;
-import com.hyperlynx.reactive.recipes.DissolveRecipe;
-import com.hyperlynx.reactive.recipes.DissolveRecipeSerializer;
-import com.hyperlynx.reactive.recipes.TransmuteRecipe;
-import com.hyperlynx.reactive.recipes.TransmuteRecipeSerializer;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
@@ -49,8 +46,6 @@ public class Registration {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
-
-    // Handles registration of recipes.
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ReactiveMod.MODID);
 
@@ -88,8 +83,12 @@ public class Registration {
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> CURSED_IRON_SYMBOL = BLOCKS.register("cursed_iron_symbol",
+            () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> CURSED_IRON_SYMBOL_ITEM = fromBlock(CURSED_IRON_SYMBOL, ReactiveMod.CREATIVE_TAB);
+
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
-            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get()).build(null));
+            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), CURSED_IRON_SYMBOL.get()).build(null));
 
     // Additional blocks
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
@@ -184,6 +183,8 @@ public class Registration {
             () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> ASH = ITEMS.register("ash",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
 
@@ -233,6 +234,9 @@ public class Registration {
     public static final RegistryObject<RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
     public static final RegistryObject<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
 
+    public static final RegistryObject<RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
+    public static final RegistryObject<RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
+
     //Register advancement criteria for the book
     public static final FlagCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
     public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
@@ -245,21 +249,6 @@ public class Registration {
     public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
 
     // ----------------------- METHODS ------------------------
-
-    // Helper method for BlockItem registration
-    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab tab) {
-        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
-    }
-
-    // Helper method for Recipe Types.
-    public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {
-        return new RecipeType<>()
-        {
-            public String toString() {
-                return ReactiveMod.MODID + ":" + id;
-            }
-        };
-    }
 
     // Various event handlers
     @SubscribeEvent
@@ -274,6 +263,7 @@ public class Registration {
         ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
+        ((SymbolBlock) CURSED_IRON_SYMBOL.get()).setSymbolItem(CURSED_IRON_SYMBOL_ITEM.get());
         evt.enqueueWork(() -> CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(BE_CURSED_TRIGGER));
@@ -295,5 +285,20 @@ public class Registration {
     @OnlyIn(Dist.CLIENT)
     public static void init(final FMLClientSetupEvent event) {
 
+    }
+
+    // Helper method for BlockItem registration
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab tab) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
+    }
+
+    // Helper method for Recipe Types.
+    public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {
+        return new RecipeType<>()
+        {
+            public String toString() {
+                return ReactiveMod.MODID + ":" + id;
+            }
+        };
     }
 }

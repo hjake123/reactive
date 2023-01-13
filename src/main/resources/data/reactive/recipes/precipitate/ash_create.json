@@ -1,0 +1,10 @@
+{
+  "type": "reactive:precipitation",
+  "product": {
+    "item": "reactive:ash"
+  },
+  "reagents": ["reactive:caustic", "reactive:blaze"],
+  "min": 1300,
+  "cost": 25,
+  "reagent_count": 2
+}

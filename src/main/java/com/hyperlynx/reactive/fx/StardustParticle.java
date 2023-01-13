@@ -66,7 +66,7 @@ public class StardustParticle extends TextureSheetParticle {
                 particle.setParticleSpeed(0, 0, 0);
             else
                 particle.setParticleSpeed(RANDOM.nextDouble() * 0.02d - 0.01d, RANDOM.nextDouble() * 0.02d - 0.01d, RANDOM.nextDouble() * 0.02d - 0.01d);
-            particle.setLifetime(20);
+            particle.setLifetime(25);
             return particle;
         }
     }

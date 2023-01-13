@@ -1,5 +1,8 @@
 {
   "textures": [
-    "reactive:stardust"
+    "reactive:stardust0",
+    "reactive:stardust1",
+    "reactive:stardust2",
+    "reactive:stardust3"
   ]
 }

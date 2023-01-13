@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.util.Color;
+import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
@@ -17,12 +18,14 @@ public class Power {
     private final String id;
     private final String name;
     private final Item bottle;
+    private final PrimedWSV percent_reactivity;
 
     public Power(String id, int color, Item bottle){
         this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
     }
 
     public Power(String id, int color, String name, Item bottle){
@@ -30,6 +33,7 @@ public class Power {
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = name;
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
     }
 
     public Power(String id, Color color, String name, Item bottle){
@@ -37,6 +41,7 @@ public class Power {
         this.color = color;
         this.bottle = bottle;
         this.name = name;
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -57,6 +62,13 @@ public class Power {
     }
     public String getId() { return id; }
     public String getName(){return name;}
+
+    // Returns whether the given power level is sufficient to cause a reaction with this power.
+    public boolean checkReactivity(Level level, int power_level, int threshold){
+        float strength = percent_reactivity.get(level) / 100F;
+        int adjusted_power_level = (int) (power_level * strength);
+        return adjusted_power_level >= threshold;
+    }
 
     // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {

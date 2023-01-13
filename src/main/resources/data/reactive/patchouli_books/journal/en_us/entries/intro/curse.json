@@ -28,7 +28,7 @@
     },
     {
       "type": "reactive:transmute",
-      "recipe": "soul_sand_from_red_sand"
+      "recipe": "cursed_symbol"
     }
   ]
 }

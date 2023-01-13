@@ -55,7 +55,7 @@ public abstract class Reaction {
 
     public boolean conditionsMet(CrucibleBlockEntity crucible){
         for(Power p : reagents.keySet()){
-            if(reagents.get(p) > crucible.getPowerLevel(p)){
+            if(!p.checkReactivity(crucible.getLevel(), crucible.getPowerLevel(p), reagents.get(p))){
                 return false;
             }
         }

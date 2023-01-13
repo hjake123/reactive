@@ -5,6 +5,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 /*
@@ -77,7 +78,7 @@ public class WorldSpecificValue {
     }
 
     // 'Randomize' the order of a list.
-    public static <T> ArrayList<T> shuffle(Level l, String alias, ArrayList<T> list){
+    public static <T> ArrayList<T> shuffle(Level l, String alias, List<T> list){
         ArrayList<T> input = new ArrayList<>(list);
         ArrayList<T> output = new ArrayList<>();
         for(int i = 0; i < list.size(); i++){
