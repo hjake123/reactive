@@ -15,8 +15,8 @@ public class ConfigMan {
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
                     .push("config");
-            crucibleTickDelay = builder.comment("The crucible performs its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 30]")
-                    .defineInRange("crucibleTickDelay", 30, 1, 900);
+            crucibleTickDelay = builder.comment("The crucible performs a stage of its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 5]")
+                    .defineInRange("crucibleTickDelay", 5, 1, 900);
             crucibleRange = builder.comment("The crucible may check an area this many blocks in radius for some effects. Do not set this too high. [Default: 12]")
                     .defineInRange("crucibleRange", 12, 2, 64);
             doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\"]")

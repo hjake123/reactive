@@ -6,17 +6,13 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class Reaction {
 
@@ -69,7 +65,7 @@ public abstract class Reaction {
             case ELECTRIC -> crucible.electricCharge > 0;
             case NO_ELECTRIC -> crucible.electricCharge == 0;
             case SACRIFICE -> crucible.sacrificeCount >= 10;
-            default -> false;
+            default -> true;
         };
     }
 

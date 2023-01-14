@@ -3,7 +3,7 @@
   "product": {
     "item": "reactive:ash"
   },
-  "reagents": ["reactive:caustic", "reactive:blaze"],
+  "reagents": ["reactive:caustic", "reactive:esoteric_z"],
   "min": 1300,
   "cost": 25,
   "reagent_count": 2
