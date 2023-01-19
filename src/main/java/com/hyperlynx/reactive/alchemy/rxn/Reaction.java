@@ -51,7 +51,7 @@ public abstract class Reaction {
     }
 
     public boolean conditionsMet(CrucibleBlockEntity crucible){
-        if(WorldSpecificValue.get("body_inhibition_threshold", 200, 500) > crucible.getPowerLevel(Powers.BODY_POWER.get()))
+        if(WorldSpecificValue.get("body_inhibition_threshold", 200, 500) < crucible.getPowerLevel(Powers.BODY_POWER.get()))
             return false;
 
         for(Power p : reagents.keySet()){

@@ -261,12 +261,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private static void react(Level level, CrucibleBlockEntity crucible){
         crucible.used_crystal_this_cycle = false;
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
-            if(level.getRandom().nextFloat() > crucible.getPowerLevel(Powers.BODY_POWER.get()) * 0.7F/CRUCIBLE_MAX_POWER) { // Body suppresses reactions.
-                if (r.conditionsMet(crucible)) {
-                    r.run(crucible);
-                    crucible.setDirty();
-                }
+            if (r.conditionsMet(crucible)) {
+                r.run(crucible);
+                crucible.setDirty();
             }
+
         }
         if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null)
             crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
