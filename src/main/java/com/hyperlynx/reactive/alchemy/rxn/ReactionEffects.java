@@ -10,6 +10,7 @@ import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -23,6 +24,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
@@ -99,6 +101,20 @@ public class ReactionEffects {
         return c;
     }
 
+    public static CrucibleBlockEntity salt(CrucibleBlockEntity c) {
+        if(c.getTotalPowerLevel() < WorldSpecificValue.get("salt_overflow_threshold", 1000, 1300)){
+            ItemEntity salt_drop = new ItemEntity(c.getLevel(), c.getBlockPos().getX() + 0.5,
+                    c.getBlockPos().getY() + 0.5,
+                    c.getBlockPos().getZ() + 0.6, Registration.SALT.get().getDefaultInstance());
+            c.getLevel().addFreshEntity(salt_drop);
+        }else{
+            CrucibleBlockEntity.empty(c.getLevel(), c.getBlockPos(), c.getBlockState(), c);
+            c.getLevel().setBlock(c.getBlockPos(), Registration.SALTY_CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.GLASS_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+        return c;
+    }
+
     public static CrucibleBlockEntity discharge(CrucibleBlockEntity c) {
         c.electricCharge += 5;
         if (c.electricCharge > 21) {
@@ -134,7 +150,7 @@ public class ReactionEffects {
         return c;
     }
 
-    // Either apply levitation to nearby entities, apply slow falling, or shoot a shulker bullet.
+    // Either apply levitation to nearby entities.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.

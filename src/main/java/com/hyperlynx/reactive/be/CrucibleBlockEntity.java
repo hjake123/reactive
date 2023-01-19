@@ -192,7 +192,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 case 0 -> {
                     // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL) && crucible.getTotalPowerLevel() > 400){
-                        if (crucible.getPowerLevel(Powers.MIND_POWER.get()) == 1000) {
+                        if (crucible.getPowerLevel(Powers.MIND_POWER.get()) > 1300) {
                             BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL);
                             SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
                             crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -206,21 +206,21 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 case 1 -> {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
-                        crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get(level, "blaze_rod_power_amount", 20, 50));
+                        crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 20, 50));
                     }
                 }
 
                 case 2 -> {
                     // End Rods add light.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
-                        crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get(level, "end_rod_power_amount", 30, 100));
+                        crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get("end_rod_power_amount", 30, 100));
                     }
                 }
 
                 case 3 -> {
                     // Wither Skeleton Skulls add curse.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
-                        crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(level, "wither_skull_power_amount", 50, 400));
+                        crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
                     }
                 }
 
@@ -229,10 +229,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT)){
                         Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT), BlockEntityType.CONDUIT);
                         if(maybe_conduit.isPresent() && maybe_conduit.get().isActive()){
-                            if(WorldSpecificValues.CONDUIT_POWER.get(level) == 1){
-                                crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
+                            if(WorldSpecificValues.CONDUIT_POWER.get() == 1){
+                                crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get("conduit_power_amount", 120, 140));
                             }else{
-                                crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get(level, "conduit_power_amount", 120, 140));
+                                crucible.addPower(Powers.WARP_POWER.get(), WorldSpecificValue.get("conduit_power_amount", 120, 140));
                             }
                         }
                     }
@@ -245,6 +245,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     }
                     crucible.gather_stage = 0;
                 }
+
             }
 
             crucible.gather_stage++;
@@ -302,11 +303,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
         for (Power p : stack_power_list) {
-            int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(stack, crucible.getLevel());
+            int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(stack);
             if(dissolve_capacity <= 0){
                 continue;
             }
-            changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack, crucible.getLevel()) / stack_power_list.size());
+            changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack) / stack_power_list.size());
             tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity));
             stack.setCount(Math.max(stack.getCount()-dissolve_capacity, 0));
         }
@@ -320,7 +321,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             if(r.matches(new FakeContainer(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
                 return;
             }
         }
@@ -333,7 +334,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             if (r.matches(new FakeContainer(itemEntity.getItem()), level)) {
                 if (r.powerMet(crucible, level)) {
                     ItemStack result = r.apply(itemEntity.getItem(), crucible, level);
-                    level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
+                    level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
                     crucible.setDirty(level, pos, state);
                     return true;
                 }
@@ -380,7 +381,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
-            addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get(event.getEntity().level, "undead_curse_strength", 30, 300));
+            addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
             return;
         }
 
@@ -392,7 +393,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         double z = event.getEntity().getZ();
 
         // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
-        if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get(getLevel()) && getPowerLevel(Powers.MIND_POWER.get()) > 0
+        if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get() && getPowerLevel(Powers.MIND_POWER.get()) > 0
         && !(event.getEntity() instanceof Phantom)
         && (event.getEntity().getLevel().isNight())){
             spawnPhantom(x, y, z);
@@ -404,17 +405,17 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
         // Add Vital due to sacrifices.
         int power;
-        int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get(event.getEntity().level);
+        int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get();
         if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
-            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
         } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
-            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
         } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
-            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
         } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
-            power = WorldSpecificValue.get(event.getEntity().level, "strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
         } else {
-            power = WorldSpecificValue.get(event.getEntity().level, "weak_sacrifice", 30, 60);
+            power = WorldSpecificValue.get("weak_sacrifice", 30, 60);
         }
         addPower(Powers.VITAL_POWER.get(), power);
         setDirty();

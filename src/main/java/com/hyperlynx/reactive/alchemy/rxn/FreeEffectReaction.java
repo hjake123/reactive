@@ -7,8 +7,8 @@ import net.minecraft.world.level.Level;
 import java.util.function.Function;
 
 public class FreeEffectReaction extends EffectReaction{
-    public FreeEffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
-        super(l, alias, function, required_power);
+    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
+        super(alias, function, required_power);
     }
 
     @Override

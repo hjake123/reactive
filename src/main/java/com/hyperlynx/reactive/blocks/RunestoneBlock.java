@@ -4,8 +4,6 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -25,7 +23,7 @@ public class RunestoneBlock extends HorizontalDirectionalBlock {
 
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
-        return WorldSpecificValue.get((Level) level, "rune_power", 0.36F, 0.56F);
+        return WorldSpecificValue.get("rune_power", 0.36F, 0.56F);
     }
 
     @Nullable

@@ -4,7 +4,7 @@
     "item": "reactive:iron_symbol"
   },
   "product": {
-    "item": "reactive:cursed_iron_symbol"
+    "item": "reactive:occult_symbol"
   },
   "reagents": ["reactive:curse"],
   "min": 1000,

@@ -5,6 +5,7 @@
     "reactive:pure_quartz_block",
     "reactive:volt_cell",
     "reactive:solid_portal",
-    "reactive:runestone"
+    "reactive:runestone",
+    "reactive:salty_crucible"
   ]
 }

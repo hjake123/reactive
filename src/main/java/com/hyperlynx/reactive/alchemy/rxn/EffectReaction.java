@@ -13,24 +13,24 @@ public class EffectReaction extends Reaction{
     protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
     int cost;
 
-    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, int numReagents) {
-        super(l, alias, numReagents);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, int numReagents) {
+        super(alias, numReagents);
         effectFunction = function;
-        cost = WorldSpecificValue.get(l, alias+"cost", 10, 30);
+        cost = WorldSpecificValue.get(alias+"cost", 10, 30);
     }
 
-    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
-        super(l, alias, 0);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
+        super(alias, 0);
         effectFunction = function;
-        cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
-        reagents.put(required_power, WorldSpecificValue.get(l, alias+"required", 1, 400));
+        cost = WorldSpecificValue.get(alias+"cost", 1, 50);
+        reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
     }
 
-    public EffectReaction(Level l, String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, int num_additionals) {
-        super(l, alias, num_additionals);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, int num_additionals) {
+        super(alias, num_additionals);
         effectFunction = function;
-        cost = WorldSpecificValue.get(l, alias+"cost", 1, 50);
-        reagents.put(required_power, WorldSpecificValue.get(l, alias+"required", 1, 400));
+        cost = WorldSpecificValue.get(alias+"cost", 1, 50);
+        reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
     }
 
     @Override

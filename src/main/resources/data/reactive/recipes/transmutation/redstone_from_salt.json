@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:salt"
+  },
+  "product": {
+    "item": "minecraft:redstone"
+  },
+  "reagents": ["reactive:mind"],
+  "min": 200,
+  "cost": 100
+}

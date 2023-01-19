@@ -28,10 +28,33 @@ public class ConfigMan {
     public static final ForgeConfigSpec commonSpec;
     public static final Common COMMON;
 
+    public static class Server {
+        public ForgeConfigSpec.BooleanValue useWorldSeed;
+        public ForgeConfigSpec.LongValue seed;
+
+        Server(ForgeConfigSpec.Builder builder){
+            builder.comment("World Specific Value Options:")
+                    .push("config");
+            seed = builder.comment("The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!")
+                    .defineInRange("seed", 42, Long.MIN_VALUE, Long.MAX_VALUE);
+            useWorldSeed = builder.comment("Whether to reset the seed to your world seed when loading.")
+                    .define("resetSeed", true);
+
+            builder.pop();
+        }
+    }
+
+    public static final ForgeConfigSpec serverSpec;
+    public static final Server SERVER;
+
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
-        commonSpec = specPair.getRight();
-        COMMON = specPair.getLeft();
+        final Pair<Common, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(Common::new);
+        commonSpec = commonSpecPair.getRight();
+        COMMON = commonSpecPair.getLeft();
+
+        final Pair<Server, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(Server::new);
+        serverSpec = serverSpecPair.getRight();
+        SERVER = serverSpecPair.getLeft();
     }
 
 }

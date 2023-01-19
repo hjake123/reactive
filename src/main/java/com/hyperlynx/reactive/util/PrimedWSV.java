@@ -1,7 +1,5 @@
 package com.hyperlynx.reactive.util;
 
-import net.minecraft.world.level.Level;
-
 // This is a wrapper for making a WSV where everything except the world is predetermined by class fields.
 public class PrimedWSV {
     private final String alias;
@@ -14,7 +12,7 @@ public class PrimedWSV {
         this.min = min;
     }
 
-    public int get(Level l){
-        return WorldSpecificValue.get(l, alias, min, max);
+    public int get(){
+        return WorldSpecificValue.get(alias, min, max);
     }
 }

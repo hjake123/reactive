@@ -12,9 +12,9 @@ public class DecomposeReaction extends Reaction{
     List<Power> results;
     int rate;
 
-    public DecomposeReaction(Level l, String alias, Power reagent, Power... results) {
-        super(l, alias, 0);
-        rate = WorldSpecificValue.get(l, alias+"rate", 10, 20);
+    public DecomposeReaction(String alias, Power reagent, Power... results) {
+        super(alias, 0);
+        rate = WorldSpecificValue.get(alias+"rate", 10, 20);
         reagents.put(reagent, rate);
         this.results = List.of(results);
     }
@@ -23,7 +23,7 @@ public class DecomposeReaction extends Reaction{
     public void run(CrucibleBlockEntity crucible) {
         reagents.forEach(crucible::expendPower);
         results.forEach((Power result) -> {
-            crucible.addPower(result, rate/results.size());
+            crucible.addPower(result, Math.min(rate/results.size(), 1));
         });
     }
 

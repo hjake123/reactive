@@ -64,8 +64,9 @@ public class Power {
     public String getName(){return name;}
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
+    // TODO: didn't work for client so this system doesn't do anything.
     public boolean checkReactivity(Level level, int power_level, int threshold){
-        float strength = percent_reactivity.get(level) / 100F;
+        float strength = percent_reactivity.get() / 100F;
         int adjusted_power_level = (int) (power_level * strength);
         return adjusted_power_level >= threshold;
     }
@@ -85,9 +86,9 @@ public class Power {
         return stack_powers;
     }
 
-    public static int getSourceLevel(ItemStack i, Level level) {
+    public static int getSourceLevel(ItemStack i) {
         return WorldSpecificValue.get(
-                level, "power_" + i.getItem().getDescriptionId(),
+                "power_" + i.getItem().getDescriptionId(),
                 i.is(AlchemyTags.highPower) ? 250: 25,
                 i.is(AlchemyTags.highPower) ? 500: 50);
     }

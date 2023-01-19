@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:salt"
+  },
+  "product": {
+    "item": "minecraft:glowstone_dust"
+  },
+  "reagents": ["reactive:light"],
+  "min": 200,
+  "cost": 150
+}

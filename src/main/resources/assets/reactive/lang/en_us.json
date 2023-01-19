@@ -16,15 +16,17 @@
   "item.reactive.crystal_iron": "Ferrous Crystal",
   "item.reactive.phantom_residue": "Phantom Residue",
   "item.reactive.ash": "Alchemist's Ash",
+  "item.reactive.litmus_paper": "Litmus Paper",
   "item.reactive.ether": "Ether",
   "item.reactive.active_ether": "Luminous Ether",
   "block.reactive.unnamed": "Unnamed Substance",
   "item.reactive.stardust": "Star Dust",
+  "item.reactive.salt": "Apprentice's Salts",
   "item.reactive.journal": "Accumulated Journal of Alchemical Knowledge",
   "block.reactive.copper_symbol": "Copper Symbol",
   "block.reactive.iron_symbol": "Iron Symbol",
   "block.reactive.gold_symbol": "Gold Symbol",
-  "block.reactive.cursed_iron_symbol": "Occult Symbol",
+  "block.reactive.occult_symbol": "Occult Symbol",
   "block.reactive.blaze_rod": "Mounted Blaze Rod",
   "block.reactive.pure_quartz_block": "Pure Quartz Block",
   "block.reactive.volt_cell": "Volt Cell",
@@ -39,5 +41,6 @@
   "block.reactive.mind_staff": "Arcane Staff of Power",
   "block.reactive.vital_staff": "Living Staff of Power",
   "block.reactive.solid_portal": "Crystallized Nether Portal",
-  "block.reactive.runestone": "Runestone"
+  "block.reactive.runestone": "Runestone",
+  "block.reactive.salty_crucible": "Salt Crusted Crucible"
 }

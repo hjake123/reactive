@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class CrucibleBlock extends Block implements EntityBlock {
+public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
 
     public static final BooleanProperty FULL = BooleanProperty.create("full");
 
@@ -54,14 +54,7 @@ public class CrucibleBlock extends Block implements EntityBlock {
         super.createBlockStateDefinition(builder);
     }
 
-    // Copied from the model itself. There's probably a better way!
-    protected static final VoxelShape SHAPE = Shapes.or(Block.box(3, 1, 3, 13, 2, 13), Shapes.or(Block.box(13, 2, 3,14, 10, 13), Shapes.or(Block.box(2, 2, 3,3, 10, 13), Shapes.or(Block.box(3, 2, 2, 13, 10, 3), Shapes.or(Block.box(3, 2, 13,13, 10, 14))))));
     protected static final VoxelShape INSIDE = Block.box(3, 3, 3, 13, 9, 13);
-
-    @Override
-    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return SHAPE;
-    }
 
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
@@ -99,6 +92,8 @@ public class CrucibleBlock extends Block implements EntityBlock {
                 ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
             level.setBlock(pos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
             Registration.TRY_LAVA_CRUCIBLE_TRIGGER.trigger((ServerPlayer)player);
+        }else if(player.getItemInHand(hand).is(Registration.LITMUS_PAPER.get())){
+            return InteractionResult.PASS;
         }
 
         if(state.getValue(FULL)){

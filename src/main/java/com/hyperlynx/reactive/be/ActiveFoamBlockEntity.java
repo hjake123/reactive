@@ -3,14 +3,12 @@ package com.hyperlynx.reactive.be;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Objects;
@@ -40,7 +38,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
 
     private static void trySpreadSideways(Level level, BlockPos pos, RandomSource random, int spreads_left){
         int active_direction = random.nextIntBetweenInclusive(1, 4);
-        int forbidden_direction = WorldSpecificValue.get(level, "gold_foam_spread_direction", 1, 4);
+        int forbidden_direction = WorldSpecificValue.get("gold_foam_spread_direction", 1, 4);
         if(active_direction == forbidden_direction){
             return;
         }
@@ -85,10 +83,10 @@ public class ActiveFoamBlockEntity extends BlockEntity {
     }
 
     public static void spreadAround(Level level, BlockPos pos, RandomSource random, int spreads_left) {
-        float up_chance = WorldSpecificValue.get(level,"gold_foam_up_chance", 0.2F, 0.5F);
-        float down_chance = WorldSpecificValue.get(level,"gold_foam_down_chance", 0.2F, 0.5F);
+        float up_chance = WorldSpecificValue.get("gold_foam_up_chance", 0.2F, 0.5F);
+        float down_chance = WorldSpecificValue.get("gold_foam_down_chance", 0.2F, 0.5F);
 
-        if(WorldSpecificValue.getBool((ServerLevel) level, "gold_foam_up_priority", 0.5F)){
+        if(WorldSpecificValue.getBool("gold_foam_up_priority", 0.5F)){
             if(random.nextFloat() < up_chance){
                 trySpread(level, pos.above(), pos, spreads_left);
             }else if(random.nextFloat() < down_chance){

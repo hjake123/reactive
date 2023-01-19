@@ -19,9 +19,9 @@ import java.util.Objects;
 public class CurseAssimilationReaction extends Reaction{
     int rate;
 
-    public CurseAssimilationReaction(Level l, String alias){
-        super(l, alias, 0);
-        rate = WorldSpecificValues.CURSE_RATE.get(l);
+    public CurseAssimilationReaction(String alias){
+        super(alias, 0);
+        rate = WorldSpecificValues.CURSE_RATE.get();
     }
 
     @Override
@@ -30,9 +30,9 @@ public class CurseAssimilationReaction extends Reaction{
         crucible.addPower(Powers.CURSE_POWER.get(), rate);
 
         if(Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.2 && crucible.getPowerLevel(Powers.CURSE_POWER.get()) >
-                WorldSpecificValue.get(crucible.getLevel(), "curse_assim_hurt_threshold", 900, 1100)){
+                WorldSpecificValue.get("curse_assim_hurt_threshold", 900, 1100)){
             AABB aoe = new AABB(crucible.getBlockPos());
-            aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
+            aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
             List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
                 if (CrystalIronItem.effectNotBlocked(crucible.getLevel(), e, 1)) {

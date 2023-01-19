@@ -2,6 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,8 +17,8 @@ import javax.annotation.Nonnull;
 @Mod(ReactiveMod.MODID)
 public class ReactiveMod
 {
-    public static final Logger LOGGER = LogManager.getLogger();
     public static final ReactionMan REACTION_MAN = new ReactionMan();
+    public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
     public static final String MODID = "reactive";
 
     public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab(MODID)
@@ -31,11 +32,11 @@ public class ReactiveMod
 
     public ReactiveMod() {
         Registration.init();
-
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(REACTION_MAN);
+        MinecraftForge.EVENT_BUS.register(WORLD_SPECIFIC_VALUE);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
-
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
     }
 
 }

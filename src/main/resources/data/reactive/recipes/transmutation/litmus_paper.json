@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:paper"
+  },
+  "product": {
+    "item": "reactive:litmus_paper"
+  },
+  "reagents": ["reactive:mind"],
+  "min": 500,
+  "cost": 500
+}

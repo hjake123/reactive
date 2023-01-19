@@ -3,7 +3,6 @@ package com.hyperlynx.reactive.recipes;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.PowerBearer;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -38,7 +37,7 @@ public class PrecipitateRecipe implements Recipe<Container> {
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
     public boolean powerMet(PowerBearer bearer, Level level){
-        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(level, id + "_reagent_order", reagents);
+        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(id + "_reagent_order", reagents);
 
         int power_level = 0;
         int iterations = 0;

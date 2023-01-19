@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -62,16 +61,16 @@ public class CrystalIronItem extends Item {
                 }else if(mei.getEffect().equals(MobEffects.POISON)){
                     toBeRemoved = mei.getEffect();
                     getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.HUNGER) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_hunger", 0.7F)){
+                }else if(mei.getEffect().equals(MobEffects.HUNGER) && WorldSpecificValue.getBool("stone_break_hunger", 0.7F)){
                     toBeRemoved = mei.getEffect();
                     getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.BAD_OMEN)){
                     toBeRemoved = mei.getEffect();
                     getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_slow", 0.3F)){
+                }else if(mei.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN) && WorldSpecificValue.getBool("stone_break_slow", 0.3F)){
                     toBeRemoved = mei.getEffect();
                     getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.WEAKNESS) && WorldSpecificValue.getBool((ServerLevel) level, "stone_break_weakness", 0.5F)){
+                }else if(mei.getEffect().equals(MobEffects.WEAKNESS) && WorldSpecificValue.getBool("stone_break_weakness", 0.5F)){
                     toBeRemoved = mei.getEffect();
                     getHurt(stack, holder);
                 }

@@ -21,6 +21,8 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
     @Override
     public void setup(IVariableProvider variables) {
         String recipeId = "reactive:transmutation/" + variables.get("recipe").asString();
+        if(Minecraft.getInstance().level == null)
+            return;
         List<TransmuteRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
         for(TransmuteRecipe r : recipes){
             if (r.getId().equals(new ResourceLocation(recipeId))) {

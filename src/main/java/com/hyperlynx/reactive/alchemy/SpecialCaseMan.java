@@ -70,13 +70,13 @@ public class SpecialCaseMan {
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
-        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "soul_escape_threshold", 300, 600))
+        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get("soul_escape_threshold", 300, 600))
             soulEscape(c);
         if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 665)
             curseEscape(c);
-        if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "blaze_escape_threshold", 20, 100))
+        if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get("blaze_escape_threshold", 20, 100))
             blazeEscape(c);
-        if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get(c.getLevel(), "verdant_escape_threshold", 1300, 1500))
+        if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
             verdantEscape(c);
         if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
             staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
@@ -89,7 +89,7 @@ public class SpecialCaseMan {
     }
 
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
-        final int BOTTLE_RETURN = WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "bottle_return", 750, 840);
+        final int BOTTLE_RETURN = WorldSpecificValue.get("bottle_return", 750, 840);
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){
@@ -149,7 +149,7 @@ public class SpecialCaseMan {
             return;
         }
 
-        int cause = WorldSpecificValues.GOLEM_CAUSE.get(level);
+        int cause = WorldSpecificValues.GOLEM_CAUSE.get();
         BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
 
         if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
@@ -271,8 +271,8 @@ public class SpecialCaseMan {
 
     // Putting a writable book in a crucible with Mind will fill it with gibberish.
     private static void waterWriting(CrucibleBlockEntity c, ItemEntity e){
-        if(c.getPowerLevel(Powers.MIND_POWER.get()) < WorldSpecificValue.get(Objects.requireNonNull(c.getLevel()), "water_write_threshold",
-                WorldSpecificValue.get(e.level, "water_write_cost", 20, 50), 700)) {
+        if(c.getPowerLevel(Powers.MIND_POWER.get()) < WorldSpecificValue.get("water_write_threshold",
+                WorldSpecificValue.get("water_write_cost", 20, 50), 700)) {
             return;
         }
 
@@ -299,7 +299,7 @@ public class SpecialCaseMan {
 
         e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
         e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
-        c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get(e.level, "water_write_cost", 20, 50));
+        c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 20, 50));
         c.setDirty();
     }
 
@@ -338,7 +338,7 @@ public class SpecialCaseMan {
                    m = new Zombie(EntityType.ZOMBIE, c.getLevel());
                 }
                 m.setSilent(true);
-                m.setPos(aoe.getCenter().add(WorldSpecificValue.get(c.getLevel(), "monster_summon_x", -5, 5), 1, WorldSpecificValue.get(c.getLevel(), "monster_summon_z", -5, 5)));
+                m.setPos(aoe.getCenter().add(WorldSpecificValue.get("monster_summon_x", -5, 5), 1, WorldSpecificValue.get("monster_summon_z", -5, 5)));
                 c.getLevel().addFreshEntity(m);
             }
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
@@ -378,7 +378,7 @@ public class SpecialCaseMan {
     }
 
     private static void verdantEscape(CrucibleBlockEntity c) {
-        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool((ServerLevel) c.getLevel(), "no_moss", 0.5F))
+        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool("no_moss", 0.5F))
             return;
         ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }

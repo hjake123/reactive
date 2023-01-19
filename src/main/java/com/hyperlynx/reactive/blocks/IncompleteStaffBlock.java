@@ -35,7 +35,7 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
         if(l.isClientSide)
             return;
 
-        int order = WorldSpecificValues.EFFECT_ORDER.get(l);
+        int order = WorldSpecificValues.EFFECT_ORDER.get();
         Power[] order1 = {Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()};
         Power[] order2 = {Powers.Y_POWER.get(), Powers.Z_POWER.get(), Powers.X_POWER.get()};
         Power[] order3 = {Powers.Z_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get()};

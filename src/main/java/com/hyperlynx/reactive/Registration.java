@@ -83,12 +83,12 @@ public class Registration {
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
-    public static final RegistryObject<Block> CURSED_IRON_SYMBOL = BLOCKS.register("cursed_iron_symbol",
+    public static final RegistryObject<Block> OCCULT_SYMBOL = BLOCKS.register("occult_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> CURSED_IRON_SYMBOL_ITEM = fromBlock(CURSED_IRON_SYMBOL, ReactiveMod.CREATIVE_TAB);
+    public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = fromBlock(OCCULT_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
-            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), CURSED_IRON_SYMBOL.get()).build(null));
+            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get()).build(null));
 
     // Additional blocks
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
@@ -122,6 +122,10 @@ public class Registration {
     public static final RegistryObject<Block> RUNESTONE = BLOCKS.register("runestone",
             () -> new RunestoneBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE)));
     public static final RegistryObject<Item> RUNESTONE_ITEM = fromBlock(RUNESTONE, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
+            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
+    public static final RegistryObject<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
@@ -186,7 +190,11 @@ public class Registration {
     public static final RegistryObject<Item> ASH = ITEMS.register("ash",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
-            () -> new SoupItem(new Item.Properties().tab(CreativeModeTab.TAB_FOOD).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
+            () -> new SoupItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
+    public static final RegistryObject<Item> SALT = ITEMS.register("salt",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
+            () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
@@ -263,7 +271,7 @@ public class Registration {
         ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
-        ((SymbolBlock) CURSED_IRON_SYMBOL.get()).setSymbolItem(CURSED_IRON_SYMBOL_ITEM.get());
+        ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         evt.enqueueWork(() -> CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(BE_CURSED_TRIGGER));
@@ -290,6 +298,10 @@ public class Registration {
     // Helper method for BlockItem registration
     public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block, CreativeModeTab tab) {
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties().tab(tab)));
+    }
+
+    public static <B extends Block> RegistryObject<Item> fromBlock(RegistryObject<B> block) {
+        return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
     // Helper method for Recipe Types.
