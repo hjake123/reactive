@@ -48,6 +48,9 @@ public class LitmusPaperItem extends Item {
             return InteractionResult.PASS;
         }
 
+        if(context.getItemInHand().hasTag())
+            return InteractionResult.CONSUME;
+
         CrucibleBlockEntity crucible = (CrucibleBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
         if(crucible == null || crucible.getTotalPowerLevel() == 0) {
             return InteractionResult.PASS;

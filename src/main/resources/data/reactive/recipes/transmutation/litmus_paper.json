@@ -6,7 +6,7 @@
   "product": {
     "item": "reactive:litmus_paper"
   },
-  "reagents": ["reactive:mind"],
+  "reagents": ["reactive:mind", "reactive:light"],
   "min": 500,
   "cost": 500
 }

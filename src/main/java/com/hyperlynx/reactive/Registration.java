@@ -187,8 +187,6 @@ public class Registration {
             () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> ASH = ITEMS.register("ash",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
     public static final RegistryObject<Item> SALT = ITEMS.register("salt",

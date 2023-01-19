@@ -1,0 +1,25 @@
+{
+  "name": "Points of Technique",
+  "icon": "reactive:litmus_paper",
+  "category": "reactive:intro",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(o)Here are a few useful features to note when performing Alchemy of any kind."
+    },
+    {
+      "type": "reactive:transmute",
+      "recipe": "litmus_paper",
+      "text": "$(item)$(o)Litmus Paper$(0) is specially-treated paper that can be used by the adept to measure the strength of Powers in the Crucible."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:body_bottle",
+      "text": "$(o)The Body Power inhibits reactions from taking place. If you need an unfortunate combination of Powers for a transmutation, add some Body. $(p)It's also good against a certain $(l:intro/curse)other Power$(/l)"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "In Making the $(item)Staff of Power$(0), the Order follows that of the Reactions of the Secret Powers under a Golden Sign. $(p)$(4)EXPLOSION; FOAM; FALLING$(0)... This is the Order."
+    }
+  ]
+}

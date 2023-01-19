@@ -27,9 +27,9 @@ public class Powers {
     public static final RegistryObject<Power> VERDANT_POWER = POWERS.register("verdant", () -> new Power("verdant", 0x3ADB00, Registration.VERDANT_BOTTLE.get()));
     public static final RegistryObject<Power> ACID_POWER = POWERS.register("caustic", () -> new Power("caustic", 0x9D1E2D, "Acid", Registration.ACID_BOTTLE.get()));
 
-    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF, "Secret",null));
-    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12, "Secret",null));
-    public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8, "Secret",null));
+    public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF, "Unknown",null));
+    public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12, "Unknown",null));
+    public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8, "Unknown",null));
 
     // TODO: this stuff
     //public static final RegistryObject<Power> CHAOS_POWER = POWERS.register("chaos", () -> new Power("chaos", 0xFFFFFF, "Chaos", null));
