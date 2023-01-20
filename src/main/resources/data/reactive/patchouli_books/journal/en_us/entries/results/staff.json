@@ -21,5 +21,13 @@
       "type": "patchouli:text",
       "text": "$(1)Once the staff is tempered, the creation process can be completed by expelling a large amount of one of the six basic powers. The staff should gain an ability corresponding to that power."
     }
-  ]
+  ],
+  "extra_recipe_mappings": {
+    "reactive:blaze_staff": 0,
+    "reactive:mind_staff": 0,
+    "reactive:soul_staff": 0,
+    "reactive:warp_staff": 0,
+    "reactive:vital_staff": 0,
+    "reactive:light_staff": 0
+  }
 }

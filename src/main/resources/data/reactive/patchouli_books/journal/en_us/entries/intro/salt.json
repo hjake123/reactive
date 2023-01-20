@@ -22,5 +22,8 @@
       "recipe": "blaze_powder_from_salt",
       "text": "$(o)It can also make Blaze Powder, but, frankly, you're probably better off just killing Blazes."
     }
-  ]
+  ],
+  "extra_recipe_mappings": {
+    "reactive:salt": 0
+  }
 }

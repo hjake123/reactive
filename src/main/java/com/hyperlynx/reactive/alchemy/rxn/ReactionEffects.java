@@ -152,6 +152,9 @@ public class ReactionEffects {
 
     // Either apply levitation to nearby entities.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
+        if(c.getLevel().isClientSide)
+            return c;
+
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
@@ -165,9 +168,9 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
                 e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
             }
-            ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ENCHANTED_HIT,
+            ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
                     origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                    e.getX(),e.getEyeY()-0.1, e.getZ(), 10, 7, 0.3);
+                    e.getX(),e.getEyeY()-0.1, e.getZ(), 8, 7, 0.74);
         }
         return c;
     }

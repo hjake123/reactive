@@ -13,6 +13,13 @@
     }
   ],
   "extra_recipe_mappings": {
-    "reactive:acid_bottle": 0
+    "reactive:acid_bottle": 0,
+    "reactive:body_bottle": 0,
+    "reactive:blaze_bottle": 0,
+    "reactive:mind_bottle": 0,
+    "reactive:soul_bottle": 0,
+    "reactive:warp_bottle": 0,
+    "reactive:verdant_bottle": 0,
+    "reactive:light_bottle": 0
   }
 }

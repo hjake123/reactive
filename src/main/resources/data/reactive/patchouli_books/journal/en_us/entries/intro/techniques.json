@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "In Making the $(item)Staff of Power$(0), the Order follows that of the Reactions of the Secret Powers under a Golden Sign. $(p)$(4)EXPLOSION; FOAM; FALLING$(0)... This is the Order."
+      "text": "In Making the $(item)Staff of Power$(0), the Order follows that of the Reactions of the Secret Powers under a Golden Sign. $(p)$(4)BLASTING(br)FOAMING$(br)FALLING$(0)$(p)This is the Order."
     }
   ]
 }
