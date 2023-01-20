@@ -4,6 +4,7 @@
     "item": "minecraft:end_rod"
   },
   "product": {
-    "item": "reactive:stardust"
+    "item": "reactive:stardust",
+    "count": 8
   }
 }

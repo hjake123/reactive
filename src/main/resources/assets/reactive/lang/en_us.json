@@ -42,5 +42,10 @@
   "block.reactive.vital_staff": "Living Staff of Power",
   "block.reactive.solid_portal": "Crystallized Nether Portal",
   "block.reactive.runestone": "Runestone",
-  "block.reactive.salty_crucible": "Salt Crusted Crucible"
+  "block.reactive.salty_crucible": "Salt Crusted Crucible",
+  "title.reactive.dissolve": "Dissolution",
+  "title.reactive.transmute": "Transmutation",
+  "jei.reactive.crucible": "The Crucible is made by clicking on a Cauldron with a Scroll of Transmutation. See the Journal for details.",
+  "jei.reactive.generic": "See the Journal for details.",
+  "jei.reactive.reaction_result": "Result of a world-specific reaction. See the Journal for details."
 }
