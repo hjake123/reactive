@@ -7,6 +7,14 @@
     "minecraft:sculk",
     "minecraft:sculk_catalyst",
     "minecraft:sculk_sensor",
-    "minecraft:echo_shard"
+    "minecraft:echo_shard",
+    {
+      "id": "botania:mana_powder",
+      "required": false
+    },
+    {
+      "id": "quark:soul_bead",
+      "required": false
+    }
   ]
 }

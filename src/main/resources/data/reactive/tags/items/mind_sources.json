@@ -11,6 +11,14 @@
     "minecraft:enchanted_book",
     "reactive:scroll",
     "patchouli:guide_book",
-    "reactive:solid_portal"
+    "reactive:solid_portal",
+    {
+      "id": "hexcasting:amethyst_dust",
+      "required": false
+    },
+    {
+      "id": "hexcasting:charged_amethyst",
+      "required": false
+    }
   ]
 }

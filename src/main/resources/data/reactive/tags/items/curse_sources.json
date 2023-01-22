@@ -4,6 +4,14 @@
     "#minecraft:soul_fire_base_blocks",
     "minecraft:rotten_flesh",
     "minecraft:fermented_spider_eye",
-    "minecraft:wither_rose"
+    "minecraft:wither_rose",
+    {
+      "id": "botania:virus_necrodermal",
+      "required": false
+    },
+    {
+      "id": "botania:virus_nullodermal",
+      "required": false
+    }
   ]
 }

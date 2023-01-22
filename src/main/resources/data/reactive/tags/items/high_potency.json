@@ -6,6 +6,10 @@
     "#forge:ender_pearls",
     "minecraft:echo_shard",
     "minecraft:enchanted_book",
-    "reactive:solid_portal"
+    "reactive:solid_portal",
+    {
+      "id": "hexcasting:charged_amethyst",
+      "required": false
+    }
   ]
 }

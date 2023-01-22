@@ -10,6 +10,14 @@
     "#minecraft:flowers",
     "minecraft:kelp",
     "minecraft:sugar_cane",
-    "#minecraft:leaves"
+    "#minecraft:leaves",
+    {
+      "id": "#botania:petals",
+      "required": false
+    },
+    {
+      "id": "botania:living_root",
+      "required": false
+    }
   ]
 }
