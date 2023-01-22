@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "reactive:salt_block"
+    }
+  ],
+  "result": {
+    "item": "reactive:salt",
+    "count": 4
+  }
+}

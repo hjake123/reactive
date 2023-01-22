@@ -76,7 +76,7 @@ public class ReactionMan {
         // Add effect reactions to do crazy things.
         REACTIONS.add(new EffectReaction("growth_effect", ReactionEffects::growth, Powers.VERDANT_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new FreeEffectReaction("flames_effect", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new EffectReaction("levitation_effect", ReactionEffects::levitation, 1).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+        REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
 
         // Add end crystal conversion reactions
         switch (WorldSpecificValues.CONDUIT_POWER.get()) {
@@ -89,21 +89,21 @@ public class ReactionMan {
         switch (order) {
             case 1 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-                REACTIONS.add(new EffectReaction("vortex_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction("falling_effect", ReactionEffects::blockfall, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 2 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-                REACTIONS.add(new EffectReaction("vortex_effect", ReactionEffects::explosion, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction("falling_effect", ReactionEffects::blockfall, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
             case 3 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-                REACTIONS.add(new EffectReaction("vortex_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new EffectReaction("falling_effect", ReactionEffects::blockfall, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
             }
         }
 

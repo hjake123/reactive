@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -9,29 +8,29 @@ import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.util.FlagCriterion;
+import com.hyperlynx.reactive.util.HarvestChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.projectile.ShulkerBullet;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.LightningRodBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,9 +38,6 @@ import java.util.Random;
 
 // Just a holder class for the various reaction effect methods.
 public class ReactionEffects {
-
-    // TODO: testing
-
     // Destroys the contents of the Crucible and some connected Symbols unless there is an Iron Symbol.
     public static CrucibleBlockEntity explosion(CrucibleBlockEntity c) {
         if (!c.getLevel().isClientSide){
@@ -194,7 +190,7 @@ public class ReactionEffects {
         if(c.getLevel() == null) return c;
 
         AABB blast_zone = new AABB(c.getBlockPos());
-        blast_zone.inflate(3, 5, 3);
+        blast_zone = blast_zone.inflate(2, 5, 2);
 
         if(c.getLevel().isClientSide){
             if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
@@ -212,16 +208,25 @@ public class ReactionEffects {
         return c;
     }
 
-    // Cause blocks to fall down near the Crucible.
+    // Cause blocks to fall down near the Symbol.
     public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
         RandomSource random = level.random;
+        BlockPos symbol_pos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        if(symbol_pos == null)
+            return c;
+
         for(int i = 0; i < 10; i++) {
-            BlockPos target = c.getBlockPos().offset(random.nextInt(-4, 4), random.nextInt(0, 4), random.nextInt(-4, 4));
-            if (target == c.getBlockPos()) continue;
-            if (!level.isClientSide && !level.getBlockState(target).isAir()) {
-                FallingBlockEntity.fall(level, target, level.getBlockState(target));
+            BlockPos target = symbol_pos.offset(random.nextInt(-4, 4), random.nextInt(0, 4), random.nextInt(-4, 4));
+            if (target == c.getBlockPos() || target == symbol_pos) continue;
+            BlockState target_state = level.getBlockState(target);
+            if (!level.isClientSide && !target_state.isAir() && HarvestChecker.canMineBlock(c.getLevel(), target, target_state, 35F)) {
+                FallingBlockEntity.fall(level, target, target_state);
                 ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
+                ItemEntity drop = new ItemEntity(level, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.6, c.getBlockPos().getZ()+0.5,
+                        Registration.MOTION_SALT.get().getDefaultInstance());
+                level.addFreshEntity(drop);
+                FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.BLOCK_FALL_TRIGGER, c.getBlockPos(), 16);
             }
         }
         return c;

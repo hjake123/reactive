@@ -3,5 +3,6 @@
     "criterion": {
       "trigger": "reactive:portal_freeze_criterion"
     }
-  }
+  },
+  "parent": "reactive:portal_trade"
 }

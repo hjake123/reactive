@@ -3,5 +3,6 @@
     "see_synthesis": {
       "trigger": "reactive:make_rift_criterion"
     }
-  }
+  },
+  "parent": "reactive:dissolve_tp"
 }

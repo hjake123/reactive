@@ -15,7 +15,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "iron_symbol",
-      "text": "$(o)An $(item)Iron Symbol$(0) brings out the protective nature of Iron to prevent movement of Power."
+      "text": "$(o)An $(item)Iron Symbol$(0) brings out the protective nature of Iron to prevent movement of Power. $(p)Its area of effect is far lesser than that of the Copper Symbol."
     },
     {
       "type": "reactive:transmute",

@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -32,8 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,8 +128,8 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
                 // Collect bottles of mundane Powers.
                 if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
                     for(Power p : c.getPowerMap().keySet()){
-                        if(c.getPowerLevel(p) > 850){
-                            c.expendPower(p, 850);
+                        if(c.getPowerLevel(p) > 600){
+                            c.expendPower(p, 600);
                             player.addItem(SpecialCaseMan.checkBottleSpecialCases(c, p.getBottle()));
                             player.getItemInHand(hand).shrink(1);
                             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);

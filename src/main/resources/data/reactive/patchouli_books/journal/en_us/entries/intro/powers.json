@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)There are six basic kinds of alchemical power. $(li)$(4)BLAZE$(0), the power of heat and fire. $(li)$(4)LIGHT$(0), the power of... well, light. $(li)$(4)MIND$(0), the power of enchantments and thought. $(li)$(4)SOUL$(0), the power of the spirit. $(o)$(li)$(4)WARP$(0), the power of teleportation. $(li)$(4)VITAL$(0), the power of life."
+      "text": "$(o)There are six basic kinds of alchemical power. $(li)$(4)BLAZE$(0), the power of heat and fire. $(li)$(4)LIGHT$(0), the power of... well, light. $(li)$(4)MIND$(0), the power of enchantments and thought. $(li)$(4)SOUL$(0), the power of the spirit. $(o)$(li)$(4)WARP$(0), the power of space. $(li)$(4)VITAL$(0), the power of life."
     },
     {
       "type": "patchouli:text",

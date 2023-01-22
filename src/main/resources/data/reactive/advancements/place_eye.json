@@ -1,0 +1,8 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:place_eye_criterion"
+    }
+  },
+  "parent": "reactive:be_cursed"
+}

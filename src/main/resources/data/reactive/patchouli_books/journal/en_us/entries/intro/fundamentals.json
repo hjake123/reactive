@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The true Nature of these $(l:reactive:intro/powers)Powers$() is as a raw ontological force that interacts with material based on their essential properties. Outside of special containers, they quickly degrade into various particles and effects. As such, they can only bind to particular objects."
+      "text": "The true Nature of these $(l:reactive:intro/powers)Powers$() is as a raw ontological force that interacts with materials based on their essential properties. Outside of special containers, they quickly degrade into various particles and effects. As such, they can only bind to particular objects."
     },
     {
       "type": "patchouli:text",
@@ -18,7 +18,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)I've taken the liberty of cutting him off there. Here is an updated procedure: $(br2)Transcribe the following, using glowing ink mixed with redstone, onto a clean paper.$(br2)Then, simply apply the result to a Cauldron."
+      "text": "$(o)I've taken the liberty of cutting him off there. Here is an updated procedure: $(br2)Transcribe the following, using glowing ink mixed with redstone, onto a clean paper. A simple crafting operation will suffice.$(br2)Then, simply apply the result to a Cauldron."
     },
     {
       "type": "patchouli:image",
@@ -27,7 +27,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "reactive:alchemy_scroll_crafting",
-      "text": "$(o)A simple crafting operation will suffice. Do not fear: the risk of damaging or losing this journal in the process is slim to none."
+      "text": "$(o)Do not fear: the risk of damaging or losing this journal in the process is slim to none."
     },
     {
       "type": "patchouli:text",

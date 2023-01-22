@@ -10,7 +10,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "litmus_paper",
-      "text": "$(item)$(o)Litmus Paper$(0) is specially-treated paper that can be used by the adept to measure the strength of Powers in the Crucible."
+      "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used by the adept to Measure the Strength of Powers in the Crucible."
     },
     {
       "type": "patchouli:spotlight",
@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "In Making the $(item)Staff of Power$(0), the Order follows that of the Reactions of the Secret Powers under a Golden Sign. $(p)$(4)BLASTING(br)FOAMING$(br)FALLING$(0)$(p)This is the Order."
+      "text": "In Making the $(item)Staff of Power$(0), the Order follows that of the Reactions of the Secret Powers under a Golden Sign. $(p)$(4)$(bold)BLASTING$(br)FOAMING$(br)FALLING$()$(p)This is the Order."
     }
   ]
 }

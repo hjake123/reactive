@@ -3,24 +3,18 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.TagBuilder;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.text.html.parser.TagElement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LitmusPaperItem extends Item {
@@ -47,9 +41,6 @@ public class LitmusPaperItem extends Item {
         if(!context.getLevel().getBlockState(context.getClickedPos()).is(Registration.CRUCIBLE.get())){
             return InteractionResult.PASS;
         }
-
-        if(context.getItemInHand().hasTag())
-            return InteractionResult.CONSUME;
 
         CrucibleBlockEntity crucible = (CrucibleBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
         if(crucible == null || crucible.getTotalPowerLevel() == 0) {

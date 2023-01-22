@@ -1,0 +1,22 @@
+{
+  "name": "Motion Salts",
+  "icon": "reactive:motion_salt",
+  "category": "reactive:results",
+  "advancement": "reactive:see_block_fall",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "reactive:motion_salt",
+      "text": "Behold! The Exact Material I Predicted has Appeared Miraculously! I shall call this Substance $(item)Grid Breaker's Salts$(0).$(p)$(o)It's better to call them $(item)Motion Salts$(0)."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:motion_salt_block_crafting",
+      "text": "These Salts are notably harder than their Apprentice-Named Counterparts, and when combined into a Block, they exhibit a most Peculiar Property: blocks that appear next to them fall as if they were $(item)Sand$(0)."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "The Possibilities do not need to be stated, for they are Trivial to Imagine -- as to be expected of our Art."
+    }
+  ]
+}

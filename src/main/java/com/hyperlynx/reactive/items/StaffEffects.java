@@ -2,18 +2,14 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.fx.ParticleScribe;
-import com.hyperlynx.reactive.util.Helper;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
+import com.hyperlynx.reactive.util.BeamHelper;
+import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,14 +18,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.BlockEvent;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,7 +40,7 @@ public class StaffEffects {
     Beam casting code is taken from Eclectic, as contributed by petrak@
      */
     public static Player radiance(Player user){
-        var blockHit = Helper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32);
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(32));
@@ -85,7 +77,7 @@ public class StaffEffects {
     }
 
     public static Player blazing(Player user){
-        var blockHit = Helper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
         start = start.add(0, -0.3, 0);
@@ -107,7 +99,7 @@ public class StaffEffects {
     }
 
     public static Player spectral(Player user){
-        var blockHit = Helper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
         var blockHitPos = blockHit.getLocation();
 
         if(user instanceof ServerPlayer) {
@@ -126,7 +118,7 @@ public class StaffEffects {
     }
 
     public static Player warping(Player user) {
-        var blockHit = Helper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, 16);
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, 16);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(16));
@@ -154,7 +146,7 @@ public class StaffEffects {
                     drop_entity.teleportTo(user.getX(), user.getY(), user.getZ());
                 }
             }
-            else if(canMineBlock(user.level, user, blockHit.getBlockPos(), user.level.getBlockState(blockHit.getBlockPos()))){
+            else if(HarvestChecker.canMineBlock(user.level, user, blockHit.getBlockPos(), user.level.getBlockState(blockHit.getBlockPos()), 30F)){
                 hit_state.getBlock().playerWillDestroy(user.level, blockHit.getBlockPos(), hit_state, user);
                 hit_state.getBlock().playerDestroy(user.level, user, blockHit.getBlockPos(), hit_state, null, Items.IRON_PICKAXE.getDefaultInstance());
                 user.level.removeBlock(blockHit.getBlockPos(), false);
@@ -195,10 +187,6 @@ public class StaffEffects {
                 victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 30, 1));
             }
         }
-        int k = PotionUtils.getColor(Potions.REGENERATION);
-        double r = (float)(k >> 16 & 255) / 255.0F;
-        double g = (float)(k >> 8 & 255) / 255.0F;
-        double b = (float)(k & 255) / 255.0F;
 
         for(int i = 0; i < 10; i++){
             user.level.addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
@@ -208,14 +196,4 @@ public class StaffEffects {
         return user;
     }
 
-    public static boolean canMineBlock(Level level, Player player, BlockPos pos, BlockState state) {
-        if (!player.mayBuild() || !level.mayInteract(player, pos))
-            return false;
-
-        if (MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(level, pos, state, player)))
-            return false;
-
-        Block candidate_to_break = state.getBlock();
-        return !(candidate_to_break.defaultDestroyTime() < 0) && !(candidate_to_break.defaultDestroyTime() > 30F);
-    }
 }

@@ -1,0 +1,8 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:activate_eye_criterion"
+    }
+  },
+  "parent": "reactive:place_eye"
+}

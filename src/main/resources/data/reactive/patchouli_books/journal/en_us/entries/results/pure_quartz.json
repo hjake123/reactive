@@ -22,6 +22,11 @@
       "type": "patchouli:crafting",
       "recipe": "reactive:pure_quartz_block_crafting",
       "text": "Pure Quartz can be made into a remarkably transparent and resilient form of glass. There are likely other uses for it as well due to its inert alchemical properties."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:quartz_bottle_crafting",
+      "text": "$(o)You could even make a nifty bottle with it!"
     }
   ]
 }

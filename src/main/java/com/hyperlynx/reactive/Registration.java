@@ -1,10 +1,7 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.be.StaffBlockEntity;
-import com.hyperlynx.reactive.be.SymbolBlockEntity;
+import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.fx.*;
 import com.hyperlynx.reactive.items.*;
@@ -84,7 +81,7 @@ public class Registration {
     public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> OCCULT_SYMBOL = BLOCKS.register("occult_symbol",
-            () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+            () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = fromBlock(OCCULT_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
@@ -126,6 +123,14 @@ public class Registration {
     public static final RegistryObject<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
             () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
     public static final RegistryObject<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
+
+    public static final RegistryObject<Block> SALT_BLOCK = BLOCKS.register("salt_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.SAND)));
+    public static final RegistryObject<Item> SALT_BLOCK_ITEM = fromBlock(SALT_BLOCK, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> MOTION_SALT_BLOCK = BLOCKS.register("motion_salt_block",
+            () -> new MotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Item> MOTION_SALT_BLOCK_ITEM = fromBlock(MOTION_SALT_BLOCK, ReactiveMod.CREATIVE_TAB);
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
@@ -191,6 +196,8 @@ public class Registration {
             () -> new SoupItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
     public static final RegistryObject<Item> SALT = ITEMS.register("salt",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> MOTION_SALT = ITEMS.register("motion_salt",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
             () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
@@ -225,7 +232,11 @@ public class Registration {
     public static final RegistryObject<ParticleType<SimpleParticleType>> SMALL_RUNE_PARTICLE_TYPE = PARTICLES.register("small_runes",
             () -> SMALL_RUNE_PARTICLE);
 
-    // Register dummy blocks for the weird water types.
+    public static final SimpleParticleType SMALL_BLACK_RUNE_PARTICLE = new SimpleParticleType(false);
+    public static final RegistryObject<ParticleType<SimpleParticleType>> SMALL_BLACK_RUNE_PARTICLE_TYPE = PARTICLES.register("small_black_runes",
+            () -> SMALL_BLACK_RUNE_PARTICLE);
+
+    // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
     public static final RegistryObject<Block> DUMMY_NOISE_WATER = BLOCKS.register("noisy_water",
@@ -253,6 +264,11 @@ public class Registration {
     public static final FlagCriterion MAKE_RIFT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"));
     public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
     public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
+    public static final FlagCriterion BLOCK_FALL_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_block_fall_criterion"));
+    public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
+    public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"));
+
+
 
     // ----------------------- METHODS ------------------------
 
@@ -262,6 +278,7 @@ public class Registration {
         Minecraft.getInstance().particleEngine.register(STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(RUNE_PARTICLE_TYPE.get(), RuneParticle.RuneParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(SMALL_RUNE_PARTICLE_TYPE.get(), SmallRuneParticle.SmallRuneParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(SMALL_BLACK_RUNE_PARTICLE_TYPE.get(), SmallBlackRuneParticle.SmallBlackRuneParticleProvider::new);
     }
 
     @SubscribeEvent
@@ -279,6 +296,9 @@ public class Registration {
         evt.enqueueWork(() -> CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_TRADE_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_FREEZE_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(PLACE_OCCULT_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(BLOCK_FALL_TRIGGER));
+        evt.enqueueWork(() -> CriteriaTriggers.register(OCCULT_AWAKENING_TRIGGER));
     }
 
     @SubscribeEvent

@@ -89,7 +89,7 @@ public class SpecialCaseMan {
     }
 
     private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
-        final int BOTTLE_RETURN = WorldSpecificValue.get("bottle_return", 750, 840);
+        final int BOTTLE_RETURN = WorldSpecificValue.get("bottle_return", 500, 570);
         boolean changed = false;
         for(Power p : Powers.POWER_SUPPLIER.get()){
             if(p.matchesBottle(e.getItem())){

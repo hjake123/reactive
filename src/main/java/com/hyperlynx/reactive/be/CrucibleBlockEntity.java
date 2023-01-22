@@ -187,7 +187,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
-        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get()/2, Registration.IRON_SYMBOL.get())){
+        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, 3, Registration.IRON_SYMBOL.get())){
             switch(crucible.gather_stage){
                 case 0 -> {
                     // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
@@ -218,8 +218,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 }
 
                 case 3 -> {
-                    // Wither Skeleton Skulls add curse.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
+                    // Occult Symbols and Wither Skeleton Skulls add curse.
+                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
                         crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
                     }
                 }
@@ -243,7 +243,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     if(crucible.enderRiftStrength > 0){
                         crucible.addPower(Powers.WARP_POWER.get(), 10);
                     }
-                    crucible.gather_stage = 0;
+                    crucible.gather_stage = -1;
                 }
 
             }
@@ -374,7 +374,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return;
         }
 
-        double dist = Helper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
+        double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
         if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())) {
             return;
         }

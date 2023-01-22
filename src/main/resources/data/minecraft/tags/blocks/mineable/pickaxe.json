@@ -6,6 +6,8 @@
     "reactive:volt_cell",
     "reactive:solid_portal",
     "reactive:runestone",
-    "reactive:salty_crucible"
+    "reactive:salty_crucible",
+    "reactive:salt_block",
+    "reactive:motion_salt_block"
   ]
 }

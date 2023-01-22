@@ -5,10 +5,14 @@
   "refmap": "reactive.mixins.refmap.json",
   "package": "com.hyperlynx.reactive.mixin",
   "mixins": [
+    "AbstractSkeletonMixin",
     "AllayMixin",
+    "CreeperMixin",
     "LightningBoltMixin",
     "PhantomMixin",
-    "VexMixin"
+    "SpiderMixin",
+    "VexMixin",
+    "ZombieMixin"
   ],
   "injectors": {
     "defaultRequire": 1

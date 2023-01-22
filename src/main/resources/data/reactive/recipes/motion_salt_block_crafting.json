@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "q": {
+      "item": "reactive:motion_salt"
+    }
+  },
+  "pattern": [
+    "qq",
+    "qq"
+  ],
+  "result": {
+    "item": "reactive:motion_salt_block"
+  }
+}
