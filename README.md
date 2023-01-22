@@ -1,3 +1,7 @@
 # reactive
  
-This project is planned, at some point, to be a focused alchemy-themed magic mod with some mechanics that change between worlds. At the moment, it's pretty basic, however, and as I've not done something like this before it might take a long time. Please be patient if you read this. If you want to contribute, contact me or send a PR, but again, it's not anywhere near done.
+Reactive is an alchemy-themed magic mod based on in-world experimentation. 
+If you're here, you're either curious about the source code, or want to know the format for recipes.
+Either way, this is a passion project but I tried to put in work to make it understandable at least. 
+
+For recipes, check src/main/resources/data/reactive/recipes for folders full of example recipes for dissolve (Power Release) and transmutation reactions.
