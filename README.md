@@ -36,6 +36,7 @@ There are two config files; one in the config folder, and one in each world's se
  #Whether to reset the seed to your world seed when loading.
 	resetSeed = true 
  (is true by default and set to false after the world seed is written to this file)
+ (if you want deterministic behavior, set this to false in a defaultconfigs copy of the file and choose your own seed)
 
 ```
 
