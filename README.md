@@ -71,7 +71,7 @@ Please take care not to replace my tag definition unless you want to overwrite m
 }
 ```
 
-###TRANSMUTE RECIPES
+### TRANSMUTE RECIPES
 ```
 {
   "type": "reactive:transmutation",
