@@ -6,7 +6,6 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -64,8 +63,7 @@ public class Power {
     public String getName(){return name;}
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
-    // TODO: didn't work for client so this system doesn't do anything.
-    public boolean checkReactivity(Level level, int power_level, int threshold){
+    public boolean checkReactivity(int power_level, int threshold){
         float strength = percent_reactivity.get() / 100F;
         int adjusted_power_level = (int) (power_level * strength);
         return adjusted_power_level >= threshold;
@@ -90,7 +88,7 @@ public class Power {
         return WorldSpecificValue.get(
                 "power_" + i.getItem().getDescriptionId(),
                 i.is(AlchemyTags.highPower) ? 250: 25,
-                i.is(AlchemyTags.highPower) ? 500: 50);
+                i.is(AlchemyTags.highPower) ? 500: 75);
     }
 
     public boolean hasBottle(){

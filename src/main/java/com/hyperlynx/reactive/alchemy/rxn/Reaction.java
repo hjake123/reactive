@@ -55,7 +55,7 @@ public abstract class Reaction {
             return false;
 
         for(Power p : reagents.keySet()){
-            if(!p.checkReactivity(crucible.getLevel(), crucible.getPowerLevel(p), reagents.get(p))){
+            if(!p.checkReactivity(crucible.getPowerLevel(p), reagents.get(p))){
                 return false;
             }
         }

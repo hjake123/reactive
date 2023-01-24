@@ -7,11 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,7 +19,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SymbolBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
+public class SymbolBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private Item symbol_item = Items.BARRIER;
 
@@ -33,10 +29,6 @@ public class SymbolBlock extends Block implements EntityBlock, SimpleWaterlogged
     protected static final VoxelShape WEST_SHAPE = Block.box(15, 2, 2, 16, 14, 14);
     protected static final VoxelShape NORTH_SHAPE = Block.box(2, 2, 15, 14, 14, 16);
     protected static final VoxelShape SOUTH_SHAPE = Block.box(2, 2, 0, 14, 14, 1);
-
-    public static BlockPos getAttachedBlock(BlockState state, BlockPos pos){
-        return pos.relative(state.getValue(FACING).getOpposite());
-    }
 
     public SymbolBlock(BlockBehaviour.Properties props) {
         super(props);
