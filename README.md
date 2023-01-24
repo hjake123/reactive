@@ -49,7 +49,7 @@ reactive:curse_sources
 reactive:light_sources
 reactive:mind_sources
 reactive:soul_sources
-reactive:verdant_source
+reactive:verdant_sources
 reactive:vital_sources
 reactive:warp_sources
 ```
