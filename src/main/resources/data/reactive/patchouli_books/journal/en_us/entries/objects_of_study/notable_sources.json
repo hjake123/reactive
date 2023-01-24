@@ -30,7 +30,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The ingredients for Vital Power are quite rare, but just yesterday, I discovered that some had entered my Crucible out of nowhere! I checked my supplies, but nothing was missing, so the $(thing)Exterminator$(0) who came through last night is unlikely the cause. $(br2)How could the power of Life Itself have appeared $(l:reactive:intro/sacrifice)without using items at all?$(0)"
+      "text": "The ingredients for Vital Power are quite rare, but just yesterday, I discovered that some had entered my Crucible out of nowhere! I checked my supplies, but nothing was missing, so the $(thing)Exterminator$(0) who came through last night is unlikely the cause. $(br2)How could the power of Life Itself have appeared $(l:reactive:objects_of_study/sacrifice)without using items at all?$(0)"
     }
   ]
 }
