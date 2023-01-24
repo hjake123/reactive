@@ -30,6 +30,16 @@
       "text": "$(o)Do not fear: the risk of damaging or losing this journal in the process is slim to none."
     },
     {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:alchemy_scroll_alt_crafting",
+      "text": "$(o)An alternate recipe."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:alchemy_scroll_alt2_crafting",
+      "text": "$(o)Another alternate recipe."
+    },
+    {
       "type": "patchouli:text",
       "text": "$(o)The meaning of the glyphs is not important. Know only that the scroll's power is not derived from its writing, but in equal parts from the intrinsic properties of the ink, and from you. By taking the effort to transcribe these words, you bring about everything that will happen from now on."
     }

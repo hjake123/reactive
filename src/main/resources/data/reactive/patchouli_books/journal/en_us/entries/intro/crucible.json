@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The $(item)Power Crucible$() is the $(thing)Essential Tool of Alchemy$(). Its unique capability to convert matter into its raw $(thing)Alchemical Power$() enables easy access to these powers.$(br2)Additionally, it acts as an ideal medium for $(thing)Transmutations$(0)."
+      "text": "The $(item)Power Crucible$() is the $(thing)Essential Tool of Alchemy$(). Its unique capability to convert matter into its raw $(thing)Alchemical Power$() enables easy access to these powers.$(br2)Additionally, it acts as an ideal medium for $(thing)Transmutations$(0).$(p)See the $(l:intro/fundamentals)introduction$(/l) to learn how to make it."
     },
     {
       "type": "patchouli:spotlight",
