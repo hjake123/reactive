@@ -118,9 +118,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     } else if (crucible.electricCharge > 0) {
                         crucible.electricCharge--;
                     }
-                }
 
-                case 1 -> {
                     // Check for Effusive Sponges and fill if there is one.
                     if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
                         if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
@@ -130,14 +128,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     }
                 }
 
-                case 2 -> {
+                case 1 -> {
                     // Gather energy from the surroundings.
                     if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
                         gatherPower(level, crucible);
                     }
                 }
 
-                case 3 -> {
+                case 2 -> {
                     // Process items inside the Crucible
                     if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
                         if (processItemsInside(level, pos, state, crucible)) {
@@ -146,14 +144,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     }
                 }
 
-                case 4 -> {
+                case 3 -> {
                     // Perform applicable reactions.
                     if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
                         react(level, crucible);
                     }
                 }
 
-                case 5 -> {
+                case 4 -> {
                     // Synchronize the client and server.
                     crucible.setDirty();
                     crucible.process_stage = -1;

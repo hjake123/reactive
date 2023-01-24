@@ -19,6 +19,4 @@ public class AlchemyTags {
 
     public static final TagKey<Item> highPower = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "high_potency"));
 
-    public static final TagKey<Item> formationProduct = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "formation_products"));
-
 }
