@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(1)It should be possible to summon forth spirits using a Crucible. While one might imagine that simply releasing Soul would acomplish this, the truth seems, as ever to be somewhat more involved. $(br2)It is my belief that certain spiritually important objects would aid such a process:"
+      "text": "$(1)It should be possible to summon forth spirits using a Crucible. While one might imagine that simply releasing Soul would acomplish this, the truth seems, as ever, to be somewhat more involved. $(br2)It is my belief that certain spiritually important objects would aid such a process:"
     },
     {
       "type": "patchouli:text",
