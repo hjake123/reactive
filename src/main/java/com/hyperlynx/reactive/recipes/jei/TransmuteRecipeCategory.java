@@ -73,7 +73,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     private void drawReagentLabel(Minecraft minecraft, PoseStack poseStack, String label) {
         int width = minecraft.font.width(label);
-        int center = getWidth() / 2;
+        int center = getBackground().getWidth() / 2;
         int x = center - (width / 2);
         int y = 41;
         minecraft.font.draw(poseStack, label, x, y, 0xFF3838);
