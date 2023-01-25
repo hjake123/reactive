@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:salt"
+  },
+  "product": {
+    "item": "minecraft:prismarine_crystals"
+  },
+  "reagents": ["reactive:soul", "reactive:light"],
+  "min": 1200,
+  "cost": 400
+}

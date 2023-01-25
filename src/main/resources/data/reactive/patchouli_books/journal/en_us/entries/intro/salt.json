@@ -23,6 +23,11 @@
       "text": "$(o)It can also make Blaze Powder, but, frankly, you're probably better off just killing Blazes."
     },
     {
+      "type": "reactive:transmute",
+      "recipe": "prismarine_crystals_from_salt",
+      "text": "$(o)$(4)I wonder if this goes the other direction?$(0)"
+    },
+    {
       "type": "patchouli:crafting",
       "recipe": "reactive:salt_block_crafting",
       "text": "$(o)You can also make it into a pretty block! $(p)It doesn't dissolve in water or anything, it's just decorative."
