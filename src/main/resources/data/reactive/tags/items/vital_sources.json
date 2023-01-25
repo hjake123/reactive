@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "minecraft:glistering_melon_slice",
-    "minecraft:ghast_tear"
+    "minecraft:ghast_tear",
+    {
+      "id": "quark:crab_shell",
+      "required": false
+    }
   ]
 }

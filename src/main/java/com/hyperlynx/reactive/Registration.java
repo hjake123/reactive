@@ -187,6 +187,8 @@ public class Registration {
     public static final RegistryObject<Item> SCROLL = ITEMS.register("scroll",
             () -> new AlchemyScroll(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .stacksTo(1).rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
+            () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
@@ -199,8 +201,6 @@ public class Registration {
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
-            () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",

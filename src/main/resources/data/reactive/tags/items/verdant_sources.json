@@ -18,6 +18,10 @@
     {
       "id": "botania:living_root",
       "required": false
+    },
+    {
+      "id": "quark:moss_paste",
+      "required": false
     }
   ]
 }

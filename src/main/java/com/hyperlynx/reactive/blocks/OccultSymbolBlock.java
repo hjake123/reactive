@@ -86,7 +86,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         // Which bottle will be extracted, from the list above.
         // If the player doesn't have enough xp, we can't roll 6, so Mind won't be extracted.
         // (Remember, nextInt is exclusive at the top end!)
-        int roll = level.random.nextInt(0, player.experienceLevel < 3 ? 5 : 6);
+        int roll = level.random.nextInt(0, player.experienceLevel < 4 ? 5 : 6);
 
         switch(roll){
             case 0 -> {
@@ -121,7 +121,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             }
             case 5 -> {
                 // A Bottle of Mind was extracted.
-                player.giveExperienceLevels(-3);
+                player.giveExperienceLevels(-4);
                 player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100, 2));
                 player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
                 player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);

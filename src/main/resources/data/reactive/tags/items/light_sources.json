@@ -10,6 +10,10 @@
     "minecraft:ochre_froglight",
     "minecraft:glow_ink_sac",
     "minecraft:glow_lichen",
-    "minecraft:glow_berries"
+    "minecraft:glow_berries",
+    {
+      "id": "#quark:corundum",
+      "required": false
+    }
   ]
 }
