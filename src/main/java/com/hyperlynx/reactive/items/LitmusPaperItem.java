@@ -1,13 +1,19 @@
 package com.hyperlynx.reactive.items;
 
+import ca.weblite.objc.Client;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,6 +40,18 @@ public class LitmusPaperItem extends Item {
         for(Tag tag : measurements){
             hover_text.add(Component.literal(((CompoundTag) tag).getString("value")));
         }
+    }
+
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if(player.isCrouching() && level.isClientSide){
+            ListTag measurements = player.getItemInHand(hand).getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
+            for(Tag tag : measurements){
+                player.sendSystemMessage(Component.literal(((CompoundTag) tag).getString("value")));
+            }
+        }
+        return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
     @Override
