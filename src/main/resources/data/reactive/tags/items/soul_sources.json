@@ -8,6 +8,8 @@
     "minecraft:sculk_catalyst",
     "minecraft:sculk_sensor",
     "minecraft:echo_shard",
+    "#forge:gems/prismarine",
+    "#forge:dusts/prismarine",
     {
       "id": "botania:mana_powder",
       "required": false
