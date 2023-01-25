@@ -128,6 +128,8 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
                 // Collect bottles of mundane Powers.
                 if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
                     for(Power p : c.getPowerMap().keySet()){
+                        if(!p.hasBottle())
+                            continue;
                         if(c.getPowerLevel(p) > 600){
                             c.expendPower(p, 600);
                             player.addItem(SpecialCaseMan.checkBottleSpecialCases(c, p.getBottle()));

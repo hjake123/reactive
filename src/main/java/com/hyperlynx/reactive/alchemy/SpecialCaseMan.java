@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
+import com.hyperlynx.reactive.items.LitmusPaperItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
@@ -50,7 +51,9 @@ import java.util.*;
 public class SpecialCaseMan {
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
-        if(e.getItem().is(Tags.Items.ENDER_PEARLS))
+        if(e.getItem().is(Registration.LITMUS_PAPER.get()))
+            LitmusPaperItem.takeMeasurement(e.getItem(), c);
+        else if(e.getItem().is(Tags.Items.ENDER_PEARLS))
             enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
         else if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
             explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);

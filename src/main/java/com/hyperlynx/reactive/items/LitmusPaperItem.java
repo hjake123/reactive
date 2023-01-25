@@ -47,6 +47,12 @@ public class LitmusPaperItem extends Item {
             return InteractionResult.PASS;
         }
 
+        takeMeasurement(context.getItemInHand(), crucible);
+
+        return InteractionResult.SUCCESS;
+    }
+
+    public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible) {
         ListTag measurements = new ListTag();
 
         for(Power p : crucible.getPowerMap().keySet()){
@@ -68,10 +74,8 @@ public class LitmusPaperItem extends Item {
             measurements.add(mt);
         }
 
-        if(!context.getItemInHand().hasTag())
-            context.getItemInHand().setTag(new CompoundTag());
-        context.getItemInHand().getTag().put(TAG_MEASUREMENT, measurements);
-
-        return InteractionResult.SUCCESS;
+        if(!paper.hasTag())
+            paper.setTag(new CompoundTag());
+        paper.getTag().put(TAG_MEASUREMENT, measurements);
     }
 }
