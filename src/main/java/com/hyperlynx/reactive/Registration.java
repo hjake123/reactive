@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.fx.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.FlagCriterion;
+import com.hyperlynx.reactive.util.StagedFlagCriterion;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
@@ -259,14 +260,14 @@ public class Registration {
     public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
     public static final FlagCriterion BE_CURSED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
     public static final FlagCriterion TRY_NETHER_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
-    public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"));
+    public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"), new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible"));
     public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
-    public static final FlagCriterion MAKE_RIFT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"));
+    public static final FlagCriterion MAKE_RIFT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"), new ResourceLocation(ReactiveMod.MODID, "dissolve_tp"));
     public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
-    public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
+    public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"), new ResourceLocation(ReactiveMod.MODID, "portal_trade"));
     public static final FlagCriterion BLOCK_FALL_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_block_fall_criterion"));
     public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
-    public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"));
+    public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
 
 
 

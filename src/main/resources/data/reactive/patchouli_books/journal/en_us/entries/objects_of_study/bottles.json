@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)If you're having trouble harvesting from the Crucible using a bottle, consider how you get water out of Cauldron. It's the same procedure here."
+      "text": "$(o)If you're having trouble harvesting from the Crucible using a bottle, consider how you get water out of Cauldron. It's the same procedure here. $(p)You should be able to put the Power back by shift-right clicking."
     }
   ],
   "extra_recipe_mappings": {

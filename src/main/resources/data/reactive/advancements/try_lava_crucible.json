@@ -1,7 +1,6 @@
 {
-  "parent": "reactive:try_nether_crucible",
   "criteria": {
-    "criterion": {
+    "lava_crit": {
       "trigger": "reactive:try_lava_crucible_criterion"
     }
   }

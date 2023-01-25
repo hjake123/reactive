@@ -40,4 +40,7 @@ public class WorldSpecificValues {
     // 4: Vital is Verdant + Light
     // 5: Verdant is Vital + Light
 
+    public final static PrimedWSV BOTTLE_RETURN = new PrimedWSV("bottle_return", 500, 570);
+
+
 }
