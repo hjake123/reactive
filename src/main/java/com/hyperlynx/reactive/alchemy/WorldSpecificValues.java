@@ -42,5 +42,4 @@ public class WorldSpecificValues {
 
     public final static PrimedWSV BOTTLE_RETURN = new PrimedWSV("bottle_return", 500, 570);
 
-
 }

@@ -67,6 +67,8 @@ public class SpecialCaseMan {
             enderEyeFlyAway(c, e);
         else if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700)
             residualSlime(c, e);
+
+        tryEmptyPowerBottle(e, c);
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
@@ -87,6 +89,33 @@ public class SpecialCaseMan {
         if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
             return makeRiftBottle(c, bottle);
         return bottle;
+    }
+
+    private static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
+        boolean changed = false;
+        for(Power p : Powers.POWER_SUPPLIER.get()){
+            if(p.matchesBottle(e.getItem())){
+                if(c.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
+                    if(e.getItem().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(e.getItem())){
+                        c.enderRiftStrength = 2000;
+                    }
+                    if (e.getItem().getCount() == 1) {
+                        e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                    }
+                    else {
+                        e.getItem().shrink(1);
+                        ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        e.getLevel().addFreshEntity(empty_bottle);
+                    }
+                    changed = true;
+                }
+            }
+        }
+
+        if(changed){
+            c.setDirty();
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(c.getLevel().getRandom().nextFloat()/5));
+        }
     }
 
     // Copper ingots in acid charge the Crucible.
@@ -280,7 +309,10 @@ public class SpecialCaseMan {
     private static void residualSlime(CrucibleBlockEntity c, ItemEntity e) {
         c.expendPower(Powers.VERDANT_POWER.get(), 400);
         c.setDirty();
-        e.kill();
+        if(e.getItem().getCount() == 1)
+            e.kill();
+        else
+            e.getItem().shrink(1);
         Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.getLevel()));
         slime.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.1, 0));
         slime.setSize(1, true);
