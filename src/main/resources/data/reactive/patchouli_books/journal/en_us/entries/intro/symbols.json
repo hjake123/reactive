@@ -25,6 +25,10 @@
     {
       "type": "patchouli:text",
       "text": "$(o)The mechanics that cause these symbols to behave in these manners is unknown, but seems related to metallurgy. Copper promotes change, Iron promotes stability, Gold promotes radiance. Claiming a spiritual influence is at work seems reckless at best."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)Ah, two more things: you can automatically place Symbols using a $(item)Dispenser$(0), and break them by trying to move them with a $(item)Piston$(0). $(p)It should be a simple enough task to make a device that can toggle the status of a Symbol using these properties."
     }
   ]
 }

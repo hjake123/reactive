@@ -71,19 +71,19 @@ public class Registration {
     // Register the Symbol blocks, items, and the BE.
     public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = fromBlock(COPPER_SYMBOL, ReactiveMod.CREATIVE_TAB);
+    public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = SymbolItem.fromBlock(COPPER_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> IRON_SYMBOL = BLOCKS.register("iron_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> IRON_SYMBOL_ITEM = fromBlock(IRON_SYMBOL, ReactiveMod.CREATIVE_TAB);
+    public static final RegistryObject<Item> IRON_SYMBOL_ITEM = SymbolItem.fromBlock(IRON_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> GOLD_SYMBOL = BLOCKS.register("gold_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
+    public static final RegistryObject<Item> GOLD_SYMBOL_ITEM = SymbolItem.fromBlock(GOLD_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> OCCULT_SYMBOL = BLOCKS.register("occult_symbol",
             () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = fromBlock(OCCULT_SYMBOL, ReactiveMod.CREATIVE_TAB);
+    public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = SymbolItem.fromBlock(OCCULT_SYMBOL, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get()).build(null));
@@ -190,7 +190,7 @@ public class Registration {
     public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
             () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+            () -> new QuartzBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
             () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",

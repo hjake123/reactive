@@ -6,15 +6,17 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -36,9 +39,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
+public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, WorldlyContainerHolder {
 
     public static final BooleanProperty FULL = BooleanProperty.create("full");
 
@@ -136,8 +140,8 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
         for(Power p : c.getPowerMap().keySet()){
             if(!p.hasBottle())
                 continue;
-            if(c.getPowerLevel(p) > 600){
-                c.expendPower(p, 600);
+            if(c.getPowerLevel(p) > PowerBottleItem.BOTTLE_COST){
+                c.expendPower(p, PowerBottleItem.BOTTLE_COST);
                 player.addItem(SpecialCaseMan.checkBottleSpecialCases(c, p.getBottle()));
                 player.getItemInHand(hand).shrink(1);
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
@@ -232,4 +236,77 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock {
        return null;
     }
 
+    // The Crucible acts as a container for the ItemEntities in its block space.
+    @Override
+    public WorldlyContainer getContainer(BlockState state, LevelAccessor accessor, BlockPos pos) {
+        return new EntityInsideContainer(state, accessor, pos);
+    }
+
+    static class EntityInsideContainer extends SimpleContainer implements WorldlyContainer {
+        private final BlockState state;
+        private final LevelAccessor level;
+        private final BlockPos pos;
+
+        public EntityInsideContainer(BlockState state, LevelAccessor level, BlockPos pos) {
+            super(0);
+            this.state = state;
+            this.level = level;
+            this.pos = pos;
+        }
+
+        private List<ItemStack> getEntitySlots(){
+            List<ItemStack> slots = new ArrayList<>();
+            for(Entity entity : getEntitesInside(pos, (Level) level)){
+                if(entity instanceof ItemEntity){
+                    slots.add(((ItemEntity) entity).getItem());
+                }
+            }
+            return slots;
+        }
+
+        @Override
+        public int getContainerSize() {
+            return getEntitySlots().size()+1;
+        }
+
+        @Override
+        public int @NotNull [] getSlotsForFace(Direction face) {
+            int size = getContainerSize();
+            int[] slots_array = new int[size];
+            for(int i = 0; i < size; i++){
+                slots_array[i] = i;
+            }
+            return slots_array;
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int unknown, ItemStack stack, @Nullable Direction face) {
+            return state.getValue(FULL);
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int unknown, ItemStack stack, Direction face) {
+            return false;
+        }
+
+        @Override
+        public ItemStack getItem(int slot) {
+            if(slot >= getContainerSize() - 1){
+                return ItemStack.EMPTY;
+            }
+            return getEntitySlots().get(slot);
+        }
+
+        @Override
+        public void setItem(int slot, ItemStack stack) {
+            if(slot == getEntitySlots().size()) {
+                ItemEntity ingredient_drop = new ItemEntity((Level) level, pos.getX() + 0.5, pos.getY() + 0.5265, pos.getZ() + 0.5, stack);
+                ingredient_drop.setPickUpDelay(50);
+                ingredient_drop.setDeltaMovement(0, 0, 0);
+                level.addFreshEntity(ingredient_drop);
+            }else{
+                getEntitySlots().set(slot, stack);
+            }
+        }
+    }
 }

@@ -5,24 +5,78 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.Objects;
 
 public class PowerBottleItem extends Item {
+    public final static int BOTTLE_COST = 600;
+
     public PowerBottleItem(Properties props) {
         super(props);
+        DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack) {
-        return Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
+        return true;
     }
+
+    @Override
+    public ItemStack getCraftingRemainingItem(ItemStack stack) {
+        ItemStack res = Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
+        res.setCount(stack.getCount());
+        return res;
+    }
+
+    private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DispenseItemBehavior() {
+        private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+
+        @Override
+        public ItemStack dispense(BlockSource source, ItemStack stack) {
+            BlockPos target = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            if(!source.getLevel().getBlockState(target).is(Registration.CRUCIBLE.get())){
+                return defaultDispenseItemBehavior.dispense(source, stack);
+            }
+
+            CrucibleBlockEntity crucible = (CrucibleBlockEntity) source.getLevel().getBlockEntity(target);
+            if(crucible == null) {
+                return defaultDispenseItemBehavior.dispense(source, stack);
+            }
+
+            boolean changed = false;
+            for(Power p : Powers.POWER_SUPPLIER.get()){
+                if(p.matchesBottle(stack)){
+                    if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
+                        if(stack.is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(stack)){
+                            crucible.enderRiftStrength = 2000;
+                        }
+                        stack.shrink(1);
+                        ItemEntity quartz_bottle_drop = new ItemEntity(source.getLevel(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        source.getLevel().addFreshEntity(quartz_bottle_drop);
+                        changed = true;
+                    }
+                }
+            }
+
+            if(changed){
+                crucible.setDirty();
+                crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
+            }
+            return stack;
+        }
+    };
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
@@ -60,6 +114,33 @@ public class PowerBottleItem extends Item {
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    public static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
+        boolean changed = false;
+        for(Power p : Powers.POWER_SUPPLIER.get()){
+            if(p.matchesBottle(e.getItem())){
+                if(c.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
+                    if(e.getItem().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(e.getItem())){
+                        c.enderRiftStrength = 2000;
+                    }
+                    if (e.getItem().getCount() == 1) {
+                        e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                    }
+                    else {
+                        e.getItem().shrink(1);
+                        ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        e.getLevel().addFreshEntity(empty_bottle);
+                    }
+                    changed = true;
+                }
+            }
+        }
+
+        if(changed){
+            c.setDirty();
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(c.getLevel().getRandom().nextFloat()/5));
+        }
     }
 
 }
