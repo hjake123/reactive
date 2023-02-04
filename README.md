@@ -91,7 +91,7 @@ Please take care not to replace my tag definition unless you want to overwrite m
 
 Both recipes support item stack definitions with "count" greater than 1.
 
-Though the mod doesn't use them (at this point), there are also Precipitation Recipes, which cause items to be generated without a catalyst item. Their format is:
+Though the mod doesn't describe them in JEI, there are also Precipitation Recipes, which cause items to be generated without a catalyst item. Their format is:
 ```
 {
   "type": "reactive:precipitation",
