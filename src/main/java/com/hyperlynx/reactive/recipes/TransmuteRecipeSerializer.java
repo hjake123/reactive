@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,12 +40,9 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public @Nullable TransmuteRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
         ItemStack reactant = buffer.readItem();
         ItemStack product = buffer.readItem();
-        List<Power> reagents = new ArrayList<>();
-        while(buffer.isReadable()){
-            reagents.add(buffer.readRegistryId());
-        }
-        int min = buffer.readInt();
-        int cost = buffer.readInt();
+        List<Power> reagents = buffer.readCollection(ArrayList::new, IForgeFriendlyByteBuf::readRegistryId);
+        int min = buffer.readVarInt();
+        int cost = buffer.readVarInt();
         return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
     }
 
@@ -52,11 +50,9 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
         buffer.writeItem(recipe.reactant);
         buffer.writeItem(recipe.product);
-        for(Power p : recipe.reagents){
-            buffer.writeRegistryId(Powers.POWER_SUPPLIER.get(), p);
-        }
-        buffer.writeInt(recipe.minimum);
-        buffer.writeInt(recipe.cost);
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
+        buffer.writeVarInt(recipe.minimum);
+        buffer.writeVarInt(recipe.cost);
     }
 
 }

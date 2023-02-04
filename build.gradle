@@ -60,7 +60,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                eclectic {
+                reactive {
                     source sourceSets.main
                 }
             }
@@ -82,7 +82,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                eclectic {
+                reactive {
                     source sourceSets.main
                 }
             }
@@ -107,7 +107,7 @@ minecraft {
             args '--mod', 'reactive', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                eclectic {
+                reactive {
                     source sourceSets.main
                 }
             }

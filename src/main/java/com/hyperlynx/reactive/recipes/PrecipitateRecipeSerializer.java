@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,10 +39,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     @Override
     public @Nullable PrecipitateRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
         ItemStack product = buffer.readItem();
-        List<Power> reagents = new ArrayList<>();
-        while(buffer.isReadable()){
-            reagents.add(buffer.readRegistryId());
-        }
+        List<Power> reagents = buffer.readCollection(ArrayList::new, IForgeFriendlyByteBuf::readRegistryId);
         int min = buffer.readInt();
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
@@ -51,9 +49,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
         buffer.writeItem(recipe.product);
-        for(Power p : recipe.reagents){
-            buffer.writeRegistryId(Powers.POWER_SUPPLIER.get(), p);
-        }
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
         buffer.writeInt(recipe.reagent_count);
