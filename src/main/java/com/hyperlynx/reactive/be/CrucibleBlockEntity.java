@@ -258,7 +258,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // The method that performs reactions.
     private static void react(Level level, CrucibleBlockEntity crucible){
         crucible.used_crystal_this_cycle = false;
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)){
+        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
             if (r.conditionsMet(crucible)) {
                 r.run(crucible);
                 crucible.setDirty();

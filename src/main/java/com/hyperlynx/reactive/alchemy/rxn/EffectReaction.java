@@ -11,24 +11,28 @@ import java.util.function.Function;
 // This function runs a particular effect function each reaction tick.
 public class EffectReaction extends Reaction{
     protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
+    protected Function<CrucibleBlockEntity, CrucibleBlockEntity> renderFunction;
     int cost;
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, int numReagents) {
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> effect, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, int numReagents) {
         super(alias, numReagents);
-        effectFunction = function;
+        effectFunction = effect;
+        renderFunction = render;
         cost = WorldSpecificValue.get(alias+"cost", 10, 30);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power) {
         super(alias, 0);
         effectFunction = function;
+        renderFunction = render;
         cost = WorldSpecificValue.get(alias+"cost", 1, 50);
         reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, int num_additionals) {
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, int num_additionals) {
         super(alias, num_additionals);
         effectFunction = function;
+        renderFunction = render;
         cost = WorldSpecificValue.get(alias+"cost", 1, 50);
         reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
     }
@@ -45,7 +49,8 @@ public class EffectReaction extends Reaction{
 
     @Override
     public void render(final Level l, final CrucibleBlockEntity crucible) {
-        effectFunction.apply(crucible);
+        if(renderFunction != null)
+            renderFunction.apply(crucible);
     }
 
     @Override

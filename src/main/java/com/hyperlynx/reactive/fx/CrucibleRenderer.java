@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -24,8 +23,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
@@ -53,11 +50,16 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private void renderReactions(CrucibleBlockEntity crucible){
-        if(!ReactiveMod.REACTION_MAN.isInitialized())
-            return;
-
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions(crucible.getLevel())){
-            if(r.conditionsMet(crucible)) r.render((ClientLevel) crucible.getLevel(), crucible);
+        ReactiveMod.LOGGER.debug("Trying to render reactions.");
+//        if(!ReactiveMod.REACTION_MAN.isInitialized())
+//            return;
+//        ReactiveMod.LOGGER.debug("RMan initialized.");
+        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
+            ReactiveMod.LOGGER.debug("Checking " + r.toString());
+            if(r.conditionsMet(crucible)){
+                ReactiveMod.LOGGER.debug("Conditions met! Rendering...");
+                r.render(crucible.getLevel(), crucible);
+            }
         }
     }
 
