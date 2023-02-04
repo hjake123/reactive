@@ -99,7 +99,7 @@ public abstract class Reaction {
 
     public abstract void run(CrucibleBlockEntity crucible);
 
-    public abstract void render(final ClientLevel l, final CrucibleBlockEntity crucible);
+    public abstract void render(final Level l, final CrucibleBlockEntity crucible);
 
     public enum Stimulus {
         NONE,

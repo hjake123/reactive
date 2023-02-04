@@ -32,9 +32,10 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public void render(final ClientLevel l, final CrucibleBlockEntity crucible) {
-        // No need.
+    public void render(Level l, CrucibleBlockEntity crucible) {
+
     }
+
 
     @Override
     public String toString() {

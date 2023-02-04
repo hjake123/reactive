@@ -12,6 +12,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,7 +45,7 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(final ClientLevel l, final CrucibleBlockEntity crucible) {
+    public void render(final Level l, final CrucibleBlockEntity crucible) {
         ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, crucible.getBlockPos(), 0.45, 0.7, 1);
     }
 

@@ -52,10 +52,10 @@ public class StaffItem extends BlockItem {
     @Override
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
         if(ticks % 10 == 1) {
-            if(player instanceof LocalPlayer && !beam)
+            if(level.isClientSide && !beam)
                 effectFunction.apply((Player) player);
 
-            if(player instanceof ServerPlayer) {
+            if(!level.isClientSide) {
                 effectFunction.apply((Player) player);
                 if (player.getOffhandItem().is(stack.getItem())) {
                     player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
@@ -64,7 +64,7 @@ public class StaffItem extends BlockItem {
                 }
             }
         }
-        if (player instanceof LocalPlayer && beam) effectFunction.apply((Player) player);
+        if (level.isClientSide && beam) effectFunction.apply((Player) player);
     }
 
     @Override

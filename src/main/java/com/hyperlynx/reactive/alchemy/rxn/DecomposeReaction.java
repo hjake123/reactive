@@ -28,7 +28,7 @@ public class DecomposeReaction extends Reaction{
     }
 
     @Override
-    public void render(ClientLevel l, CrucibleBlockEntity crucible) {
+    public void render(Level l, CrucibleBlockEntity crucible) {
 
     }
 }

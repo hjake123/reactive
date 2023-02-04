@@ -29,7 +29,7 @@ public class AssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(final ClientLevel l, final CrucibleBlockEntity crucible) {
+    public void render(final Level l, final CrucibleBlockEntity crucible) {
         //Helper.drawParticlesCrucibleTop(l, ParticleTypes.ENCHANTED_HIT, crucible.getBlockPos(), 0.2F);
     }
 
