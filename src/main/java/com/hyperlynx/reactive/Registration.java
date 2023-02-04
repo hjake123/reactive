@@ -1,20 +1,24 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.be.*;
+import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.be.StaffBlockEntity;
+import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
-import com.hyperlynx.reactive.fx.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.FlagCriterion;
 import com.hyperlynx.reactive.util.StagedFlagCriterion;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -24,14 +28,9 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -39,6 +38,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @SuppressWarnings("unused")
+@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
@@ -56,7 +56,7 @@ public class Registration {
         Powers.POWERS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> bus.register(Registration.class));
+        bus.register(Registration.class);
     }
 
     // ----------------------- REGISTRATION ------------------------
@@ -269,18 +269,7 @@ public class Registration {
     public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
     public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
 
-
-
     // ----------------------- METHODS ------------------------
-
-    // Various event handlers
-    @SubscribeEvent
-    public static void registerParticles(RegisterParticleProvidersEvent evt) {
-        Minecraft.getInstance().particleEngine.register(STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
-        Minecraft.getInstance().particleEngine.register(RUNE_PARTICLE_TYPE.get(), RuneParticle.RuneParticleProvider::new);
-        Minecraft.getInstance().particleEngine.register(SMALL_RUNE_PARTICLE_TYPE.get(), SmallRuneParticle.SmallRuneParticleProvider::new);
-        Minecraft.getInstance().particleEngine.register(SMALL_BLACK_RUNE_PARTICLE_TYPE.get(), SmallBlackRuneParticle.SmallBlackRuneParticleProvider::new);
-    }
 
     @SubscribeEvent
     public static void commonSetupHandler(FMLCommonSetupEvent evt){
@@ -300,18 +289,6 @@ public class Registration {
         evt.enqueueWork(() -> CriteriaTriggers.register(PLACE_OCCULT_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(BLOCK_FALL_TRIGGER));
         evt.enqueueWork(() -> CriteriaTriggers.register(OCCULT_AWAKENING_TRIGGER));
-    }
-
-    @SubscribeEvent
-    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        evt.registerBlockEntityRenderer(CRUCIBLE_BE_TYPE.get(), CrucibleRenderer::new);
-        evt.registerBlockEntityRenderer(SYMBOL_BE_TYPE.get(), SymbolRenderer::new);
-    }
-
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void init(final FMLClientSetupEvent event) {
-
     }
 
     // Helper method for BlockItem registration

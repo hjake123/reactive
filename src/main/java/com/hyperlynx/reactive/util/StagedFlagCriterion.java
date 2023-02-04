@@ -7,9 +7,9 @@ import net.minecraft.server.level.ServerPlayer;
 public class StagedFlagCriterion extends FlagCriterion{
     ResourceLocation prereq;
 
-    public StagedFlagCriterion(ResourceLocation crit_rl, ResourceLocation prerequisite_rl) {
+    public StagedFlagCriterion(ResourceLocation crit_rl, ResourceLocation prerequisite_advancement_rl) {
         super(crit_rl);
-        prereq = prerequisite_rl;
+        prereq = prerequisite_advancement_rl;
     }
 
     @Override
