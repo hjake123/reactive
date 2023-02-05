@@ -10,7 +10,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "litmus_paper",
-      "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used by the adept to Measure the Strength of Powers in the Crucible."
+      "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used by the adept to Measure the Strength of Powers in the Crucible. $(p)$(o)Shift-right-click to more conveniently read what it says."
     },
     {
       "type": "patchouli:spotlight",
