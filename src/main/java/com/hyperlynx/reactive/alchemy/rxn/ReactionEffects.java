@@ -1,14 +1,14 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.FlagCriterion;
+import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -198,7 +198,7 @@ public class ReactionEffects {
                 ItemEntity drop = new ItemEntity(level, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.6, c.getBlockPos().getZ()+0.5,
                         Registration.MOTION_SALT.get().getDefaultInstance());
                 level.addFreshEntity(drop);
-                FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.BLOCK_FALL_TRIGGER, c.getBlockPos(), 16);
+                FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.BLOCK_FALL_TRIGGER, c.getBlockPos(), 16);
             }
         }
         return c;

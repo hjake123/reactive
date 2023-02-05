@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.util;
+package com.hyperlynx.reactive.advancements;
 
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.critereon.*;

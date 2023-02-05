@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.util;
+package com.hyperlynx.reactive.advancements;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;

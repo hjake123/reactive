@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive;
 
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -8,12 +9,8 @@ import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
-import com.hyperlynx.reactive.util.FlagCriterion;
-import com.hyperlynx.reactive.util.StagedFlagCriterion;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -255,20 +252,6 @@ public class Registration {
     public static final RegistryObject<RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
     public static final RegistryObject<RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
 
-    //Register advancement criteria for the book
-    public static final FlagCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
-    public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
-    public static final FlagCriterion BE_CURSED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
-    public static final FlagCriterion TRY_NETHER_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
-    public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"), new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible"));
-    public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
-    public static final FlagCriterion MAKE_RIFT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"), new ResourceLocation(ReactiveMod.MODID, "dissolve_tp"));
-    public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
-    public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"), new ResourceLocation(ReactiveMod.MODID, "portal_trade"));
-    public static final FlagCriterion BLOCK_FALL_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_block_fall_criterion"));
-    public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
-    public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
-
     // ----------------------- METHODS ------------------------
 
     @SubscribeEvent
@@ -277,18 +260,7 @@ public class Registration {
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
-        evt.enqueueWork(() -> CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(BE_CURSED_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(TRY_NETHER_CRUCIBLE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(TRY_LAVA_CRUCIBLE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_TRADE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(PORTAL_FREEZE_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(PLACE_OCCULT_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(BLOCK_FALL_TRIGGER));
-        evt.enqueueWork(() -> CriteriaTriggers.register(OCCULT_AWAKENING_TRIGGER));
+        CriteriaTriggers.enqueue(evt);
     }
 
     // Helper method for BlockItem registration

@@ -1,6 +1,8 @@
 package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
@@ -190,14 +192,14 @@ public class SpecialCaseMan {
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower);
             if(!l.isClientSide)
-                Registration.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
+                CriteriaTriggers.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
             if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
                 player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
                 foundTarget = true;
             }
         }
         if(!foundTarget){
-            FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER, p, 20);
+            FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.MAKE_RIFT_TRIGGER, p, 20);
             c.enderRiftStrength = 2000;
         }
         e.kill();
@@ -328,7 +330,7 @@ public class SpecialCaseMan {
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 0));
                 e.hurt(DamageSource.MAGIC, 10);
                 if(e instanceof Player){
-                    Registration.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
+                    CriteriaTriggers.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
                 }
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1, 1);
@@ -367,7 +369,7 @@ public class SpecialCaseMan {
         if(portal.isComplete()){
             portal.createSolidPortalBlocks();
             if(!l.isClientSide)
-                FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, Registration.PORTAL_FREEZE_TRIGGER, p, 9);
+                FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.PORTAL_FREEZE_TRIGGER, p, 9);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.blocks.OccultSymbolBlock;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import net.minecraft.server.level.ServerPlayer;
@@ -49,7 +50,7 @@ public class AlchemyScroll extends SimpleFoiledItem {
                 level.setBlock(context.getClickedPos(), level.getBlockState(context.getClickedPos()).setValue(OccultSymbolBlock.ACTIVE, true), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.74F);
-                Registration.OCCULT_AWAKENING_TRIGGER.trigger((ServerPlayer) context.getPlayer());
+                CriteriaTriggers.OCCULT_AWAKENING_TRIGGER.trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())

@@ -2,39 +2,10 @@ package com.hyperlynx.reactive.fx;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.fx.ParticleScribe;
-import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.FlagCriterion;
-import com.hyperlynx.reactive.util.HarvestChecker;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.LightningRodBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 // Just a holder class for the various reaction render methods. Please only call these on the client thank you.
 public class ReactionRenders {

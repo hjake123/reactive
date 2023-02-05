@@ -2,6 +2,8 @@ package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -197,7 +199,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -383,7 +385,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         sacrificeCount++;
-        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, Registration.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
+        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();

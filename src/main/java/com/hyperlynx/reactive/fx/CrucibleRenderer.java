@@ -50,14 +50,8 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private void renderReactions(CrucibleBlockEntity crucible){
-        ReactiveMod.LOGGER.debug("Trying to render reactions.");
-//        if(!ReactiveMod.REACTION_MAN.isInitialized())
-//            return;
-//        ReactiveMod.LOGGER.debug("RMan initialized.");
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
-            ReactiveMod.LOGGER.debug("Checking " + r.toString());
             if(r.conditionsMet(crucible)){
-                ReactiveMod.LOGGER.debug("Conditions met! Rendering...");
                 r.render(crucible.getLevel(), crucible);
             }
         }

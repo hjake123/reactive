@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.fx.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,7 +43,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if(entity instanceof ServerPlayer){
-            Registration.PLACE_OCCULT_TRIGGER.trigger((ServerPlayer) entity);
+            CriteriaTriggers.PLACE_OCCULT_TRIGGER.trigger((ServerPlayer) entity);
         }
     }
 
