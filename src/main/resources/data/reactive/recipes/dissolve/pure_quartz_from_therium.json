@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "byg:therium_shard"
+  },
+  "product": {
+    "item": "reactive:quartz"
+  }
+}

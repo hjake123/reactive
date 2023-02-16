@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.recipes;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.PowerBearer;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransmuteRecipe implements Recipe<Container> {
@@ -22,6 +24,8 @@ public class TransmuteRecipe implements Recipe<Container> {
     protected final List<Power> reagents;
     int cost;
     int minimum;
+
+    public static final TransmuteRecipe EMPTY = new TransmuteRecipe(new ResourceLocation(ReactiveMod.MODID, "trans_empty"), "transmutation", ItemStack.EMPTY, ItemStack.EMPTY, new ArrayList<>(), 0, 0);
 
     public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost) {
         this.id = id;

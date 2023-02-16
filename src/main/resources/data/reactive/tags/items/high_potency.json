@@ -10,6 +10,18 @@
     {
       "id": "hexcasting:charged_amethyst",
       "required": false
+    },
+    {
+      "id": "botania:mana_pearl",
+      "required": false
+    },
+    {
+      "id": "botania:mana_diamond",
+      "required": false
+    },
+    {
+      "id": "allaybottle:allay_bottle",
+      "required": false
     }
   ]
 }

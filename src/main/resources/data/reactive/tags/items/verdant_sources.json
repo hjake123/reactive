@@ -22,6 +22,14 @@
     {
       "id": "quark:moss_paste",
       "required": false
+    },
+    {
+      "id": "botania:cell_block",
+      "required": false
+    },
+    {
+      "id": "byg:aloe_vera",
+      "required": false
     }
   ]
 }

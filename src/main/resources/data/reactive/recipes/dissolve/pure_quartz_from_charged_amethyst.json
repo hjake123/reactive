@@ -1,0 +1,10 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "hexcasting:charged_amethyst"
+  },
+  "product": {
+    "item": "reactive:quartz",
+    "count": 2
+  }
+}

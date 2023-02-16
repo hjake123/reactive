@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.recipes;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,19 +22,24 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     @Override
     @NotNull
     public TransmuteRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
-        ItemStack reactant = CraftingHelper.getItemStack(json.get("reactant").getAsJsonObject(), false);
-        ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
-        List<Power> reagents = new ArrayList<>();
-        for(JsonElement j : json.get("reagents").getAsJsonArray()){
-            RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
-            if(powObj.isPresent())
-                reagents.add(powObj.get());
-            else
-                System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
+        try {
+            ItemStack reactant = CraftingHelper.getItemStack(json.get("reactant").getAsJsonObject(), false);
+            ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
+            List<Power> reagents = new ArrayList<>();
+            for (JsonElement j : json.get("reagents").getAsJsonArray()) {
+                RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
+                if (powObj.isPresent())
+                    reagents.add(powObj.get());
+                else
+                    System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
+            }
+            int min = json.get("min").getAsInt();
+            int cost = json.get("cost").getAsInt();
+            return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
         }
-        int min = json.get("min").getAsInt();
-        int cost = json.get("cost").getAsInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
+        catch(JsonSyntaxException e){
+            return TransmuteRecipe.EMPTY;
+        }
     }
 
     @Override

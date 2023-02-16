@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "botania:mana_diamond"
+  },
+  "product": {
+    "item": "minecraft:diamond"
+  }
+}

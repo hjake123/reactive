@@ -7,6 +7,10 @@
     {
       "id": "quark:crab_shell",
       "required": false
+    },
+    {
+      "id": "botania:tiny_potato",
+      "required": false
     }
   ]
 }

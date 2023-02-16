@@ -9,6 +9,10 @@
     "minecraft:verdant_froglight",
     "minecraft:ochre_froglight",
     "minecraft:nether_wart",
-    "#forge:gunpowder"
+    "#forge:gunpowder",
+    {
+      "id": "byg:brim_powder",
+      "required": false
+    }
   ]
 }

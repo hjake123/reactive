@@ -50,6 +50,10 @@
       "required": false
     },
     {
+      "id": "byg:therium_shard",
+      "required": false
+    },
+    {
       "id": "naturalist:glow_goop",
       "required": false
     }

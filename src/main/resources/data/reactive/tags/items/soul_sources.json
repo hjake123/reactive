@@ -14,7 +14,31 @@
       "required": false
     },
     {
+      "id": "botania:manasteel_ingot",
+      "required": false
+    },
+    {
+      "id": "botania:mana_string",
+      "required": false
+    },
+    {
+      "id": "botania:mana_pearl",
+      "required": false
+    },
+    {
+      "id": "botania:mana_diamond",
+      "required": false
+    },
+    {
+      "id": "botania:mana_bottle",
+      "required": false
+    },
+    {
       "id": "quark:soul_bead",
+      "required": false
+    },
+    {
+      "id": "allaybottle:allay_bottle",
       "required": false
     }
   ]

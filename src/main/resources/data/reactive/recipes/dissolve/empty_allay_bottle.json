@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "allaybottle:allay_bottle"
+  },
+  "product": {
+    "item": "minecraft:glass_bottle"
+  }
+}
