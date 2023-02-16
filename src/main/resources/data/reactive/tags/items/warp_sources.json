@@ -6,6 +6,14 @@
     "#forge:ender_pearls",
     "minecraft:warped_roots",
     "minecraft:twisting_vines",
-    "minecraft:warped_roots"
+    "minecraft:warped_roots",
+    {
+      "id": "quark:chorus_weeds",
+      "required": false
+    },
+    {
+      "id": "quark:chorus_twist",
+      "required": false
+    }
   ]
 }

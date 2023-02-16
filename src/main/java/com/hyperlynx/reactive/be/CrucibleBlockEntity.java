@@ -301,6 +301,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static boolean tryReduceToPower(ItemStack stack, CrucibleBlockEntity crucible){
         List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
+        if(stack_power_list.isEmpty()){
+            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount());
+            if(dissolved)
+                stack.setCount(0);
+            return false;
+        }
         for (Power p : stack_power_list) {
             int dissolve_capacity = (CrucibleBlockEntity.CRUCIBLE_MAX_POWER - crucible.getPowerLevel(p)) / Power.getSourceLevel(stack);
             if(dissolve_capacity <= 0){
@@ -314,16 +320,17 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
-    private static void tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count){
+    private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count){
         List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for (DissolveRecipe r : purify_recipes) {
             if(r.matches(new FakeContainer(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
