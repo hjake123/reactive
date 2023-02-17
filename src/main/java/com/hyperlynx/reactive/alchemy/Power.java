@@ -1,21 +1,26 @@
 package com.hyperlynx.reactive.alchemy;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
-public class Power {
+public class Power implements IForgeRegistryEntry<Power> {
     private final Color color;
     private final String id;
-    private final String name;
+    private String name;
+    private String domain; // Usually going to be "reactive"
     private final Item bottle;
     private final PrimedWSV percent_reactivity;
 
@@ -25,6 +30,7 @@ public class Power {
         this.bottle = bottle;
         this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.domain = ReactiveMod.MODID;
     }
 
     public Power(String id, int color, String name, Item bottle){
@@ -110,5 +116,23 @@ public class Power {
     @Override
     public String toString(){
         return name;
+    }
+
+    @Override
+    public Power setRegistryName(ResourceLocation name) {
+        this.domain = name.getNamespace();
+        this.name = name.getPath();
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getRegistryName() {
+        return new ResourceLocation(domain, name);
+    }
+
+    @Override
+    public Class<Power> getRegistryType() {
+        return Power.class;
     }
 }

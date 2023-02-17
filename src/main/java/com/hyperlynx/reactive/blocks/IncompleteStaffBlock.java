@@ -8,7 +8,6 @@ import com.hyperlynx.reactive.fx.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +15,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.levelgen.RandomSource;
+
+import java.util.Random;
 
 public class IncompleteStaffBlock extends BaseStaffBlock{
 
@@ -89,7 +91,7 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random rng) {
         if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
             ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, state.getValue(PROGRESS) * 0.2 + 0.2, 1);
         }

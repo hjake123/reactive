@@ -3,10 +3,6 @@
   "values": [
     "minecraft:soul_sand",
     "minecraft:soul_soil",
-    "minecraft:sculk",
-    "minecraft:sculk_catalyst",
-    "minecraft:sculk_sensor",
-    "minecraft:echo_shard",
     "#forge:gems/prismarine",
     "#forge:dusts/prismarine",
     {

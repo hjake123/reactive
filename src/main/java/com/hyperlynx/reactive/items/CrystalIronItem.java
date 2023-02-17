@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -32,7 +33,7 @@ public class CrystalIronItem extends Item {
                 }
             }
             return false;
-        }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
+        }else if(e instanceof ServerPlayer && ((Player) e).getInventory().contains(Registration.ITEMS.createTagKey("crystal_iron"))){
             if(cost > 0){
                 for(ItemStack stack : ((Player) e).getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){

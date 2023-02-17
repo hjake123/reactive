@@ -21,7 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.StructureTags;
+import net.minecraft.tags.ConfiguredStructureTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -103,7 +103,7 @@ public class SpecialCaseMan {
     // Ender eyes that are thrown into the Crucible without Curse are launched as if used.
     private static void enderEyeFlyAway(CrucibleBlockEntity c, ItemEntity e) {
         ServerLevel serverlevel = (ServerLevel) c.getLevel();
-        BlockPos blockpos = serverlevel.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
+        BlockPos blockpos = serverlevel.findNearestMapFeature(ConfiguredStructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
         if (blockpos != null) {
             EyeOfEnder eyeofender = new EyeOfEnder(c.getLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
             eyeofender.setItem(e.getItem());
@@ -127,11 +127,10 @@ public class SpecialCaseMan {
             return;
         }
 
-        int cause = WorldSpecificValues.GOLEM_CAUSE.get();
         BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
 
         if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
-            conjureSpirit(level, e, c, cause, candlePos);
+            conjureSpirit(level, e, c, candlePos);
         }
     }
 
@@ -149,18 +148,8 @@ public class SpecialCaseMan {
         level.playSound(null, blazeRodPos, SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
-    private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
-        if (cause == 1) { // It's most likely that an Allay will spawn.
-            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20))
-                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-            else
-                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-        } else if (cause == 2) { // It's most likely that a Vex will spawn.
-            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-            else
-                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-        }
+    private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos candlePos) {
+        EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
@@ -291,7 +280,6 @@ public class SpecialCaseMan {
             e.getItem().shrink(1);
         Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.getLevel()));
         slime.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.1, 0));
-        slime.setSize(1, true);
         c.getLevel().addFreshEntity(slime);
     }
 

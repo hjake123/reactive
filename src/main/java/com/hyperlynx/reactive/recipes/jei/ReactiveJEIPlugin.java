@@ -9,6 +9,7 @@ import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
@@ -42,10 +43,10 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addDescriptions(IRecipeRegistration registration) {
-        registration.addItemStackInfo(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.crucible"));
-        registration.addItemStackInfo(Registration.SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.GOLD_FOAM_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.MOTION_SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), new TranslatableComponent("jei.reactive.crucible"));
+        registration.addItemStackInfo(Registration.SALT.get().getDefaultInstance(), new TranslatableComponent("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(Registration.GOLD_FOAM_ITEM.get().getDefaultInstance(), new TranslatableComponent("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(Registration.MOTION_SALT.get().getDefaultInstance(), new TranslatableComponent("jei.reactive.reaction_result"));
         addGenericDescriptions(registration, Registration.STAFF_OF_WARP_ITEM.get(), Registration.STAFF_OF_MIND_ITEM.get(),
                 Registration.STAFF_OF_BLAZE_ITEM.get(), Registration.STAFF_OF_LIFE_ITEM.get(), Registration.STAFF_OF_LIGHT_ITEM.get(),
                 Registration.STAFF_OF_SOUL_ITEM.get(), Registration.SOLID_PORTAL_ITEM.get(), Registration.LIGHT_BOTTLE.get(),
@@ -55,7 +56,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     private void addGenericDescriptions(IRecipeRegistration registration, Item... items){
         for(Item item : items){
-            registration.addItemStackInfo(item.getDefaultInstance(), Component.translatable("jei.reactive.generic"));
+            registration.addItemStackInfo(item.getDefaultInstance(), new TranslatableComponent("jei.reactive.generic"));
         }
     }
 

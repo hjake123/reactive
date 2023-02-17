@@ -17,6 +17,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,13 +32,23 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     @Override
+    public ResourceLocation getUid() {
+        return new ResourceLocation(ReactiveMod.MODID, "transmute");
+    }
+
+    @Override
+    public Class<? extends TransmuteRecipe> getRecipeClass() {
+        return TransmuteRecipe.class;
+    }
+
+    @Override
     public RecipeType<TransmuteRecipe> getRecipeType() {
         return RecipeType.create(ReactiveMod.MODID, "transmute", TransmuteRecipe.class);
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable("title.reactive.transmute");
+        return new TranslatableComponent("title.reactive.transmute");
     }
 
     @Override

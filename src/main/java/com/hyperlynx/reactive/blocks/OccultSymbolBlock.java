@@ -6,10 +6,10 @@ import com.hyperlynx.reactive.fx.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class OccultSymbolBlock extends SymbolBlock{
     public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
@@ -58,7 +59,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
         if(!state.getValue(ACTIVE))
             return;
         double d0 = random.nextDouble() * 8 - 4;
@@ -94,37 +95,37 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
                 player.hurt(DamageSource.MAGIC, 14);
-                player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_acid"), true);
             }
             case 1 -> {
                 // A Bottle of Stock was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 1000, 1));
                 player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 10);
-                player.displayClientMessage(Component.translatable("message.reactive.extract_body"), true);
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_body"), true);
             }
             case 2 -> {
                 // A Bottle of Blaze was extracted.
                 player.setTicksFrozen(600);
                 player.setRemainingFireTicks(0);
                 player.hurt(DamageSource.FREEZE, 5);
-                player.displayClientMessage(Component.translatable("message.reactive.extract_blaze"), true);
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_blaze"), true);
             }
             case 3 -> {
                 // A Bottle of Nature was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.POISON, 800, 2));
                 player.hurt(DamageSource.MAGIC, 2);
-                player.displayClientMessage(Component.translatable("message.reactive.extract_verdant"), true);
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_verdant"), true);
             }
             case 4 -> {
                 // A Bottle of Light was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 1500, 0));
-                player.displayClientMessage(Component.translatable("message.reactive.extract_light"), true);
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_light"), true);
             }
             case 5 -> {
                 // A Bottle of Mind was extracted.
                 player.giveExperienceLevels(-4);
-                player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100, 2));
-                player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
+                player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 2));
+                player.displayClientMessage(new TranslatableComponent("message.reactive.extract_mind"), true);
                 player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);
             }
         }

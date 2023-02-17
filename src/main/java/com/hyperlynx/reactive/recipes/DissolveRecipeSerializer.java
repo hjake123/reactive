@@ -7,10 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe> {
+public class DissolveRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<DissolveRecipe> {
+    ResourceLocation name;
     @Override
     @NotNull
     public DissolveRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {

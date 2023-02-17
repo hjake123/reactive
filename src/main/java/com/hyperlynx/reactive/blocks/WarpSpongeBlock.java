@@ -3,10 +3,11 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.Random;
 
 public class WarpSpongeBlock extends WetSpongeBlock {
     public WarpSpongeBlock(Properties props) {
@@ -14,7 +15,7 @@ public class WarpSpongeBlock extends WetSpongeBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random random) {
         super.animateTick(state, level, pos, random);
         super.animateTick(state, level, pos, random);
         super.animateTick(state, level, pos, random);
@@ -31,7 +32,7 @@ public class WarpSpongeBlock extends WetSpongeBlock {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
         final int RANGE = 20;
         for(int i = 1; i < RANGE; i++){
             BlockPos target = pos.below(i);

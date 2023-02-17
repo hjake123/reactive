@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -17,6 +16,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
 
 public class StardustBlock extends Block {
     VoxelShape SHAPE = Block.box(5, 5, 5, 11, 11, 11);
@@ -37,7 +38,7 @@ public class StardustBlock extends Block {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, Random rng) {
         level.addParticle(Registration.STARDUST_PARTICLE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
 

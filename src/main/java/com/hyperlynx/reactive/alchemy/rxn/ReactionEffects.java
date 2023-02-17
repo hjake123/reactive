@@ -16,7 +16,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -183,7 +182,7 @@ public class ReactionEffects {
     // Cause blocks to fall down near the Symbol.
     public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
-        RandomSource random = level.random;
+        Random random = level.random;
         BlockPos symbol_pos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
         if(symbol_pos == null)
             return c;

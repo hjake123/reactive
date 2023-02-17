@@ -9,11 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)$(li)Skulls $(li)Candles $(li)Paintings $(li)Brewing Stands $(br2)Additionally, the manner of the spirit summoned might be random; if so, it might be changed for the better with Mind Power."
-    },
-    {
-      "type": "patchouli:text",
-      "text": "$(o)A $(l:intro/curse)certain other power$(/l), naturally, would almost guarantee the summoning of a malicious spirit.$(br2)Not sure why you'd want to do that but, it's your call."
+      "text": "$(1)$(li)Skulls $(li)Candles $(li)Paintings $(li)Brewing Stands"
     }
     ]
 }

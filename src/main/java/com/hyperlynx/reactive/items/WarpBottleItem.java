@@ -59,12 +59,12 @@ public class WarpBottleItem extends PowerBottleItem{
         }
         return super.use(level, player, hand);
     }
-
+    
     @Override
-    public int getMaxStackSize(ItemStack stack) {
+    public int getItemStackLimit(ItemStack stack) {
         if(isRiftBottle(stack))
             return 1;
-        return super.getMaxStackSize(stack);
+        return super.getItemStackLimit(stack);
     }
 
     public static void addTeleportTags(ResourceKey<Level> lkey, BlockPos pos, CompoundTag tag) {

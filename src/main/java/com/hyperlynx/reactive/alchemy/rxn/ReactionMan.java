@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.fx.ReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -115,7 +115,7 @@ public class ReactionMan {
     }
 
     @SubscribeEvent
-    public void worldUnload(LevelEvent.Unload event){
+    public void worldUnload(WorldEvent.Unload event){
         reset();
     }
 

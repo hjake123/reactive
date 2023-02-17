@@ -5,13 +5,14 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.RandomSource;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class ActiveFoamBlockEntity extends BlockEntity {
     int spreads_left = 16;
@@ -36,8 +37,8 @@ public class ActiveFoamBlockEntity extends BlockEntity {
         }
     }
 
-    private static void trySpreadSideways(Level level, BlockPos pos, RandomSource random, int spreads_left){
-        int active_direction = random.nextIntBetweenInclusive(1, 4);
+    private static void trySpreadSideways(Level level, BlockPos pos, Random random, int spreads_left){
+        int active_direction = random.nextInt(1, 5);
         int forbidden_direction = WorldSpecificValue.get("gold_foam_spread_direction", 1, 4);
         if(active_direction == forbidden_direction){
             return;
@@ -82,7 +83,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
         }
     }
 
-    public static void spreadAround(Level level, BlockPos pos, RandomSource random, int spreads_left) {
+    public static void spreadAround(Level level, BlockPos pos, Random random, int spreads_left) {
         float up_chance = WorldSpecificValue.get("gold_foam_up_chance", 0.2F, 0.5F);
         float down_chance = WorldSpecificValue.get("gold_foam_down_chance", 0.2F, 0.5F);
 

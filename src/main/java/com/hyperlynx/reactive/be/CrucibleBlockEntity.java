@@ -24,6 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -386,7 +387,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return;
         }
 
-        if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
+        if(((LivingEntity)event.getEntity()).getMobType().equals(MobType.UNDEAD)){
             addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
             return;
         }

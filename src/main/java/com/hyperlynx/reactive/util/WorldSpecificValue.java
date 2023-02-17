@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.util;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -64,10 +64,10 @@ public class WorldSpecificValue {
 
     // Sets the seed in the config to your world seed if that option is selected.
     @SubscribeEvent
-    public void worldLoad(LevelEvent.Load event){
-        if(event.getLevel().isClientSide())
+    public void worldLoad(WorldEvent.Load event){
+        if(event.getWorld().isClientSide())
             return;
-        long world_seed = event.getLevel().getServer().getLevel(Level.OVERWORLD).getSeed();
+        long world_seed = event.getWorld().getServer().getLevel(Level.OVERWORLD).getSeed();
         if(ConfigMan.SERVER.useWorldSeed.get()){
             ConfigMan.SERVER.seed.set(world_seed);
             ConfigMan.SERVER.useWorldSeed.set(false);
