@@ -21,8 +21,6 @@ import java.util.Optional;
 @Mixin(Allay.class)
 public abstract class AllayMixin {
 
-    @Shadow public abstract SimpleContainer getInventory();
-
     Optional<BlockPos> symbol_maybe = Optional.empty();
     int symbol_cache_ticker = 0;
 

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "hexcasting:amethyst_dust"
+  },
+  "product": {
+    "item": "reactive:stardust"
+  },
+  "reagents": ["reactive:light"],
+  "min": 250,
+  "cost": 25
+}

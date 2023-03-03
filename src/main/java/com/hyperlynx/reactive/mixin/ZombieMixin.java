@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Zombie.class)
 public abstract class ZombieMixin {
 
-    @Inject(method = "addBehaviourGoals", at = @At("TAIL"))
-    public void addBehaviourGoals(CallbackInfo ci) {
+    @Inject(method = "registerGoals", at = @At("TAIL"))
+    public void registerGoals(CallbackInfo ci) {
         ((Zombie)(Object) this).goalSelector.addGoal(5, new OccultSymbolAttractGoal(((Zombie)(Object) this), 1.0D, 3));
     }
 
