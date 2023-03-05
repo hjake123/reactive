@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,8 +15,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;

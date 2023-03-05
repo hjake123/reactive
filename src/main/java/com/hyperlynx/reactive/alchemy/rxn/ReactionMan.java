@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import com.hyperlynx.reactive.fx.ReactionRenders;
+import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

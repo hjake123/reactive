@@ -6,7 +6,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;

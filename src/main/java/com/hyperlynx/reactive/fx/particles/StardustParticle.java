@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.fx;
+package com.hyperlynx.reactive.fx.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -9,20 +9,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class RuneParticle extends TextureSheetParticle {
+public class StardustParticle extends TextureSheetParticle {
     static final Random RANDOM = new Random();
     private final SpriteSet sprites;
-    protected float base_size;
 
-    protected RuneParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
+    protected StardustParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(level, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
         this.sprites = pSprites;
         this.friction = 0.95F;
         this.speedUpWhenYMotionIsBlocked = true;
         this.hasPhysics = false;
-        this.age = RANDOM.nextInt(0, 5);
-        this.setSpriteFromAge(sprites);
-        this.base_size = 1.2F;
+        this.setSpriteFromAge(pSprites);
     }
 
     // Copied from net.minecraft.client.particle.GlowParticle
@@ -44,7 +41,7 @@ public class RuneParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
-        this.setSize(base_size - ((float) this.age / (float) this.lifetime), base_size - ((float) this.age / (float) this.lifetime));
+        this.setSize(1.2f - ((float) this.age / (float) this.lifetime), 1.2f - ((float) this.age / (float) this.lifetime));
     }
 
     @Override
@@ -53,20 +50,23 @@ public class RuneParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class RuneParticleProvider implements ParticleProvider<SimpleParticleType> {
+    public static class StardustParticleProvider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet sprite;
 
-        public RuneParticleProvider(SpriteSet pSprites) {
+        public StardustParticleProvider(SpriteSet pSprites) {
             this.sprite = pSprites;
         }
 
         @Nullable
         @Override
         public Particle createParticle(@NotNull SimpleParticleType pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            var particle = new RuneParticle(pLevel, pX, pY, pZ, 0d, 0d, 0d, this.sprite);
-            particle.setColor(RANDOM.nextFloat(0.8F, 1F), RANDOM.nextFloat(0.6F, 1F), RANDOM.nextFloat(0.8F, 1F));
-            particle.setParticleSpeed(0, -0.01, 0);
-            particle.setLifetime(RANDOM.nextInt(20, 50));
+            var particle = new StardustParticle(pLevel, pX, pY, pZ, 0d, 0d, 0d, this.sprite);
+            particle.setColor(1f, 1f, 1f);
+            if(RANDOM.nextDouble() < 0.1)
+                particle.setParticleSpeed(0, 0, 0);
+            else
+                particle.setParticleSpeed(RANDOM.nextDouble() * 0.02d - 0.01d, RANDOM.nextDouble() * 0.02d - 0.01d, RANDOM.nextDouble() * 0.02d - 0.01d);
+            particle.setLifetime(25);
             return particle;
         }
     }

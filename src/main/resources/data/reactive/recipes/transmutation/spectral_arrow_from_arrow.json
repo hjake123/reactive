@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:arrow"
+  },
+  "product": {
+    "item": "minecraft:spectral_arrow"
+  },
+  "reagents": ["reactive:light"],
+  "min": 200,
+  "cost": 20
+}

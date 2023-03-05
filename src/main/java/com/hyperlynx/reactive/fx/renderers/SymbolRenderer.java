@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.fx;
+package com.hyperlynx.reactive.fx.renderers;
 
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.SymbolBlock;

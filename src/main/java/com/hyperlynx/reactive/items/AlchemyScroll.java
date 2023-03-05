@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.blocks.OccultSymbolBlock;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

@@ -2,7 +2,7 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

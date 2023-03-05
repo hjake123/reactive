@@ -3,8 +3,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.fx.ParticleScribe;
-import net.minecraft.client.multiplayer.ClientLevel;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 

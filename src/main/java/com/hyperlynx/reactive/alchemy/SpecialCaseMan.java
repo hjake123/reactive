@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.LitmusPaperItem;
 import com.hyperlynx.reactive.items.PowerBottleItem;

@@ -7,7 +7,7 @@ import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;

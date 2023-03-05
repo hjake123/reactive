@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.fx;
+package com.hyperlynx.reactive.fx.particles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;

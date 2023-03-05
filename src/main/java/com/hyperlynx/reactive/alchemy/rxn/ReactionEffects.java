@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
