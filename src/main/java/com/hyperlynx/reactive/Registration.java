@@ -229,7 +229,7 @@ public class Registration {
     // Register entities
     public static final RegistryObject<EntityType<SoulCat>> SOULCAT_ENTITY_TYPE = ENTITY_TYPES.register("soulcat", () ->
             EntityType.Builder.of(SoulCat::new, MobCategory.CREATURE)
-            .sized(2.5f, 0.9f)
+            .sized(1.5f, 0.9f)
             .build("reactive:soulcat"));
 
     // Register particles

@@ -27,21 +27,9 @@ public class SoulCat extends TamableAnimal {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
 
     public static AttributeSupplier.Builder getCatAttributes() {
-        return AttributeSupplier.builder()
-                .add(Attributes.MAX_HEALTH, 18)
-                .add(Attributes.ARMOR, 4.0D)
-                .add(Attributes.ATTACK_DAMAGE, 6.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.54D)
-                .add(Attributes.ATTACK_KNOCKBACK)
-                .add(Attributes.ATTACK_SPEED)
-                .add(Attributes.JUMP_STRENGTH, 2.0D)
-                .add(Attributes.FOLLOW_RANGE)
-                .add(Attributes.ARMOR_TOUGHNESS)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 0.0D)
-                .add(ForgeMod.ENTITY_GRAVITY.get(), 0.9);
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 18.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.ATTACK_DAMAGE, 6.0D);
     }
 }
