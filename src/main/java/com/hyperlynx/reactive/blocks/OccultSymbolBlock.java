@@ -3,6 +3,8 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.util.BeamHelper;
+import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -27,6 +29,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -85,26 +90,28 @@ public class OccultSymbolBlock extends SymbolBlock{
                 Registration.VERDANT_BOTTLE.get(), Registration.LIGHT_BOTTLE.get(), Registration.MIND_BOTTLE.get());
 
         // Which bottle will be extracted, from the list above.
-        // If the player doesn't have enough xp, we can't roll 6, so Mind won't be extracted.
+        // Rolls beyond the table shatter the bottle.
         // (Remember, nextInt is exclusive at the top end!)
-        int roll = level.random.nextInt(0, player.experienceLevel < 4 ? 5 : 6);
+        int roll = level.random.nextInt(0, 8);
+        boolean bottle_broke = false;
 
         switch(roll){
             case 0 -> {
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
+                player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 1500, 0));
                 player.hurt(DamageSource.MAGIC, 14);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
             }
             case 1 -> {
                 // A Bottle of Stock was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 1000, 1));
-                player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 10);
+                player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 16);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_body"), true);
             }
             case 2 -> {
                 // A Bottle of Blaze was extracted.
-                player.setTicksFrozen(600);
+                player.setTicksFrozen(800);
                 player.setRemainingFireTicks(0);
                 player.hurt(DamageSource.FREEZE, 5);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_blaze"), true);
@@ -122,19 +129,32 @@ public class OccultSymbolBlock extends SymbolBlock{
             }
             case 5 -> {
                 // A Bottle of Mind was extracted.
-                player.giveExperienceLevels(-4);
-                player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 100, 2));
-                player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
-                player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);
+                if(player.experienceLevel > 4){
+                    player.giveExperienceLevels(-4);
+                    player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 150, 2));
+                    player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
+                    player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);
+                }else{
+                    // If they can't afford the Mind bottle, break the bottle.
+                    bottle_broke = true;
+                }
             }
+            default -> bottle_broke = true;
         }
 
-        level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.8F);
         ParticleScribe.drawParticleZigZag(level, Registration.SMALL_BLACK_RUNE_PARTICLE, pos, player.blockPosition().above(), 5, 4, 0.7);
-
-        ItemStack bottled_power = bottle_list.get(roll).getDefaultInstance();
         player.getItemInHand(hand).shrink(1);
-        player.addItem(bottled_power);
+
+        if(bottle_broke) {
+            player.displayClientMessage(Component.translatable("message.reactive.bottle_broke"), true);
+            player.hurt(DamageSource.GENERIC, 1);
+            level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 0.5F, 1.0F);
+        }
+        else{
+            ItemStack bottled_power = bottle_list.get(roll).getDefaultInstance();
+            player.addItem(bottled_power);
+            level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.8F);
+        }
 
         player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 120);
 

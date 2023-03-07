@@ -63,7 +63,6 @@ import java.util.*;
         - Check for special cases along the way.
  */
 
-@Mod.EventBusSubscriber
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     // Don't change this without updating the recipes.

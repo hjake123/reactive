@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)Well done. In an active state, the symbol is able to bring forth various kinds of power. To accomplish this is simple without thought. Simply hold an empty $(l:objects_of_study/bottles)bottle$(/l) up to the symbol and it will fill. $(p)However, there is a $(4)cost$(0). "
+      "text": "$(o)Well done. In an active state, the symbol is able to bring forth various kinds of power. To accomplish this is simple without thought. Simply hold an empty $(l:objects_of_study/bottles)bottle$(/l) up to the symbol and it will fill or shatter under the strain. $(p)There is a $(4)cost$(0). "
     },
     {
       "type": "patchouli:text",

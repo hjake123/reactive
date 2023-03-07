@@ -54,5 +54,6 @@
   "message.reactive.extract_blaze": "You feel very cold.",
   "message.reactive.extract_mind": "Your thoughts are clouded over.",
   "message.reactive.extract_light": "Your body seems to fade away.",
-  "message.reactive.extract_verdant": "You feel strangely ill."
+  "message.reactive.extract_verdant": "You feel strangely ill.",
+  "message.reactive.bottle_broke": "The bottle shatters in your hand."
 }
