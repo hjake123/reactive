@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:vine"
+  },
+  "product": {
+    "item": "minecraft:twisting_vines"
+  },
+  "reagents": ["reactive:warp", "reactive:verdant"],
+  "min": 100,
+  "cost": 20
+}

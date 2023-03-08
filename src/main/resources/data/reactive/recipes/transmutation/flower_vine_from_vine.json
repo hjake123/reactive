@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:vine"
+  },
+  "product": {
+    "item": "reactive:flower_vine"
+  },
+  "reagents": ["reactive:vital", "reactive:verdant"],
+  "min": 100,
+  "cost": 20
+}

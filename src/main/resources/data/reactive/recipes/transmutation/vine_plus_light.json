@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:vine"
+  },
+  "product": {
+    "item": "minecraft:glow_berries"
+  },
+  "reagents": ["reactive:light", "reactive:verdant"],
+  "min": 100,
+  "cost": 20
+}

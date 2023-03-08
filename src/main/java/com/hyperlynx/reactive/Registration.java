@@ -14,8 +14,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -30,8 +28,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -139,6 +135,19 @@ public class Registration {
     public static final RegistryObject<Block> MOTION_SALT_BLOCK = BLOCKS.register("motion_salt_block",
             () -> new MotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).sound(SoundType.CALCITE)));
     public static final RegistryObject<Item> MOTION_SALT_BLOCK_ITEM = fromBlock(MOTION_SALT_BLOCK, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> FLOWER_VINES = BLOCKS.register("flower_vine",
+            () -> new FlowerVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
+
+    public static final RegistryObject<Block> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
+            () -> new FlowerVinePlantBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
+
+    public static final RegistryObject<Item> FLOWER_VINES_ITEM = fromBlock(FLOWER_VINES, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> MIND_LICHEN = BLOCKS.register("mind_lichen",
+            () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN).lightLevel((state) -> 7)));
+
+    public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN, ReactiveMod.CREATIVE_TAB);
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",

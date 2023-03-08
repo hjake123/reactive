@@ -17,7 +17,9 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -76,6 +78,6 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
         int center = getBackground().getWidth() / 2;
         int x = center - (width / 2);
         int y = 41;
-        minecraft.font.draw(poseStack, label, x, y, 0xFF3838);
+        minecraft.font.draw(poseStack, label, x, y,0xFF3838);
     }
 }

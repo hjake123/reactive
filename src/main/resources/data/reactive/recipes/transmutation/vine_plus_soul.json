@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:vine"
+  },
+  "product": {
+    "item": "minecraft:sculk_vein"
+  },
+  "reagents": ["reactive:soul", "reactive:verdant"],
+  "min": 100,
+  "cost": 20
+}

@@ -44,6 +44,8 @@
   "block.reactive.salt_block": "Salt Block",
   "block.reactive.motion_salt_block": "Motion Salt Block",
   "block.reactive.salty_crucible": "Salt Crusted Crucible",
+  "block.reactive.mind_lichen": "Psychic Lichen",
+  "block.reactive.flower_vine": "Floral Vines",
   "title.reactive.dissolve": "Power Release",
   "title.reactive.transmute": "Transmutation",
   "jei.reactive.crucible": "The Crucible is made by clicking on a Cauldron with a Scroll of Transmutation. See the Journal for details.",

@@ -429,7 +429,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private void spawnPhantom(double x, double y, double z) {
         Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
         p.setPos(new Vec3(x, y +2, z));
-        p.setPhantomSize(this.getLevel().random.nextInt(1, 4));
+        p.setPhantomSize(this.getLevel().random.nextInt(2, 4));
         getLevel().addFreshEntity(p);
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
     }
