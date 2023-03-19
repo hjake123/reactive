@@ -17,8 +17,6 @@ public class DissolveRecipe implements Recipe<Container> {
     protected final ItemStack reactant;
     protected final ItemStack product;
 
-    public static final DissolveRecipe EMPTY = new DissolveRecipe(new ResourceLocation(ReactiveMod.MODID, "dissolve_empty"), "dissolve", ItemStack.EMPTY, ItemStack.EMPTY);
-
     public DissolveRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product) {
         this.id = id;
         this.group = group;

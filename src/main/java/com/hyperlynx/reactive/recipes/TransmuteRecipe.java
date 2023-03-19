@@ -25,8 +25,6 @@ public class TransmuteRecipe implements Recipe<Container> {
     int cost;
     int minimum;
 
-    public static final TransmuteRecipe EMPTY = new TransmuteRecipe(new ResourceLocation(ReactiveMod.MODID, "trans_empty"), "transmutation", ItemStack.EMPTY, ItemStack.EMPTY, new ArrayList<>(), 0, 0);
-
     public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost) {
         this.id = id;
         this.group = group;

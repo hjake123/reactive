@@ -38,7 +38,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
         }
         catch(JsonSyntaxException e){
-            return TransmuteRecipe.EMPTY;
+            return null;
         }
     }
 

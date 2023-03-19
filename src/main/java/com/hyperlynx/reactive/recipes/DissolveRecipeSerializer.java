@@ -19,7 +19,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
             return new DissolveRecipe(id, "dissolve", reactant, product);
         }catch(JsonSyntaxException e){
-            return DissolveRecipe.EMPTY;
+            return null;
         }
     }
 
