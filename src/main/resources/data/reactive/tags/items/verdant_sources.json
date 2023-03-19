@@ -11,6 +11,7 @@
     "minecraft:kelp",
     "minecraft:sugar_cane",
     "#minecraft:leaves",
+    "reactive:flower_vine",
     {
       "id": "#botania:petals",
       "required": false

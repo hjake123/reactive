@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "v": {
+      "item": "reactive:flower_vine"
+    }
+  },
+  "pattern": [
+    "   ",
+    "vv ",
+    "   "
+  ],
+  "result": {
+    "item": "minecraft:red_dye",
+    "count": 2
+  }
+}
