@@ -7,13 +7,11 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.be.StaffBlockEntity;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.*;
-import com.hyperlynx.reactive.entities.SoulCat;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -28,7 +26,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -42,7 +39,6 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
-    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
@@ -52,7 +48,6 @@ public class Registration {
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
-        ENTITY_TYPES.register(bus);
         ITEMS.register(bus);
         PARTICLES.register(bus);
         TILES.register(bus);
@@ -236,12 +231,6 @@ public class Registration {
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
-    // Register entities
-    public static final RegistryObject<EntityType<SoulCat>> SOULCAT_ENTITY_TYPE = ENTITY_TYPES.register("soulcat", () ->
-            EntityType.Builder.of(SoulCat::new, MobCategory.CREATURE)
-            .sized(1.5f, 0.9f)
-            .build("reactive:soulcat"));
-
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
     public static final RegistryObject<ParticleType<SimpleParticleType>> STARDUST_PARTICLE_TYPE = PARTICLES.register("stardust",
@@ -286,11 +275,6 @@ public class Registration {
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         CriteriaTriggers.enqueue(evt);
-    }
-
-    @SubscribeEvent
-    public static void entityAttributeHandler(EntityAttributeCreationEvent evt){
-        evt.put(SOULCAT_ENTITY_TYPE.get(), SoulCat.getCatAttributes().build());
     }
 
     // Helper method for BlockItem registration
