@@ -5,7 +5,6 @@ import com.hyperlynx.reactive.fx.particles.SmallBlackRuneParticle;
 import com.hyperlynx.reactive.fx.particles.SmallRuneParticle;
 import com.hyperlynx.reactive.fx.particles.StardustParticle;
 import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
-import com.hyperlynx.reactive.fx.renderers.SoulCatRenderer;
 import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityRenderersEvent;
