@@ -1,27 +1,15 @@
 package com.hyperlynx.reactive.items;
 
-import com.google.common.collect.Multimap;
-import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.StaffBlockEntity;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
@@ -32,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class StaffItem extends BlockItem {
@@ -92,7 +81,7 @@ public class StaffItem extends BlockItem {
         return InteractionResult.PASS;
     }
 
-    // Called when the item is placed to store durability data into the block entity.
+    // Called when the item is placed to store item stack data into the block entity.
     @Override
     protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player placer, ItemStack stack, BlockState state) {
         MinecraftServer server = level.getServer();
@@ -103,11 +92,12 @@ public class StaffItem extends BlockItem {
         if (blockentity == null)
             return false;
 
-        IntTag durability_tag = IntTag.valueOf(this.getDamage(stack));
+        //IntTag durability_tag = IntTag.valueOf(this.getDamage(stack));
 
         CompoundTag data_tag = blockentity.saveWithoutMetadata();
         CompoundTag prior_data_tag = data_tag.copy();
-        data_tag.put(StaffBlockEntity.DURABILITY_TAG, durability_tag);
+        //data_tag.put(StaffBlockEntity.DURABILITY_TAG, durability_tag);
+        data_tag.put(StaffBlockEntity.ITEM_STACK_TAG, stack.hasTag() ? Objects.requireNonNull(stack.getTag()) : new CompoundTag());
 
         if (!data_tag.equals(prior_data_tag)) {
             blockentity.load(data_tag);
