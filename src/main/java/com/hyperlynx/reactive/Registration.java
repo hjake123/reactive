@@ -2,10 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.be.ActiveFoamBlockEntity;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.be.StaffBlockEntity;
-import com.hyperlynx.reactive.be.SymbolBlockEntity;
+import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
@@ -189,6 +186,12 @@ public class Registration {
 
     public static final RegistryObject<BlockEntityType<ActiveFoamBlockEntity>> ACTIVE_GOLD_FOAM_BE = TILES.register("active_gold_foam_be",
             () -> BlockEntityType.Builder.of(ActiveFoamBlockEntity::new, ACTIVE_GOLD_FOAM.get()).build(null));
+
+    public static final RegistryObject<Block> DISPLACED_BLOCK = BLOCKS.register("displaced_block",
+            DisplacedBlock::new);
+
+    public static final RegistryObject<BlockEntityType<DisplacedBlockEntity>> DISPLACED_BLOCK_BE = TILES.register("displaced_block_be",
+            () -> BlockEntityType.Builder.of(DisplacedBlockEntity::new, DISPLACED_BLOCK.get()).build(null));
 
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
