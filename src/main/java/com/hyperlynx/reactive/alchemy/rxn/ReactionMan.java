@@ -20,6 +20,7 @@ import java.util.List;
 
 public class ReactionMan {
     static boolean initialized = false;
+    static boolean initializer_lock = false; // Prevent multiple things trying to initialize reactions at once.
     private static final LinkedList<Reaction> REACTIONS = new LinkedList<>();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
 
@@ -27,12 +28,12 @@ public class ReactionMan {
         return initialized ? REACTIONS : constructReactions();
     }
 
-    public boolean isInitialized(){
-        return initialized;
-    }
-
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
     private LinkedList<Reaction> constructReactions(){
+        if(initializer_lock)
+            return new LinkedList<>();
+        initializer_lock = true;
+
         // Set up the Base Power List.
         BASE_POWER_LIST.add(Powers.BLAZE_POWER.get());
         BASE_POWER_LIST.add(Powers.WARP_POWER.get());
@@ -111,6 +112,7 @@ public class ReactionMan {
         REACTIONS.add(new DecomposeReaction("necromancy", Powers.SOUL_POWER.get(), Powers.CURSE_POWER.get()).setStimulus(Reaction.Stimulus.SACRIFICE));
 
         initialized = true;
+        initializer_lock = false;
         return REACTIONS;
     }
 
