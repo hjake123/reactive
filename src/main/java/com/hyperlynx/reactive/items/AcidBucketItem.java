@@ -1,6 +1,5 @@
 package com.hyperlynx.reactive.items;
 
-import com.hyperlynx.reactive.Registration;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
