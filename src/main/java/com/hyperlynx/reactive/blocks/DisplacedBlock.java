@@ -1,6 +1,8 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.be.DisplacedBlockEntity;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
@@ -10,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -45,6 +48,9 @@ public class DisplacedBlock extends Block implements EntityBlock {
 
     // Convert some other block into a Displaced Block.
     public static void displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
+        // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
+        if(!level.isClientSide)
+            FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER, pos, 16);
         displaceWithChain(state_to_be_displaced, pos, level, duration, null);
     }
 
@@ -87,7 +93,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
         }
 
         if(shouldNotReappear(level, pos, (DisplacedBlockEntity) blockentity)){
-            level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 100);
+            level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 20);
             return;
         }
 
@@ -102,6 +108,15 @@ public class DisplacedBlock extends Block implements EntityBlock {
         }
         level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         return true;
+    }
+
+    // Middle click brings up the block being displaced.
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter getter, BlockPos pos, BlockState state) {
+        BlockEntity entity = getter.getBlockEntity(pos);
+        if(!(entity instanceof DisplacedBlockEntity displaced_entity))
+            return ItemStack.EMPTY;
+        return displaced_entity.self_state.getBlock().getCloneItemStack(getter, pos, state);
     }
 
     @Nullable

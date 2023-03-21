@@ -1,0 +1,7 @@
+{
+  "variants":{
+    "":{
+      "model": "reactive:block/framed_motion_salt"
+    }
+  }
+}

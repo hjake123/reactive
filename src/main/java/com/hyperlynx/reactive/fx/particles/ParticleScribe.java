@@ -53,7 +53,7 @@ public class ParticleScribe {
                 next_z = z2;
             }else{
                 double min_progress = 1.0/(segments+3);
-                double max_progress = 1.0/(segments-3);
+                double max_progress = segments==3 ? 1.0 : 1.0/(segments-3);
                 double actual_progress = ThreadLocalRandom.current().nextDouble(min_progress, max_progress);
 
                 double x_dist = Math.abs(x2 - prev_x) * actual_progress;

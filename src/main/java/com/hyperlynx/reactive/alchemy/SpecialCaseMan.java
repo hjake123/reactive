@@ -4,13 +4,16 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.LitmusPaperItem;
 import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
-import com.hyperlynx.reactive.util.*;
+import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.util.HyperPortalShape;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -43,6 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.MossBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
@@ -70,6 +74,9 @@ public class SpecialCaseMan {
             enderEyeFlyAway(c, e);
         else if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700)
             residualSlime(c, e);
+        else if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
+                && c.electricCharge > 0)
+            displaceNearby(c, e);
 
         PowerBottleItem.tryEmptyPowerBottle(e, c);
     }
@@ -293,6 +300,22 @@ public class SpecialCaseMan {
         slime.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.1, 0));
         slime.setSize(1, true);
         c.getLevel().addFreshEntity(slime);
+    }
+
+    // Throwing a Motion Salt Block into an electrified crucible displaces a nearby block.
+    private static void displaceNearby(CrucibleBlockEntity c, ItemEntity e) {
+        e.kill();
+        Optional<BlockPos> target = BlockPos.findClosestMatch(c.getBlockPos(), ConfigMan.COMMON.crucibleRange.get(), ConfigMan.COMMON.crucibleRange.get(),
+                blockPos -> {
+                    BlockState state = Objects.requireNonNull(c.getLevel()).getBlockState(blockPos);
+                    return !blockPos.equals(c.getBlockPos()) && !state.isAir() && !state.is(Registration.VOLT_CELL.get());
+                });
+        if(target.isPresent()){
+            DisplacedBlock.displace(c.getLevel().getBlockState(target.get()), target.get(), c.getLevel(), 200);
+            for(int i = 0; i < 2; i++)
+                ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK, c.getBlockPos(), target.get(),
+                        5, 8, 0.9F);
+        }
     }
 
     private static void soulEscape(CrucibleBlockEntity c){

@@ -5,9 +5,6 @@
       "x": 90,
       "y": 90
     },
-    "axis=y": {
-      "model": "reactive:block/solid_portal"
-    },
     "axis=z": {
       "model": "reactive:block/solid_portal",
       "x": 90

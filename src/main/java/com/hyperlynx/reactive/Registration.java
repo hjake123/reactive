@@ -8,7 +8,6 @@ import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -127,6 +126,10 @@ public class Registration {
     public static final RegistryObject<Block> MOTION_SALT_BLOCK = BLOCKS.register("motion_salt_block",
             () -> new MotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).sound(SoundType.CALCITE)));
     public static final RegistryObject<Item> MOTION_SALT_BLOCK_ITEM = fromBlock(MOTION_SALT_BLOCK, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<Block> FRAMED_MOTION_SALT_BLOCK = BLOCKS.register("framed_motion_salt_block",
+            () -> new FramedMotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
+    public static final RegistryObject<Item> FRAMED_MOTION_SALT_BLOCK_ITEM = fromBlock(FRAMED_MOTION_SALT_BLOCK, ReactiveMod.CREATIVE_TAB);
 
     public static final RegistryObject<Block> FLOWER_VINES = BLOCKS.register("flower_vine",
             () -> new FlowerVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));

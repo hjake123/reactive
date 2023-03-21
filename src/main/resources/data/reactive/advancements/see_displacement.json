@@ -1,0 +1,8 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:see_displacement_criterion"
+    }
+  },
+  "parent": "reactive:see_block_fall"
+}

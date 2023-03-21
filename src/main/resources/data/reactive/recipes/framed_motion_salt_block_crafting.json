@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "reactive:motion_salt_block"
+    },
+    {
+      "item": "minecraft:copper_ingot"
+    }
+  ],
+  "result":{
+    "item": "reactive:framed_motion_salt_block"
+  }
+}

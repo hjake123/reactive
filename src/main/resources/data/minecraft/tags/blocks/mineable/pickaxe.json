@@ -8,6 +8,7 @@
     "reactive:runestone",
     "reactive:salty_crucible",
     "reactive:salt_block",
-    "reactive:motion_salt_block"
+    "reactive:motion_salt_block",
+    "reactive:framed_motion_salt_block"
   ]
 }

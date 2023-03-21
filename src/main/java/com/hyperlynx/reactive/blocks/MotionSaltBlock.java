@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import org.jetbrains.annotations.NotNull;
 
 public class MotionSaltBlock extends Block {
     public static final BooleanProperty POWERED = ObserverBlock.POWERED;
@@ -53,11 +54,11 @@ public class MotionSaltBlock extends Block {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
         DisplacedBlock.displace(state, pos, level, 200);
-        // TODO: Research event.
+        // TODO: Displacement research event 1
         if(state.getValue(POWERED)){
             // Also displace the block above this one.
             DisplacedBlock.displaceWithChain(level.getBlockState(pos.above()), pos.above(), level, 210, pos);
-            // TODO: Separate research event.
+            // TODO: Displacement research event 2
         }
     }
 
