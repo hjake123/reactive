@@ -8,16 +8,15 @@ import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -144,6 +143,12 @@ public class Registration {
 
     public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN, ReactiveMod.CREATIVE_TAB);
 
+    public static final RegistryObject<Block> ACID_BLOCK = BLOCKS.register("acid_block",
+            () -> new AcidBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).speedFactor(0.65F).strength(1.4F)));
+
+    public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
+            () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
             () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
@@ -254,6 +259,10 @@ public class Registration {
     public static final RegistryObject<ParticleType<SimpleParticleType>> SMALL_BLACK_RUNE_PARTICLE_TYPE = PARTICLES.register("small_black_runes",
             () -> SMALL_BLACK_RUNE_PARTICLE);
 
+    public static final SimpleParticleType ACID_BUBBLE_PARTICLE = new SimpleParticleType(false);
+    public static final RegistryObject<ParticleType<SimpleParticleType>> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
+            () -> ACID_BUBBLE_PARTICLE);
+
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
@@ -281,6 +290,7 @@ public class Registration {
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         CriteriaTriggers.enqueue(evt);
+        ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
     }
 
     // Helper method for BlockItem registration

@@ -35,9 +35,7 @@ public class PowerBottleItem extends Item {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        ItemStack res = Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
-        res.setCount(stack.getCount());
-        return res;
+        return Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
     }
 
     private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DispenseItemBehavior() {

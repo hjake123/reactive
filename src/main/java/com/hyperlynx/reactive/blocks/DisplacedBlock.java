@@ -39,9 +39,9 @@ public class DisplacedBlock extends Block implements EntityBlock {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
         for(int i = 0; i < 4; i++){
-            double x = pos.getX() + level.getRandom().nextFloat();
-            double y = pos.getY() + level.getRandom().nextFloat();
-            double z = pos.getZ() + level.getRandom().nextFloat();
+            double x = pos.getX() + rng.nextFloat();
+            double y = pos.getY() + rng.nextFloat();
+            double z = pos.getZ() + rng.nextFloat();
             level.addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, 0, 0);
         }
     }

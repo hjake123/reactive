@@ -1,0 +1,140 @@
+package com.hyperlynx.reactive.blocks;
+
+import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.ibm.icu.text.MessagePattern;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
+
+public class AcidBlock extends Block implements BucketPickup {
+    public AcidBlock(Properties props) {
+        super(props);
+    }
+
+    @Override
+    public @NotNull ItemStack pickupBlock(LevelAccessor accessor, BlockPos pos, BlockState state) {
+        accessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+        return Registration.ACID_BUCKET.get().getDefaultInstance();
+    }
+
+    @Override
+    public Optional<SoundEvent> getPickupSound() {
+        return Optional.of(SoundEvents.SLIME_BLOCK_BREAK);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState p_154285_, BlockGetter p_154286_, BlockPos p_154287_, CollisionContext p_154288_) {
+        return Shapes.empty();
+    }
+
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if(entity instanceof ItemEntity item){
+            ItemStack stack = item.getItem();
+            if(stack.getMaxStackSize() > 1){
+                stack.shrink(1);
+            }else{
+                boolean broke = stack.hurt(3, level.random, null);
+                if(broke)
+                    stack.setCount(0);
+            }
+            if(stack.getCount() < 1){
+                item.kill();
+                level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }else {
+                item.setItem(stack);
+            }
+            return;
+        }
+
+        if (!(entity instanceof LivingEntity living) || !entity.getFeetBlockState().is(this)) {
+            return;
+        }
+        living.makeStuckInBlock(state, new Vec3((double)0.9F, 1.5D, (double)0.9F));
+        living.hurt(DamageSource.IN_FIRE, 2);
+    }
+
+    private void killPlantsUnderneath(Level level, BlockPos pos, BlockState state){
+        level.scheduleTick(pos, state.getBlock(), 10);
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+        BlockState state_beneath = level.getBlockState(pos.below());
+        if(state_beneath.getBlock() instanceof SnowyDirtBlock){
+            level.setBlockAndUpdate(pos.below(), Blocks.COARSE_DIRT.defaultBlockState());
+        }
+        if(state_beneath.getBlock() instanceof LeavesBlock || state_beneath.getBlock() instanceof IPlantable || state_beneath.getBlock() instanceof GrowingPlantBlock){
+            level.setBlockAndUpdate(pos.below(), state);
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            level.scheduleTick(pos.below(), state.getBlock(), 10);
+        }
+        level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+        killPlantsUnderneath(level, pos, state);
+        BlockState state_beneath = level.getBlockState(pos.below());
+        if(state_beneath.getMaterial().equals(Material.WOOL) || state_beneath.getMaterial().equals(Material.WOOD) || state_beneath.getBlock() instanceof MossBlock){
+            level.setBlockAndUpdate(pos.below(), state);
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+        if(state_beneath.getBlock() instanceof WeatheringCopper){
+            if(WeatheringCopper.getNext(state_beneath.getBlock()).isPresent()){
+                level.setBlockAndUpdate(pos.below(), WeatheringCopper.getNext(state_beneath.getBlock()).get().defaultBlockState());
+            }
+        }
+    }
+
+    @Override
+    public boolean isRandomlyTicking(BlockState irrelevant) {
+        return true;
+    }
+
+    @Override
+    public void onPlace(BlockState p_60566_, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
+        killPlantsUnderneath(level, pos, level.getBlockState(pos));
+    }
+
+    @Override
+    public void neighborChanged(BlockState our_state, Level level, BlockPos pos, Block block, BlockPos neighbor_pos, boolean unknown) {
+        killPlantsUnderneath(level, pos, our_state);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
+        for(int i = 0; i < 1; i++){
+            double x = pos.getX() + rng.nextFloat();
+            double y = pos.getY() + 1.0F;
+            double z = pos.getZ() + rng.nextFloat();
+            level.addParticle(Registration.ACID_BUBBLE_PARTICLE, x, y, z, 0, 0, 0);
+        }
+    }
+}

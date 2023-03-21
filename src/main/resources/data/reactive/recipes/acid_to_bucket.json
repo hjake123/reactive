@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "reactive:acid_bottle"
+    },
+    {
+      "item": "reactive:acid_bottle"
+    },
+    {
+      "item": "reactive:acid_bottle"
+    }
+  ],
+  "result":{
+    "item": "reactive:acid_bucket"
+  }
+}

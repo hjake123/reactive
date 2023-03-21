@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "reactive:acid_bucket"
+    },
+    {
+      "item": "reactive:quartz_bottle"
+    },
+    {
+      "item": "reactive:quartz_bottle"
+    },
+    {
+      "item": "reactive:quartz_bottle"
+    }
+  ],
+  "result":{
+    "item": "reactive:acid_bottle",
+    "count": 3
+  }
+}

@@ -1,9 +1,6 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.fx.particles.RuneParticle;
-import com.hyperlynx.reactive.fx.particles.SmallBlackRuneParticle;
-import com.hyperlynx.reactive.fx.particles.SmallRuneParticle;
-import com.hyperlynx.reactive.fx.particles.StardustParticle;
+import com.hyperlynx.reactive.fx.particles.*;
 import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
 import net.minecraft.client.Minecraft;
@@ -25,6 +22,7 @@ public class ClientRegistration {
         Minecraft.getInstance().particleEngine.register(Registration.RUNE_PARTICLE_TYPE.get(), RuneParticle.RuneParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(Registration.SMALL_RUNE_PARTICLE_TYPE.get(), SmallRuneParticle.SmallRuneParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(Registration.SMALL_BLACK_RUNE_PARTICLE_TYPE.get(), SmallBlackRuneParticle.SmallBlackRuneParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(Registration.ACID_BUBBLE_PARTICLE_TYPE.get(), AcidBubbleParticle.AcidBubbleParticleProvider::new);
     }
 
     @SubscribeEvent
