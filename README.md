@@ -24,6 +24,10 @@ There are two config files; one in the config folder, and one in each world's se
 	doNotTeleport = ["minecraft:ender_dragon", "minecraft:wither"]
  (Add any LivingEntity entities that you need to never be teleportable.)
  
+ 	#Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]
+	acidMeltBlockEntities = false
+ (Self explanatory.)
+ 
 ```
 ### SERVER CONFIG
 ```
