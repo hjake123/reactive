@@ -40,7 +40,7 @@ There are two config files; one in the config folder, and one in each world's se
 
 ```
 ### TAGS
-The ```reactive:acid_immune``` block tag can be used to decide which blocks are immune to being dissolved by blocks of acid.
+The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
 
 # Adding Power Sources
 Any item can be added as a power source by adding it to one of these following tags:
@@ -55,7 +55,7 @@ reactive:verdant_sources
 reactive:vital_sources
 reactive:warp_sources
 ```
-Note that blaze sources cannot be added at this time.
+Note that blaze sources cannot be added.
 To specify that an item is "high potency", i.e. that it should return substantially more power than normal, assign it to the tag ```reactive:high_potency```.
 Please take care not to replace my tag definition unless you want to overwrite my assignments of items to powers.
 
