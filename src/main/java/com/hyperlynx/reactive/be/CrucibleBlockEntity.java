@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.be;
 
+import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
@@ -46,7 +47,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -301,7 +301,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
         if(stack_power_list.isEmpty()){
-            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount());
+            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount(), crucible);
             if(dissolved)
                 stack.setCount(0);
             return false;
@@ -312,16 +312,18 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 continue;
             }
             changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack) / stack_power_list.size());
-            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity));
+            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity), crucible);
             stack.setCount(Math.max(stack.getCount()-dissolve_capacity, 0));
         }
         return changed;
     }
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
-    private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count){
+    private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
         List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for (DissolveRecipe r : purify_recipes) {
+            if(r.needs_electricity && crucible.electricCharge < 1)
+                continue;
             if(r.matches(new FakeContainer(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
@@ -336,9 +338,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
         List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
         for (TransmuteRecipe r : purify_recipes) {
+            if(r.needs_electricity && crucible.electricCharge < 1)
+                continue;
             if (r.matches(new FakeContainer(itemEntity.getItem()), level)) {
-                if (r.powerMet(crucible, level)) {
-                    ItemStack result = r.apply(itemEntity.getItem(), crucible, level);
+                if (r.powerMet(crucible)) {
+                    ItemStack result = r.apply(itemEntity.getItem(), crucible);
                     level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
                     crucible.setDirty(level, pos, state);
                     return true;
@@ -352,6 +356,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         List<PrecipitateRecipe> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
         for(PrecipitateRecipe r : creation_recipes){
+            if(r.needs_electricity && crucible.electricCharge < 1)
+                continue;
             if(r.powerMet(crucible, level)){
                 ItemStack result = r.apply(crucible, level);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));

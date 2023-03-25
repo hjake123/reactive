@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.util;
 
 import com.hyperlynx.reactive.ReactiveMod;
-import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

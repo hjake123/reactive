@@ -1,6 +1,5 @@
 package com.hyperlynx.reactive.recipes;
 
-import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -16,12 +15,14 @@ public class DissolveRecipe implements Recipe<Container> {
     protected final String group;
     protected final ItemStack reactant;
     protected final ItemStack product;
+    public boolean needs_electricity;
 
-    public DissolveRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product) {
+    public DissolveRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, boolean needs_electricity) {
         this.id = id;
         this.group = group;
         this.reactant = reactant;
         this.product = product;
+        this.needs_electricity = needs_electricity;
     }
 
     @Override

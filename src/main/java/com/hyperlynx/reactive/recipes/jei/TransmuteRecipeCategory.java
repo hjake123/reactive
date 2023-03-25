@@ -3,7 +3,6 @@ package com.hyperlynx.reactive.recipes.jei;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -17,9 +16,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -65,12 +62,15 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public void draw(TransmuteRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        List<String> reagent_list = new ArrayList<String>();
+        List<String> reagent_list = new ArrayList<>();
         for(Power reagent : recipe.getReagents()){
             reagent_list.add(reagent.getName());
         }
         Minecraft minecraft = Minecraft.getInstance();
         drawReagentLabel(minecraft, stack, reagent_list.toString().substring(1, reagent_list.toString().length()-1));
+        if(recipe.needs_electricity){
+            drawElectricLabel(minecraft, stack);
+        }
     }
 
     private void drawReagentLabel(Minecraft minecraft, PoseStack poseStack, String label) {
@@ -79,5 +79,13 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
         int x = center - (width / 2);
         int y = 41;
         minecraft.font.draw(poseStack, label, x, y,0xFF3838);
+    }
+
+    private void drawElectricLabel(Minecraft minecraft, PoseStack poseStack) {
+        int width = minecraft.font.width("Needs Charge");
+        int center = getBackground().getWidth() / 2;
+        int x = center - (width / 2);
+        int y = 29;
+        minecraft.font.drawShadow(poseStack, "Needs Charge", x, y,0x0DA8A8);
     }
 }

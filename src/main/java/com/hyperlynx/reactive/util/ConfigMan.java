@@ -11,6 +11,8 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue crucibleTickDelay;
         public ForgeConfigSpec.IntValue crucibleRange;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
+        public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
+
 
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -21,6 +23,8 @@ public class ConfigMan {
                     .defineInRange("crucibleRange", 12, 2, 64);
             doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\"]")
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither"));
+            acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
+                    .define("acidMeltBlockEntities", false);
             builder.pop();
         }
     }

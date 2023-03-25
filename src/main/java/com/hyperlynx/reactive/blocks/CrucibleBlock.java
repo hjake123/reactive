@@ -115,25 +115,23 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
         if(state.getValue(FULL)){
             BlockEntity crucible = level.getBlockEntity(pos);
-            if(crucible instanceof CrucibleBlockEntity c){
-                // Clear the crucible with shift-right-click.
-                if(player.isShiftKeyDown()){
-                    level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
-                    level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
-                }
-
-                if(player.getItemInHand(hand).is(Items.GLASS_BOTTLE)){
-                    extractGlassBottle(state, level, pos, player, hand, c);
-                }
-
-                // Collect bottles of mundane Powers.
-                if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
-                    extractQuartzBottle(level, pos, player, hand, c);
-                }
-                return InteractionResult.SUCCESS;
+            if(!(crucible instanceof CrucibleBlockEntity c)){
+                return InteractionResult.PASS;
             }
+            // Clear the crucible with shift-right-click.
+            if(player.isShiftKeyDown()){
+                level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
+                level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+            }
+            if(player.getItemInHand(hand).is(Items.GLASS_BOTTLE)){
+                extractGlassBottle(state, level, pos, player, hand, c);
+            }
+            // Collect bottles of mundane Powers.
+            if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
+                extractQuartzBottle(level, pos, player, hand, c);
+            }
+            return InteractionResult.SUCCESS;
         }
-
         return InteractionResult.PASS;
     }
 

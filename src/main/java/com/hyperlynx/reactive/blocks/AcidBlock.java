@@ -1,11 +1,9 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
-import com.ibm.icu.text.MessagePattern;
+import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -27,7 +25,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -75,42 +72,56 @@ public class AcidBlock extends Block implements BucketPickup {
         if (!(entity instanceof LivingEntity living) || !entity.getFeetBlockState().is(this)) {
             return;
         }
-        living.makeStuckInBlock(state, new Vec3((double)0.9F, 1.5D, (double)0.9F));
+        living.makeStuckInBlock(state, new Vec3(0.9F, 1.5D, 0.9F));
         living.hurt(DamageSource.IN_FIRE, 2);
     }
 
     private void killPlantsUnderneath(Level level, BlockPos pos, BlockState state){
+        if(blockIsOnExcludedList(level.getBlockState(pos.below())))
+            return;
         level.scheduleTick(pos, state.getBlock(), 10);
     }
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+        if(!(ConfigMan.COMMON.acidMeltBlockEntities.get()) && level.getBlockEntity(pos.below()) != null)
+            return;
         BlockState state_beneath = level.getBlockState(pos.below());
+        if(blockIsOnExcludedList(state_beneath))
+            return;
         if(state_beneath.getBlock() instanceof SnowyDirtBlock){
             level.setBlockAndUpdate(pos.below(), Blocks.COARSE_DIRT.defaultBlockState());
         }
-        if(state_beneath.getBlock() instanceof LeavesBlock || state_beneath.getBlock() instanceof IPlantable || state_beneath.getBlock() instanceof GrowingPlantBlock){
+        if(state_beneath.getBlock() instanceof LeavesBlock || state_beneath.getBlock() instanceof IPlantable
+                || state_beneath.getBlock() instanceof GrowingPlantBlock){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             level.scheduleTick(pos.below(), state.getBlock(), 10);
         }
-        level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+        if(!(ConfigMan.COMMON.acidMeltBlockEntities.get()) && level.getBlockEntity(pos.below()) != null)
+            return;
         killPlantsUnderneath(level, pos, state);
         BlockState state_beneath = level.getBlockState(pos.below());
-        if(state_beneath.getMaterial().equals(Material.WOOL) || state_beneath.getMaterial().equals(Material.WOOD) || state_beneath.getBlock() instanceof MossBlock){
+        if(blockIsOnExcludedList(state_beneath))
+            return;
+        if(state_beneath.getMaterial().equals(Material.WOOL) || state_beneath.getMaterial().equals(Material.WOOD)
+                || state_beneath.getBlock() instanceof MossBlock || state_beneath.is(Blocks.DRIPSTONE_BLOCK)){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
         if(state_beneath.getBlock() instanceof WeatheringCopper){
             if(WeatheringCopper.getNext(state_beneath.getBlock()).isPresent()){
                 level.setBlockAndUpdate(pos.below(), WeatheringCopper.getNext(state_beneath.getBlock()).get().defaultBlockState());
             }
         }
+    }
+
+    private boolean blockIsOnExcludedList(BlockState b){
+        return b.is(AlchemyTags.acidImmune);
     }
 
     @Override

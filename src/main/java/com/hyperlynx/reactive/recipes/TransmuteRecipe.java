@@ -1,6 +1,5 @@
 package com.hyperlynx.reactive.recipes;
 
-import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.PowerBearer;
@@ -13,7 +12,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransmuteRecipe implements Recipe<Container> {
@@ -24,8 +22,9 @@ public class TransmuteRecipe implements Recipe<Container> {
     protected final List<Power> reagents;
     int cost;
     int minimum;
+    public boolean needs_electricity;
 
-    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost) {
+    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
         this.id = id;
         this.group = group;
         this.reactant = reactant;
@@ -33,9 +32,10 @@ public class TransmuteRecipe implements Recipe<Container> {
         this.reagents = reagents;
         this.minimum = min;
         this.cost = cost;
+        this.needs_electricity = needs_electricity;
     }
 
-    public boolean powerMet(PowerBearer bearer, Level level){
+    public boolean powerMet(PowerBearer bearer){
         int power_level = 0;
         boolean has_all_reagents = true;
         for(Power p : reagents) {
@@ -48,7 +48,7 @@ public class TransmuteRecipe implements Recipe<Container> {
         return has_all_reagents && power_level > minimum;
     }
 
-    public ItemStack apply(ItemStack input, PowerBearer bearer, Level level) {
+    public ItemStack apply(ItemStack input, PowerBearer bearer) {
         int max_tfs = Integer.MAX_VALUE;
         if(cost > 0) {
             for (Power p : reagents) {

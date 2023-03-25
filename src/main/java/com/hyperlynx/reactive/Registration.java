@@ -207,7 +207,7 @@ public class Registration {
     public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
             () -> new StardustItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SCROLL = ITEMS.register("scroll",
-            () -> new AlchemyScroll(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
+            () -> new AlchemyScrollItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .stacksTo(1).rarity(Rarity.RARE)));
     public static final RegistryObject<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
             () -> new LitmusPaperItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));

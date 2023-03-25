@@ -39,6 +39,8 @@ There are two config files; one in the config folder, and one in each world's se
  (if you want deterministic behavior, set this to false in a defaultconfigs copy of the file and choose your own seed)
 
 ```
+### TAGS
+The ```reactive:acid_immune``` block tag can be used to decide which blocks are immune to being dissolved by blocks of acid.
 
 # Adding Power Sources
 Any item can be added as a power source by adding it to one of these following tags:
@@ -58,6 +60,24 @@ To specify that an item is "high potency", i.e. that it should return substantia
 Please take care not to replace my tag definition unless you want to overwrite my assignments of items to powers.
 
 # Adding Recipes
+### Specifying Powers
+Whenever you need to write a Power into one of the following recipes 
+(in the 'reagent' sections), you may use any of the following values:
+```
+reactive:body
+reactive:blaze
+reactive:caustic
+reactive:curse
+reactive:light
+reactive:mind
+reactive:soul
+reactive:verdant
+reactive:vital
+reactive:warp
+reactive:esoteric_x
+reactive:esoteric_y
+reactive:esoteric_z
+```
 ### DISSOLVE (Power Release) RECIPES
 ```
 {
@@ -68,9 +88,14 @@ Please take care not to replace my tag definition unless you want to overwrite m
   "product": {
     "item": "namespace:output_item"
   }
+  "needs_electricity": false
 }
 ```
+These recipes do not require that an item is a power source; they simply happen when any quantity of the reactant is added to the Crucible.
 
+"needs_electricity" causes the recipe to require that electrical charge is present in the Crucible for the recipe to work. If it is omitted, false will be assumed by default.
+
+Note that if "needs_electricity" is true and an item is a power source, non-electrified Crucibles will **still break down the item**! It would simply not return any byproduct.
 ### TRANSMUTE RECIPES
 ```
 {
@@ -84,13 +109,18 @@ Please take care not to replace my tag definition unless you want to overwrite m
   "reagents": ["reactive:power1", "reactive:power2", ...],
   "min": 1300,
   "cost": 1000
+  "needs_electricity: false
 }
 ```
+These recipes are like Dissolve recipes, but they have a Power requirement.
+
 "min" refers to the minumum total power balance that must be present for the transmutation to occur.
+
 "cost" refers to the amount of power used (split between the reagents) by each operation.
 
-Both recipes support item stack definitions with "count" greater than 1.
+"needs_electricity", as above, makes the recipe require that the Crucible is electrified.
 
+### PRECIPITATION RECIPES
 Though the mod doesn't describe them in JEI, there are also Precipitation Recipes, which cause items to be generated without a catalyst item. Their format is:
 ```
 {
@@ -102,9 +132,15 @@ Though the mod doesn't describe them in JEI, there are also Precipitation Recipe
   "min": 750,
   "cost": 250,
   "reagent_count": 2
+  "needs_electricity: false
 }
 ```
 "min" and "cost" are the same as for transmutation.
-"reagent_count" is the number of reagents from the list that are chosen. Which ones are required can therefore be made world-specific. The game will crash if this value is set higher than the number of reagents given the list, so be careful.
+
+"reagent_count" is the number of reagents from the list that are chosen. Which ones are required can therefore be made world-specific. If this value is equal or higher than the number of reagents given, all will be required. Note that adding too many of these recipes would be bad for performance and might make some reactions hard or impossible to cause.
+
+"needs_electricity" is as above.
+
+All recipes support item stack definitions with "count" greater than 1.
 # Further Customization
 At this time, there is no more you can do to alter the behavior of the mod. I'll likely add an API or similar sooner or later, especially if it's asked for. You can get in touch with me through the issues section or my discord (HyperLynx#7548) to talk about this.

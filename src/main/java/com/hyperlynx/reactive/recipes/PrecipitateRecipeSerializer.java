@@ -33,7 +33,10 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         int min = json.get("min").getAsInt();
         int cost = json.get("cost").getAsInt();
         int reagent_count = json.get("reagent_count").getAsInt();
-        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count);
+        boolean needs_electricity = false;
+        if(json.has("needs_electricity"))
+            needs_electricity = json.get("needs_electricity").getAsBoolean();
+        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
     }
 
     @Override
@@ -43,7 +46,8 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         int min = buffer.readInt();
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
-        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count);
+        boolean needs_electricity = buffer.readBoolean();
+        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
     }
 
     @Override
@@ -53,6 +57,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
         buffer.writeInt(recipe.reagent_count);
+        buffer.writeBoolean(recipe.needs_electricity);
     }
 
 }

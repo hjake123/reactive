@@ -2,12 +2,8 @@ package com.hyperlynx.reactive.mixin;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.blocks.SymbolBlock;
-import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;

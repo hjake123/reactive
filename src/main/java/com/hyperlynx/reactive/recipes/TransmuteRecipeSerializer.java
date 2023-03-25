@@ -35,7 +35,10 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             }
             int min = json.get("min").getAsInt();
             int cost = json.get("cost").getAsInt();
-            return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
+            boolean needs_electricity = false;
+            if(json.has("needs_electricity"))
+                needs_electricity = json.get("needs_electricity").getAsBoolean();
+            return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost, needs_electricity);
         }
         catch(JsonSyntaxException e){
             return null;
@@ -49,7 +52,8 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         List<Power> reagents = buffer.readCollection(ArrayList::new, IForgeFriendlyByteBuf::readRegistryId);
         int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost);
+        boolean needs_electricity = buffer.readBoolean();
+        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost, needs_electricity);
     }
 
     @Override
@@ -59,6 +63,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
         buffer.writeVarInt(recipe.minimum);
         buffer.writeVarInt(recipe.cost);
+        buffer.writeBoolean(recipe.needs_electricity);
     }
 
 }

@@ -17,7 +17,10 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
         try {
             ItemStack reactant = CraftingHelper.getItemStack(json.get("reactant").getAsJsonObject(), false);
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
-            return new DissolveRecipe(id, "dissolve", reactant, product);
+            boolean needs_electricity = false;
+            if(json.has("needs_electricity"))
+                needs_electricity = json.get("needs_electricity").getAsBoolean();
+            return new DissolveRecipe(id, "dissolve", reactant, product, needs_electricity);
         }catch(JsonSyntaxException e){
             return null;
         }
@@ -27,13 +30,15 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
     public @Nullable DissolveRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
         ItemStack reactant = buffer.readItem();
         ItemStack product = buffer.readItem();
-        return new DissolveRecipe(id, "dissolve", reactant, product);
+        boolean needs_electricity = buffer.readBoolean();
+        return new DissolveRecipe(id, "dissolve", reactant, product, needs_electricity);
     }
 
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull DissolveRecipe recipe) {
         buffer.writeItem(recipe.reactant);
         buffer.writeItem(recipe.product);
+        buffer.writeBoolean(recipe.needs_electricity);
     }
 
 }

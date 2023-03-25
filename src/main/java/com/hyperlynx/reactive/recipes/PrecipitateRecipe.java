@@ -24,8 +24,9 @@ public class PrecipitateRecipe implements Recipe<Container> {
     int cost;
     int minimum;
     int reagent_count;
+    public boolean needs_electricity;
 
-    public PrecipitateRecipe(ResourceLocation id, String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count) {
+    public PrecipitateRecipe(ResourceLocation id, String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
         this.id = id;
         this.group = group;
         this.product = product;
@@ -33,6 +34,7 @@ public class PrecipitateRecipe implements Recipe<Container> {
         this.minimum = min;
         this.cost = cost;
         this.reagent_count = reagent_count;
+        this.needs_electricity = needs_electricity;
     }
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.

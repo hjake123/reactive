@@ -4,22 +4,18 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
@@ -62,6 +58,17 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
     public void draw(DissolveRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if(recipe.needs_electricity){
+            drawElectricLabel(minecraft, stack);
+        }
+    }
 
+    private void drawElectricLabel(Minecraft minecraft, PoseStack poseStack) {
+        int width = minecraft.font.width("Needs Charge");
+        int center = getBackground().getWidth() / 2;
+        int x = center - (width / 2);
+        int y = 29;
+        minecraft.font.drawShadow(poseStack, "Needs Charge", x, y,0x0DA8A8);
     }
 }

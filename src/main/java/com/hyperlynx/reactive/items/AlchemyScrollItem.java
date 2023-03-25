@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
-public class AlchemyScroll extends SimpleFoiledItem {
-    public AlchemyScroll(Properties props) {
+public class AlchemyScrollItem extends SimpleFoiledItem {
+    public AlchemyScrollItem(Properties props) {
         super(props);
     }
 

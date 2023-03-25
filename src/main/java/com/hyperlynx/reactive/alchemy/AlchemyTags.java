@@ -2,9 +2,11 @@ package com.hyperlynx.reactive.alchemy;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class AlchemyTags {
     public static final TagKey<Item> mindSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "mind_sources"));
@@ -18,5 +20,8 @@ public class AlchemyTags {
     public static final TagKey<Item> acidSource = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "caustic_sources"));
 
     public static final TagKey<Item> highPower = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "high_potency"));
+
+    public static final TagKey<Block> acidImmune = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "acid_immune"));
+
 
 }
