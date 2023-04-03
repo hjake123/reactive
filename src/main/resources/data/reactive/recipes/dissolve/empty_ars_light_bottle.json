@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "ars_nouveau:jar_of_light"
+  },
+  "product": {
+    "item": "minecraft:glass_bottle"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "ars_nouveau:magebloom"
+  },
+  "product": {
+    "item": "minecraft:string",
+    "count": 4
+  }
+}

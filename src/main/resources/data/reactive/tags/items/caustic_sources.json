@@ -10,6 +10,7 @@
     "minecraft:ochre_froglight",
     "minecraft:nether_wart",
     "#forge:gunpowder",
+    "minecraft:magma_cream",
     {
       "id": "byg:brim_powder",
       "required": false

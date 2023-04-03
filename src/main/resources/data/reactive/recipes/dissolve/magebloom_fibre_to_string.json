@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "ars_nouveau:magebloom_fiber"
+  },
+  "product": {
+    "item": "minecraft:string"
+  }
+}

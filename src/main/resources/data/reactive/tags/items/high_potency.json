@@ -22,6 +22,22 @@
     {
       "id": "allaybottle:allay_bottle",
       "required": false
+    },
+    {
+      "id": "quark:soul_bead",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:bucket_of_source",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:jar_of_light",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:void_jar",
+      "required": false
     }
   ]
 }

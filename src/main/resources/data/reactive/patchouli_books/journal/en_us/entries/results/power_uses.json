@@ -25,7 +25,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "reactive:blaze_bottle",
-      "text": "$(o)Starting with an easy one, Blaze power, predictably, can be used as a smelting fuel. The bottle vaporizes in the ensuing flame, so it cannot be recovered."
+      "text": "$(o)Blaze power, predictably, can be used as a smelting fuel. The bottle vaporizes in the ensuing flame, so it cannot be recovered."
     },
     {
       "type": "patchouli:spotlight",

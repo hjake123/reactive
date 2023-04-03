@@ -40,6 +40,10 @@
     {
       "id": "allaybottle:allay_bottle",
       "required": false
+    },
+    {
+      "id": "ars_nouveau:experience_gem",
+      "required": false
     }
   ]
 }

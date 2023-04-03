@@ -22,6 +22,14 @@
     {
       "id": "byg:ether_bulbs",
       "required": false
+    },
+    {
+      "id": "ars_nouveau:conjuration_essence",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:void_jar",
+      "required": false
     }
   ]
 }

@@ -17,6 +17,30 @@
     {
       "id": "hexcasting:charged_amethyst",
       "required": false
+    },
+    {
+      "id": "ars_nouveau:source_berry",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:magebloom",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:magebloom_fiber",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:source_gem",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:abjuration_essence",
+      "required": false
+    },
+    {
+      "id": "ars_nouveau:bucket_of_source",
+      "required": false
     }
   ]
 }
