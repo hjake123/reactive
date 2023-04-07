@@ -70,6 +70,18 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         }
     }
 
+    private void renderSculkCharge(CrucibleBlockEntity crucible){
+        float speedDivisor = 27F;
+        if(!crucible.sculkSpreader.getCursors().isEmpty()){
+            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.SCULK_SOUL, crucible.getBlockPos(),
+                    0.05F,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor
+            );
+        }
+    }
+
     @Override
     public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
         poseStack.pushPose();
@@ -85,6 +97,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         poseStack.popPose();
         renderReactions(crucible);
         renderElectricity(crucible);
+        renderSculkCharge(crucible);
     }
 
     // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)

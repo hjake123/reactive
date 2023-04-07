@@ -39,6 +39,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NetherPortalBlock;
+import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
@@ -85,6 +86,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
+
+    public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -150,6 +153,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
                         react(level, crucible);
                     }
+
+                    // Spread Sculk if applicable
+                    crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
                 }
 
                 case 4 -> {
@@ -175,6 +181,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(crucible.linked_crystal != null) {
             crucible.unlinkCrystal(level, pos, state);
         }
+        crucible.sculkSpreader.clear();
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
@@ -646,6 +653,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             power_list_tag.add(tag);
         }
         main_tag.put("powers", power_list_tag);
+        sculkSpreader.save(main_tag);
     }
 
     @Override
@@ -668,6 +676,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
         }
         electricCharge = main_tag.getInt("electric_charge");
+        sculkSpreader.load(main_tag);
     }
 
 }

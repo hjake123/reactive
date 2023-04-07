@@ -11,6 +11,7 @@
     "minecraft:nether_wart",
     "#forge:gunpowder",
     "minecraft:magma_cream",
+    "minecraft:dragon_breath",
     {
       "id": "byg:brim_powder",
       "required": false

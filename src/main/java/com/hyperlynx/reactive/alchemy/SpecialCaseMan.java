@@ -43,9 +43,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CandleBlock;
-import net.minecraft.world.level.block.MossBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -56,7 +54,6 @@ import java.util.*;
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
 public class SpecialCaseMan {
-
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         if(e.getItem().is(Registration.LITMUS_PAPER.get()))
             LitmusPaperItem.takeMeasurement(e.getItem(), c);
@@ -74,6 +71,8 @@ public class SpecialCaseMan {
             enderEyeFlyAway(c, e);
         else if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700)
             residualSlime(c, e);
+        else if(e.getItem().is(Items.SCULK_CATALYST))
+            sculkMagic(c, e);
         else if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
                 && c.electricCharge > 0)
             displaceNearby(c, e);
@@ -141,6 +140,28 @@ public class SpecialCaseMan {
             conjureSpirit(level, e, c, cause, candlePos);
         }
     }
+
+    // Either spread Sculk or change Vital to Soul using a Catalyst.
+    private static void sculkMagic(CrucibleBlockEntity c, ItemEntity e) {
+        if(!(c.getLevel() instanceof ServerLevel serverlevel))
+            return;
+
+        int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
+
+        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 800){
+            c.sculkSpreader.addCursors(c.getBlockPos().north(), spread);
+            c.sculkSpreader.addCursors(c.getBlockPos().south(), spread);
+            c.sculkSpreader.addCursors(c.getBlockPos().east(), spread);
+            c.sculkSpreader.addCursors(c.getBlockPos().west(), spread);
+            c.expendPower(Powers.SOUL_POWER.get(), 500);
+        }else{
+            if(c.getPowerLevel(Powers.VITAL_POWER.get()) > 100){
+                c.expendPower(Powers.VITAL_POWER.get(), 100);
+                c.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get("sculk_soul_return", 60, 100));
+            }
+        }
+    }
+
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
         EntityType.BLAZE.spawn((ServerLevel) level, null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);

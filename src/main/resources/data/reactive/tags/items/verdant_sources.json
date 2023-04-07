@@ -12,6 +12,7 @@
     "minecraft:sugar_cane",
     "#minecraft:leaves",
     "reactive:flower_vine",
+    "#forge:seeds",
     {
       "id": "#botania:petals",
       "required": false

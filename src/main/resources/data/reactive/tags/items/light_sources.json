@@ -9,6 +9,7 @@
     "minecraft:glow_ink_sac",
     "minecraft:glow_lichen",
     "minecraft:glow_berries",
+    "minecraft:nether_star",
     {
       "id": "#quark:corundum",
       "required": false

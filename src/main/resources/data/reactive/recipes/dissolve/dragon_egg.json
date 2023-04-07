@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:dragon_egg"
+  },
+  "product": {
+    "item": "minecraft:dragon_egg"
+  }
+}

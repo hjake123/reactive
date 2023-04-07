@@ -10,6 +10,8 @@
     "reactive:scroll",
     "patchouli:guide_book",
     "reactive:solid_portal",
+    "minecraft:dragon_egg",
+    "reactive:mind_lichen",
     {
       "id": "hexcasting:amethyst_dust",
       "required": false

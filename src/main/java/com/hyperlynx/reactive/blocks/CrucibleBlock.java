@@ -75,12 +75,16 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         if(signal > WorldSpecificValue.get("redstone_void_threshold", 11, 14)){
             if(level.getBlockEntity(my_pos) instanceof CrucibleBlockEntity crucible){
                 switch(WorldSpecificValue.get("redstone_behavior", 0, 2)){
-                    case 0 -> CrucibleBlockEntity.empty(level, my_pos, state, crucible);
+                    case 0 -> {
+                        CrucibleBlockEntity.empty(level, my_pos, state, crucible);
+                        crucible.setDirty();
+                    }
                     case 1 -> {
                         if(crucible.getTotalPowerLevel() > 1500)
                             CrucibleBlockEntity.empty(level, my_pos, state, crucible);
                         else
                             crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 1500);
+                        crucible.setDirty();
                     }
                     case 2 -> state.setValue(FULL, false);
                 }

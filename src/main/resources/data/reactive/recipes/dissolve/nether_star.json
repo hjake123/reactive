@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:nether_star"
+  },
+  "product": {
+    "item": "minecraft:nether_star"
+  }
+}

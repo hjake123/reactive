@@ -7,6 +7,9 @@
     "minecraft:echo_shard",
     "minecraft:enchanted_book",
     "reactive:solid_portal",
+    "reactive:flower_vine",
+    "minecraft:nether_star",
+    "minecraft:dragon_breath",
     {
       "id": "hexcasting:charged_amethyst",
       "required": false
