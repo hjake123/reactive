@@ -1,19 +1,18 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface ChainDisplacingBlock {
-    int MAX_CHAIN_DEPTH = 10; // Make configurable!
-
     boolean stateMatchesSelf(BlockState state);
 
     // Displace connected Framed blocks.
     default boolean recursiveChainDisplace(Level level, BlockPos pos, BlockPos chain_target, int chain_count, boolean displace_surroundings){
-        if(chain_count > MAX_CHAIN_DEPTH)
+        if(chain_count > ConfigMan.COMMON.displaceRange.get())
             return false;
 
         BlockState state = level.getBlockState(pos);
