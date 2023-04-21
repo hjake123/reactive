@@ -34,7 +34,7 @@ public class CurseAssimilationReaction extends Reaction{
             aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
             List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
-                if (CrystalIronItem.effectNotBlocked(crucible.getLevel(), e, 1)) {
+                if (CrystalIronItem.effectNotBlocked(e, 1)) {
                     e.hurt(DamageSource.MAGIC, 1);
                 }
             }

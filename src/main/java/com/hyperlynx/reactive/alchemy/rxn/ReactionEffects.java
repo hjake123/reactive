@@ -74,7 +74,7 @@ public class ReactionEffects {
             aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
-                if (CrystalIronItem.effectNotBlocked(c.getLevel(), e, 1)) {
+                if (CrystalIronItem.effectNotBlocked(e, 1)) {
                     e.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 1));
                     e.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 200, 1));
                     e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 1));
@@ -120,7 +120,7 @@ public class ReactionEffects {
                 LivingEntity victim = nearby_ents.get(0);
 
                 if (!c.getLevel().isClientSide) {
-                    if(CrystalIronItem.effectNotBlocked(c.getLevel(), victim, 2))
+                    if(CrystalIronItem.effectNotBlocked(victim, 2))
                         victim.hurt(DamageSource.MAGIC, 12);
                     ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
@@ -145,7 +145,7 @@ public class ReactionEffects {
         }
 
         for(LivingEntity e : nearby_ents){
-            if(CrystalIronItem.effectNotBlocked(c.getLevel(), e, 4)) {
+            if(CrystalIronItem.effectNotBlocked(e, 4)) {
                 e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
             }
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,

@@ -252,7 +252,7 @@ public class SpecialCaseMan {
 
         nearby_ents.removeAll(to_be_excluded);
 
-        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(level, nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0)){
+        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0)){
             nearby_ents.get(0).teleportTo(destination.getX() + 0.5, destination.getY() + 0.85, destination.getZ() + 0.5);
             return true;
         }
