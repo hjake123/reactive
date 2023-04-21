@@ -18,6 +18,7 @@
   "item.reactive.ash": "Alchemist's Ash",
   "item.reactive.litmus_paper": "Litmus Paper",
   "item.reactive.motion_salt": "Motion Salts",
+  "item.reactive.unknown_device": "Strange Device",
   "block.reactive.unnamed": "Unnamed Substance",
   "item.reactive.stardust": "Star Dust",
   "item.reactive.acid_bucket": "Bucket of Acid",
@@ -61,5 +62,6 @@
   "message.reactive.extract_mind": "Your thoughts are clouded over.",
   "message.reactive.extract_light": "Your body seems to fade away.",
   "message.reactive.extract_verdant": "You feel strangely ill.",
-  "message.reactive.bottle_broke": "The bottle shatters in your hand."
+  "message.reactive.bottle_broke": "The bottle shatters in your hand.",
+  "message.reactive.warp_blocked": "Your Ferrous Crystal prevented you from teleporting."
 }

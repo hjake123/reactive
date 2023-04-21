@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)Intuitively, we might imagine this is a result of Warp Power, due to, well, it being a portal; the power contained in $(item)Crying Obsidian$(1) should reveal if that theory is correct. $(br2)I wonder if $(4)a Symbol might allow access to a Portal's Power$(1)?"
+      "text": "$(1)Whatever the cause is, it is clearly a rather energetic phenomenon. $(br2)Therefore, it might be possible to passively harvest Power from a Portal, as one would from a $(item)Blaze Rod$(0)."
     }
   ]
 }

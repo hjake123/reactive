@@ -11,7 +11,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "reactive:volt_cell_crafting",
-      "text": "Aside from damaging Creatures that pass on top of it, placing it below a Crucible charges it with $(thing)Electricity$(0). $(4)I wonder what additional kinds of reactions might be possible with such Stimulus?$(0)"
+      "text": "Aside from damaging Creatures that pass on top of it, placing it below a Crucible charges it with $(thing)Electricity$(0). Using this stimulus, new and important kinds of Reactions can surely be observed!"
     }
   ]
 }

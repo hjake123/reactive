@@ -22,7 +22,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Did I scare you? Seriously, though, it's a good source of Vital Power."
+      "text": "$(o)Did I scare you? Seriously, though, it's a good source of Vital Power. Not the only source, mind you, but a good one."
     }
   ]
 }

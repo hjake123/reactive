@@ -19,16 +19,16 @@
     {
       "type": "reactive:transmute",
       "recipe": "flower_vine_from_vine",
-      "text": "Fusing with the Vital power, for instance, produces a plant whose vivacious nature cannot be understated."
-    },
-    {
-      "type": "reactive:transmute",
-      "recipe": "mind_lichen_from_vine",
-      "text": "Many of these Life-Forms are somewhat Unnatural in Appearance."
+      "text": "Fusion with the Vital power, for instance, produces a plant whose vivacious nature cannot be understated."
     },
     {
       "type": "reactive:transmute",
       "recipe": "vine_plus_soul",
+      "text": "Many of these Life-Forms are somewhat Unnatural in Appearance."
+    },
+    {
+      "type": "reactive:transmute",
+      "recipe": "mind_lichen_from_vine",
       "text": "Indeed, deeper Study of some of these Specimens may be worth considering."
     },
     {

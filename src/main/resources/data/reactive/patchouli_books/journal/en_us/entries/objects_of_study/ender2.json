@@ -6,11 +6,11 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Indeed, this was not the result I expected. It seems in absence of a target, the teleportation effect remains suspended in the Warp Solution until one ventures close enough."
+      "text": "Indeed, this was not the result I expected. It seems in absence of a target, the teleportation effect remains suspended in the Warp Solution until some creature ventures close enough."
     },
     {
       "type": "patchouli:text",
-      "text": "I wonder if it might be possible to somehow $(4)capture this Effect$(0)? If it were, I could probably put it to good use. $(br2)Before I could do so, however, I would have to be able to get close $(4)without being subjected to the teleportation effect$(0). This is truly a mystery..."
+      "text": "I wonder if it might be possible to somehow $(4)capture$(0) this Effect? If it were, I could probably put it to good use. $(br2)Before I could do so, however, I would have to be able to get close without being subjected to the teleportation effect. This is truly a mystery..."
     }
   ]
 }

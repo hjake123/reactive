@@ -1,12 +1,12 @@
 {
   "name": "Displacement",
   "icon": "reactive:motion_salt_block",
-  "category": "reactive:objects_of_study",
+  "category": "reactive:results",
   "advancement": "reactive:see_displacement",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Marvelous! Simply Marvelous! I admit, I was being somewhat Optimistic in my prior note, but sometimes Optimism Pays Off.$(br2)Through application of $(l:reactive:intro/volt_cell)Electricity$(/l) these $(thing)Motion Salt Blocks$(0) defy Reality Itself, becoming Incorporeal, or perhaps Displaced by a Field of Energy."
+      "text": "Marvelous! Simply Marvelous! I admit, I was being somewhat Optimistic in my prior note, but sometimes Optimism Pays Off.$(br2)Through application of $(l:reactive:intro/volt_cell)Electricity$(/l) these $(thing)Motion Salt Blocks$(0) defy Reality Itself, becoming Incorporeal, or perhaps Displaced, by a Field of Energy."
     },
     {
       "type": "patchouli:text",

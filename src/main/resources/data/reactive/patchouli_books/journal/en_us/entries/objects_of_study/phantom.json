@@ -10,7 +10,7 @@
     {
       "type": "reactive:dissolve",
       "reactant": "minecraft:phantom_membrane",
-      "text": "$(o)I wonder if it could be $(4)transmuted into something useful$(0)? $(br2)If so, the best bet would be to experiment with $(4)dissolved plants$(0)."
+      "text": "$(o)Though there are no transmutation recipes known for this substance, I have observed an effect when it is combined with a certain 'natural' Power."
     }
   ]
 }

@@ -25,7 +25,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "prismarine_crystals_from_salt",
-      "text": "$(o)$(4)I wonder if this goes the other direction?$(0)"
+      "text": "$(o)Consider the implications of this recipe's existence on the properties of $(thing)Prismarine$(0)."
     },
     {
       "type": "patchouli:crafting",

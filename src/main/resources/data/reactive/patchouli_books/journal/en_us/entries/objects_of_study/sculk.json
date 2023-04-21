@@ -10,7 +10,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "minecraft:sculk_catalyst",
-      "text": "$(thing)Sculk Catalysts$(1) seem to be the source. When death occurs nearby one, they spread their strange corruption further. I wonder... if one was infused with the $(4)Power of Life$(1) directly, how might it respond...?"
+      "text": "$(thing)Sculk Catalysts$(1) seem to be the source. When death occurs nearby one, they spread their strange corruption further. If one was infused with the $(4)Power of Life$(1) directly, how might it respond...?"
     },
     {
       "type": "patchouli:text",

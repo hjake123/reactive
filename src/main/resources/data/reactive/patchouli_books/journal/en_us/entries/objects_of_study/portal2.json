@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Hello again. Yes, this seems like a dead end, but I wonder what might happen if you flood the Portal with $(4)a large amount of the same kind of Power it is made of?$(0) $(br2)The result might be $(4)delicate if the portal frame remains intact$(0)."
+      "text": "$(o)Hello again. Yes, this seems like a dead end, but be persistent! Sacrificing a large amount of the $(4)power the portals secrete over long time spans$(0) is the key to a curious effect. $(br2)The change can only reverse if the portal frame remains intact."
     }
   ],
   "extra_recipe_mappings": {
