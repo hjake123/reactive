@@ -20,7 +20,9 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 public class IncompleteStaffBlock extends BaseStaffBlock{
 
     public static final IntegerProperty PROGRESS = IntegerProperty.create("progress", 0, 3);
-    private static final double RING_HEIGHT = 1.1;
+    private static final double RING_HEIGHT_1 = 0.8;
+    private static final double RING_HEIGHT_2 = 1.1;
+    private static final double RING_HEIGHT_3 = 1.4;
 
     public IncompleteStaffBlock(Properties props) {
         super(props.lightLevel((BlockState bs) -> bs.getValue(PROGRESS) > 0 ? 0 : 8));
@@ -31,8 +33,8 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
         builder.add(PROGRESS);
     }
 
-    public static void tryMakeProgress(Level l, BlockState state, BlockPos pos, Power exposed_power){
-        if(l.isClientSide)
+    public static void tryMakeProgress(Level level, BlockState state, BlockPos pos, Power exposed_power){
+        if(level.isClientSide)
             return;
 
         int order = WorldSpecificValues.EFFECT_ORDER.get();
@@ -59,13 +61,12 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
                 staff_to_become = Registration.STAFF_OF_SOUL.get();
 
             if(staff_to_become == Blocks.AIR){
-                dropAsItem(l, pos);
+                failCrafting(level, pos);
                 return;
             }
 
-            l.setBlock(pos, staff_to_become.defaultBlockState(), Block.UPDATE_CLIENTS);
-            l.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 1.0F, 1.0F);
-            ParticleScribe.drawParticleRing(l, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, 1, 40);
+            level.setBlock(pos, staff_to_become.defaultBlockState(), Block.UPDATE_CLIENTS);
+            level.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 1.0F, 1.0F);
             return;
         }
 
@@ -73,15 +74,15 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
                 || order == 2 && order2[state.getValue(PROGRESS)].equals(exposed_power)
                 || order == 3 && order3[state.getValue(PROGRESS)].equals(exposed_power)){
 
-            l.setBlock(pos, state.setValue(PROGRESS, state.getValue(PROGRESS) + 1), Block.UPDATE_CLIENTS);
-            ParticleScribe.drawParticleRing(l, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, state.getValue(PROGRESS) * 0.2 + 0.2, 5);
+            level.setBlock(pos, state.setValue(PROGRESS, state.getValue(PROGRESS) + 1), Block.UPDATE_CLIENTS);
+            level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
 
         }else{
-            dropAsItem(l, pos);
+            failCrafting(level, pos);
         }
     }
 
-    private static void dropAsItem(Level l, BlockPos pos){
+    private static void failCrafting(Level l, BlockPos pos){
         l.removeBlock(pos, true);
         ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.INCOMPLETE_STAFF_ITEM.get().getDefaultInstance());
         l.addFreshEntity(dropped_staff);
@@ -91,7 +92,14 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
         if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT, state.getValue(PROGRESS) * 0.2 + 0.2, 1);
+            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_1, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 1.1F);
+        }
+        if(state.getValue(PROGRESS) > 1 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
+            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_2, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+        }
+        if(state.getValue(PROGRESS) > 2 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
+            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_3, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
         }
     }
 }
