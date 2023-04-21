@@ -149,6 +149,24 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
+    // Register Power bottles
+    public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
+            () -> new BlazeBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
+            () -> new WarpBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
             () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
@@ -158,32 +176,32 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::radiance, true));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::warping, false));
+            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::warping, false, WARP_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500).fireResistant(), StaffEffects::blazing, true));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500).fireResistant(), StaffEffects::blazing, true, BLAZE_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::spectral, false));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::spectral, false, SOUL_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::missile, false));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::missile, false, MIND_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::living, true));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1500), StaffEffects::living, true, Items.GHAST_TEAR));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -218,29 +236,11 @@ public class Registration {
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
-            () -> new SoupItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(64).food((new FoodProperties.Builder().nutrition(8).saturationMod(0.6F)).build())));
+            () -> new SoupItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).stacksTo(64).food((new FoodProperties.Builder().nutrition(7).saturationMod(0.5F)).build())));
     public static final RegistryObject<Item> SALT = ITEMS.register("salt",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-
-    // Register Power bottles
-    public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
-            () -> new BlazeBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
-            () -> new WarpBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
-    public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
-            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
@@ -291,6 +291,7 @@ public class Registration {
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         CriteriaTriggers.enqueue(evt);
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
+        ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
     }
 
     // Helper method for BlockItem registration
