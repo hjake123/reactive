@@ -26,8 +26,8 @@ public class ConfigMan {
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
                     .define("acidMeltBlockEntities", false);
-            displaceRange = builder.comment("The maximum distance from the first displaced block that displacement effects can chain. Effectively, how far the flood fill can go. Keep in mind that displaced blocks are all displaced on the same tick. [Default: 16]")
-                    .defineInRange("displaceRange", 16, 2, 128);
+            displaceRange = builder.comment("The maximum depth for the search when displacing blocks. Keep in mind that displaced blocks are all displaced on the same tick. [Default: 24]")
+                    .defineInRange("displaceRange", 24, 2, 128);
             builder.pop();
         }
     }

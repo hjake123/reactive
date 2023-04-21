@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface ChainDisplacingBlock {
     boolean stateMatchesSelf(BlockState state);
 
-    // Displace connected Framed blocks.
+    // Displace connected CDBs using a recursive depth-first search.
     default boolean recursiveChainDisplace(Level level, BlockPos pos, BlockPos chain_target, int chain_count, boolean displace_surroundings){
         if(chain_count > ConfigMan.COMMON.displaceRange.get())
             return false;
