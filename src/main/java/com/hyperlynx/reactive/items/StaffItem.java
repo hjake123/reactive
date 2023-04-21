@@ -9,9 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -26,11 +24,13 @@ import java.util.function.Function;
 public class StaffItem extends BlockItem {
     Function<Player, Player> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
+    public Item repair_item;
 
-    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam) {
+    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Item repair_item) {
         super(block, props);
         effectFunction = effect;
         this.beam = beam;
+        this.repair_item = repair_item;
     }
 
     @Override
@@ -79,6 +79,17 @@ public class StaffItem extends BlockItem {
         if(context.getPlayer().isCrouching())
             return super.useOn(context);
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return true;
+    }
+
+    // Check if the item being used to repair is the assigned repair bottle for this staff.
+    @Override
+    public boolean isValidRepairItem(ItemStack self, ItemStack repair_item_candidate) {
+        return repair_item != null && repair_item_candidate.is(repair_item);
     }
 
     // Called when the item is placed to store item stack data into the block entity.
