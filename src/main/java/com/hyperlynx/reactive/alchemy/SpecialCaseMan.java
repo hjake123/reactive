@@ -252,11 +252,18 @@ public class SpecialCaseMan {
 
         nearby_ents.removeAll(to_be_excluded);
 
-        if(!nearby_ents.isEmpty() && CrystalIronItem.effectNotBlocked(nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0)){
-            nearby_ents.get(0).teleportTo(destination.getX() + 0.5, destination.getY() + 0.85, destination.getZ() + 0.5);
-            return true;
+        if(nearby_ents.isEmpty() || !CrystalIronItem.effectNotBlocked(nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0))
+            return false;
+
+        LivingEntity victim = nearby_ents.get(0);
+        for(LivingEntity e : nearby_ents){
+            if(victim == null || e.distanceToSqr(Vec3.atCenterOf(pos)) < victim.distanceToSqr(Vec3.atCenterOf(pos))){
+                victim = e;
+            }
         }
-        return false;
+
+        victim.teleportTo(destination.getX() + 0.5, destination.getY() + 0.85, destination.getZ() + 0.5);
+        return true;
     }
 
     // Make a Warp Bottle into a Rift Bottle.
