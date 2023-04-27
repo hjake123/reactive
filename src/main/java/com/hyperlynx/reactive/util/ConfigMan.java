@@ -11,6 +11,7 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue crucibleTickDelay;
         public ForgeConfigSpec.IntValue crucibleRange;
         public ForgeConfigSpec.IntValue displaceRange;
+        public ForgeConfigSpec.IntValue maxDisplaceCount;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
 
@@ -22,12 +23,12 @@ public class ConfigMan {
                     .defineInRange("crucibleTickDelay", 5, 1, 900);
             crucibleRange = builder.comment("The crucible may check an area this many blocks in radius for some effects. Do not set this too high. [Default: 12]")
                     .defineInRange("crucibleRange", 12, 2, 64);
-            doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\"]")
-                    .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither"));
+            doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\", \"minecraft:warden\"]")
+                    .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
                     .define("acidMeltBlockEntities", false);
-            displaceRange = builder.comment("The maximum depth for the search when displacing blocks. Keep in mind that displaced blocks are all displaced on the same tick. [Default: 24]")
-                    .defineInRange("displaceRange", 24, 2, 128);
+            maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by certain effect. [Default: 128]")
+                    .defineInRange("maxDisplaceCount", 128, 4, 4096);
             builder.pop();
         }
     }

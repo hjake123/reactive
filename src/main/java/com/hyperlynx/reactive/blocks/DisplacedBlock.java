@@ -98,12 +98,18 @@ public class DisplacedBlock extends Block implements EntityBlock {
         }
 
         level.setBlockAndUpdate(pos, ((DisplacedBlockEntity) blockentity).self_state);
+        level.updateNeighborsAt(pos, this);
     }
 
     // When broken, the displacement should end.
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if(level.getBlockEntity(pos) instanceof DisplacedBlockEntity displaced){
+            if(displaced.self_state.getBlock() instanceof DisplacedBlock){
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
+                return true;
+            }
             level.setBlockAndUpdate(pos, displaced.self_state);
         }
         level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
@@ -115,6 +121,8 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public ItemStack getCloneItemStack(BlockGetter getter, BlockPos pos, BlockState state) {
         BlockEntity entity = getter.getBlockEntity(pos);
         if(!(entity instanceof DisplacedBlockEntity displaced_entity))
+            return ItemStack.EMPTY;
+        if(displaced_entity.self_state.getBlock() instanceof DisplacedBlock)
             return ItemStack.EMPTY;
         return displaced_entity.self_state.getBlock().getCloneItemStack(getter, pos, state);
     }
