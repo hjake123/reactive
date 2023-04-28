@@ -23,5 +23,4 @@ public class AlchemyTags {
 
     public static final TagKey<Block> acidImmune = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "acid_immune"));
 
-
 }

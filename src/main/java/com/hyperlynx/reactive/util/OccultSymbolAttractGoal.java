@@ -16,14 +16,6 @@ public class OccultSymbolAttractGoal extends MoveToBlockGoal {
         super(mob, d, 24, i);
     }
 
-    public void playDestroyProgressSound(LevelAccessor accessor, BlockPos pos) {
-        accessor.playSound((Player)null, pos, SoundEvents.STONE_HIT, SoundSource.HOSTILE, 0.5F, 0.9F + accessor.getRandom().nextFloat() * 0.2F);
-    }
-
-    public void playBreakSound(Level level, BlockPos pos) {
-        level.playSound((Player)null, pos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat() * 0.2F);
-    }
-
     public double acceptedDistance() {
         return 1.14D;
     }
