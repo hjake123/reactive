@@ -43,7 +43,7 @@ public class MindLichenBlock extends MultifaceBlock implements BonemealableBlock
     }
 
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (entity instanceof Player player) {
+        if (entity instanceof Player player && !player.isCreative()) {
             if(CrystalIronItem.effectNotBlocked(player, 1) && player.totalExperience > 10){
                 player.giveExperiencePoints(-10);
                 ExperienceOrb xp = new ExperienceOrb(level, player.getX(), player.getY() + 0.8, player.getZ(), 10);
