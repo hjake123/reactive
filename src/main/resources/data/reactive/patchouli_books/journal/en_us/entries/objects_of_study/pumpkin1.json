@@ -13,7 +13,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)Update: the Carved Pumpkin refuses to release its Power into solution. I feel certain that with the right $(4)apparatus$(0), a Spirit might be brought forth. I will continue to investigate this matter..."
+      "text": "$(1)Update: the Carved Pumpkin refuses to release its Power into solution. I feel certain that with the right $(4)apparatus$(1), a Spirit might be brought forth. I will continue to investigate this matter..."
     }
   ]
 }
