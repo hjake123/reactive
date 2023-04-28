@@ -2,6 +2,8 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ObserverBlock;
@@ -24,7 +26,9 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState prior, boolean p_60570_) {
-        checkBecomeElectrified(level, pos, state, pos.below());
+        if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
+            ((ChainDisplacingBlock)Registration.FRAMED_MOTION_SALT_BLOCK.get()).breadthFirstDisplace(level, pos, level.getBestNeighborSignal(pos) > 10);
+        }
     }
 
     @Override
@@ -36,6 +40,7 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
         }
         checkBecomeElectrified(level, salt_pos, our_state, neighbor_pos);
     }
+
 
     // These displace themselves instantly.
     private static void checkBecomeElectrified(Level level, BlockPos salt_pos, BlockState our_state, BlockPos neighbor_pos){

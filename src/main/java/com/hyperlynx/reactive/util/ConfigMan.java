@@ -27,7 +27,7 @@ public class ConfigMan {
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
                     .define("acidMeltBlockEntities", false);
-            maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by certain effect. [Default: 128]")
+            maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]")
                     .defineInRange("maxDisplaceCount", 128, 4, 4096);
             builder.pop();
         }

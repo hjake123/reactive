@@ -62,7 +62,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
             return;
         }
 
-        level.setBlockAndUpdate(pos, Registration.DISPLACED_BLOCK.get().defaultBlockState());
+        level.setBlock(pos, Registration.DISPLACED_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         BlockEntity be = level.getBlockEntity(pos);
         if(!(be instanceof DisplacedBlockEntity displaced)){
             System.err.println("Displaced Block Entity didn't attach...? Report this to hyperlynx!");
@@ -101,7 +101,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
         level.updateNeighborsAt(pos, this);
     }
 
-    // When broken, the displacement should end.
+    // When broken, the displacement should end. If needed, this will instead break the Volt Cell.
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if(level.getBlockEntity(pos) instanceof DisplacedBlockEntity displaced){
@@ -110,9 +110,14 @@ public class DisplacedBlock extends Block implements EntityBlock {
                 level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
                 return true;
             }
-            level.setBlockAndUpdate(pos, displaced.self_state);
+            if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
+                level.destroyBlock(pos.below(), true);
+                return false;
+            }
+            level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
+        }else{
+            System.err.println("Didn't find a valid block entity associated with the displaced block at " + pos + "! Report this to hyperlynx!");
         }
-        level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         return true;
     }
 
