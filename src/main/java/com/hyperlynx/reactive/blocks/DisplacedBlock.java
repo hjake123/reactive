@@ -112,8 +112,8 @@ public class DisplacedBlock extends Block implements EntityBlock {
             }
             if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
                 level.destroyBlock(pos.below(), true);
-                return false;
             }
+            level.setBlockAndUpdate(pos, displaced.self_state);
             level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         }else{
             System.err.println("Didn't find a valid block entity associated with the displaced block at " + pos + "! Report this to hyperlynx!");
