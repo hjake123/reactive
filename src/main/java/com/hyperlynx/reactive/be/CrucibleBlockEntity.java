@@ -70,23 +70,20 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
-
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private int process_stage = 0; // Used for sequential processing. See tick().
     private int gather_stage = 0; // Used for sequential processing. See gatherPower().
-
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
-    private boolean color_initialized = false; // This is set to true when mix_color is
-
+    private boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
-
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
+    public int render_tick_counter = 0; // Used for counting rendering ticks on the client in CrucibleRenderer.
+    public List<Reaction> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more efficiently render reactions, and is only updated on the client.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
-
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
@@ -271,7 +268,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 r.run(crucible);
                 crucible.setDirty();
             }
-
         }
         if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null)
             crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
@@ -637,7 +633,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         if(linked_crystal != null)
             main_tag.put("LinkedCrystal", IntTag.valueOf(linked_crystal.getId()));
 
-        // Powers must be saved last.
         if(powers == null || powers.isEmpty()){
             return;
         }

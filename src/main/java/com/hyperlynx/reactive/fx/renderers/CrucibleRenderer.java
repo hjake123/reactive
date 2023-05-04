@@ -50,11 +50,18 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 
-    private void renderReactions(CrucibleBlockEntity crucible){
+    private void checkReactions(CrucibleBlockEntity crucible){
+        crucible.reactions_to_render.clear();
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
             if(r.conditionsMet(crucible)){
-                r.render(crucible.getLevel(), crucible);
+                crucible.reactions_to_render.add(r);
             }
+        }
+    }
+
+    private void renderReactions(CrucibleBlockEntity crucible){
+        for(Reaction r : crucible.reactions_to_render){
+            r.render(crucible.getLevel(), crucible);
         }
     }
 
@@ -95,6 +102,14 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);
         }
         poseStack.popPose();
+
+        // Every 30 frames, check which reactions to render.
+        crucible.render_tick_counter++;
+        if(crucible.render_tick_counter > 30){
+            crucible.render_tick_counter = 0;
+            checkReactions(crucible);
+        }
+
         renderReactions(crucible);
         renderElectricity(crucible);
         renderSculkCharge(crucible);

@@ -40,6 +40,18 @@ public class AreaMemory {
         return newlyFound;
     }
 
+    // Fetch the first instance of the relevant block in the cache, or return null.
+    public BlockPos fetchWithoutScan(Level l, Block target){
+        if(model.containsKey(target)) {
+            BlockPos holder = model.get(target);
+            if(l.getBlockState(holder).is(target)) {
+                return holder;
+            }
+        }
+
+        return null;
+    }
+
     // Scan for a compatible block. This is expensive! If there is none, returns null.
     private BlockPos findAndAddNearest(Level l, int radius, Block target){
         Optional<BlockPos> found_maybe = BlockPos.findClosestMatch(hostPos, radius, radius, blockPos -> l.getBlockState(blockPos).is(target));
