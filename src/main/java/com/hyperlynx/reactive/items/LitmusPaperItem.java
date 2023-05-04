@@ -46,6 +46,9 @@ public class LitmusPaperItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if(player.isCrouching() && level.isClientSide){
+            if(!player.getItemInHand(hand).hasTag())
+                return InteractionResultHolder.pass(player.getItemInHand(hand));
+
             ListTag measurements = player.getItemInHand(hand).getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
             for(Tag tag : measurements){
                 player.sendSystemMessage(Component.literal(((CompoundTag) tag).getString("value")));
