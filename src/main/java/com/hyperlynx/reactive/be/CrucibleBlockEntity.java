@@ -74,7 +74,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private int process_stage = 0; // Used for sequential processing. See tick().
     private int gather_stage = 0; // Used for sequential processing. See gatherPower().
-    private int gather_scan_cooldown = 0; // Used to limit how often gatherPower() will scan the environment. See tick() case 1.
     private final Color mix_color = new Color(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
@@ -134,17 +133,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 case 1 -> {
                     // Gather energy from the surroundings.
                     if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
-                        // Only scan for new power sources sometimes.
-                        if(crucible.gather_scan_cooldown <= 0) {
-                            crucible.areaMemory.cache_only_mode = false;
-                            crucible.gather_scan_cooldown = 3;
-                        }
-                        else{
-                            crucible.areaMemory.cache_only_mode = true;
-                            crucible.gather_scan_cooldown--;
-                        }
                         gatherPower(level, crucible);
                     }
+                    level.addParticle(ParticleTypes.ANGRY_VILLAGER,
+                            crucible.getBlockPos().getX(), crucible.getBlockPos().getY(),crucible.getBlockPos().getZ(),
+                            0,0,0);
                 }
 
                 case 2 -> {
@@ -190,7 +183,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             crucible.unlinkCrystal(level, pos, state);
         }
         crucible.sculkSpreader.clear();
-        crucible.gather_scan_cooldown = 0;
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
@@ -201,6 +193,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
+        if(level.random.nextFloat() < 0.2){
+            crucible.areaMemory.cache_only_mode = false;
+        }else{
+            crucible.areaMemory.cache_only_mode = true;
+        }
+
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
         if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, 3, Registration.IRON_SYMBOL.get())){
             switch(crucible.gather_stage){
