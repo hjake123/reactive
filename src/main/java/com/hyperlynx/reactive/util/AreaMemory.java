@@ -14,6 +14,7 @@ import java.util.Optional;
 public class AreaMemory {
     BlockPos hostPos;
     Map<Block, BlockPos> model;
+    public boolean cache_only_mode = false; // If this is true, the model is used exclusively; no new items are scanned in.
 
     public AreaMemory(BlockPos hostPos){
         this.hostPos = hostPos;
@@ -32,6 +33,9 @@ public class AreaMemory {
                 return holder;
             }
         }
+
+        if(cache_only_mode)
+            return null;
 
         // If we reach this point, the block must either not be cached or have changed. Either way...
         BlockPos newlyFound = findAndAddNearest(l, radius, target);
