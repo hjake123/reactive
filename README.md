@@ -28,6 +28,11 @@ There are two config files; one in the config folder, and one in each world's se
 	acidMeltBlockEntities = false
  (Self explanatory.)
  
+ 	#The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]
+	#Range: 4 ~ 4096
+	maxDisplaceCount = 128
+(How many blocks can be displaced when a structure of adjacent Framed Motion Salt Block is electrified. Note that this many blocks will be operated on in one tick by the initial displacement, which might cause a lag spike if you set it too high.)
+ 
 ```
 ### SERVER CONFIG
 ```
