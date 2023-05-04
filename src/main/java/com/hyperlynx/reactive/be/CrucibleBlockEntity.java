@@ -135,9 +135,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
                         gatherPower(level, crucible);
                     }
-                    level.addParticle(ParticleTypes.ANGRY_VILLAGER,
-                            crucible.getBlockPos().getX(), crucible.getBlockPos().getY(),crucible.getBlockPos().getZ(),
-                            0,0,0);
                 }
 
                 case 2 -> {
