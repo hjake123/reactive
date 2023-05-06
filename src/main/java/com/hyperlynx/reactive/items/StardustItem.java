@@ -25,9 +25,11 @@ public class StardustItem extends Item {
                 }
             }
         }else{
-            level.setBlock(player.getOnPos().above(2), Registration.STARDUST.get().defaultBlockState(), 2);
-            if(!player.isCreative())
-                player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
+            if(level.getBlockState(player.getOnPos().above(2)).isAir()){
+                level.setBlock(player.getOnPos().above(2), Registration.STARDUST.get().defaultBlockState(), 2);
+                if(!player.isCreative())
+                    player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
+            }
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
