@@ -44,7 +44,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -190,11 +189,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
-        if(level.random.nextFloat() < 0.2){
-            crucible.areaMemory.cache_only_mode = false;
-        }else{
-            crucible.areaMemory.cache_only_mode = true;
-        }
+        crucible.areaMemory.cache_only_mode = !(level.random.nextFloat() < 0.2);
 
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
         if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, 3, Registration.IRON_SYMBOL.get())){
@@ -671,11 +666,13 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         // Powers tag is guaranteed to be a list.
         ListTag power_list_tag = (ListTag) main_tag.get("powers");
         powers.clear();
-        if(power_list_tag != null && !power_list_tag.isEmpty()) {
+        if (power_list_tag != null && !power_list_tag.isEmpty()) {
             for (Tag power_tag : power_list_tag) {
                 Power p = Power.readPower((CompoundTag) power_tag);
                 addPower(p, ((CompoundTag) power_tag).getInt("level"));
             }
+        }else{
+            resetColor();
         }
         electricCharge = main_tag.getInt("electric_charge");
         sculkSpreader.load(main_tag);
