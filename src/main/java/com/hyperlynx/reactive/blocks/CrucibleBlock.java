@@ -5,9 +5,11 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.PowerBottleItem;
+import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,8 +37,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,27 +102,58 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         }
     }
 
+    private boolean checkFluidInStack(IFluidHandlerItem container, Fluid criterion){
+        if(container == null)
+            return false;
+        for(int i = 0; i < container.getTanks(); i++){
+            if(container.getFluidInTank(i).containsFluid(new FluidStack(criterion, 1000)))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
         if(level.isClientSide()){
             return InteractionResult.SUCCESS;
         }
-        if(player.getItemInHand(hand).is(Items.WATER_BUCKET) && !state.getValue(FULL)){
-            if(level.dimensionType().ultraWarm()){
-                netherCrucibleFill(level, pos, (ServerPlayer) player);
-            }else{
-                level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
-                level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
+
+        if(player.getItemInHand(hand).is(Registration.LITMUS_PAPER.get()))
+            return InteractionResult.PASS;
+
+        if (!state.getValue(FULL)) {
+            // New code to allow for non-vanilla fluid input.
+            IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(player.getItemInHand(hand).copy()).orElse(null);
+
+            if (checkFluidInStack(fluidHandler, Fluids.WATER)) {
+                becomeFull(state, level, pos, (ServerPlayer) player);
+                if (((ServerPlayer) player).gameMode.isSurvival()) {
+                    fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+                    player.setItemInHand(hand, fluidHandler.getContainer());
+                }
+                return InteractionResult.PASS;
             }
-            if(player instanceof ServerPlayer){
-                if(((ServerPlayer) player).gameMode.isSurvival()){
+            if (checkFluidInStack(fluidHandler, Fluids.LAVA)) {
+                lavaCrucibleFill(level, pos, (ServerPlayer) player);
+                if (((ServerPlayer) player).gameMode.isSurvival()) {
+                    fluidHandler.drain(new FluidStack(Fluids.LAVA, 1000), IFluidHandler.FluidAction.EXECUTE);
+                    player.setItemInHand(hand, fluidHandler.getContainer());
+                }
+                return InteractionResult.PASS;
+            }
+            if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
+                BlockEntity crucible = level.getBlockEntity(pos);
+                if (!(crucible instanceof CrucibleBlockEntity c)) {
+                    return InteractionResult.PASS;
+                }
+                becomeFull(state, level, pos, (ServerPlayer) player);
+                c.addPower(Powers.ACID_POWER.get(), WorldSpecificValues.BOTTLE_RETURN.get()*3);
+                c.setDirty();
+                if (((ServerPlayer) player).gameMode.isSurvival()) {
                     player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
                 }
+                return InteractionResult.CONSUME;
             }
-        }else if(player.getItemInHand(hand).is(Items.LAVA_BUCKET) && !state.getValue(FULL)){
-            lavaCrucibleFill(level, pos, (ServerPlayer) player);
-        }else if(player.getItemInHand(hand).is(Registration.LITMUS_PAPER.get())){
-            return InteractionResult.PASS;
         }
 
         if(state.getValue(FULL)){
@@ -137,6 +176,15 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
+    }
+
+    private static void becomeFull(BlockState state, Level level, BlockPos pos, ServerPlayer player) {
+        if(level.dimensionType().ultraWarm()){
+            netherCrucibleFill(level, pos, player);
+        }else{
+            level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
+        }
     }
 
     private static void extractQuartzBottle(Level level, BlockPos pos, Player player, InteractionHand hand, CrucibleBlockEntity c) {

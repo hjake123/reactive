@@ -100,6 +100,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
             VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
             renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);
+            crucible.was_empty_last_tick = false;
+        }else{
+            crucible.was_empty_last_tick = true;
         }
         poseStack.popPose();
 

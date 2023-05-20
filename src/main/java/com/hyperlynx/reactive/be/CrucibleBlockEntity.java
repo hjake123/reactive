@@ -77,6 +77,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
     private boolean color_initialized = false; // This is set to true when mix_color is first updated.
+    public boolean was_empty_last_tick = true; // This is used for color mixing and is ONLY updated on the client.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
@@ -545,7 +546,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         return totalpp;
     }
 
-    // These methods calculate and return the combined color of the cauldron's mixture
+    // These methods calculate and return the combined color of the cauldron's mixture, based on the given water color.
     @Override
     public Color getCombinedColor(int water_color_number) {
         Color water_color = new Color(water_color_number);
@@ -560,6 +561,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             mix_color.green = water_color.green;
             mix_color.blue = water_color.blue;
             color_initialized = true;
+        }
+        if(was_empty_last_tick){
+            mix_color.red = next_mix_color.red;
+            mix_color.green = next_mix_color.green;
+            mix_color.blue = next_mix_color.blue;
         }
         if(!mix_color.equals(next_mix_color)){ // Smoothly change the mix color to match the new color.
             int delta_red = Math.min(Math.abs(next_mix_color.red - mix_color.red), 2);
