@@ -5,12 +5,16 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(o)Here are a few useful features to note when performing Alchemy of any kind."
+      "text": "$(o)Here are a few noteworthy features to keep in mind."
     },
     {
       "type": "reactive:transmute",
       "recipe": "litmus_paper",
       "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used by the adept to Measure the Strength of Powers in the Crucible."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Transmutations$(0), like the one described on the prior page, occur only once a Certain Threshold of Total Power has been reached. The Ratio of reagents does not matter -- only that the Threshold is passed."
     },
     {
       "type": "patchouli:spotlight",

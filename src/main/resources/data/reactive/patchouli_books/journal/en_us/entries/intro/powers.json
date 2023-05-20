@@ -18,7 +18,7 @@
     },
     {
       "type": "patchouli:text",
-      "text":"$(o)It is natural to question which items source which powers. The answer to this is unknown in general, but typically the associations are obvious. A touch of critical thinking and note taking will go a long way here. $(br2)Note that $(4)anything that vanishes when put in the Crucible$(0) does so because a Power was released from it."
+      "text":"$(o)It is natural to question which items source which powers. The answer to this is unknown in general, but typically the associations are obvious. A touch of critical thinking and note taking will go a long way here. $(br2)Note that $(4)anything that vanishes when put in the Crucible$(0) does so because a Power was released from it, even if there was no visible change to the Crucible."
     }
   ]
 }
