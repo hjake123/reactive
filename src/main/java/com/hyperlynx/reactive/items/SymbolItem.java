@@ -27,19 +27,16 @@ public class SymbolItem extends BlockItem {
         return ITEMS.register(block.getId().getPath(), () -> new SymbolItem(block.get(), new Item.Properties().tab(tab)));
     }
 
-    private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR;
+    private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
+        public ItemStack execute(BlockSource target_source, ItemStack stack) {
+            Direction direction = target_source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos pos = target_source.getPos().relative(direction);
 
-    static {
-        DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {
-            public ItemStack execute(BlockSource target_source, ItemStack stack) {
-                Direction direction = target_source.getBlockState().getValue(DispenserBlock.FACING);
-                BlockPos pos = target_source.getPos().relative(direction);
+            SymbolItem symbol = (SymbolItem) stack.getItem();
+            symbol.place(new DirectionalPlaceContext(target_source.getLevel(), pos, direction, stack, direction));
 
-                SymbolItem symbol = (SymbolItem) stack.getItem();
-                symbol.place(new DirectionalPlaceContext(target_source.getLevel(), pos, direction, stack, direction));
+            return stack;
+        }
+    };
 
-                return stack;
-            }
-        };
-    }
 }
