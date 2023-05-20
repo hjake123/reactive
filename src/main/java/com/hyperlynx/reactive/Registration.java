@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,8 +59,14 @@ public class Registration {
             () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
     public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE, ReactiveMod.CREATIVE_TAB);
 
+    // Register the Shulker Crucible
+    public static final RegistryObject<Block> SHULKER_CRUCIBLE = BLOCKS.register("shulker_crucible",
+            () -> new ShulkerCrucibleBlock(BlockBehaviour.Properties.of(Material.SHULKER_SHELL)));
+    public static final RegistryObject<Item> SHULKER_CRUCIBLE_ITEM = fromBlock(SHULKER_CRUCIBLE, ReactiveMod.CREATIVE_TAB);
+
+    // Register the Crucible BE.
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
-            () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get()).build(null));
+            () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get(), SHULKER_CRUCIBLE.get()).build(null));
 
     // Register the Symbol blocks, items, and the BE.
     public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",

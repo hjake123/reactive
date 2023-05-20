@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -27,7 +28,7 @@ public class QuartzBottleItem extends Item {
         @Override
         public ItemStack dispense(BlockSource source, ItemStack stack) {
             BlockPos target = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            if(!source.getLevel().getBlockState(target).is(Registration.CRUCIBLE.get())){
+            if(!(source.getLevel().getBlockState(target).getBlock() instanceof CrucibleBlock)){
                 return defaultDispenseItemBehavior.dispense(source, stack);
             }
 

@@ -9,7 +9,7 @@ import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.PowerBottleItem;
-import com.hyperlynx.reactive.util.PrimedWSV;
+import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -121,8 +121,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 if(!(crucible instanceof CrucibleBlockEntity c)){
                     return InteractionResult.PASS;
                 }
-                c.mix_color.set(Powers.ACID_POWER.get().getColor());
-                c.color_initialized = true;
+                c.setStartingColor(Powers.ACID_POWER.get().getColor());
             }
 
             // If it wasn't an acid bucket, just pass on the client side.
@@ -257,6 +256,11 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             CrucibleBlockEntity.empty(level, pos, state, (CrucibleBlockEntity) level.getBlockEntity(pos));
         }
 
+        super.onRemove(state, level, pos, new_state, p_60519_);
+    }
+
+    // Shunt method to let Shulker Crucibles not empty when broken.
+    public void onRemoveWithoutEmpty(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
         super.onRemove(state, level, pos, new_state, p_60519_);
     }
 

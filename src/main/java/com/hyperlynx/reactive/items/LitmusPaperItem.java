@@ -4,6 +4,7 @@ import ca.weblite.objc.Client;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -59,7 +60,7 @@ public class LitmusPaperItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if(!context.getLevel().getBlockState(context.getClickedPos()).is(Registration.CRUCIBLE.get())){
+        if(!(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof CrucibleBlock)){
             return InteractionResult.PASS;
         }
 

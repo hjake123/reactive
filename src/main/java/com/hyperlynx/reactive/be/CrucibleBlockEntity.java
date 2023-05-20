@@ -66,7 +66,7 @@ import java.util.*;
 
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
-    // Don't change this without updating the recipes.
+    // Don't change the max power without updating the recipes.
 
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
@@ -543,6 +543,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             totalpp += powers.get(p);
         }
         return totalpp;
+    }
+
+    // Manually decides the initial color of the mixture to prevent fading from water.
+    public void setStartingColor(Color starting){
+        mix_color.set(starting);
+        color_initialized = true;
     }
 
     // These methods calculate and return the combined color of the cauldron's mixture, based on the given water color.
