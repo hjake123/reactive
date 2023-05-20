@@ -115,6 +115,17 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
         if(level.isClientSide()){
+            // Hacky method to make sure that acid bucket addition instantly updates the mix color.
+            if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
+                BlockEntity crucible = level.getBlockEntity(pos);
+                if(!(crucible instanceof CrucibleBlockEntity c)){
+                    return InteractionResult.PASS;
+                }
+                c.mix_color.set(Powers.ACID_POWER.get().getColor());
+                c.color_initialized = true;
+            }
+
+            // If it wasn't an acid bucket, just pass on the client side.
             return InteractionResult.SUCCESS;
         }
 

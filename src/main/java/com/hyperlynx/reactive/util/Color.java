@@ -21,6 +21,12 @@ public class Color {
         blue = 0;
     }
 
+    public void set(Color to){
+        red = to.red;
+        green = to.green;
+        blue = to.blue;
+    }
+
     @Override
     public boolean equals(Object obj) {
         boolean obj_equals = super.equals(obj);
