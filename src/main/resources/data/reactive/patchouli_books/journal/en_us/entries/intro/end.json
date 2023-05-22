@@ -28,7 +28,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Of course, there are many other things that exist at once. Maybe this message doesn't make any sense in the context you've created for it. Maybe your world truly has no trace of us, beyond this book. Maybe to you, this is all meaningless lore, useless lines of text. $(br2)If that's the case, I am sorry for wasting your time."
+      "text": "$(o)Of course, there are many other things that exist at once. Maybe this message doesn't make any sense in the context you've created for it. Maybe your world truly has no trace of us, beyond this book. Maybe you simply don't care. $(br2)If that's the case, I am sorry for wasting your time."
     },
     {
       "type": "patchouli:text",

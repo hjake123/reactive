@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -23,6 +24,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -92,6 +94,12 @@ public class ReactionEffects {
             c.getLevel().addFreshEntity(salt_drop);
         }else{
             CrucibleBlockEntity.empty(c.getLevel(), c.getBlockPos(), c.getBlockState(), c);
+            if(c.getBlockState().getBlock() instanceof ShulkerCrucibleBlock) {
+                ItemEntity shell_drop = new ItemEntity(c.getLevel(), c.getBlockPos().getX() + 0.5,
+                        c.getBlockPos().getY() + 0.5,
+                        c.getBlockPos().getZ() + 0.6, Items.SHULKER_SHELL.getDefaultInstance());
+                c.getLevel().addFreshEntity(shell_drop);
+            }
             c.getLevel().setBlock(c.getBlockPos(), Registration.SALTY_CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.GLASS_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
