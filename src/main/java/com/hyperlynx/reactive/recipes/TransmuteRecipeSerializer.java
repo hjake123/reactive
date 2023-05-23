@@ -8,6 +8,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf;
@@ -23,7 +24,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     @NotNull
     public TransmuteRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
         try {
-            ItemStack reactant = CraftingHelper.getItemStack(json.get("reactant").getAsJsonObject(), false);
+            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject());
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
             List<Power> reagents = new ArrayList<>();
             for (JsonElement j : json.get("reagents").getAsJsonArray()) {
@@ -47,7 +48,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
 
     @Override
     public @Nullable TransmuteRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
-        ItemStack reactant = buffer.readItem();
+        Ingredient reactant = Ingredient.fromNetwork(buffer);
         ItemStack product = buffer.readItem();
         List<Power> reagents = buffer.readCollection(ArrayList::new, IForgeFriendlyByteBuf::readRegistryId);
         int min = buffer.readVarInt();
@@ -58,7 +59,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
 
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
-        buffer.writeItem(recipe.reactant);
+        recipe.reactant.toNetwork(buffer);
         buffer.writeItem(recipe.product);
         buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
         buffer.writeVarInt(recipe.minimum);

@@ -37,7 +37,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
     @Override
     public IVariable process(@NotNull String key) {
         if(key.equals("reactant")){
-            return IVariable.from(recipe.getReactant());
+            return IVariable.from(recipe.getReactant().getItems());
         }
         if(key.equals("product")){
             return IVariable.from(recipe.getResultItem());

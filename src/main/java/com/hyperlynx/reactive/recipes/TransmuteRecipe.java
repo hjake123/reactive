@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.alchemy.PowerBearer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -17,14 +18,14 @@ import java.util.List;
 public class TransmuteRecipe implements Recipe<Container> {
     protected final ResourceLocation id;
     protected final String group;
-    protected final ItemStack reactant;
+    protected final Ingredient reactant;
     protected final ItemStack product;
     protected final List<Power> reagents;
     int cost;
     int minimum;
     public boolean needs_electricity;
 
-    public TransmuteRecipe(ResourceLocation id, String group, ItemStack reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
+    public TransmuteRecipe(ResourceLocation id, String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
         this.id = id;
         this.group = group;
         this.reactant = reactant;
@@ -64,7 +65,11 @@ public class TransmuteRecipe implements Recipe<Container> {
 
     @Override
     public boolean matches(Container container, @NotNull Level level) {
-        return container.getItem(0).is(reactant.getItem());
+        for(ItemStack i : reactant.getItems()) {
+            if (container.getItem(0).is(i.getItem()))
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -77,7 +82,7 @@ public class TransmuteRecipe implements Recipe<Container> {
         return product;
     }
 
-    public ItemStack getReactant(){ return reactant; }
+    public Ingredient getReactant(){ return reactant; }
 
     public List<Power> getReagents(){ return reagents;}
 

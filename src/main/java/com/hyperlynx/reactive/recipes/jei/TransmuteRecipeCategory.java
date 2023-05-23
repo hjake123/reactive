@@ -17,6 +17,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         input_slot.setSlotName("reactant");
-        input_slot.addItemStack(recipe.getReactant());
+        input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
         output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getResultItem());
 
