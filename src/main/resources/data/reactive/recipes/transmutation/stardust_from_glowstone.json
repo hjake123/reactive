@@ -6,7 +6,7 @@
   "product": {
     "item": "reactive:stardust"
   },
-  "reagents": ["reactive:mind"],
+  "reagents": ["reactive:mind", "reactive:light"],
   "min": 250,
   "cost": 25
 }

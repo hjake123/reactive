@@ -37,7 +37,7 @@ public class BlazeBottleItem extends PowerBottleItem {
     @Override
     public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
     {
-        return 8000;
+        return 4000;
     }
 
     @Override

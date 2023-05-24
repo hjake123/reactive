@@ -1,6 +1,6 @@
 {
   "name": "Journal of Alchemy",
-  "landing_text": "The following are a collection of notes on the rich Subject of Reactive Alchemy.",
+  "landing_text": "The following are a collection of notes on the Subject of Reactive Alchemy.",
   "version": 1,
   "model": "reactive:journal",
   "book_texture": "patchouli:textures/gui/book_purple.png",

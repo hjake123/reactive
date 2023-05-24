@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:bubble_coral"
+    "item": "minecraft:bubble_coral_block"
   },
   "reagents": ["reactive:vital"],
   "min": 100,

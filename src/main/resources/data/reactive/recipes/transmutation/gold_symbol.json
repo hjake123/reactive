@@ -1,7 +1,7 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "item": "minecraft:gold_ingot"
+    "tag": "forge:ingots/gold"
   },
   "product": {
     "item": "reactive:gold_symbol"

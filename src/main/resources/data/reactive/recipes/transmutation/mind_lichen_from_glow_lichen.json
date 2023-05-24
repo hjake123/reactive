@@ -7,6 +7,6 @@
     "item": "reactive:mind_lichen"
   },
   "reagents": ["reactive:mind"],
-  "min": 100,
-  "cost": 20
+  "min": 50,
+  "cost": 10
 }

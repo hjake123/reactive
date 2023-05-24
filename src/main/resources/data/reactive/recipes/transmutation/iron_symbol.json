@@ -1,7 +1,7 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "item": "minecraft:iron_ingot"
+    "tag": "forge:ingots/iron"
   },
   "product": {
     "item": "reactive:iron_symbol"

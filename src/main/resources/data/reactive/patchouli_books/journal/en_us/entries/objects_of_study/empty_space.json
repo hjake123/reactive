@@ -22,7 +22,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(p)If that Reaction were to disrupt the Grid, it would doubtlessly create a $(4)physical byproduct$(0) of some kind at the Crucible's mouth. I will seek this vindicating Material out."
+      "text": "If that Reaction were to disrupt the Grid, it would doubtlessly create a $(4)physical byproduct$(0) of some kind at the Crucible's mouth. I will seek this vindicating Material out."
     }
   ]
 }

@@ -10,7 +10,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "litmus_paper",
-      "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used by the adept to Measure the Strength of Powers in the Crucible."
+      "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used to Measure the Strength of Powers in the Crucible. $(p)$(o)Use it normally to take the measurement, and shift-click to read it."
     },
     {
       "type": "patchouli:text",
@@ -19,7 +19,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "reactive:body_bottle",
-      "text": "$(o)The Body Power inhibits reactions from taking place. If you need an unfortunate combination of Powers for a transmutation, add some Body. $(p)It's also good against a certain $(l:intro/curse)other Power$(/l)"
+      "text": "$(o)The Body Power inhibits reactions from taking place. If you need an unfortunate combination of Powers for a transmutation, add some Body."
     },
     {
       "type": "patchouli:crafting",

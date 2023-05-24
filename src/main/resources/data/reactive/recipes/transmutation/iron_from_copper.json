@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:copper_ingot"
+  },
+  "product": {
+    "item": "minecraft:iron_ingot"
+  },
+  "reagents": ["reactive:warp", "reactive:esoteric_z"],
+  "min": 650,
+  "cost": 100
+}
