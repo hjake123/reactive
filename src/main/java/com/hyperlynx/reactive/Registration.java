@@ -6,22 +6,26 @@ import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
+import com.hyperlynx.reactive.util.HyperMobEffect;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +40,8 @@ import net.minecraftforge.registries.RegistryObject;
 public class Registration {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
+    public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, ReactiveMod.MODID);
+    public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, ReactiveMod.MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
@@ -45,6 +51,8 @@ public class Registration {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
         ITEMS.register(bus);
+        MOB_EFFECTS.register(bus);
+        POTIONS.register(bus);
         PARTICLES.register(bus);
         TILES.register(bus);
         Powers.POWERS.register(bus);
@@ -156,6 +164,15 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
+    public static final RegistryObject<Block> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
+            () -> new GravityChandelierBlock(BlockBehaviour.Properties.copy(Blocks.TORCH)));
+
+    public static final RegistryObject<Item> GRAVITY_CHANDELIER_ITEM = fromBlock(GRAVITY_CHANDELIER, ReactiveMod.CREATIVE_TAB);
+
+    public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
+            TILES.register("gravity_chandelier_be",
+            () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
+
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
@@ -248,6 +265,22 @@ public class Registration {
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> FORCE_ROCK = ITEMS.register("force_rock",
+            () -> new ForceRockItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
+            () -> new SecretScaleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+
+    // Register mob effects
+    public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xC0BF77)
+                    .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
+                            (double)-1F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+
+    // Register potions
+    public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 1400)));
+    public static final RegistryObject<Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 2800)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
@@ -299,6 +332,7 @@ public class Registration {
         CriteriaTriggers.enqueue(evt);
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
+        SecretScaleItem.registerGravPotions(evt);
     }
 
     // Helper method for BlockItem registration

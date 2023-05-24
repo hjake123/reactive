@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -10,20 +11,25 @@ import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
+import com.hyperlynx.reactive.util.FakeContainer;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -141,7 +147,7 @@ public class ReactionEffects {
         return c;
     }
 
-    // Either apply levitation to nearby entities.
+    // Apply levitation to nearby entities.
     public static CrucibleBlockEntity levitation(CrucibleBlockEntity c) {
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
@@ -155,12 +161,54 @@ public class ReactionEffects {
         for(LivingEntity e : nearby_ents){
             if(CrystalIronItem.effectNotBlocked(e, 4)) {
                 e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+                if(e instanceof ServerPlayer player){
+                    CriteriaTriggers.BE_LEVITATED_TRIGGER.trigger(player);
+                }
             }
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
                     origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                    e.getX(),e.getEyeY()-0.1, e.getZ(), 8, 7, 0.74);
+                    e.getX(),e.getEyeY()-0.2, e.getZ(), 8, 7, 0.74);
         }
         return c;
+    }
+
+    // Apply slow fall to nearby entities and, if possible, create Secret Scales.
+    public static CrucibleBlockEntity slowfall(CrucibleBlockEntity crucible) {
+        AABB aoe = new AABB(crucible.getBlockPos());
+        aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
+        List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+
+        BlockPos origin_pos = crucible.areaMemory.fetch(crucible.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        if(origin_pos == null){
+            origin_pos = crucible.getBlockPos();
+        }
+
+        for(LivingEntity e : nearby_ents){
+            if(CrystalIronItem.effectNotBlocked(e, 4)) {
+                e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
+                if(e instanceof ServerPlayer player){
+                    CriteriaTriggers.BE_SLOWFALLED_TRIGGER.trigger(player);
+                }
+            }
+            ParticleScribe.drawParticleZigZag(crucible.getLevel(), ParticleTypes.END_ROD,
+                    origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
+                    e.getX(),e.getEyeY()-0.3, e.getZ(), 5, 12, 0.5);
+        }
+
+        // Craft the scales if levitation is also happening, and then empty the Crucible.
+        if(crucible.linked_crystal != null && crucible.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("levitationcost", 10, 30)){
+            for(Entity entity : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())){
+                if(entity instanceof ItemEntity item_entity && item_entity.getItem().is(Registration.PHANTOM_RESIDUE.get())){
+                    int count = item_entity.getItem().getCount();
+                    item_entity.kill();
+                    ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
+                    drop_stack.setCount(count);
+                    crucible.getLevel().addFreshEntity(new ItemEntity(crucible.getLevel(), crucible.getBlockPos().getX() + 0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ() + 0.5, drop_stack));
+                    CrucibleBlockEntity.empty(crucible.getLevel(), crucible.getBlockPos(), crucible.getBlockState(), crucible);
+                }
+            }
+        }
+        return crucible;
     }
 
     // Causes nearby bonemeal-ables to be fertilized occasionally.

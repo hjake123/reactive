@@ -1,7 +1,7 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "item": "minecraft:copper_ingot"
+    "tag": "forge:ingots/copper"
   },
   "product": {
     "item": "reactive:copper_symbol"

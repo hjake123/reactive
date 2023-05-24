@@ -23,6 +23,11 @@
       "text": "$(1)Similarly, Light Power can be used to more quickly produce standard Lanterns."
     },
     {
+      "type": "reactive:transmute",
+      "recipe": "force_rock_from_flint",
+      "text": "Infusing a piece of Flint with the Warp Power creates a Peculiar Object that $(thing)imparts force on the person whom shoots it$(0).$(p)Ah... perhaps this isn't useful, actually..."
+    },
+    {
       "type": "patchouli:spotlight",
       "item": "reactive:blaze_bottle",
       "text": "$(o)Blaze power, predictably, can be used as a smelting fuel. The bottle vaporizes in the ensuing flame, so it cannot be recovered."

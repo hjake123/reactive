@@ -101,6 +101,26 @@ public class ParticleScribe {
         }
     }
 
+    public static void drawParticleSphere(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
+        double center_x = pos.getX() + 0.5;
+        double center_z = pos.getZ() + 0.5;
+
+        if(level.isClientSide()){
+            for(int i = 0; i < frequency; i++){
+                double x = level.random.nextGaussian();
+                double y = level.random.nextGaussian();
+                double z = level.random.nextGaussian();
+                double normalizer = 1 / Math.sqrt(x * x + y * y + z * z);
+
+                x = x * normalizer * radius;
+                y = y * normalizer * radius;
+                z = z * normalizer * radius;
+
+                level.addParticle(opt, center_x + x, pos.getY() + height + y, center_z + z, 0, 0, 0);
+            }
+        }
+    }
+
     public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos){
         drawParticleCrucibleTop(level, opt, pos, 1, 0, 0, 0);
     }

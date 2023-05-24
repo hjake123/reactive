@@ -19,6 +19,8 @@ public class CriteriaTriggers {
     public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
     public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
     public static final FlagCriterion SEE_DISPLACEMENT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_displacement_criterion"), new ResourceLocation(ReactiveMod.MODID, "see_block_fall"));
+    public static final FlagCriterion BE_SLOWFALLED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_slowfalled_criterion"));
+    public static final FlagCriterion BE_LEVITATED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_levitated_criterion"));
 
 
     // Called in Registration.
@@ -36,5 +38,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BLOCK_FALL_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(OCCULT_AWAKENING_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_DISPLACEMENT_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_SLOWFALLED_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_LEVITATED_TRIGGER));
     }
 }

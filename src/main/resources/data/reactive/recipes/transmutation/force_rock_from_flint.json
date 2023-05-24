@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:flint"
+  },
+  "product": {
+    "item": "reactive:force_rock"
+  },
+  "reagents": ["reactive:warp"],
+  "min": 80,
+  "cost": 80
+}

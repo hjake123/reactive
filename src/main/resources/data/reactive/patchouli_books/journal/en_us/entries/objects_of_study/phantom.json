@@ -11,6 +11,10 @@
       "type": "reactive:dissolve",
       "reactant": "minecraft:phantom_membrane",
       "text": "$(o)Though there are no transmutation recipes known for this substance, I have observed an effect when it is combined with a certain 'natural' Power."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(o)There is another reaction catalyzed by this substance as well, this time with a $(l:reactive:intro/synthesis)secret Power$(/l). Experience its effect, and I will tell you more."
     }
   ]
 }

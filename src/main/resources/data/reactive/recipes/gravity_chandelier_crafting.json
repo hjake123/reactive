@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "s": {
+      "item": "reactive:secret_scale"
+    },
+    "r": {
+      "item": "minecraft:end_rod"
+    },
+    "g": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    "sss",
+    "rrr",
+    " g "
+  ],
+  "result": {
+    "item": "reactive:gravity_chandelier"
+  }
+}
