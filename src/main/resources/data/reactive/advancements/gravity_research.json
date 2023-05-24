@@ -1,14 +1,13 @@
 {
   "criteria": {
-    "criterionA": {
-      "trigger": "reactive:be_slowfalled_criterion"
-    },
-    "criterionB": {
+    "criterion": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "reactive:secret_scale"
+            "items": [
+              "reactive:secret_scale"
+            ]
           }
         ]
       }
