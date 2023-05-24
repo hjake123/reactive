@@ -14,7 +14,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(thing)Transmutations$(0), like the one described on the prior page, occur only once a Certain Threshold of Total Power has been reached. The Ratio of reagents does not matter -- only that the Threshold is passed."
+      "text": "$(thing)Transmutations$(0), like the one described on the prior page, occur only once a Certain Threshold of Total Power has been reached. The Ratio of Powers does not matter -- only that the Threshold is passed."
     },
     {
       "type": "patchouli:spotlight",

@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(item)Salts$(0) are occasionally formed when a Reaction occurs. The Annihilation of certain Base Powers is one such Method. $(p)While they may seem useless on their own, these Salts do have some Utility."
+      "text": "$(item)Salts$(0) are occasionally formed when a Reaction occurs. $(p)In particular, Apprentice's Salt is created when a particular pair of $(l:reactive:intro/powers)Base Powers$(/l) annihilate."
     },
     {
       "type": "reactive:transmute",

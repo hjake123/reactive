@@ -2,10 +2,11 @@
   "name": "Crucible",
   "icon": "reactive:crucible",
   "category": "reactive:intro",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The $(item)Power Crucible$() is the $(thing)Essential Tool of Alchemy$(). Its unique capability to convert matter into its raw $(thing)Alchemical Power$() enables easy access to these powers.$(br2)Additionally, it acts as an ideal medium for $(thing)Transmutations$(0).$(p)See the $(l:intro/fundamentals)introduction$(/l) to learn how to make it."
+      "text": "The $(item)Power Crucible$() is the $(thing)Essential Tool of Alchemy$(). Its unique capability to convert matter into its raw $(thing)Alchemical Power$() enables easy access to these powers.$(br2)Additionally, it acts as an ideal medium for $(thing)Transmutations$(0).$(p)Shift-click its icon to see how to make one."
     },
     {
       "type": "patchouli:spotlight",
@@ -24,8 +25,5 @@
       "type": "patchouli:text",
       "text": "$(1)For the engineering-oriented: $(p)$(item)Dispensers$(1) are able to both fill and empty $(l:reactive:objects_of_study/bottles)bottles of Power$(/l) when aimed at a Crucible. $(p)A $(item)Hopper$(1) is able to autonomously add items to the Crucible, even from the sides. $(p)Finally, output items bounce out of the Crucible high enough that a stream of Water would be able to catch them."
     }
-  ],
-  "extra_recipe_mappings": {
-      "reactive:crucible": 1
-  }
+  ]
 }

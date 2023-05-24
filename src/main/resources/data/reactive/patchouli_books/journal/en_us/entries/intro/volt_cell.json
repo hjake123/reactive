@@ -6,7 +6,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "reactive:volt_cell",
-      "text": "The Volt Cell is a device capable of producing $(thing)electric charge$(0) using a chemical effect within bottles of $(#9d1e2d)Acid$(0)."
+      "text": "The Volt Cell is a device capable of producing $(thing)electric charge$(0) using a chemical effect within bottles of $(#9d1e2d)Acid$(0).$(p)$(o)Trying to craft a bottle of Acid? Remember, you can shift-click on ingredients in this book to see how they're made!"
     },
     {
       "type": "patchouli:crafting",

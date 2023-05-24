@@ -6,17 +6,17 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Using $(thing)Electrical Stimulation$(0), it is possible to Synthesize certain pairs of Adjacent Essential Powers together. $(br2)I call the results $(3)Esoteric Powers$(0). Who knows what properties these elusive Powers might bring about?"
+      "text": "Using $(thing)Electrical Stimulation$(0), it is possible to Synthesize certain pairs of Adjacent Base Powers together. $(br2)I call the results $(3)Esoteric Powers$(0). Who knows what properties these elusive Powers might bring about?"
     },
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle.png"],
-      "text": "This Diagram depicts my Theory of the Essential Powers."
+      "text": "This Diagram depicts the Relationships between the Powers."
     },
     {
       "type": "patchouli:image",
       "images": ["reactive:textures/gui/rune_circle_a1.png"],
-      "text": "Opposing $(4)Basic Powers$(0) annihilate."
+      "text": "Opposing $(4)Base Powers$(0) annihilate."
     },
     {
       "type": "patchouli:image",
