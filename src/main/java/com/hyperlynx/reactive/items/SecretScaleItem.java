@@ -65,6 +65,9 @@ public class SecretScaleItem extends Item {
         if(boatHit == null)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
+        if(boatHit.getEntity().isNoGravity())
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
+
         boatHit.getEntity().setNoGravity(true);
         if(!player.isCreative())
             player.getItemInHand(hand).shrink(1);

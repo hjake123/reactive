@@ -197,18 +197,27 @@ public class ReactionEffects {
 
         // Craft the scales if levitation is also happening, and then empty the Crucible.
         if(crucible.linked_crystal != null && crucible.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("levitationcost", 10, 30)){
-            for(Entity entity : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())){
-                if(entity instanceof ItemEntity item_entity && item_entity.getItem().is(Registration.PHANTOM_RESIDUE.get())){
-                    int count = item_entity.getItem().getCount();
-                    item_entity.kill();
-                    ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
-                    drop_stack.setCount(count);
-                    crucible.getLevel().addFreshEntity(new ItemEntity(crucible.getLevel(), crucible.getBlockPos().getX() + 0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ() + 0.5, drop_stack));
-                    CrucibleBlockEntity.empty(crucible.getLevel(), crucible.getBlockPos(), crucible.getBlockState(), crucible);
-                }
-            }
+            craftSecretScale(crucible);
         }
         return crucible;
+    }
+
+    private static void craftSecretScale(CrucibleBlockEntity crucible) {
+        for(Entity entity : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())){
+            if(entity instanceof ItemEntity item_entity && item_entity.getItem().is(Registration.PHANTOM_RESIDUE.get())) {
+                ParticleScribe.drawParticleZigZag(crucible.getLevel(), ParticleTypes.END_ROD,
+                        crucible.getBlockPos().getX(), crucible.getBlockPos().getY(), crucible.getBlockPos().getZ(),
+                        entity.getX(), entity.getY(), entity.getZ(), 25, 10, 0.9);
+                crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS,
+                        0.8F, 0.8F);
+                int count = item_entity.getItem().getCount();
+                item_entity.kill();
+                ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
+                drop_stack.setCount(count);
+                crucible.getLevel().addFreshEntity(new ItemEntity(crucible.getLevel(), crucible.getBlockPos().getX() + 0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ() + 0.5, drop_stack));
+                crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+            }
+        }
     }
 
     // Causes nearby bonemeal-ables to be fertilized occasionally.

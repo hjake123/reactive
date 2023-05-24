@@ -94,21 +94,21 @@ public class ReactionMan {
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, ReactionRenders::foaming, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new ItemConsumingEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.Z_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
+                REACTIONS.add(new CatalystEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.Z_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
             }
             case 2 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, ReactionRenders::foaming, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new ItemConsumingEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.X_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
+                REACTIONS.add(new CatalystEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.X_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
             }
             case 3 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, ReactionRenders::foaming, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-                REACTIONS.add(new ItemConsumingEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.Y_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
+                REACTIONS.add(new CatalystEffectReaction("slowfall", ReactionEffects::slowfall, null, Powers.Y_POWER.get(), Registration.PHANTOM_RESIDUE.get()));
             }
         }
 
