@@ -1,7 +1,7 @@
 {
   "type": "reactive:dissolve",
   "reactant": {
-    "item": "minecraft:dirt"
+    "tag": "forge:crops"
   },
   "product": {
     "item": "minecraft:mud"

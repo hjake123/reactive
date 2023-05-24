@@ -29,6 +29,6 @@ public class ForceRockItem extends Item {
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.CALCITE_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
         }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 }
