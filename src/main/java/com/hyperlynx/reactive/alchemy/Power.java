@@ -17,6 +17,7 @@ public class Power {
     private final String id;
     private final String name;
     private final Item bottle;
+    private final Item render_item;
     private final PrimedWSV percent_reactivity;
 
     public Power(String id, int color, Item bottle){
@@ -25,6 +26,7 @@ public class Power {
         this.bottle = bottle;
         this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = null;
     }
 
     public Power(String id, int color, String name, Item bottle){
@@ -33,6 +35,7 @@ public class Power {
         this.bottle = bottle;
         this.name = name;
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = null;
     }
 
     public Power(String id, Color color, String name, Item bottle){
@@ -41,6 +44,35 @@ public class Power {
         this.bottle = bottle;
         this.name = name;
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = null;
+    }
+
+
+    public Power(String id, int color, Item bottle, Item renderItem){
+        this.id = id;
+        this.color = new Color(color);
+        this.bottle = bottle;
+        this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = renderItem;
+    }
+
+    public Power(String id, int color, String name, Item bottle, Item renderItem){
+        this.id = id;
+        this.color = new Color(color);
+        this.bottle = bottle;
+        this.name = name;
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = renderItem;
+    }
+
+    public Power(String id, Color color, String name, Item bottle, Item renderItem){
+        this.id = id;
+        this.color = color;
+        this.bottle = bottle;
+        this.name = name;
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        render_item = renderItem;
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -110,5 +142,13 @@ public class Power {
     @Override
     public String toString(){
         return name;
+    }
+
+    public ItemStack getRenderStack() {
+        if(bottle != null)
+            return bottle.getDefaultInstance();
+        if(render_item != null)
+            return render_item.getDefaultInstance();
+        return ItemStack.EMPTY;
     }
 }

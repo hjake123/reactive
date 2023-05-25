@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.POWER_TYPE;
+
 public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe> {
 
     @Override
@@ -42,7 +44,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public IDrawable getBackground() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(new ResourceLocation(ReactiveMod.MODID, "textures/gui/tf_jei.png"), 2, 2, 76, 49);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(new ResourceLocation(ReactiveMod.MODID, "textures/gui/tf_jei.png"), 2, 2, 76, 38);
     }
 
     @Override
@@ -53,40 +55,62 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TransmuteRecipe recipe, IFocusGroup focuses) {
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
-        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
+
+        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getResultItem());
 
+        switch (recipe.getReagents().size()) {
+            case 1 -> {
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                power_slot.setSlotName("reagent_middle");
+                power_slot.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+            }
+            case 2 -> {
+                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 20, 24);
+                power_slotl.setSlotName("reagent_left");
+                power_slotl.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+
+                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 36, 24);
+                power_slotr.setSlotName("reagent_right");
+                power_slotr.addIngredient(POWER_TYPE, recipe.getReagents().get(1));
+            }
+            case 3 -> {
+                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 12, 24);
+                power_slotl.setSlotName("reagent_left");
+                power_slotl.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                power_slot.setSlotName("reagent_middle");
+                power_slot.addIngredient(POWER_TYPE, recipe.getReagents().get(1));
+
+                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 44, 24);
+                power_slotr.setSlotName("reagent_right");
+                power_slotr.addIngredient(POWER_TYPE, recipe.getReagents().get(2));
+            }
+            default -> {
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                power_slot.setSlotName("reagents");
+                power_slot.addIngredients(POWER_TYPE, recipe.getReagents());
+            }
+        }
     }
 
     @Override
     public void draw(TransmuteRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        List<String> reagent_list = new ArrayList<>();
-        for(Power reagent : recipe.getReagents()){
-            reagent_list.add(reagent.getName());
-        }
         Minecraft minecraft = Minecraft.getInstance();
-        drawReagentLabel(minecraft, stack, reagent_list.toString().substring(1, reagent_list.toString().length()-1));
         if(recipe.needs_electricity){
             drawElectricLabel(minecraft, stack);
         }
     }
 
-    private void drawReagentLabel(Minecraft minecraft, PoseStack poseStack, String label) {
-        int width = minecraft.font.width(label);
-        int center = getBackground().getWidth() / 2;
-        int x = center - (width / 2);
-        int y = 41;
-        minecraft.font.draw(poseStack, label, x, y,0xFF3838);
-    }
-
     private void drawElectricLabel(Minecraft minecraft, PoseStack poseStack) {
-        int width = minecraft.font.width("Needs Charge");
+        int width = minecraft.font.width("Charge");
         int center = getBackground().getWidth() / 2;
         int x = center - (width / 2);
-        int y = 29;
-        minecraft.font.drawShadow(poseStack, "Needs Charge", x, y,0x0DA8A8);
+        int y = 11;
+        minecraft.font.drawShadow(poseStack, "Charge", x, y,0x0DA8A8);
     }
 }

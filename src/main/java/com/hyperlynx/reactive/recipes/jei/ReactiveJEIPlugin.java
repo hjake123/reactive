@@ -2,11 +2,14 @@ package com.hyperlynx.reactive.recipes.jei;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.items.StaffItem;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
@@ -18,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,6 +30,9 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public static IJeiHelpers HELPERS;
     public static DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
     public static TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
+    public static PowerIngredientType POWER_TYPE = new PowerIngredientType();
+    public static PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
+    public static PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -36,6 +43,11 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(DISSOLVE_CATEGORY);
         registration.addRecipeCategories(TRANSMUTE_CATEGORY);
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+        registration.register(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues(), POWER_HANDLER, POWER_RENDERER);
     }
 
     @Override
@@ -51,6 +63,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues());
     }
 
     private void addDescriptions(IRecipeRegistration registration) {
@@ -64,11 +77,18 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 Registration.STAFF_OF_SOUL_ITEM.get(), Registration.SOLID_PORTAL_ITEM.get(), Registration.LIGHT_BOTTLE.get(),
                 Registration.MIND_BOTTLE.get(), Registration.BODY_BOTTLE.get(), Registration.WARP_BOTTLE.get(), Registration.BLAZE_BOTTLE.get(),
                 Registration.ACID_BOTTLE.get(), Registration.VERDANT_BOTTLE.get(), Registration.SOUL_BOTTLE.get());
+        addPowerDescriptions(registration);
     }
 
     private void addGenericDescriptions(IRecipeRegistration registration, Item... items){
         for(Item item : items){
             registration.addItemStackInfo(item.getDefaultInstance(), Component.translatable("jei.reactive.generic"));
+        }
+    }
+
+    private void addPowerDescriptions(IRecipeRegistration registration){
+        for(Power power : Powers.POWER_SUPPLIER.get().getValues()){
+            registration.addIngredientInfo(power, POWER_TYPE, Component.translatable("jei.reactive.power"));
         }
     }
 

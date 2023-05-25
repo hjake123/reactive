@@ -87,7 +87,6 @@ reactive:esoteric_x
 reactive:esoteric_y
 reactive:esoteric_z
 ```
-The final three of these will each display as "Esoteric" in JEI, so they will be indistinguishable. Note also that long combinations of Powers will bleed out of the recipe boxes due to JEI limitations that I don't currently know how to work around.
 
 ### Specifying Reactants
 Reactants are the input items for these recipes. They can be specified either as an item or a tag, like so:
