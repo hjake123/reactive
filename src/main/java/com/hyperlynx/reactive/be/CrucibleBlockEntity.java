@@ -332,7 +332,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             if(r.matches(new FakeContainer(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant))));
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant), level.registryAccess())));
                 return true;
             }
         }
@@ -387,12 +387,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(this.getLevel() == null || !this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level.isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
+        if(this.getLevel() == null || !this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level().isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
             return;
         }
 
         double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())) {
+        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())) {
             return;
         }
 
@@ -402,7 +402,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         sacrificeCount++;
-        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level, CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
+        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();
@@ -411,7 +411,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         // While Mind is being devoured by Curse, sacrifices spawn Phantoms.
         if(getPowerLevel(Powers.CURSE_POWER.get()) >= WorldSpecificValues.CURSE_RATE.get() && getPowerLevel(Powers.MIND_POWER.get()) > 0
         && !(event.getEntity() instanceof Phantom)
-        && (event.getEntity().getLevel().isNight())){
+        && (event.getEntity().level().isNight())){
             spawnPhantom(x, y, z);
         }else{
             ParticleScribe.drawParticleLine(level, ParticleTypes.CLOUD,

@@ -24,11 +24,7 @@ public class StardustBlock extends Block {
     public StardustBlock(Properties props) {
         super(props);
         props.sound(SoundType.SAND);
-    }
-
-    @Override
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
-        return PushReaction.DESTROY;
+        props.pushReaction(PushReaction.DESTROY);
     }
 
     @Override

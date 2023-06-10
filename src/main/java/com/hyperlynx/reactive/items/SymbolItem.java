@@ -23,8 +23,8 @@ public class SymbolItem extends BlockItem {
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
-    public static RegistryObject<Item> fromBlock(RegistryObject<Block> block, CreativeModeTab tab) {
-        return ITEMS.register(block.getId().getPath(), () -> new SymbolItem(block.get(), new Item.Properties().tab(tab)));
+    public static RegistryObject<Item> fromBlock(RegistryObject<Block> block) {
+        return ITEMS.register(block.getId().getPath(), () -> new SymbolItem(block.get(), new Item.Properties()));
     }
 
     private static final DispenseItemBehavior DISPENSE_ITEM_BEHAVIOR = new DefaultDispenseItemBehavior() {

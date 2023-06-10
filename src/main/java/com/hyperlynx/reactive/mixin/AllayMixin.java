@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.animal.allay.Allay;
+import net.minecraft.world.entity.monster.Phantom;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,16 +25,16 @@ public abstract class AllayMixin {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
             symbol_maybe = BlockPos.findClosestMatch(((Allay)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Allay)(Object)this).level.getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+                    blockPos -> ((Allay)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 
         if(symbol_maybe.isPresent()) {
-            ((Allay)(Object) this).hurt(DamageSource.MAGIC, 4);
+            ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 4);
         }
 
         if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(Registration.CRYSTAL_IRON.get())){
-            ((Allay)(Object) this).hurt(DamageSource.MAGIC, 10);
+            ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 10);
         }
     }
 

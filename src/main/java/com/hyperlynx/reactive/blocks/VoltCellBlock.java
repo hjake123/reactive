@@ -37,7 +37,7 @@ public class VoltCellBlock extends Block {
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity ent) {
         super.stepOn(level, pos, state, ent);
         if (ent instanceof LivingEntity)
-            ent.hurt(DamageSource.MAGIC, 1);
+            ent.hurt(level.damageSources().magic(), 1);
     }
 }
 

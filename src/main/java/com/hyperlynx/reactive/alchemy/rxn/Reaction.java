@@ -81,7 +81,7 @@ public abstract class Reaction {
         if(level.isClientSide) {
             return false;
         }
-        if(((ServerLevel) level).dragonFight() != null) {
+        if(((ServerLevel) level).getDragonFight() != null) {
             return false;
         }
 

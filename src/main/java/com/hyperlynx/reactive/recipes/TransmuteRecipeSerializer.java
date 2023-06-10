@@ -24,7 +24,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     @NotNull
     public TransmuteRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
         try {
-            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject());
+            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject(), false);
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
             List<Power> reagents = new ArrayList<>();
             for (JsonElement j : json.get("reagents").getAsJsonArray()) {

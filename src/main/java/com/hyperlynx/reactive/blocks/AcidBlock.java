@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -19,12 +20,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class AcidBlock extends Block implements BucketPickup {
             return;
         }
         living.makeStuckInBlock(state, new Vec3(0.9F, 1.5D, 0.9F));
-        living.hurt(DamageSource.IN_FIRE, 2);
+        living.hurt(level.damageSources().inFire(), 2);
     }
 
     private void killPlantsUnderneath(Level level, BlockPos pos, BlockState state){
@@ -108,7 +109,10 @@ public class AcidBlock extends Block implements BucketPickup {
         BlockState state_beneath = level.getBlockState(pos.below());
         if(blockIsOnExcludedList(state_beneath))
             return;
-        if(state_beneath.getMaterial().equals(Material.WOOL) || state_beneath.getMaterial().equals(Material.WOOD)
+        if(state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.LOGS)
+                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.PLANKS)
+                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL)
+                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL_CARPETS)
                 || state_beneath.getBlock() instanceof MossBlock || state_beneath.is(Blocks.DRIPSTONE_BLOCK)){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());

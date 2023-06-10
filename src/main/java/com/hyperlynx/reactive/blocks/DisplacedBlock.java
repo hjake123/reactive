@@ -33,7 +33,8 @@ public class DisplacedBlock extends Block implements EntityBlock {
                 .noLootTable()
                 .strength(1F)
                 .explosionResistance(-1F)
-                .sound(SoundType.CHAIN));
+                .sound(SoundType.CHAIN)
+                .pushReaction(PushReaction.IGNORE));
     }
 
     @Override
@@ -145,10 +146,5 @@ public class DisplacedBlock extends Block implements EntityBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.IGNORE;
     }
 }

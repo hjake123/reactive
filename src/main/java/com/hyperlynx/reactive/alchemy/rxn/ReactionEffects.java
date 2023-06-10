@@ -61,7 +61,7 @@ public class ReactionEffects {
             SpecialCaseMan.checkEmptySpecialCases(c);
             c.expendPower();
             c.getLevel().setBlock(pos, c.getLevel().getBlockState(pos).setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
-            c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
+            c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
 
             if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()))
                 c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), true);
@@ -135,7 +135,7 @@ public class ReactionEffects {
 
                 if (!c.getLevel().isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
-                        victim.hurt(DamageSource.MAGIC, 12);
+                        victim.hurt(c.getLevel().damageSources().magic(), 12);
                     ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
@@ -239,7 +239,7 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
-            e.hurt(DamageSource.IN_FIRE, 12);
+            e.hurt(c.getLevel().damageSources().inFire(), 12);
             e.setSecondsOnFire(7);
         }
         return c;

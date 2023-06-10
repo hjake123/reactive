@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.monster.Phantom;
+import net.minecraft.world.entity.monster.Vex;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,12 +24,12 @@ public abstract class PhantomMixin {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
             symbol_maybe = BlockPos.findClosestMatch(((Phantom)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Phantom)(Object)this).level.getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+                    blockPos -> ((Phantom)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 
         if(symbol_maybe.isPresent()) {
-            ((Phantom)(Object) this).hurt(DamageSource.MAGIC, 4);
+            ((Phantom)(Object) this).hurt(((Phantom) (Object) this).level().damageSources().magic(), 4);
         }
     }
 }

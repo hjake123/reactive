@@ -16,7 +16,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
     @NotNull
     public DissolveRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
         try {
-            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject());
+            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject(), false);
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
             boolean needs_electricity = false;
             if(json.has("needs_electricity"))

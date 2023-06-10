@@ -58,7 +58,7 @@ public class SymbolBlockEntity extends BlockEntity {
     // If you die near an Occult Symbol, it breaks, and you come back as an undead being.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(event.getEntity().level.isClientSide || !symbol_item.getDefaultInstance().is(Registration.OCCULT_SYMBOL_ITEM.get())
+        if(event.getEntity().level().isClientSide || !symbol_item.getDefaultInstance().is(Registration.OCCULT_SYMBOL_ITEM.get())
                 ||  !(event.getEntity() instanceof Player)){
             return;
         }
@@ -68,7 +68,7 @@ public class SymbolBlockEntity extends BlockEntity {
             return;
         }
 
-        Level level = event.getEntity().getLevel();
+        Level level = event.getEntity().level();
         if(level.getBlockState(this.getBlockPos()).isAir())
             return; // Needed since the event sometimes fires more than once for the same death.
 

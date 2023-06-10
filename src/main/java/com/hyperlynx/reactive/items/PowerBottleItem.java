@@ -129,7 +129,7 @@ public class PowerBottleItem extends Item {
                     else {
                         e.getItem().shrink(1);
                         ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                        e.getLevel().addFreshEntity(empty_bottle);
+                        e.level().addFreshEntity(empty_bottle);
                     }
                     changed = true;
                 }

@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.portal.PortalShape;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -33,7 +32,7 @@ public class SolidPortalBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public SolidPortalBlock(Properties prop) {
-        super(prop);
+        super(prop.pushReaction(PushReaction.DESTROY));
         this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.X));
 
     }
@@ -64,11 +63,6 @@ public class SolidPortalBlock extends Block {
             }
         }
         super.playerDestroy(level, player, pos, state, irrelevant, stack);
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
     }
 
     @Override

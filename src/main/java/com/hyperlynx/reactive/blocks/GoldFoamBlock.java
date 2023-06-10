@@ -17,6 +17,6 @@ public class GoldFoamBlock extends Block{
     }
 
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity guy_who_falls_down, float f) {
-        guy_who_falls_down.causeFallDamage(f, 0.1F, DamageSource.FALL);
+        guy_who_falls_down.causeFallDamage(f, 0.1F, level.damageSources().fall());
     }
 }

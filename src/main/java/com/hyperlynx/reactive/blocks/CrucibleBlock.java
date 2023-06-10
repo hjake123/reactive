@@ -235,7 +235,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     }
 
     private static void lavaCrucibleFill(Level level, BlockPos pos, ServerPlayer player) {
-        level.explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
+        level.explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
         level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 1.0F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);

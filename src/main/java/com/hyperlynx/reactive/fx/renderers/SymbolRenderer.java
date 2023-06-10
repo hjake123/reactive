@@ -3,7 +3,8 @@ package com.hyperlynx.reactive.fx.renderers;
 import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.SymbolBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
+import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -13,7 +14,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
+import org.joml.Quaternionf;
 
 public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
 
@@ -27,28 +30,28 @@ public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
     }
 
     @Override
-    public void render(SymbolBlockEntity symbol, float partialTicks, PoseStack matrix, MultiBufferSource mbs, int light, int overlay) {
-        matrix.pushPose();
+    public void render(SymbolBlockEntity symbol, float partialTicks, PoseStack pose_stack, MultiBufferSource mbs, int light, int overlay) {
+        pose_stack.pushPose();
         if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.UP)){
-            matrix.translate(0.5, 0.02, 0.5);
-            matrix.mulPose(Vector3f.XP.rotationDegrees(90f));
+            pose_stack.translate(0.5, 0.02, 0.5);
+            pose_stack.mulPose(Axis.XP.rotationDegrees(90f));
         }else if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.DOWN)){
-            matrix.translate(0.5, 0.98, 0.5);
-            matrix.mulPose(Vector3f.XP.rotationDegrees(90f));
+            pose_stack.translate(0.5, 0.98, 0.5);
+            pose_stack.mulPose(Axis.XP.rotationDegrees(90f));
         }else if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.NORTH)){
-            matrix.translate(0.5, 0.5, 0.98);
+            pose_stack.translate(0.5, 0.5, 0.98);
         }else if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.SOUTH)){
-            matrix.translate(0.5, 0.5, 0.02);
+            pose_stack.translate(0.5, 0.5, 0.02);
         }else if(symbol.getBlockState().getValue(SymbolBlock.FACING).equals(Direction.EAST)){
-            matrix.translate(0.02, 0.5, 0.5);
-            matrix.mulPose(Vector3f.YP.rotationDegrees(90f));
+            pose_stack.translate(0.02, 0.5, 0.5);
+            pose_stack.mulPose(Axis.YP.rotationDegrees(90f));
         }else{ // WEST
-            matrix.translate(0.98, 0.5, 0.5);
-            matrix.mulPose(Vector3f.YP.rotationDegrees(90f));
+            pose_stack.translate(0.98, 0.5, 0.5);
+            pose_stack.mulPose(Axis.YP.rotationDegrees(90f));
         }
 
-        itemRenderer.renderStatic(symbol.symbol_item.getDefaultInstance(), ItemTransforms.TransformType.FIXED, light, OverlayTexture.NO_OVERLAY, matrix, mbs, 0);
-        matrix.popPose();
+        itemRenderer.renderStatic(symbol.symbol_item.getDefaultInstance(), ItemDisplayContext.FIXED, light, 0, pose_stack, mbs, symbol.getLevel(), 0);
+        pose_stack.popPose();
     }
 
     @Override

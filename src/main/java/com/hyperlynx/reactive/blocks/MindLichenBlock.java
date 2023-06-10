@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.MultifaceSpreader;
@@ -28,10 +29,10 @@ public class MindLichenBlock extends MultifaceBlock implements BonemealableBlock
         return spreader;
     }
 
-    public boolean isValidBonemealTarget(BlockGetter getter, BlockPos pos, BlockState state, boolean flag) {
-        return Direction.stream().anyMatch((matching_direction) -> {
-            return this.spreader.canSpreadInAnyDirection(state, getter, pos, matching_direction.getOpposite());
-        });
+    @Override
+    public boolean isValidBonemealTarget(LevelReader reader, BlockPos pos, BlockState state, boolean flag) {
+        return Direction.stream().anyMatch((matching_direction) ->
+                this.spreader.canSpreadInAnyDirection(state, reader, pos, matching_direction.getOpposite()));
     }
 
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos pos, BlockState state) {

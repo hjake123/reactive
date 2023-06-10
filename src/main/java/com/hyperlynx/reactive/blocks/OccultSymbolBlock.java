@@ -95,7 +95,7 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 1500, 0));
-                player.hurt(DamageSource.MAGIC, 14);
+                player.hurt(level.damageSources().magic(), 14);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
             }
             case 1 -> {
@@ -108,13 +108,13 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Blaze was extracted.
                 player.setTicksFrozen(800);
                 player.setRemainingFireTicks(0);
-                player.hurt(DamageSource.FREEZE, 5);
+                player.hurt(level.damageSources().freeze(), 5);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_blaze"), true);
             }
             case 3 -> {
                 // A Bottle of Nature was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.POISON, 800, 2));
-                player.hurt(DamageSource.MAGIC, 2);
+                player.hurt(level.damageSources().magic(), 2);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_verdant"), true);
             }
             case 4 -> {
@@ -142,7 +142,7 @@ public class OccultSymbolBlock extends SymbolBlock{
 
         if(bottle_broke) {
             player.displayClientMessage(Component.translatable("message.reactive.bottle_broke"), true);
-            player.hurt(DamageSource.GENERIC, 1);
+            player.hurt(level.damageSources().generic(), 1);
             level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 0.5F, 1.0F);
         }
         else{

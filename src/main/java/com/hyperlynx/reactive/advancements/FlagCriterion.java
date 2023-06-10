@@ -30,7 +30,7 @@ public class FlagCriterion extends SimpleCriterionTrigger<FlagCriterion.FlagTrig
     }
 
     class FlagTriggerInstance extends AbstractCriterionTriggerInstance {
-        public FlagTriggerInstance(EntityPredicate.Composite pred) {
+        public FlagTriggerInstance(ContextAwarePredicate pred) {
             super(crit_rl, pred);
         }
 
@@ -45,7 +45,7 @@ public class FlagCriterion extends SimpleCriterionTrigger<FlagCriterion.FlagTrig
     }
 
     @Override
-    protected @NotNull FlagCriterion.FlagTriggerInstance createInstance(JsonObject p_66248_, EntityPredicate.Composite pred, DeserializationContext p_66250_) {
+    protected @NotNull FlagCriterion.FlagTriggerInstance createInstance(JsonObject p_66248_, ContextAwarePredicate pred, DeserializationContext p_66250_) {
         return new FlagTriggerInstance(pred);
     }
 

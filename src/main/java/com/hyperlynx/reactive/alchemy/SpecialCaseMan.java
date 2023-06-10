@@ -28,10 +28,7 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -164,7 +161,7 @@ public class SpecialCaseMan {
 
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
-        EntityType.BLAZE.spawn((ServerLevel) level, null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
+        EntityType.BLAZE.spawn((ServerLevel) level, (CompoundTag) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
@@ -180,14 +177,14 @@ public class SpecialCaseMan {
     private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20))
-                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             else
-                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             else
-                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         }
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
@@ -216,12 +213,12 @@ public class SpecialCaseMan {
 
         boolean foundTarget = false;
 
-        UUID thrower = e.getThrower();
+        Entity thrower = e.getOwner();
         if(thrower != null) {
-            Player player = l.getPlayerByUUID(thrower);
+            Player player = l.getPlayerByUUID(thrower.getUUID());
             if(!l.isClientSide)
                 CriteriaTriggers.ENDER_PEARL_DISSOLVE_TRIGGER.trigger((ServerPlayer) player);
-            if(player != null && e.getLevel().dimension().equals(player.getLevel().dimension())){
+            if(player != null && e.level().dimension().equals(player.level().dimension())){
                 player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
                 foundTarget = true;
             }
@@ -278,7 +275,7 @@ public class SpecialCaseMan {
 
     // Explode gunpowder due to blaze.
     private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
-        l.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
+        l.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
         e.kill();
     }
 
@@ -302,7 +299,7 @@ public class SpecialCaseMan {
         for(int i = 0; i < pagecount; i++){
             StringBuilder gibberish = new StringBuilder();
             for(int j = 0; j < 200; j++){
-                gibberish.append(CHAR_LIST.charAt(e.level.random.nextInt(CHAR_LIST.length())));
+                gibberish.append(CHAR_LIST.charAt(e.level().random.nextInt(CHAR_LIST.length())));
             }
             if(i < pages.size())
                 pages.set(i, StringTag.valueOf(gibberish.toString()));
@@ -310,8 +307,8 @@ public class SpecialCaseMan {
                 pages.add(i, StringTag.valueOf(gibberish.toString()));
         }
 
-        e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
-        e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
+        e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+        e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
         c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 20, 50));
         c.setDirty();
     }
@@ -379,12 +376,12 @@ public class SpecialCaseMan {
                     continue;
                 e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 300, 0));
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 0));
-                e.hurt(DamageSource.MAGIC, 10);
+                e.hurt(e.level().damageSources().magic(), 10);
                 if(e instanceof Player){
                     CriteriaTriggers.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
                 }
             }
-            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundSource.BLOCKS, 1, 1);
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.get(), SoundSource.BLOCKS, 1, 1);
         }
     }
 
@@ -395,7 +392,7 @@ public class SpecialCaseMan {
         if(!c.getLevel().isClientSide()){
             List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
             for(LivingEntity e : nearby_ents){
-                e.hurt(DamageSource.IN_FIRE, 12);
+                e.hurt(e.level().damageSources().inFire(), 12);
                 e.setSecondsOnFire(3);
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);

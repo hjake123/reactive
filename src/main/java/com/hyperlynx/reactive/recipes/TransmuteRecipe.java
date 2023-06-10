@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.recipes;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.PowerBearer;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -73,12 +74,12 @@ public class TransmuteRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container container, RegistryAccess access) {
         return product.copy();
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess access) {
         return product;
     }
 

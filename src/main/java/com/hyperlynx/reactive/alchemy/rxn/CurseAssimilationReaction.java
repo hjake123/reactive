@@ -8,6 +8,7 @@ import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -35,7 +36,7 @@ public class CurseAssimilationReaction extends Reaction{
             List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
                 if (CrystalIronItem.effectNotBlocked(e, 1)) {
-                    e.hurt(DamageSource.MAGIC, 1);
+                    e.hurt(crucible.getLevel().damageSources().magic(), 1);
                 }
             }
         }

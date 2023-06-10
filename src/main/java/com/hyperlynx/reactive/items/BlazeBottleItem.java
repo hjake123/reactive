@@ -25,7 +25,7 @@ public class BlazeBottleItem extends PowerBottleItem {
             if(entity instanceof Player && !((Player) entity).isCreative() && ((Player) entity).isHolding(Registration.BLAZE_BOTTLE.get())){
                 tick_count++;
                 if(tick_count > 20){
-                    entity.hurt(DamageSource.IN_FIRE, 2);
+                    entity.hurt(level.damageSources().inFire(), 2);
                     tick_count = 0;
                 }
             }else{

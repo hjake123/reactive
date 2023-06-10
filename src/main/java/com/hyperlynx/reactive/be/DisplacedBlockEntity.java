@@ -1,7 +1,10 @@
 package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.Registration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -39,7 +42,9 @@ public class DisplacedBlockEntity extends BlockEntity {
     @Override
     public void load(@NotNull CompoundTag main_tag) {
         super.load(main_tag);
-        self_state = NbtUtils.readBlockState(main_tag.getCompound(BLOCK_STATE_TAG));
+        if(Minecraft.getInstance().level == null)
+            return; // This can't be!
+        self_state = NbtUtils.readBlockState(Minecraft.getInstance().level.holderLookup(Registries.BLOCK),main_tag.getCompound(BLOCK_STATE_TAG));
         if(main_tag.contains(CHAIN_TARGET_TAG))
             chain_target = NbtUtils.readBlockPos(main_tag.getCompound(CHAIN_TARGET_TAG));
     }

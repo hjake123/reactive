@@ -10,8 +10,7 @@ import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
@@ -23,6 +22,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
 import java.util.Objects;
 
@@ -94,7 +94,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         poseStack.pushPose();
         // 0.5625 is the 'full' water level.
         poseStack.translate(0, 0.5625, 0);
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(90f));
+        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = getSprite(crucible);
             Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));

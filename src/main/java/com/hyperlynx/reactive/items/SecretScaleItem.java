@@ -47,7 +47,7 @@ public class SecretScaleItem extends Item {
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
         entity.setNoGravity(true);
         if(entity.tickCount % 4 == 1)
-            entity.getLevel().addParticle(ParticleTypes.END_ROD, entity.getX(), entity.getY()+0.15, entity.getZ(), 0,0,0);
+            entity.level().addParticle(ParticleTypes.END_ROD, entity.getX(), entity.getY()+0.15, entity.getZ(), 0,0,0);
         return false;
     }
 
@@ -58,7 +58,7 @@ public class SecretScaleItem extends Item {
             return InteractionResultHolder.pass(player.getItemInHand(hand));;
 
         Vec3 start = player.getEyePosition();
-        Vec3 end = start.add(player.getLookAngle().scale(player.getReachDistance()));
+        Vec3 end = start.add(player.getLookAngle().scale(player.getEntityReach()));
         EntityHitResult boatHit = ProjectileUtil.getEntityHitResult(
                 player, start, end, new AABB(start, end), e -> e instanceof Boat, Double.MAX_VALUE
         );

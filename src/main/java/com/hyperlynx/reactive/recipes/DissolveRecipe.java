@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.recipes;
 
 import com.hyperlynx.reactive.Registration;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -36,14 +37,14 @@ public class DissolveRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(Container container) {
+    public @NotNull ItemStack assemble(Container container, RegistryAccess access) {
         ItemStack result = product.copy();
         result.setCount(product.getCount() * container.getItem(1).getCount());
         return result;
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess access) {
         return product;
     }
 

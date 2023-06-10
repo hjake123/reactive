@@ -32,13 +32,8 @@ public class SymbolBlock extends Block implements EntityBlock {
     protected static final VoxelShape SOUTH_SHAPE = Block.box(2, 2, 0, 14, 14, 1);
 
     public SymbolBlock(BlockBehaviour.Properties props) {
-        super(props);
+        super(props.pushReaction(PushReaction.DESTROY));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP));
-    }
-
-    @Override
-    public PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.DESTROY;
     }
 
     @Override

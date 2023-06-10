@@ -23,12 +23,12 @@ public class VexMixin {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
             symbol_maybe = BlockPos.findClosestMatch(((Vex)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Vex)(Object)this).level.getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+                    blockPos -> ((Vex)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 
         if(symbol_maybe.isPresent()) {
-            ((Vex) (Object) this).hurt(DamageSource.MAGIC, 1);
+            ((Vex) (Object) this).hurt(((Vex) (Object) this).level().damageSources().magic(), 1);
         }
     }
 
