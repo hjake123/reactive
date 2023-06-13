@@ -4,19 +4,14 @@ import com.hyperlynx.reactive.be.SymbolBlockEntity;
 import com.hyperlynx.reactive.blocks.SymbolBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.Items;
-import org.joml.Quaternionf;
 
 public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
 
@@ -50,7 +45,7 @@ public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
             pose_stack.mulPose(Axis.YP.rotationDegrees(90f));
         }
 
-        itemRenderer.renderStatic(symbol.symbol_item.getDefaultInstance(), ItemDisplayContext.FIXED, light, 0, pose_stack, mbs, symbol.getLevel(), 0);
+        itemRenderer.renderStatic(symbol.symbol_item.getDefaultInstance(), ItemDisplayContext.FIXED, light, overlay, pose_stack, mbs, symbol.getLevel(), 0);
         pose_stack.popPose();
     }
 
