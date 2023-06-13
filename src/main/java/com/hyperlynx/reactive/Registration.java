@@ -10,6 +10,7 @@ import com.hyperlynx.reactive.util.HyperMobEffect;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -54,6 +55,7 @@ public class Registration {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         BLOCKS.register(bus);
         ITEMS.register(bus);
+        CREATIVE_TABS.register(bus);
         MOB_EFFECTS.register(bus);
         POTIONS.register(bus);
         PARTICLES.register(bus);
@@ -65,10 +67,6 @@ public class Registration {
     }
 
     // ----------------------- REGISTRATION ------------------------
-    // Register the creative mode tab.
-    public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
-            () -> CreativeModeTab.builder().build());
-    
     // Register the all-important Crucible.
     public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
             () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
@@ -83,7 +81,11 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get(), SHULKER_CRUCIBLE.get()).build(null));
 
-    // Register the Symbol blocks, items, and the BE.
+    // Register the rest of the blocks
+    public static final RegistryObject<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
+            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
+    public static final RegistryObject<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
+
     public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> COPPER_SYMBOL_ITEM = SymbolItem.fromBlock(COPPER_SYMBOL);
@@ -100,10 +102,10 @@ public class Registration {
             () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = SymbolItem.fromBlock(OCCULT_SYMBOL);
 
+    // Register the Symbol BE
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get()).build(null));
 
-    // Additional blocks
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
             () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
     public static final RegistryObject<Item> BLAZE_ROD_ITEM = fromBlock(BLAZE_ROD);
@@ -136,10 +138,6 @@ public class Registration {
             () -> new RunestoneBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE)));
     public static final RegistryObject<Item> RUNESTONE_ITEM = fromBlock(RUNESTONE);
 
-    public static final RegistryObject<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
-            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
-    public static final RegistryObject<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
-
     public static final RegistryObject<Block> SALT_BLOCK = BLOCKS.register("salt_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.SAND)));
     public static final RegistryObject<Item> SALT_BLOCK_ITEM = fromBlock(SALT_BLOCK);
@@ -165,17 +163,18 @@ public class Registration {
 
     public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN);
 
+    public static final RegistryObject<Block> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
+            () -> new GravityChandelierBlock(BlockBehaviour.Properties.copy(Blocks.TORCH)));
+
+    public static final RegistryObject<Item> GRAVITY_CHANDELIER_ITEM = fromBlock(GRAVITY_CHANDELIER);
+
     public static final RegistryObject<Block> ACID_BLOCK = BLOCKS.register("acid_block",
             () -> new AcidBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).speedFactor(0.65F).strength(1.4F)));
 
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
 
-    public static final RegistryObject<Block> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
-            () -> new GravityChandelierBlock(BlockBehaviour.Properties.copy(Blocks.TORCH)));
-
-    public static final RegistryObject<Item> GRAVITY_CHANDELIER_ITEM = fromBlock(GRAVITY_CHANDELIER);
-
+    // Register the Gravity Chandelier BE
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
@@ -327,6 +326,18 @@ public class Registration {
 
     public static final RegistryObject<RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
     public static final RegistryObject<RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
+
+    // Register the creative mode tab.
+    public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
+            () -> CreativeModeTab.builder()
+                    .icon(() -> CRUCIBLE_ITEM.get().getDefaultInstance())
+                    .title(Component.translatable("reactive.tab"))
+                    .displayItems((params, output) -> {
+                        for(RegistryObject<Item> item_reg : ITEMS.getEntries()){
+                                output.accept(item_reg.get());
+                        }
+                    })
+                    .build());
 
     // ----------------------- METHODS ------------------------
 

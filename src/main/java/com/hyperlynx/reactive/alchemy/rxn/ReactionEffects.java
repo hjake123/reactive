@@ -239,7 +239,7 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
-            e.hurt(c.getLevel().damageSources().inFire(), 12);
+            e.hurt(c.getLevel().damageSources().inFire(), 7);
             e.setSecondsOnFire(7);
         }
         return c;

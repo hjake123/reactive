@@ -63,7 +63,7 @@ public class StaffEffects {
                         victim.setRemainingFireTicks(300);
                         victim.hurt(user.damageSources().inFire(), 7);
                     }
-                    victim.hurt(user.damageSources().magic(), 3);
+                    victim.hurt(user.damageSources().indirectMagic(user, user), 3);
                 }
             }
         }else{
@@ -85,8 +85,10 @@ public class StaffEffects {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim.equals(user))
                     continue;
+                if(victim.fireImmune())
+                    continue;
                 victim.setRemainingFireTicks(1000);
-                victim.hurt(user.damageSources().inFire(), 1);
+                victim.hurt(user.damageSources().mobAttack(user), 1);
             }
             if(user.level().getBlockState(blockHit.getBlockPos().above()).isAir())
                 user.level().setBlockAndUpdate(blockHit.getBlockPos().above(), Blocks.FIRE.defaultBlockState());
@@ -106,7 +108,7 @@ public class StaffEffects {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer)
                     continue; // This staff cannot hurt players.
-                victim.hurt(user.damageSources().generic(), 3);
+                victim.hurt(user.damageSources().indirectMagic(user, user), 3);
                 victim.knockback(0.3, user.level().random.nextDouble()*0.2 - 0.1, user.level().random.nextDouble()*0.2 - 0.1);
             }
         }else{
@@ -168,7 +170,7 @@ public class StaffEffects {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
-                victim.hurt(user.damageSources().magic(), 3);
+                victim.hurt(user.damageSources().indirectMagic(user, user), 3);
                 ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
             }
