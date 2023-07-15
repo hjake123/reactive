@@ -72,7 +72,13 @@ public class ReactionEffects {
     // Changes the Gold Symbol into Active Gold Foam, which spreads outwards for a limited distance and leaves Gold Foam behind.
     public static CrucibleBlockEntity foaming(CrucibleBlockEntity c) {
         BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        if(symbol_position == null)
+            return c;
+
         c.getLevel().setBlock(symbol_position, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.EFFECT,
+                c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
+                symbol_position.getX()+0.5, symbol_position.getY()+0.5, symbol_position.getZ()+0.5, 12, 7,0.4);
         return c;
     }
 

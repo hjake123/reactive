@@ -53,7 +53,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private void checkReactions(CrucibleBlockEntity crucible){
         crucible.reactions_to_render.clear();
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
-            if(r.conditionsMet(crucible)){
+            if(r.conditionsMet(crucible) == Reaction.Status.REACTING){
                 crucible.reactions_to_render.add(r);
             }
         }

@@ -66,6 +66,7 @@
   "jei.reactive.generic": "See the Journal of Alchemy to learn how to make this.",
   "jei.reactive.power": "This is one of the kinds of Power that can be collected in a Crucible. The icon is solely for display purposes.\n\nSee the Journal of Alchemy and experiment with different items to discover what might create this Power.",
   "jei.reactive.reaction_result": "This is the result of a world-specific reaction. See the Journal of Alchemy for details.",
+  "jei.reactive.reaction_input": "This is used in some world-specific reactions. See the Journal of Alchemy for details.",
   "message.reactive.extract_acid": "Your entire body hurts.",
   "message.reactive.extract_body": "You are hungry.",
   "message.reactive.extract_blaze": "You feel very cold.",
@@ -73,5 +74,13 @@
   "message.reactive.extract_light": "Your body seems to fade away.",
   "message.reactive.extract_verdant": "You feel strangely ill.",
   "message.reactive.bottle_broke": "The bottle shatters in your hand.",
-  "message.reactive.warp_blocked": "Your Ferrous Crystal prevented you from teleporting."
+  "message.reactive.warp_blocked": "Your Ferrous Crystal prevented you from teleporting.",
+  "text.reactive.measurement_header": "-- Measurement --",
+  "text.reactive.stable": "STABLE",
+  "text.reactive.single_power_reaction_missing_condition": "SINGLE POWER REACTION MISSING STIMULUS",
+  "text.reactive.multi_power_reaction_missing_condition": "MULTI POWER REACTION MISSING STIMULUS",
+  "text.reactive.power_too_weak": "BELOW REACTION POWER THRESHOLD",
+  "text.reactive.inhibited": "REACTION INHIBITED",
+  "text.reactive.reacting": "REACTING",
+  "text.reactive.measurement_empty": "WATER"
 }

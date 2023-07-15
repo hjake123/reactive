@@ -10,15 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 
 // Just a holder class for the various reaction render methods. Please only call these on the client thank you.
 public class ReactionRenders {
-    // Changes the Gold Symbol into Active Gold Foam, which spreads outwards for a limited distance and leaves Gold Foam behind.
-    public static CrucibleBlockEntity foaming(CrucibleBlockEntity c) {
-        BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
-        ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.EFFECT,
-                c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
-                symbol_position.getX()+0.5, symbol_position.getY()+0.5, symbol_position.getZ()+0.5, 12, 7,0.4);
-        return c;
-    }
-
     public static CrucibleBlockEntity smoke(CrucibleBlockEntity c) {
         ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.LARGE_SMOKE, c.getBlockPos(), 0.3F);
         return c;

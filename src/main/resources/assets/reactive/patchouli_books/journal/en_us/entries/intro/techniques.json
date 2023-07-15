@@ -14,7 +14,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(thing)Transmutations$(0), like the one described on the prior page, occur only once a Certain Threshold of Total Power has been reached. The Ratio of Powers does not matter -- only that the Threshold is passed."
+      "text": "$(o)$(item)Litmus Paper$(0) also reports whether the Powers in the Crucible could cause a reaction, and if not, why not. The messages are relatively self-explanatory, but keep in mind that they only refer to $(4)one of possibly many potential reactions$(0).$(br2)There is a priority system in place to ensure the most plausible reactions are reported on."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Transmutations$(0) (transforming an item into another) can only be Performed if a Certain Threshold of Total Power has been reached. Specifically, a Transmutation may occur if all Reagents are present and at least One crosses the unseen Threshold."
     },
     {
       "type": "patchouli:spotlight",
