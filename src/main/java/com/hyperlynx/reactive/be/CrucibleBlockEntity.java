@@ -85,6 +85,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public List<Reaction> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more efficiently render reactions, and is only updated on the client.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
+    public Reaction.Status reaction_status = Reaction.Status.STABLE; // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -179,6 +180,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             crucible.unlinkCrystal(level, pos, state);
         }
         crucible.sculkSpreader.clear();
+        crucible.reaction_status = Reaction.Status.STABLE;
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
@@ -265,10 +267,18 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // The method that performs reactions.
     private static void react(Level level, CrucibleBlockEntity crucible){
         crucible.used_crystal_this_cycle = false;
+        crucible.reaction_status = Reaction.Status.STABLE;
         for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
-            if (r.conditionsMet(crucible)) {
+            Reaction.Status reaction_status = r.conditionsMet(crucible);
+            // If the reaction should occur, conditionsMet will return REACTING.
+            if (reaction_status == Reaction.Status.REACTING) {
                 r.run(crucible);
                 crucible.setDirty();
+            }
+            // Only update the crucible reaction status if a higher priority status is in effect.
+            // The order is defined by their layout in Reaction.
+            if(reaction_status.ordinal() > crucible.reaction_status.ordinal()){
+                crucible.reaction_status = reaction_status;
             }
         }
         if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null)

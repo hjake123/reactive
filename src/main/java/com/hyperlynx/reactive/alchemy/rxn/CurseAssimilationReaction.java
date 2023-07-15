@@ -47,9 +47,11 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public boolean conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(CrucibleBlockEntity crucible){
         boolean has_curse = crucible.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
-        return crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse;
+        if (crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)
+            return Status.REACTING;
+        return Status.STABLE;
     }
 }
 

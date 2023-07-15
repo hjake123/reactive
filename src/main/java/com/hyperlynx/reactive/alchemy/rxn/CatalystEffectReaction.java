@@ -18,12 +18,16 @@ public class CatalystEffectReaction extends EffectReaction{
     }
 
     @Override
-    public boolean conditionsMet(CrucibleBlockEntity crucible) {
+    public Status conditionsMet(CrucibleBlockEntity crucible) {
+        Status reaction_status = super.conditionsMet(crucible);
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())) {
             if (entity_inside instanceof ItemEntity item_ent && item_ent.getItem().is(reactant)) {
-                return super.conditionsMet(crucible);
+                // The catalyst condition is met; return the check without catalyst consideration.
+                return reaction_status;
             }
         }
-        return false;
+        // The catalyst is missing.
+        // Return the super status, unless it is meant to react, in which case switch it to a missing condition.
+        return reaction_status == Status.REACTING ? Status.MISSING_STIMULUS : reaction_status;
     }
 }

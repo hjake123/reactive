@@ -1,16 +1,11 @@
 package com.hyperlynx.reactive.items;
 
-import ca.weblite.objc.Client;
-import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,25 +17,47 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LitmusPaperItem extends Item {
     public static final String TAG_MEASUREMENT = "Measurement";
+    public static final String TAG_STATUS = "Status";
     public LitmusPaperItem(Properties props) {
         super(props.stacksTo(1));
+    }
+
+    // Create a list of lines that is the measurment.
+    private List<Component> buildMeasurmentText(ItemStack stack){
+        List<Component> text = new ArrayList<>();
+        if(!stack.hasTag())
+            return text;
+
+        ListTag measurements = stack.getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
+        for(Tag tag : measurements){
+            text.add(Component.literal(((CompoundTag) tag).getString("value")));
+        }
+
+        if(measurements.isEmpty()){
+            text.add(Component.translatable("text.reactive.measurement_empty"));
+        }
+
+        StringTag reaction_status = (StringTag) stack.getTag().get(TAG_STATUS);
+        switch(Reaction.Status.valueOf(reaction_status.getAsString())){
+            case STABLE -> text.add(Component.translatable("text.reactive.stable"));
+            case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition"));
+            case POWER_TOO_WEAK -> text.add(Component.translatable("text.reactive.power_too_weak"));
+            case MISSING_STIMULUS -> text.add(Component.translatable("text.reactive.multi_power_reaction_missing_condition"));
+            case INHIBITED -> text.add(Component.translatable("text.reactive.inhibited"));
+            case REACTING -> text.add(Component.translatable("text.reactive.reacting"));
+        }
+        return text;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, level, hover_text, tooltip_flag);
-
-        if(!stack.hasTag())
-            return;
-
-        ListTag measurements = stack.getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
-        for(Tag tag : measurements){
-            hover_text.add(Component.literal(((CompoundTag) tag).getString("value")));
-        }
+        hover_text.addAll(buildMeasurmentText(stack));
     }
 
 
@@ -50,9 +67,9 @@ public class LitmusPaperItem extends Item {
             if(!player.getItemInHand(hand).hasTag())
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-            ListTag measurements = player.getItemInHand(hand).getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
-            for(Tag tag : measurements){
-                player.sendSystemMessage(Component.literal(((CompoundTag) tag).getString("value")));
+            player.sendSystemMessage(Component.translatable("text.reactive.measurement_header"));
+            for(Component line : buildMeasurmentText(player.getItemInHand(hand))){
+                player.sendSystemMessage(line);
             }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
@@ -65,7 +82,7 @@ public class LitmusPaperItem extends Item {
         }
 
         CrucibleBlockEntity crucible = (CrucibleBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
-        if(crucible == null || crucible.getTotalPowerLevel() == 0) {
+        if(crucible == null) {
             return InteractionResult.PASS;
         }
 
@@ -99,5 +116,7 @@ public class LitmusPaperItem extends Item {
         if(!paper.hasTag())
             paper.setTag(new CompoundTag());
         paper.getTag().put(TAG_MEASUREMENT, measurements);
+        paper.getTag().put(TAG_STATUS, StringTag.valueOf(crucible.reaction_status.toString()));
+
     }
 }

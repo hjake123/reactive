@@ -49,16 +49,29 @@ public abstract class Reaction {
         return this;
     }
 
-    public boolean conditionsMet(CrucibleBlockEntity crucible){
-        if(WorldSpecificValue.get("body_inhibition_threshold", 20, 200) < crucible.getPowerLevel(Powers.BODY_POWER.get()))
-            return false;
-
+    // Note that this also sets the reaction status, so all overrides should do that too.
+    public Status conditionsMet(CrucibleBlockEntity crucible){
         for(Power p : reagents.keySet()){
             if(!p.checkReactivity(crucible.getPowerLevel(p), reagents.get(p))){
-                return false;
+                if(crucible.getPowerLevel(p) > 0)
+                    return Status.POWER_TOO_WEAK;
+                return Status.STABLE;
             }
         }
-        return checkStimulus(crucible);
+        boolean met_conditions = checkStimulus(crucible);
+        if(met_conditions) {
+            if(crucible.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)) {
+                return Status.INHIBITED;
+            }
+            return Status.REACTING;
+        }
+        if(stimulus == Stimulus.NO_ELECTRIC){
+            return Status.INHIBITED;
+        }
+        if(reagents.size() == 1) {
+            return Status.VOLATILE;
+        }
+        return Status.MISSING_STIMULUS;
     }
 
     private boolean checkStimulus(CrucibleBlockEntity crucible){
@@ -108,6 +121,16 @@ public abstract class Reaction {
         SACRIFICE,
         END_CRYSTAL,
         NO_END_CRYSTAL
+    }
+
+    // The order of this enum declaration determines priority; lower on the list are more important.
+    public enum Status {
+        STABLE,
+        VOLATILE,
+        INHIBITED,
+        POWER_TOO_WEAK,
+        MISSING_STIMULUS,
+        REACTING
     }
 
     @Override

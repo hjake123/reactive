@@ -25,8 +25,14 @@ public class AnnihilationReaction extends EffectReaction{
     }
 
     @Override
-    public boolean conditionsMet(CrucibleBlockEntity crucible) {
-        return super.conditionsMet(crucible) && crucible.getTotalPowerLevel() > WorldSpecificValues.ANNIHILATION_THRESHOLD.get();
+    public Status conditionsMet(CrucibleBlockEntity crucible) {
+        if (super.conditionsMet(crucible) == Status.REACTING){
+            if(crucible.getTotalPowerLevel() > WorldSpecificValues.ANNIHILATION_THRESHOLD.get()){
+                return Status.REACTING;
+            }
+            return Status.POWER_TOO_WEAK;
+        }
+        return Status.STABLE;
     }
 
     @Override
