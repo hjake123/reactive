@@ -5,25 +5,28 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.items.StaffItem;
+import com.hyperlynx.reactive.recipes.DissolveRecipe;
+import com.hyperlynx.reactive.util.ConfigMan;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @JeiPlugin
 public class ReactiveJEIPlugin implements IModPlugin {
@@ -33,6 +36,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public static PowerIngredientType POWER_TYPE = new PowerIngredientType();
     public static PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
     public static PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
+    public static IJeiRuntime RUNTIME;
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -64,6 +68,28 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues());
+        if(ConfigMan.CLIENT.showPowerSources.get())
+            addPowerSourceRecipes(registration);
+    }
+
+    // TODO: this is bad! and slow!
+    private void addPowerSourceRecipes(IRecipeRegistration registration){
+        Set<Item> excluded = new HashSet<>();
+        ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
+        List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        for (DissolveRecipe r : purify_recipes) {
+            for(ItemStack stack: r.getReactant().getItems())
+                excluded.add(stack.getItem());
+        }
+
+        for(ItemStack i : registration.getIngredientManager().getAllIngredients(VanillaTypes.ITEM_STACK)){
+            if(Power.getSourcePower(i).size() > 0 && !excluded.contains(i.getItem())) {
+                registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), List.of(new DissolveRecipe(
+                        null,
+                        "power_source",
+                        Ingredient.of(i), ItemStack.EMPTY, false)));
+            }
+        }
     }
 
     private void addDescriptions(IRecipeRegistration registration) {
@@ -104,6 +130,11 @@ public class ReactiveJEIPlugin implements IModPlugin {
         IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(new ItemStack(staff.repair_item)),  List.of(full_durability));
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        RUNTIME = jeiRuntime;
     }
 
 

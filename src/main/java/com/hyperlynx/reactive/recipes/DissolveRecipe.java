@@ -48,6 +48,10 @@ public class DissolveRecipe implements Recipe<Container> {
         return product;
     }
 
+    public ItemStack getResultItem() {
+        return product;
+    }
+
     public Ingredient getReactant(){ return reactant; }
 
     @Override

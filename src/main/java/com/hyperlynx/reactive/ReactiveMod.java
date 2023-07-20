@@ -24,15 +24,6 @@ public class ReactiveMod
     public static final String MODID = "reactive";
     public static final Logger LOGGER = LogManager.getLogger();
 
-//    public static final CreativeModeTab CREATIVE_TAB = new CreativeModeTab(MODID)
-//    {
-//        @Nonnull
-//        @Override
-//        public ItemStack makeIcon() {
-//            return new ItemStack(Registration.CRUCIBLE_ITEM.get());
-//        }
-//    };
-
     public ReactiveMod() {
         Registration.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientRegistration::init);
@@ -41,6 +32,7 @@ public class ReactiveMod
         MinecraftForge.EVENT_BUS.register(WORLD_SPECIFIC_VALUE);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
     }
 
 }
