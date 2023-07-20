@@ -52,7 +52,7 @@ There are two config files; one in the config folder, and one in each world's se
 #Client Side Options:
 [config]
 	#Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.
-	showPowerSources = true
+	showPowerSources = false
 	(This shows the players every item that is a power source. It doesn't match my original design philosophy, but if your pack adds unintuitive Power sources,
 	this will make things a lot easier. Also, players could circumvent the secrecy using JEI tag searches anyway so it was time for this feature to exist.)
 	
