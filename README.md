@@ -46,7 +46,19 @@ There are two config files; one in the config folder, and one in each world's se
 	resetSeed = true 
  (is true by default and set to false after the world seed is written to this file)
  (if you want deterministic behavior, set this to false in a defaultconfigs copy of the file and choose your own seed)
-
+```
+### CLIENT CONFIG
+```
+#Client Side Options:
+[config]
+	#Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.
+	showPowerSources = true
+	(This shows the players every item that is a power source. It doesn't match my original design philosophy, but if your pack adds unintuitive Power sources,
+	this will make things a lot easier. Also, players could circumvent the secrecy using JEI tag searches anyway so it was time for this feature to exist.)
+	
+	#Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.
+	doNotChangeWaterTexture = false
+	(This is a Rubidium compat feature, since with Rubidium installed Crucible water will not render correctly.)
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
