@@ -80,6 +80,8 @@ Note that blaze sources cannot be added.
 To specify that an item is "high potency", i.e. that it should return substantially more power than normal, assign it to the tag ```reactive:high_potency```.
 Please take care not to replace my tag definition unless you want to overwrite my assignments of items to powers.
 
+Keep in mind as well that by default players will not be able to look up which items source which powers. That's part of the fun of experimenting in the mod! However, there is a config option in the client config to show this information to the player though a JEI interaction. Decide if you want to use that option carefully.
+
 # Adding Recipes
 ### Specifying Powers
 Whenever you need to write a Power into one of the following recipes 
