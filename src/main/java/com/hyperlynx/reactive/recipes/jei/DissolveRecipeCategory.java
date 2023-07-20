@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.recipes.jei;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -16,9 +17,13 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import com.hyperlynx.reactive.util.ConfigMan;
 
 import java.util.List;
+
+import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.POWER_TYPE;
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
@@ -56,6 +61,14 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
         output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getResultItem());
+
+        if(ConfigMan.CLIENT.showPowerSources.get()){
+            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 20);
+            power_slot.setSlotName("power_result");
+            for (ItemStack input : recipe.getReactant().getItems()) {
+                power_slot.addIngredients(POWER_TYPE, Power.getSourcePower(input));
+            }
+        }
     }
 
     @Override

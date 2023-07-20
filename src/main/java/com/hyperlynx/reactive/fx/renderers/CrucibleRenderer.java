@@ -23,6 +23,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import com.hyperlynx.reactive.util.ConfigMan;
 
 import java.util.Objects;
 
@@ -35,6 +36,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private TextureAtlasSprite getSprite(CrucibleBlockEntity crucible){
+        if(ConfigMan.CLIENT.doNotChangeWaterTexture.get())
+            return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+
         int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
 
         if(crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){

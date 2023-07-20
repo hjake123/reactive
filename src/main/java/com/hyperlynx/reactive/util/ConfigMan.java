@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.util;
 
 import com.google.common.collect.Lists;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -55,6 +56,25 @@ public class ConfigMan {
     public static final ForgeConfigSpec serverSpec;
     public static final Server SERVER;
 
+    public static class Client {
+        public ForgeConfigSpec.BooleanValue showPowerSources;
+        public ForgeConfigSpec.BooleanValue doNotChangeWaterTexture;
+
+        Client(ForgeConfigSpec.Builder builder){
+            builder.comment("Client Side Options:")
+                    .push("config");
+            showPowerSources = builder.comment("Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.")
+                    .define("showPowerSources", false);
+            doNotChangeWaterTexture = builder.comment("Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.")
+                    .define("doNotChangeWaterTexture", false);
+
+            builder.pop();
+        }
+    }
+
+    public static final ForgeConfigSpec clientSpec;
+    public static final Client CLIENT;
+
     static {
         final Pair<Common, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(Common::new);
         commonSpec = commonSpecPair.getRight();
@@ -63,6 +83,10 @@ public class ConfigMan {
         final Pair<Server, ForgeConfigSpec> serverSpecPair = new ForgeConfigSpec.Builder().configure(Server::new);
         serverSpec = serverSpecPair.getRight();
         SERVER = serverSpecPair.getLeft();
+
+        final Pair<Client, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(Client::new);
+        clientSpec = clientSpecPair.getRight();
+        CLIENT = clientSpecPair.getLeft();
     }
 
 }
