@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -49,6 +50,8 @@ public class DisplacerItem extends Item {
                 if(level.getBlockState(selected).getBlock() instanceof DisplacedBlock)
                     continue;
                 DisplacedBlock.displace(level.getBlockState(selected), selected, level, 200);
+                if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
+                    context.getItemInHand().hurtAndBreak(1, splayer, (LivingEntity) -> {});
                 break;
             }
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
@@ -60,6 +63,8 @@ public class DisplacerItem extends Item {
         if(displace_worked){
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.0F);
+            if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
+                context.getItemInHand().hurtAndBreak(1, splayer, (LivingEntity) -> {});
             return InteractionResult.SUCCESS;
         }
         level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),

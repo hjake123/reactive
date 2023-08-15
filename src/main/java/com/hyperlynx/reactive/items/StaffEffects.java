@@ -161,14 +161,14 @@ public class StaffEffects {
     public static Player missile(Player user){
         if (user instanceof ServerPlayer) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(7);
+            aoe = aoe.inflate(6);
             List<LivingEntity> nearby_ents = user.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
             for(int i = 0; i < 3; i++) {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level.random.nextInt(0, nearby_ents.size()));
-                victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
+                victim.hurt(DamageSource.playerAttack(user).setMagic(), 2);
                 ParticleScribe.drawParticleZigZag(user.level, Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
             }
