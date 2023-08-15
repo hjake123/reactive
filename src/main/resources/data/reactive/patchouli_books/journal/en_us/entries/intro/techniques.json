@@ -2,6 +2,8 @@
   "name": "Points of Technique",
   "icon": "reactive:litmus_paper",
   "category": "reactive:intro",
+  "advancement": "reactive:make_crucible",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",

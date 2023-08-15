@@ -25,7 +25,7 @@ public class Power {
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
@@ -34,7 +34,7 @@ public class Power {
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
@@ -43,7 +43,7 @@ public class Power {
         this.color = color;
         this.bottle = bottle;
         this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
@@ -53,7 +53,7 @@ public class Power {
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
@@ -62,7 +62,7 @@ public class Power {
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
@@ -71,7 +71,7 @@ public class Power {
         this.color = color;
         this.bottle = bottle;
         this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 33, 200);
+        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 

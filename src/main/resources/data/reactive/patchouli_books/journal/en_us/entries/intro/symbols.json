@@ -2,10 +2,11 @@
   "name": "Metallurgic Symbols",
   "icon": "reactive:copper_symbol",
   "category": "reactive:intro",
+  "advancement": "reactive:make_crucible",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(item)Symbols$(1) are a method of communicating one's intention to a higher power. By forming the metals into distinctive shapes, one can invoke the gods and have them do your bidding. $(0)$(br2)$(o)You can see what I'm working with here... Let me summarize."
+      "text": "$(o)$(item)Symbols$(0) change the way the Crucible interacts with its surroundings. Each has its own function. $(p)No special binding procedure is needed; simply place the Symbols within a few block of a Crucible."
     },
     {
       "type": "reactive:transmute",

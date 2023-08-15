@@ -2,13 +2,24 @@ package com.hyperlynx.reactive.fx.particles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleScribe {
+    public static void drawParticle(Level level, ParticleOptions opt, double x, double y, double z) {
+        if (level.isClientSide()) {
+            level.addParticle(opt, x, y, z, 0, 0, 0);
+        } else {
+            ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+        }
+    }
+
     public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise) {
         for (int i = 0; i < frequency; i++) {
             double u = level.random.nextDouble();
@@ -20,11 +31,7 @@ public class ParticleScribe {
             y += (level.random.nextFloat() - 0.5) * noise;
             z += (level.random.nextFloat() - 0.5) * noise;
 
-            if (level.isClientSide()) {
-                level.addParticle(opt, x, y, z, 0, 0, 0);
-            } else {
-                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
-            }
+            drawParticle(level, opt, x, y, z);
         }
     }
 

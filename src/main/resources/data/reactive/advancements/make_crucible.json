@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "make_crucible": {
+      "trigger": "reactive:make_crucible_criterion"
+    },
+    "have_crucible": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:crucible"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "make_crucible",
+      "have_crucible"
+    ]
+  ]
+}

@@ -58,12 +58,12 @@ public class OccultSymbolBlock extends SymbolBlock{
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource source) {
         if(!state.getValue(ACTIVE))
             return;
-        double d0 = random.nextDouble() * 8 - 4;
-        double d1 = random.nextDouble() * 8 - 4;
-        double d2 = random.nextDouble() * 8 - 4;
+        double d0 = source.nextDouble() * 8 - 4;
+        double d1 = source.nextDouble() * 8 - 4;
+        double d2 = source.nextDouble() * 8 - 4;
         level.addParticle(Registration.SMALL_BLACK_RUNE_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 

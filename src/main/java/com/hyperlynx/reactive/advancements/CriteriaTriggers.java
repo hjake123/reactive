@@ -6,6 +6,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {
     //Register advancement criteria for the book
+    public static final FlagCriterion MAKE_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_crucible_criterion"));
     public static final FlagCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
     public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
     public static final FlagCriterion BE_CURSED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
@@ -25,6 +26,7 @@ public class CriteriaTriggers {
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(MAKE_CRUCIBLE_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_CURSED_TRIGGER));

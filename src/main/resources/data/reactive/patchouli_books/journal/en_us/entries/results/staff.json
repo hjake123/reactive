@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)Once the staff is tempered, the creation process can be completed by expelling a large amount of one of the six basic powers. The staff should gain an ability corresponding to that power."
+      "text": "$(1)Once the staff is tempered, the creation process can be completed by expelling any amount of one of the six basic powers. The staff should gain an ability corresponding to that power."
     }
   ],
   "extra_recipe_mappings": {

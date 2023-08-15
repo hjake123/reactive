@@ -31,6 +31,7 @@ public class AlchemyScrollItem extends SimpleFoiledItem {
                 level.setBlock(context.getClickedPos(), Registration.CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.8F);
+                CriteriaTriggers.MAKE_CRUCIBLE_TRIGGER.trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())

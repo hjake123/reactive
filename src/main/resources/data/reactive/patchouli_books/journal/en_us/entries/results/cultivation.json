@@ -14,7 +14,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "vine_plus_light",
-      "text": "Additionally, certain Naturally Occurring plants can be replicated by fusing a $(item)Vine$(0) with various Base Powers."
+      "text": "Additionally, certain plants can be Created by fusing a $(item)Vine$(0) with various Base Powers."
     },
     {
       "type": "reactive:transmute",

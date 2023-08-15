@@ -2,6 +2,7 @@
   "name": "Salts",
   "icon": "reactive:salt",
   "category": "reactive:intro",
+  "advancement": "reactive:make_crucible",
   "pages": [
     {
       "type": "patchouli:text",
