@@ -270,6 +270,9 @@ public class Registration {
     public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
+    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
+            () -> new DisplacerItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xC0BF77)
