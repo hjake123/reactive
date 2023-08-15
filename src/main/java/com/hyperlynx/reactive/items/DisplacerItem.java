@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -15,11 +16,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class DisplacerItem extends Item {
-    final int MAX_TUNNEL_DEPTH = 10;
-
+    final int MAX_TUNNEL_DEPTH = 8;
     public DisplacerItem(Properties props) {
         super(props);
     }
@@ -29,7 +30,17 @@ public class DisplacerItem extends Item {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
+
         if(state.getBlock() instanceof DisplacedBlock){
+            if(context.isInside()){
+                if(context.getPlayer() != null && context.getPlayer().getXRot() > 20 && !context.getClickedFace().equals(Direction.UP)){
+                    pos = pos.below();
+                }
+                if(context.getPlayer() != null && context.getPlayer().getXRot() < -20 && !context.getClickedFace().equals(Direction.DOWN)){
+                    pos = pos.above();
+                }
+            }
+
             // Scan up to MAX_TUNNEL_DEPTH blocks forward and try to displace another.
             // Since this may be called repeatedly it can be used to make a pathway.
             BlockPos selected = pos;
