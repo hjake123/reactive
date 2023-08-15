@@ -407,7 +407,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
-            addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
+            if(!event.getSource().isFire())
+                addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
             return;
         }
 
