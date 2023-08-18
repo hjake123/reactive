@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:motion_salt"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.motion_salt"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.motion_salt"
+    }
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:motion_salt"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "reactive:see_synthesis"
+}

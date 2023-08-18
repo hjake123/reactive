@@ -1,4 +1,19 @@
 {
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_pearl"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.blink"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.blink"
+    },
+    "announce_to_chat": false,
+    "show_toast": false,
+    "hidden": true
+  },
+  "parent": "reactive:make_crucible",
   "criteria": {
     "get_dissolve_teleported": {
       "trigger": "reactive:dissolve_tp_criterion"

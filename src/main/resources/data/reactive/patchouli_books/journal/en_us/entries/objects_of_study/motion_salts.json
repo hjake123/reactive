@@ -2,7 +2,7 @@
   "name": "Motion Salts",
   "icon": "reactive:motion_salt",
   "category": "reactive:objects_of_study",
-  "advancement": "reactive:see_block_fall",
+  "advancement": "reactive:get_motion_salts",
   "pages": [
     {
       "type": "patchouli:spotlight",

@@ -20,6 +20,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -270,13 +271,14 @@ public class Registration {
     public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
-            () -> new DisplacerItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(350)));
+            () -> new DisplacerItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
+                    .defaultDurability(350)));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
-            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xC0BF77)
+            () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
-                            (double)-1F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",

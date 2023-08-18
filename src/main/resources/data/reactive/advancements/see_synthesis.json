@@ -1,4 +1,16 @@
 {
+  "display": {
+    "icon": {
+      "item": "reactive:volt_cell"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.synthesis"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.synthesis"
+    }
+  },
+  "parent": "reactive:make_crucible",
   "criteria": {
     "see_synthesis": {
       "trigger": "reactive:see_synthesis_criterion"

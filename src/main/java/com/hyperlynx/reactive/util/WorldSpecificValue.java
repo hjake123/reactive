@@ -16,22 +16,29 @@ Also, the class sets the seed to the world seed for default configurations.
 
 To ensure the values are different from each other, I add the value from a hash of a placeholder alias string, which is
 meant to be unique per instance. This also prevents drawing from the randomizer more than once.
+
+When called outside of a world (by the data generator) it uses a seed of 0.
 */
 public class WorldSpecificValue {
+    private static long getSeed(){
+        if(ConfigMan.serverSpec.isLoaded())
+            return ConfigMan.SERVER.seed.get();
+        return 0;
+    }
     public static int get(String alias, int min, int max){
-        long seed = ConfigMan.SERVER.seed.get();
+        long seed = getSeed();
         Random rand = new Random(seed + alias.hashCode());
         return rand.nextInt(max-min + 1) + min;
     }
 
     public static float get(String alias, float min, float max){
-        long seed = ConfigMan.SERVER.seed.get();
+        long seed = getSeed();
         Random rand = new Random(seed + alias.hashCode());
         return rand.nextFloat(min, max);
     }
 
     public static boolean getBool(String alias, float chance){
-        long seed = ConfigMan.SERVER.seed.get();
+        long seed = getSeed();
         Random rand = new Random(seed + alias.hashCode());
         return rand.nextFloat() < chance;
     }

@@ -22,6 +22,15 @@
     },
     {
       "type": "patchouli:text",
+      "text": "And that's not all! With a little ingenuity, it should be possible to harness this effect on the portable scale. I present: the $(item)Displacement Mallet$(0)! $(p)Using the Mallet on any Displacable Block will cause said Block to become Displaced. It's as simple as That! You can even extend the Area of Displacement by repeatedly hitting the same Displaced Block."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:displacer",
+      "text": "The appearance leaves something to be desired, but each Necessary Component is Present: the Acid to induce a Charge, the Copper to carry it, and of course the Motion Salts to translate that energy into a Displacement effect."
+    },
+    {
+      "type": "patchouli:text",
       "text": "I'm sure that this property has many creative uses -- and, of course, the fact that even mundane material can be displaced is quite intriguing. Perhaps$(br2)$(o)From here, he switches to near unintelligible theory. While I don't think his explanation bears repeating here, I don't have a better one, so... just accept it, I suppose."
     }
   ]

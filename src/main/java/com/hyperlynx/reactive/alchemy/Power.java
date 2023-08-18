@@ -77,9 +77,13 @@ public class Power {
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
     public static Power readPower(CompoundTag tag){
+        return readPower(tag, "name");
+    }
+
+    public static Power readPower(CompoundTag tag, String power_key){
         Power ret = null;
         for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if(reg.get().getId().equals(tag.getString("name"))){
+            if(reg.get().getId().equals(tag.getString(power_key))){
                 ret = reg.get();
                 break;
             }
@@ -119,8 +123,8 @@ public class Power {
     public static int getSourceLevel(ItemStack i) {
         return WorldSpecificValue.get(
                 "power_" + i.getItem().getDescriptionId(),
-                i.is(AlchemyTags.highPower) ? 250: 25,
-                i.is(AlchemyTags.highPower) ? 500: 75);
+                i.is(AlchemyTags.highPower) ? 250: 40,
+                i.is(AlchemyTags.highPower) ? 500: 90);
     }
 
     public boolean hasBottle(){

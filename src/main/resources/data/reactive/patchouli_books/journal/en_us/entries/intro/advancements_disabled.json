@@ -2,9 +2,8 @@
   "name": "Advancement Gating",
   "icon": "minecraft:book",
   "category": "reactive:intro",
-  "secret": true,
   "priority": true,
-  "flag": "advancements_disabled",
+  "flag": "|advancements_disabled, advancements_disabled_reactive:journal",
   "pages": [
     {
       "type": "patchouli:text",

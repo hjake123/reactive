@@ -1,8 +1,20 @@
 {
+    "display": {
+      "icon": {
+        "item": "reactive:framed_motion_salt_block"
+      },
+      "title": {
+        "translate": "advancement.reactive.title.displacement"
+      },
+      "description": {
+        "translate": "advancement.reactive.text.displacement"
+      },
+      "hidden": true
+  },
   "criteria": {
     "criterion": {
       "trigger": "reactive:see_displacement_criterion"
     }
   },
-  "parent": "reactive:see_block_fall"
+  "parent": "reactive:get_motion_salts"
 }

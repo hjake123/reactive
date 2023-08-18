@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:scroll"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.root"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.root"
+    },
+    "background": "reactive:textures/gui/advancements.png",
+    "announce_to_chat": false,
+    "show_toast": false
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:scroll"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

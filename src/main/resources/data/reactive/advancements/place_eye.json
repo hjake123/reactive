@@ -1,4 +1,18 @@
 {
+  "display": {
+    "icon": {
+      "item": "minecraft:ender_eye"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.put_eye"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.put_eye"
+    },
+    "announce_to_chat": false,
+    "show_toast": false,
+    "hidden": true
+  },
   "criteria": {
     "criterion": {
       "trigger": "reactive:place_eye_criterion"

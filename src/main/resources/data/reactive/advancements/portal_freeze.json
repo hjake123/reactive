@@ -1,4 +1,16 @@
 {
+  "display": {
+    "icon": {
+      "item": "reactive:solid_portal"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.freeze_portal"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.freeze_portal"
+    },
+    "hidden": true
+  },
   "criteria": {
     "criterion": {
       "trigger": "reactive:portal_freeze_criterion"

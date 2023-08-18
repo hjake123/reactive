@@ -103,13 +103,11 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
-        if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
-                int deflection_angle = level.random.nextInt(1, 360);
-                double x = Math.cos(Math.toRadians(deflection_angle)) * radius + center_x;
-                double z = Math.sin(Math.toRadians(deflection_angle)) * radius + center_z;
-                level.addParticle(opt, x, pos.getY() + height, z, 0, 0, 0);
-            }
+        for(int i = 0; i < frequency; i++){
+            int deflection_angle = level.random.nextInt(1, 360);
+            double x = Math.cos(Math.toRadians(deflection_angle)) * radius + center_x;
+            double z = Math.sin(Math.toRadians(deflection_angle)) * radius + center_z;
+            drawParticle(level, opt, x, pos.getY() + height, z);
         }
     }
 
