@@ -213,14 +213,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 case 1 -> {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
-                        crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 20, 50));
+                        crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
                     }
                 }
 
                 case 2 -> {
                     // End Rods add light.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
-                        crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get("end_rod_power_amount", 30, 100));
+                        crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get("end_rod_power_amount", 100, 300));
                     }
                 }
 
@@ -292,17 +292,17 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
         boolean changed = false;
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
-            if(entity_inside instanceof ItemEntity){
+            if(entity_inside instanceof ItemEntity item_entity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
                 // The special case may have removed the item entity; continue to the next if it has died.
-                if(!entity_inside.isAlive()) continue;
+                if(!item_entity.isAlive()) continue;
 
                 changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
-                changed = changed || tryReduceToPower(((ItemEntity) entity_inside).getItem(), crucible);
+                changed = changed || tryReduceToPower(item_entity.getItem(), crucible);
 
                 // Remove entities that were completely transmuted or dissolved.
-                if(((ItemEntity) entity_inside).getItem().getCount() == 0){
-                    entity_inside.remove(Entity.RemovalReason.KILLED);
+                if(item_entity.getItem().getCount() == 0){
+                    item_entity.remove(Entity.RemovalReason.KILLED);
                 }
             }
         }
