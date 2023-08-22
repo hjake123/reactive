@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "irons_spellbooks:arcane_salvage"
+  },
+  "product": {
+    "item": "irons_spellbooks:arcane_salvage"
+  }
+}

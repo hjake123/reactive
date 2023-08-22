@@ -41,6 +41,18 @@
     {
       "id": "ars_nouveau:void_jar",
       "required": false
+    },
+    {
+      "id": "irons_spellbooks:dragonskin",
+      "required": false
+    },
+    {
+      "id": "irons_spellbooks:arcane_ingot",
+      "required": false
+    },
+    {
+      "id": "irons_spellbooks:arcane_cloth",
+      "required": false
     }
   ]
 }
