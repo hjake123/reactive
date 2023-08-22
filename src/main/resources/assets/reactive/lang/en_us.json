@@ -87,9 +87,9 @@
   "text.reactive.measurement_empty": "WATER",
   "advancement.reactive.title.root": "Reactive Alchemy",
   "advancement.reactive.text.root": "Let's see what we can do...",
-  "advancement.reactive.title.crucible": "Familiar Forces",
+  "advancement.reactive.title.crucible": "Mostly Universal Solvent",
   "advancement.reactive.text.crucible": "Make a Crucible using a Scroll of Transmutation",
-  "advancement.reactive.title.synthesis": "Synthesis",
+  "advancement.reactive.title.synthesis": "Powers Combined",
   "advancement.reactive.text.synthesis": "Combine two Base Powers into something new",
   "advancement.reactive.title.curse": "Ash and Dust",
   "advancement.reactive.text.curse": "Discover Curse, the power that ended the world",
@@ -110,7 +110,7 @@
   "advancement.reactive.title.blink": "Get Vwooped",
   "advancement.reactive.text.blink": "Be teleported by throwing an Ender Pearl into the Crucible",
   "advancement.reactive.title.rift": "At Least it's Persistent",
-  "advancement.reactive.text.rift": "Create an ender rift",
+  "advancement.reactive.text.rift": "Suspend a teleportation effect in the Crucible",
   "advancement.reactive.title.allay": "Artificial Friend",
   "advancement.reactive.text.allay": "Summon an Allay"
 

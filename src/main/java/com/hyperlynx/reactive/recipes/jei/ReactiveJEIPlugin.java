@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.items.DisplacerItem;
 import com.hyperlynx.reactive.items.StaffItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -67,6 +68,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
         registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues());
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
@@ -131,6 +133,21 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
     }
+
+    private void addDisplacerRepairRecipe(IRecipeRegistration registration, IVanillaRecipeFactory factory){
+        Item displacer = Registration.DISPLACER.get();
+        ItemStack full_durability = new ItemStack(displacer);
+        ItemStack three_quarters_durability = new ItemStack(displacer);
+        three_quarters_durability.setDamageValue(full_durability.getMaxDamage() / 4);
+        ItemStack half_durability = new ItemStack(displacer);
+        half_durability.setDamageValue(full_durability.getMaxDamage() / 2);
+
+        IJeiAnvilRecipe sacrifice_repair_recipe = factory.createAnvilRecipe(half_durability, List.of(half_durability),  List.of(full_durability));
+        IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(Registration.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability));
+
+        registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
+    }
+
 
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {

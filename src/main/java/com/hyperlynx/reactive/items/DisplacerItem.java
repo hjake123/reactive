@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.blocks.ChainDisplacingBlock;
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import net.minecraft.core.BlockPos;
@@ -102,4 +103,14 @@ public class DisplacerItem extends Item {
         return true;
     }
 
+    @Override
+    public boolean isRepairable(ItemStack stack) {
+        return true;
+    }
+
+    // Check if the item being used to repair is the assigned repair bottle for this staff.
+    @Override
+    public boolean isValidRepairItem(ItemStack self, ItemStack repair_item_candidate) {
+        return repair_item_candidate.is(Registration.MOTION_SALT.get());
+    }
 }
