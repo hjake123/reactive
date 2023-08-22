@@ -79,7 +79,8 @@ public class ReactionMan {
         REACTIONS.add(new AssimilationReaction("vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
         REACTIONS.add(new AssimilationReaction("vital_eat", Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
 
-        switch (WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get()) {
+        int vvr = WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get();
+        switch (vvr) {
             case 2 ->
                     REACTIONS.add(new AssimilationReaction("verdant_consume", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
             case 3 ->
@@ -105,7 +106,7 @@ public class ReactionMan {
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
         // Add effect reactions to do crazy things.
-        REACTIONS.add(new EffectReaction("growth", ReactionEffects::growth, ReactionRenders::growth, Powers.VERDANT_POWER.get(), 1).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction("growth", ReactionEffects::growth, ReactionRenders::growth, Powers.VERDANT_POWER.get(), vvr == 5 ? Powers.MIND_POWER.get() : Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new FreeEffectReaction("flames", ReactionEffects::flamethrower, ReactionRenders::flamethrower, Powers.BLAZE_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
         REACTIONS.add(new EffectReaction("sunlight", ReactionEffects::sunlight, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
