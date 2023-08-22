@@ -61,6 +61,7 @@
   "block.reactive.shulker_crucible": "Shulker Crucible",
   "block.reactive.gravity_chandelier": "Gravity Chandelier",
   "effect.reactive.no_gravity": "Weightless",
+  "effect.reactive.immobility": "Immobilized",
   "title.reactive.dissolve": "Power Release",
   "title.reactive.transmute": "Transmutation",
   "jei.reactive.crucible": "The Crucible is made by clicking on a Cauldron with a Scroll of Transmutation. See the Journal of Alchemy for details.",
@@ -109,6 +110,8 @@
   "advancement.reactive.title.blink": "Get Vwooped",
   "advancement.reactive.text.blink": "Be teleported by throwing an Ender Pearl into the Crucible",
   "advancement.reactive.title.rift": "At Least it's Persistent",
-  "advancement.reactive.text.rift": "Create an ender rift"
+  "advancement.reactive.text.rift": "Create an ender rift",
+  "advancement.reactive.title.allay": "Artificial Friend",
+  "advancement.reactive.text.allay": "Summon an Allay"
 
 }

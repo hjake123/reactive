@@ -10,8 +10,6 @@ import com.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
-import com.hyperlynx.reactive.util.FakeContainer;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -41,7 +39,9 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -293,5 +293,30 @@ public class ReactionEffects {
             }
         }
         return c;
+    }
+
+    public static CrucibleBlockEntity immobilize(CrucibleBlockEntity crucible) {
+        Level level = crucible.getLevel();
+        if(level == null)
+            return crucible;
+
+        AABB aoe = new AABB(crucible.getBlockPos());
+        aoe = aoe.inflate(2);
+        List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
+
+        for(LivingEntity living : nearby){
+            ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.REVERSE_PORTAL, crucible.getBlockPos());
+            if(CrystalIronItem.effectNotBlocked(living, 1)) {
+                if(living instanceof Player player && player.isShiftKeyDown()){
+                    MobEffectInstance stop = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50);
+                    player.addEffect(stop);
+                }else {
+                    MobEffectInstance stop = new MobEffectInstance(Registration.IMMOBILE.get(), 50, 0, true, false, true);
+                    stop.setNoCounter(true);
+                    living.addEffect(stop);
+                }
+            }
+        }
+        return crucible;
     }
 }

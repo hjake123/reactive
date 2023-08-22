@@ -28,7 +28,7 @@ public class WorldSpecificValue {
     public static int get(String alias, int min, int max){
         long seed = getSeed();
         Random rand = new Random(seed + alias.hashCode());
-        return rand.nextInt(max-min + 1) + min;
+        return rand.nextInt(max-min + 1) + min; // Note that this function return between min and max INCLUSIVE
     }
 
     public static float get(String alias, float min, float max){

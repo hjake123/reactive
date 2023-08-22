@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:soul_bottle"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.allay"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.allay"
+    },
+    "hidden": true
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:see_allay_summon_criterion"
+    }
+  },
+  "parent": "reactive:make_crucible"
+}

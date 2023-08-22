@@ -18,11 +18,12 @@ public class FreeEffectReaction extends Reaction{
         renderFunction = render;
     }
 
-    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power) {
+    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power... required_powers) {
         super(alias, 0);
         effectFunction = function;
         renderFunction = render;
-        reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
+        for(Power required_power : required_powers)
+            reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
     }
 
     public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, int num_additionals) {

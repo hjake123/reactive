@@ -95,7 +95,7 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 1500, 0));
-                player.hurt(DamageSource.MAGIC, 14);
+                player.hurt(DamageSource.MAGIC, 12);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
             }
             case 1 -> {

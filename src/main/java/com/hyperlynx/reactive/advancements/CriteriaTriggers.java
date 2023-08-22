@@ -22,6 +22,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion SEE_DISPLACEMENT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_displacement_criterion"), new ResourceLocation(ReactiveMod.MODID, "get_motion_salts"));
     public static final FlagCriterion BE_SLOWFALLED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_slowfalled_criterion"));
     public static final FlagCriterion BE_LEVITATED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_levitated_criterion"));
+    public static final FlagCriterion SEE_ALLAY_SUMMON_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_allay_summon_criterion"));
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
@@ -40,6 +41,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_DISPLACEMENT_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_SLOWFALLED_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_LEVITATED_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_ALLAY_SUMMON_TRIGGER));
         ReactionMan.CRITERIA_BUILDER.register(evt);
     }
 }

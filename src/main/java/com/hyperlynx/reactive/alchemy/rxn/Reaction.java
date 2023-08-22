@@ -92,7 +92,8 @@ public abstract class Reaction {
         }
         boolean met_conditions = checkStimulus(crucible);
         if(met_conditions) {
-            if(crucible.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)) {
+            if(crucible.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
+            && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
             }
             return Status.REACTING;

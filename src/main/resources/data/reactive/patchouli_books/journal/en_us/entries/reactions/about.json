@@ -10,7 +10,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Each entry is comprised of two pages. The first page describes the reaction's visuals and effects. The second details the formula needed to create it.$(p)The second page $(4)only appears$(0) if you see the reaction occur with only the strictly necessary Powers present."
+      "text": "$(o)Each entry is comprised of two pages. The first page describes the reaction's visuals and effects. The second details the formula needed to create it if and only if you have discovered that formula."
     }
   ]
 }

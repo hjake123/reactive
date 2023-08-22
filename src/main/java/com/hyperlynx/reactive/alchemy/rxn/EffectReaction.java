@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
 import java.util.function.Function;
 
 // This reaction runs a particular effect function each reaction tick and removes power according to the cost when it does
@@ -19,6 +20,11 @@ public class EffectReaction extends FreeEffectReaction{
 
     public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power) {
         super(alias, function, render, required_power);
+        cost = WorldSpecificValue.get(alias+"cost", 1, 20);
+    }
+
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power... required_powers) {
+        super(alias, function, render, required_powers);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 

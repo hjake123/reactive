@@ -44,6 +44,7 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("flames");
         CRITERIA_BUILDER.add("levitation");
         CRITERIA_BUILDER.add("sunlight");
+        CRITERIA_BUILDER.add("immobilize");
         CRITERIA_BUILDER.add("soul_to_warp");
         CRITERIA_BUILDER.add("warp_to_soul");
         CRITERIA_BUILDER.add("compound_degradation");
@@ -78,14 +79,13 @@ public class ReactionMan {
         REACTIONS.add(new AssimilationReaction("vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
         REACTIONS.add(new AssimilationReaction("vital_eat", Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
 
-
         switch (WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get()) {
             case 2 ->
                     REACTIONS.add(new AssimilationReaction("verdant_consume", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
             case 3 ->
                     REACTIONS.add(new AssimilationReaction("vital_consume", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get()));
             case 4 ->
-                    REACTIONS.add(new SynthesisReaction("verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get(), Powers.LIGHT_POWER.get()));
+                    REACTIONS.add(new SynthesisReaction("verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
             case 5 ->
                     REACTIONS.add(new SynthesisReaction("vital_growth", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get(), Powers.LIGHT_POWER.get()));
         }
@@ -109,6 +109,8 @@ public class ReactionMan {
         REACTIONS.add(new FreeEffectReaction("flames", ReactionEffects::flamethrower, ReactionRenders::flamethrower, Powers.BLAZE_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
         REACTIONS.add(new EffectReaction("sunlight", ReactionEffects::sunlight, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction("immobilize", ReactionEffects::immobilize, null, Powers.WARP_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+
 
         // Add end crystal conversion reactions
         switch (WorldSpecificValues.CONDUIT_POWER.get()) {
