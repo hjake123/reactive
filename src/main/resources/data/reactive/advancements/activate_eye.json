@@ -1,4 +1,16 @@
 {
+  "display": {
+    "icon": {
+      "item": "reactive:occult_symbol"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.eye"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.eye"
+    },
+    "hidden": true
+  },
   "criteria": {
     "criterion": {
       "trigger": "reactive:activate_eye_criterion"

@@ -1,4 +1,17 @@
 {
+  "display": {
+    "icon": {
+      "item": "minecraft:wither_rose"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.curse"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.curse"
+    },
+    "hidden": true
+  },
+  "parent": "reactive:make_crucible",
   "criteria": {
     "criterion": {
       "trigger": "reactive:be_cursed_criterion"

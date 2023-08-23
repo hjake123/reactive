@@ -45,6 +45,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
@@ -130,6 +133,9 @@ public class SpecialCaseMan {
             return;
         }
 
+        if(c.getPowerLevel(Powers.SOUL_POWER.get()) == 0)
+            return;
+
         int cause = WorldSpecificValues.GOLEM_CAUSE.get();
         BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
 
@@ -176,15 +182,21 @@ public class SpecialCaseMan {
 
     private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
-            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20))
+            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
                 EntityType.ALLAY.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                if(e.getOwner() instanceof ServerPlayer player)
+                    CriteriaTriggers.SEE_ALLAY_SUMMON_TRIGGER.trigger(player);
+            }
             else
                 EntityType.VEX.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
                 EntityType.VEX.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
-            else
+            else {
                 EntityType.ALLAY.spawn((ServerLevel) level, (CompoundTag) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                if(e.getOwner()  instanceof ServerPlayer player)
+                    CriteriaTriggers.SEE_ALLAY_SUMMON_TRIGGER.trigger(player);
+            }
         }
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
@@ -425,6 +437,17 @@ public class SpecialCaseMan {
         for(Power p : c.getPowerMap().keySet()){
             if(c.getPowerLevel(p) > 800){
                 IncompleteStaffBlock.tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
+            }
+        }
+    }
+
+    // Prevent anything from jumping when Immobilized.
+    @SubscribeEvent(priority= EventPriority.LOWEST)
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        for(MobEffectInstance instance :event.getEntity().getActiveEffects()){
+            if(instance.getEffect().equals(Registration.IMMOBILE.get())){
+                event.getEntity().setJumping(false);
+                event.getEntity().setDeltaMovement(0, 0, 0);
             }
         }
     }

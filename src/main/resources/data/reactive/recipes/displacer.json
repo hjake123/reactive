@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "minecraft:copper_ingot"
+    },
+    "a": {
+      "item": "reactive:acid_bottle"
+    },
+    "m": {
+      "item": "reactive:motion_salt_block"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "mca",
+    " s ",
+    " s "
+  ],
+  "result": {
+    "item": "reactive:displacer"
+  }
+}

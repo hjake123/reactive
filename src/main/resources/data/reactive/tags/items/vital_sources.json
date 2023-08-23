@@ -16,6 +16,10 @@
     {
       "id": "quark:tiny_potato",
       "required": false
+    },
+    {
+      "id": "irons_spellbooks:blood_vial",
+      "required": false
     }
   ]
 }

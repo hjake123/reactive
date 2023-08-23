@@ -58,12 +58,12 @@ public class OccultSymbolBlock extends SymbolBlock{
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource source) {
         if(!state.getValue(ACTIVE))
             return;
-        double d0 = random.nextDouble() * 8 - 4;
-        double d1 = random.nextDouble() * 8 - 4;
-        double d2 = random.nextDouble() * 8 - 4;
+        double d0 = source.nextDouble() * 8 - 4;
+        double d1 = source.nextDouble() * 8 - 4;
+        double d2 = source.nextDouble() * 8 - 4;
         level.addParticle(Registration.SMALL_BLACK_RUNE_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 
@@ -95,7 +95,7 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 1500, 0));
-                player.hurt(level.damageSources().magic(), 14);
+                player.hurt(level.damageSources().magic(), 12);
                 player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
             }
             case 1 -> {

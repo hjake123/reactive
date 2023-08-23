@@ -2,13 +2,29 @@ package com.hyperlynx.reactive.fx.particles;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ParticleScribe {
+    public static void drawParticle(Level level, ParticleOptions opt, double x, double y, double z) {
+        if (level.isClientSide()) {
+            level.addParticle(opt, x, y, z, 0, 0, 0);
+        } else {
+            ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+        }
+    }
+
+    public static void drawParticleLine(Level level, ParticleOptions opt, BlockPos a, BlockPos b, int frequency, double noise){
+        drawParticleLine(level, opt, a.getX()+0.5, a.getY()+0.5,a.getZ()+0.5,
+                b.getX()+0.5, b.getY()+0.5, b.getZ()+0.5, frequency, noise);
+    }
+
     public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise) {
         for (int i = 0; i < frequency; i++) {
             double u = level.random.nextDouble();
@@ -20,11 +36,7 @@ public class ParticleScribe {
             y += (level.random.nextFloat() - 0.5) * noise;
             z += (level.random.nextFloat() - 0.5) * noise;
 
-            if (level.isClientSide()) {
-                level.addParticle(opt, x, y, z, 0, 0, 0);
-            } else {
-                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
-            }
+            drawParticle(level, opt, x, y, z);
         }
     }
 
@@ -91,13 +103,11 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
-        if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
-                int deflection_angle = level.random.nextInt(1, 360);
-                double x = Math.cos(Math.toRadians(deflection_angle)) * radius + center_x;
-                double z = Math.sin(Math.toRadians(deflection_angle)) * radius + center_z;
-                level.addParticle(opt, x, pos.getY() + height, z, 0, 0, 0);
-            }
+        for(int i = 0; i < frequency; i++){
+            int deflection_angle = level.random.nextInt(1, 360);
+            double x = Math.cos(Math.toRadians(deflection_angle)) * radius + center_x;
+            double z = Math.sin(Math.toRadians(deflection_angle)) * radius + center_z;
+            drawParticle(level, opt, x, pos.getY() + height, z);
         }
     }
 

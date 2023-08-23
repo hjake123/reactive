@@ -10,8 +10,6 @@ import com.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
-import com.hyperlynx.reactive.util.FakeContainer;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -26,8 +24,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,7 +39,9 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -220,7 +222,9 @@ public class ReactionEffects {
                 item_entity.kill();
                 ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
                 drop_stack.setCount(count);
-                crucible.getLevel().addFreshEntity(new ItemEntity(crucible.getLevel(), crucible.getBlockPos().getX() + 0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ() + 0.5, drop_stack));
+                ItemEntity secret_scale = new ItemEntity(crucible.getLevel(), crucible.getBlockPos().getX() + 0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ() + 0.5, drop_stack);
+                secret_scale.setPickUpDelay(20);
+                crucible.getLevel().addFreshEntity(secret_scale);
                 crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
             }
         }
@@ -251,6 +255,23 @@ public class ReactionEffects {
         return c;
     }
 
+    // Causes nearby undead to catch fire.
+    public static CrucibleBlockEntity sunlight(CrucibleBlockEntity c) {
+        AABB aoe = new AABB(c.getBlockPos());
+        aoe = aoe.inflate(12);
+        List<Monster> nearby_monsters = c.getLevel().getEntitiesOfClass(Monster.class, aoe);
+
+        for(Monster m : nearby_monsters){
+            if(m.getMobType().equals(MobType.UNDEAD)){
+                m.hurt(c.getLevel().damageSources().inFire(), 3);
+                m.setSecondsOnFire(5);
+            }
+        }
+
+        ParticleScribe.drawParticleRing(c.getLevel(), ParticleTypes.END_ROD, c.getBlockPos(), 0.6F, 12F, 20);
+        return c;
+    }
+
     // Cause blocks to fall down near the Symbol.
     public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
@@ -269,9 +290,32 @@ public class ReactionEffects {
                 ItemEntity drop = new ItemEntity(level, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.6, c.getBlockPos().getZ()+0.5,
                         Registration.MOTION_SALT.get().getDefaultInstance());
                 level.addFreshEntity(drop);
-                FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.BLOCK_FALL_TRIGGER, c.getBlockPos(), 16);
             }
         }
         return c;
+    }
+
+    public static CrucibleBlockEntity immobilize(CrucibleBlockEntity crucible) {
+        Level level = crucible.getLevel();
+        if(level == null)
+            return crucible;
+
+        AABB aoe = new AABB(crucible.getBlockPos());
+        aoe = aoe.inflate(2);
+        List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
+
+        for(LivingEntity living : nearby){
+            ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.REVERSE_PORTAL, crucible.getBlockPos());
+            if(CrystalIronItem.effectNotBlocked(living, 1)) {
+                if(living instanceof Player player && player.isShiftKeyDown()){
+                    MobEffectInstance stop = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50);
+                    player.addEffect(stop);
+                }else {
+                    MobEffectInstance stop = new MobEffectInstance(Registration.IMMOBILE.get(), 50, 0, true, false, true);
+                    living.addEffect(stop);
+                }
+            }
+        }
+        return crucible;
     }
 }

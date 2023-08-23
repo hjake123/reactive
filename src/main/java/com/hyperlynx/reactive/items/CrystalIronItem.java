@@ -32,11 +32,11 @@ public class CrystalIronItem extends Item {
                 }
             }
             return false;
-        }else if(e instanceof ServerPlayer && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
+        }else if(e instanceof Player && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
             if(cost > 0){
                 for(ItemStack stack : ((Player) e).getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){
-                        stack.hurtAndBreak(cost, (ServerPlayer) e, (ServerPlayer s) -> {});
+                        stack.hurtAndBreak(cost, (Player) e, (Player s) -> {});
                         return false;
                     }
                 }

@@ -43,6 +43,9 @@ public class LitmusPaperItem extends Item {
         }
 
         StringTag reaction_status = (StringTag) stack.getTag().get(TAG_STATUS);
+        if(reaction_status == null)
+            return text;
+
         switch(Reaction.Status.valueOf(reaction_status.getAsString())){
             case STABLE -> text.add(Component.translatable("text.reactive.stable"));
             case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition"));

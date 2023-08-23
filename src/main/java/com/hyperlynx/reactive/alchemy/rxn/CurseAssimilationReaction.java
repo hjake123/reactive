@@ -25,7 +25,13 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
+    public boolean isPerfect(CrucibleBlockEntity crucible) {
+        return true;
+    }
+
+    @Override
     public void run(CrucibleBlockEntity crucible) {
+        super.run(crucible);
         crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), rate);
         crucible.addPower(Powers.CURSE_POWER.get(), rate);
 

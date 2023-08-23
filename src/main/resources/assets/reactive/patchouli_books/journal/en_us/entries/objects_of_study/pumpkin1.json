@@ -9,11 +9,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)Maybe some roaming spirit chooses to make the facade its own? Perhaps the face itself is a macabre symbol that draws upon the great curse of Undeath? $(br2)Perhaps dissolving a Carved Pumpkin will resolve this question?"
+      "text": "$(1)Maybe some roaming spirit chooses to make the facade its own? Perhaps the face itself is a macabre symbol that draws upon the great curse of Undeath? $(br2)I will dissolve a Carved Pumpkin to resolve this matter once and for all."
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)Update: the Carved Pumpkin refuses to release its Power into solution. I feel certain that with the right $(4)apparatus$(1), a Spirit might be brought forth. I will continue to investigate this matter..."
+      "text": "$(1)Update:$(p)The Carved Pumpkin refuses to release its Power into solution. I feel certain that with the right $(4)apparatus$(1) and a solution of Soul Power, a Spirit might be brought forth. I will continue to investigate this matter..."
     }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "irons_spellbooks:magic_cloth"
+  },
+  "product": {
+    "item": "minecraft:light_blue_wool"
+  }
+}

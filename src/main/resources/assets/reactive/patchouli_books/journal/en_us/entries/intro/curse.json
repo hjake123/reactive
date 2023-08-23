@@ -11,7 +11,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)The $(4)death of certain creatures$(0) would create this power inside a nearby Crucible, unless it is protected by a certain $(l:reactive:intro/symbols)ward$(/l)."
+      "text": "$(o)The $(4)nearby death of undead creatures$(0) would create this power, unless it is protected by a certain $(l:reactive:intro/symbols)ward$(/l)."
     },
     {
       "type": "patchouli:spotlight",

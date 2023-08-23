@@ -2,6 +2,7 @@
   "name": "Pure Quartz",
   "icon": "reactive:quartz",
   "category": "reactive:intro",
+  "advancement": "reactive:make_crucible",
   "pages": [
     {
       "type": "patchouli:spotlight",

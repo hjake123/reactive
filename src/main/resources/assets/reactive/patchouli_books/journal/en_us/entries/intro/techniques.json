@@ -2,6 +2,8 @@
   "name": "Points of Technique",
   "icon": "reactive:litmus_paper",
   "category": "reactive:intro",
+  "advancement": "reactive:make_crucible",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",
@@ -10,6 +12,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "litmus_paper",
+      "anchor": "litmus",
       "text": "$(item)Litmus Paper$(0) is a Specially-Treated Sheet of Paper that can be used to Measure the Strength of Powers in the Crucible. $(p)$(o)Use it normally to take the measurement, and shift-click to read it."
     },
     {

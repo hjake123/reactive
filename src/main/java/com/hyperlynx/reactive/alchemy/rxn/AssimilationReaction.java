@@ -24,6 +24,7 @@ public class AssimilationReaction extends Reaction{
 
     @Override
     public void run(CrucibleBlockEntity crucible) {
+        super.run(crucible);
         crucible.expendPower(consumedPower, rate);
         crucible.addPower(producedPower, rate);
     }
@@ -31,6 +32,11 @@ public class AssimilationReaction extends Reaction{
     @Override
     public void render(final Level l, final CrucibleBlockEntity crucible) {
 
+    }
+
+    @Override
+    public boolean isPerfect(CrucibleBlockEntity crucible) {
+        return true;
     }
 
     @Override

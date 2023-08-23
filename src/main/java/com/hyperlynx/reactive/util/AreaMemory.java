@@ -39,8 +39,9 @@ public class AreaMemory {
 
         // If we reach this point, the block must either not be cached or have changed. Either way...
         BlockPos newlyFound = findAndAddNearest(l, radius, target);
-        if(newlyFound != null)
+        if(newlyFound != null) {
             model.put(target, newlyFound);
+        }
         return newlyFound;
     }
 

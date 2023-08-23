@@ -48,32 +48,33 @@ public class DisplacedBlock extends Block implements EntityBlock {
     }
 
     // Convert some other block into a Displaced Block.
-    public static void displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
+    public static boolean displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
         // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
         if(!level.isClientSide)
             FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER, pos, 16);
-        displaceWithChain(state_to_be_displaced, pos, level, duration, null);
+        return displaceWithChain(state_to_be_displaced, pos, level, duration, null);
     }
 
     // Convert some other block into a Displaced Block, and then link it to the chain target.
     // If the chain target is also a Displaced Block, it will NEVER revert. Be careful here!
-    public static void displaceWithChain(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration, BlockPos chain){
+    public static boolean displaceWithChain(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration, BlockPos chain){
         if(level.getBlockEntity(pos) != null || !HarvestChecker.canMineBlock(level, pos, state_to_be_displaced, 35F)
                 || state_to_be_displaced.isAir()){
-            return;
+            return false;
         }
 
         level.setBlock(pos, Registration.DISPLACED_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         BlockEntity be = level.getBlockEntity(pos);
         if(!(be instanceof DisplacedBlockEntity displaced)){
             System.err.println("Displaced Block Entity didn't attach...? Report this to hyperlynx!");
-            return;
+            return false;
         }
 
         displaced.self_state = state_to_be_displaced;
         displaced.chain_target = chain;
 
         level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), duration);
+        return true;
     }
 
     private boolean shouldNotReappear(ServerLevel level, BlockPos pos, DisplacedBlockEntity self_entity){

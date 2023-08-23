@@ -16,12 +16,14 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -205,32 +207,32 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1500), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1200), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(1500), StaffEffects::warping, false, WARP_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(1200), StaffEffects::warping, false, WARP_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1500).fireResistant(), StaffEffects::blazing, true, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1200).fireResistant(), StaffEffects::blazing, true, BLAZE_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().defaultDurability(1500), StaffEffects::spectral, false, SOUL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().defaultDurability(1200), StaffEffects::spectral, false, SOUL_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().defaultDurability(1500), StaffEffects::missile, false, MIND_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().defaultDurability(1200), StaffEffects::missile, false, MIND_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(1500), StaffEffects::living, true, Items.GHAST_TEAR));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(600), StaffEffects::living, true, Items.GHAST_TEAR));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -274,12 +276,22 @@ public class Registration {
             () -> new ForceRockItem(new Item.Properties()));
     public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
+    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
+            () -> new DisplacerItem(new Item.Properties()
+                    .defaultDurability(350)));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
-            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xC0BF77)
+            () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
-                            (double)-1F, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+
+    public static final RegistryObject<MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
+            () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
+                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
+                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL)
+                    .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
+                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",

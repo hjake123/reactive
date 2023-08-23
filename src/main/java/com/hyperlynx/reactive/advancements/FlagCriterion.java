@@ -49,6 +49,10 @@ public class FlagCriterion extends SimpleCriterionTrigger<FlagCriterion.FlagTrig
         return new FlagTriggerInstance(pred);
     }
 
+    public @NotNull FlagCriterion.FlagTriggerInstance createInstance(ContextAwarePredicate pred) {
+        return new FlagTriggerInstance(pred);
+    }
+
     @Override
     public @NotNull ResourceLocation getId() {
         return crit_rl;

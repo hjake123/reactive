@@ -43,6 +43,14 @@
     {
       "id": "ars_nouveau:bucket_of_source",
       "required": false
+    },
+    {
+      "id": "irons_spellbooks:arcane_essence",
+      "required": false
+    },
+    {
+      "id": "irons_spellbooks:arcane_cloth",
+      "required": false
     }
   ]
 }

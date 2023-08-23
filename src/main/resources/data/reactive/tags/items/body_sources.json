@@ -9,6 +9,10 @@
     "#forge:leather",
     "minecraft:sugar",
     "minecraft:honeycomb",
-    "minecraft:frogspawn"
+    "minecraft:frogspawn",
+    {
+      "id": "irons_spellbooks:hogskin",
+      "required": false
+    }
   ]
 }

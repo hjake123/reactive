@@ -1,7 +1,21 @@
 {
+  "display": {
+    "icon": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.portal"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.portal"
+    },
+    "announce_to_chat": false,
+    "show_toast": false
+  },
   "criteria": {
     "criterion": {
       "trigger": "reactive:portal_trade_criterion"
     }
-  }
+  },
+  "parent": "reactive:make_crucible"
 }

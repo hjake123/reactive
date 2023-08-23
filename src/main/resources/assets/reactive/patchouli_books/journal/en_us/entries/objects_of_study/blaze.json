@@ -11,6 +11,11 @@
       "type": "patchouli:crafting",
       "recipe": "reactive:mounted_blaze_rod_crafting",
       "text": "I have devised a form of the Blaze Rod that is mounted onto the Grid. Using Copper as its end caps ensures that its Power radiates from it, but regrettably it seems too weak to influence the Crucible. If only I could $(4)bolster the transfer of Power$(0) somehow..."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:end_rod",
+      "text": "$(o)Old texts speaks of another way to mount a Blaze Rod into a block. The purple substance purifies its energy into pure Light, so a similar process would be able to derive Light Power from one of these."
     }
   ]
 }

@@ -1,8 +1,0 @@
-{
-  "criteria": {
-    "criterion": {
-      "trigger": "reactive:see_block_fall_criterion"
-    }
-  },
-  "parent": "reactive:see_synthesis"
-}

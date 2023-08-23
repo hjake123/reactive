@@ -22,7 +22,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Did I scare you? Seriously, though, it's a good source of Vital Power. Not the only source, mind you, but a good one."
+      "text": "$(o)Did I scare you? Seriously, though, it's a good source of Vital Power.$(p)If you're out of things to slaughter, consider what helps you regain health to discover other sources."
     }
   ]
 }
