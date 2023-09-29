@@ -23,7 +23,7 @@ import com.hyperlynx.reactive.util.ConfigMan;
 
 import java.util.List;
 
-import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.POWER_TYPE;
+import static com.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.POWER_TYPE;
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 

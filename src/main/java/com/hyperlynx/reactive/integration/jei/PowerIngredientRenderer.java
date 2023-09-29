@@ -14,7 +14,7 @@ import net.minecraft.world.item.TooltipFlag;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.HELPERS;
+import static com.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.HELPERS;
 
 public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     @Override
