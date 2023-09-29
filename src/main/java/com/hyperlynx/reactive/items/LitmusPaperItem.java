@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -98,18 +99,11 @@ public class LitmusPaperItem extends Item {
         ListTag measurements = new ListTag();
 
         for(Power p : crucible.getPowerMap().keySet()){
-            if(crucible.getPowerLevel(p) == 0)
+            int pow = crucible.getPowerLevel(p);
+            if(pow == 0)
                 continue;
 
-            String measurement = p.getName().toUpperCase() + " - ";
-
-            if(crucible.getPowerLevel(p) < 500){
-                measurement += "LOW";
-            }else if(500 <= crucible.getPowerLevel(p) && crucible.getPowerLevel(p) < 1000){
-                measurement += "MEDIUM";
-            }else{
-                measurement += "HIGH";
-            }
+            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : "TRACE");
 
             CompoundTag mt = new CompoundTag();
             mt.putString("value", measurement);

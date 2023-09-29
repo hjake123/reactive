@@ -1,9 +1,13 @@
 package com.hyperlynx.reactive.alchemy;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
@@ -24,25 +28,16 @@ public class Power {
         this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
+        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
-    public Power(String id, int color, String name, Item bottle){
-        this.id = id;
-        this.color = new Color(color);
-        this.bottle = bottle;
-        this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = null;
-    }
-
-    public Power(String id, Color color, String name, Item bottle){
+    public Power(String id, Color color, Item bottle){
         this.id = id;
         this.color = color;
         this.bottle = bottle;
-        this.name = name;
+        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
@@ -52,25 +47,16 @@ public class Power {
         this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = id.substring(0, 1).toUpperCase() + id.substring(1).toLowerCase();
+        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
-    public Power(String id, int color, String name, Item bottle, Item renderItem){
-        this.id = id;
-        this.color = new Color(color);
-        this.bottle = bottle;
-        this.name = name;
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(String id, Color color, String name, Item bottle, Item renderItem){
+    public Power(String id, Color color, Item bottle, Item renderItem){
         this.id = id;
         this.color = color;
         this.bottle = bottle;
-        this.name = name;
+        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
@@ -96,7 +82,9 @@ public class Power {
         return color;
     }
     public String getId() { return id; }
-    public String getName(){return name;}
+    public String getName(){
+        return Component.translatable(name).getString();
+    }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){
