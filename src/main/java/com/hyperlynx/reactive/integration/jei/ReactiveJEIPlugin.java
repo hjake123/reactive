@@ -1,10 +1,9 @@
-package com.hyperlynx.reactive.recipes.jei;
+package com.hyperlynx.reactive.integration.jei;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.items.DisplacerItem;
 import com.hyperlynx.reactive.items.StaffItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -13,7 +12,6 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
