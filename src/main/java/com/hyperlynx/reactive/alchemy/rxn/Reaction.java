@@ -55,7 +55,7 @@ public abstract class Reaction {
         criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
         perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         for(Power p : powers){
-            reagents.put(p, WorldSpecificValue.get(alias+p.getName(), 1, 400));
+            reagents.put(p, WorldSpecificValue.get(alias+p.getId(), 1, 400));
         }
     }
 
