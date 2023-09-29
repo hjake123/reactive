@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.recipes.jei;
+package com.hyperlynx.reactive.integration.jei;
 
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
@@ -8,12 +8,10 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.POWER_TYPE;
-
 public class PowerIngredientHandler implements IIngredientHelper<Power> {
     @Override
     public IIngredientType getIngredientType() {
-        return POWER_TYPE;
+        return ReactiveJEIPlugin.POWER_TYPE;
     }
 
     @Override

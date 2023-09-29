@@ -2,6 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.item.CreativeModeTab;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;

@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.recipes.jei;
+package com.hyperlynx.reactive.integration.jei;
 
 import com.hyperlynx.reactive.alchemy.Power;
 import mezz.jei.api.ingredients.IIngredientType;

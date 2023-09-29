@@ -1,10 +1,8 @@
-package com.hyperlynx.reactive.recipes.jei;
+package com.hyperlynx.reactive.integration.jei;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -18,13 +16,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.POWER_TYPE;
 
 public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe> {
 
@@ -67,34 +61,34 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
             case 1 -> {
                 IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
                 power_slot.setSlotName("reagent_middle");
-                power_slot.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
             }
             case 2 -> {
                 IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 20, 24);
                 power_slotl.setSlotName("reagent_left");
-                power_slotl.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
 
                 IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 36, 24);
                 power_slotr.setSlotName("reagent_right");
-                power_slotr.addIngredient(POWER_TYPE, recipe.getReagents().get(1));
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
             }
             case 3 -> {
                 IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 12, 24);
                 power_slotl.setSlotName("reagent_left");
-                power_slotl.addIngredient(POWER_TYPE, recipe.getReagents().get(0));
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
 
                 IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
                 power_slot.setSlotName("reagent_middle");
-                power_slot.addIngredient(POWER_TYPE, recipe.getReagents().get(1));
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
 
                 IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 44, 24);
                 power_slotr.setSlotName("reagent_right");
-                power_slotr.addIngredient(POWER_TYPE, recipe.getReagents().get(2));
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(2));
             }
             default -> {
                 IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
                 power_slot.setSlotName("reagents");
-                power_slot.addIngredients(POWER_TYPE, recipe.getReagents());
+                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents());
             }
         }
     }

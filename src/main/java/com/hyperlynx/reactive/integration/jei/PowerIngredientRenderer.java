@@ -1,27 +1,21 @@
-package com.hyperlynx.reactive.recipes.jei;
+package com.hyperlynx.reactive.integration.jei;
 
-import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.Power;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Transformation;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyperlynx.reactive.recipes.jei.ReactiveJEIPlugin.HELPERS;
-
 public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     @Override
     public void render(GuiGraphics gui, Power ingredient) {
         if(ingredient.getRenderStack() != null){
-            HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ingredient.getRenderStack()).draw(gui);
+            ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ingredient.getRenderStack()).draw(gui);
         }
     }
 

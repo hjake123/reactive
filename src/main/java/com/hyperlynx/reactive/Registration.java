@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
+import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
@@ -32,6 +33,7 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -362,6 +364,9 @@ public class Registration {
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
         SecretScaleItem.registerGravPotions(evt);
+        if(ModList.get().isLoaded("create")){
+            ReactiveCreatePlugin.init();
+        }
     }
 
     @SubscribeEvent
