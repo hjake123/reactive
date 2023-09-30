@@ -9,6 +9,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -35,7 +36,8 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent evt) {
-        ReactiveCreatePlugin.initClient();
+        if(ModList.get().isLoaded("create")){
+            ReactiveCreatePlugin.initClient();
+        }
     }
-
 }
