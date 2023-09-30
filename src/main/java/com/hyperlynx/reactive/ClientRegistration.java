@@ -3,11 +3,13 @@ package com.hyperlynx.reactive;
 import com.hyperlynx.reactive.fx.particles.*;
 import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
+import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ClientRegistration {
@@ -29,6 +31,11 @@ public class ClientRegistration {
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         evt.registerBlockEntityRenderer(Registration.CRUCIBLE_BE_TYPE.get(), CrucibleRenderer::new);
         evt.registerBlockEntityRenderer(Registration.SYMBOL_BE_TYPE.get(), SymbolRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent evt) {
+        ReactiveCreatePlugin.initClient();
     }
 
 }
