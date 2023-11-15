@@ -60,7 +60,6 @@ public class StaffEffects {
                         victim.setRemainingFireTicks(300);
                         victim.hurt(DamageSource.playerAttack(user).setIsFire(), 7);
                     }
-                    victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
                 var entityBlockPos = new BlockPos(entityHit.getLocation());
