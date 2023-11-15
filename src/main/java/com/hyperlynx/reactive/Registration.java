@@ -194,6 +194,8 @@ public class Registration {
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
+    public static final RegistryObject<Item> VITAL_BOTTLE = ITEMS.register("vital_bottle",
+            () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
@@ -229,7 +231,7 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(600), StaffEffects::living, true, Items.GHAST_TEAR));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(600), StaffEffects::living, true, VITAL_BOTTLE.get()));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -279,8 +281,6 @@ public class Registration {
     public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
             () -> new DisplacerItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .defaultDurability(350)));
-    public static final RegistryObject<Item> CURSED_PAPER = ITEMS.register("cursed_paper",
-            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
