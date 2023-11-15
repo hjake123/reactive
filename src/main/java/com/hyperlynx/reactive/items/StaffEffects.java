@@ -3,22 +3,28 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
+import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.HarvestChecker;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -28,70 +34,77 @@ import java.util.Objects;
 // Similar in concept to ReactionEffects
 public class StaffEffects {
     /*
-    - Radiant: Fires beams of light that damage entities and severely damage the Undead.
-    - Blazing: Fires a jet of flame that also light the ground on fire.
-    - Warped: Not here -- check WarpStaffItem
-    - Spectral: Creates a shining point where it hits terrain, which damages entities and slowly breaks blocks.
+    - Radiant: Fires beams of light that damage entities and make invisible light sources where they hit.
+    - Blazing: Creates and fires Blaze fireballs.
+    - Warped: --not in this file--
+    - Spectral: Creates a field of damaging souls.
     - Arcane: Fires a multiple zaps that home in on surrounding enemies
-    - Living: Applies regen to things around it
+    - Living: Applies regen and health boost to things around it, and removes negative effects.
 
     Beam casting code is taken from Eclectic, as contributed by petrak@
      */
     public static Player radiance(Player user){
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32);
+        int range = 64;
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, range);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
-        var end = start.add(user.getLookAngle().scale(32));
+        var end = start.add(user.getLookAngle().scale(range));
         var entityHit = ProjectileUtil.getEntityHitResult(
                 user, start, end, new AABB(start, end), e -> e instanceof LivingEntity, Double.MAX_VALUE
         );
-
-        // Check which is closer
-        Vec3 beam_end;
-        if (entityHit == null) {
-            beam_end = blockHitPos;
-        } else if (entityHit.getLocation().distanceToSqr(start) < blockHitPos.distanceToSqr(start)) {
-            beam_end = entityHit.getLocation();
-        } else {
-            beam_end = blockHitPos;
-        }
 
         if(user instanceof ServerPlayer){
             if(entityHit != null){
                 if(entityHit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(DamageSource.playerAttack(user).setIsFall(), 7);
+                        victim.hurt(DamageSource.playerAttack(user).setIsFire(), 7);
                     }
                     victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
+                    victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
+                }
+                var entityBlockPos = new BlockPos(entityHit.getLocation());
+                if(user.level.getBlockState(entityBlockPos).isAir()){
+                    user.level.setBlock(entityBlockPos, Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
+                }
+            }
+            if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
+                // Try to put light on the side of the hit block.
+                BlockPos light_target = new BlockPos(blockHitPos.relative(blockHit.getDirection(), 1));
+                if(user.level.getBlockState(light_target).isAir()){
+                    user.level.setBlock(light_target, Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
                 }
             }
         }else{
             ParticleScribe.drawParticleLine(user.level, ParticleTypes.END_ROD,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
-                    beam_end.x, beam_end.y, beam_end.z, 2, 0.1);
+                    blockHitPos.x, blockHitPos.y, blockHitPos.z, 2, 0.1);
         }
         return user;
     }
 
     public static Player blazing(Player user){
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
-        var blockHitPos = blockHit.getLocation();
+        int range = 24;
         var start = user.getEyePosition();
-        start = start.add(0, -0.3, 0);
+        var end = start.add(user.getLookAngle().scale(range));
+        var entityHit = ProjectileUtil.getEntityHitResult(
+                user, start, end, new AABB(start, end), e -> e instanceof LivingEntity, Double.MAX_VALUE
+        );
 
         if(user instanceof ServerPlayer) {
-            AABB aoe = new AABB(start, blockHitPos);
-            for(LivingEntity victim : user.level.getEntitiesOfClass(LivingEntity.class, aoe)){
-                if(victim.equals(user))
-                    continue;
-                victim.setRemainingFireTicks(1000);
-                victim.hurt(DamageSource.playerAttack(user).setIsFire(), 1);
+            Vec3 target;
+            if(entityHit == null){
+                target = end;
+            }else{
+                target = entityHit.getLocation();
             }
-            if(user.level.getBlockState(blockHit.getBlockPos().above()).isAir())
-                user.level.setBlockAndUpdate(blockHit.getBlockPos().above(), Blocks.FIRE.defaultBlockState());
-        }else{
-            ParticleScribe.drawParticleStream(user.level, ParticleTypes.FLAME, start, user.getLookAngle(), 5);
+            var fireball_position = start
+                    .add(user.getLookAngle().scale(1.5))
+                    .add(user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1);
+            var aim = target.subtract(fireball_position).normalize().scale(0.1);
+            SmallFireball fireball = new SmallFireball(user.level, user, aim.x, aim.y, aim.z);
+            fireball.setPos(fireball_position);
+            user.level.addFreshEntity(fireball);
         }
         return user;
     }
@@ -100,63 +113,22 @@ public class StaffEffects {
         var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
         var blockHitPos = blockHit.getLocation();
 
+        AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
+        aoe = aoe.inflate(1.5);
+
         if(user instanceof ServerPlayer) {
-            AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-            aoe = aoe.inflate(2);
             for(LivingEntity victim : user.level.getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer)
                     continue; // This staff cannot hurt players.
-                victim.hurt(DamageSource.GENERIC, 3);
+                victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                 victim.knockback(0.3, user.level.random.nextDouble()*0.2 - 0.1, user.level.random.nextDouble()*0.2 - 0.1);
             }
         }else{
+            ParticleScribe.drawParticleBox(user.level, ParticleTypes.SOUL, aoe, 10);
             user.level.addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
         }
         return user;
     }
-
-    public static Player warping(Player user) {
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, 16);
-        var blockHitPos = blockHit.getLocation();
-        var start = user.getEyePosition();
-        var end = start.add(user.getLookAngle().scale(16));
-        var entityHit = ProjectileUtil.getEntityHitResult(
-                user, start, end, new AABB(start, end), Objects::nonNull, Double.MAX_VALUE
-        );
-
-        // Check which is closer
-        Vec3 beam_end;
-        if (entityHit == null) {
-            beam_end = blockHitPos;
-        } else if (entityHit.getLocation().distanceToSqr(start) < blockHitPos.distanceToSqr(start)) {
-            beam_end = entityHit.getLocation();
-        } else {
-            beam_end = blockHitPos;
-        }
-
-        if(user instanceof ServerPlayer){
-            BlockState hit_state = user.level.getBlockState(blockHit.getBlockPos());
-            if(entityHit != null){
-                if(entityHit.getEntity() instanceof LivingEntity victim){
-                    victim.hurt(DamageSource.playerAttack(user).setMagic(), 5);
-                }
-                if(entityHit.getEntity() instanceof ItemEntity drop_entity){
-                    drop_entity.teleportTo(user.getX(), user.getY(), user.getZ());
-                }
-            }
-            else if(HarvestChecker.canMineBlock(user.level, user, blockHit.getBlockPos(), user.level.getBlockState(blockHit.getBlockPos()), 30F)){
-                hit_state.getBlock().playerWillDestroy(user.level, blockHit.getBlockPos(), hit_state, user);
-                hit_state.getBlock().playerDestroy(user.level, user, blockHit.getBlockPos(), hit_state, null, Items.IRON_PICKAXE.getDefaultInstance());
-                user.level.removeBlock(blockHit.getBlockPos(), false);
-            }
-        }else{
-            ParticleScribe.drawParticleZigZag(user.level, ParticleTypes.ENCHANTED_HIT,
-                    user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
-                    beam_end.x, beam_end.y, beam_end.z, 4, 4,0.1);
-        }
-        return user;
-    }
-
 
     public static Player missile(Player user){
         if (user instanceof ServerPlayer) {
@@ -179,10 +151,26 @@ public class StaffEffects {
     public static Player living(Player user){
         if (user.getLevel().random.nextFloat() < 0.4) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(5); // Inflate the AOE to be 3x the size of the crucible.
+            aoe = aoe.inflate(5);
             List<LivingEntity> nearby_ents = user.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : nearby_ents) {
-                victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 30, 1));
+                boolean has_regen = false, has_hp_up = false;
+                for(MobEffectInstance mei : victim.getActiveEffects()){
+                    if(!mei.getEffect().isBeneficial())
+                        victim.removeEffect(mei.getEffect());
+                    else if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
+                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 100, 2));
+                        has_hp_up = true;
+                    }
+                    else if(mei.getEffect().equals(MobEffects.REGENERATION)){
+                        mei.update(new MobEffectInstance(MobEffects.REGENERATION, 50, 2));
+                        has_regen = true;
+                    }
+                }
+                if(!has_regen)
+                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, 2));
+                if(!has_hp_up)
+                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 100, 2));
             }
         }
 

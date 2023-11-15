@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:crystal_iron"
+  },
+  "product": {
+    "item": "reactive:crystal_iron"
+  },
+  "reagents": ["reactive:body", "reactive:soul"],
+  "min": 800,
+  "cost": 800
+}

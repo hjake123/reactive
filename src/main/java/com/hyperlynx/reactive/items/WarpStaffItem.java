@@ -1,0 +1,161 @@
+package com.hyperlynx.reactive.items;
+
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.util.BeamHelper;
+import com.hyperlynx.reactive.util.ConfigMan;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+
+public class WarpStaffItem extends StaffItem{
+    public static final String TAG_BOUND_ENTITY = "BoundEntity";
+
+    public WarpStaffItem(Block block, Properties props, Item repair_item) {
+        super(block, props, null, false, repair_item);
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
+        // NO-OP
+    }
+
+    @Override
+    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
+        return UseAnim.NONE;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return 0;
+    }
+
+    public static boolean hasBoundEntity(ItemStack stack){
+        return stack.hasTag() && stack.getTag().contains(TAG_BOUND_ENTITY);
+    }
+
+    public static @Nullable Entity getBoundEntity(Level level, ItemStack stack){
+        return level.getEntity((stack.getTag().getInt(TAG_BOUND_ENTITY)));
+    }
+
+    private void zap(Player user, Vec3 target, ParticleOptions opt){
+        ParticleScribe.drawParticleZigZag(user.level, opt,
+                user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
+                target.x, target.y, target.z, 5, 3, 0.4);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
+        super.appendHoverText(stack, level, hover_text, tooltip_flag);
+        if(level != null && hasBoundEntity(stack)){
+            Entity bound = getBoundEntity(level, stack);
+            if(bound == null){
+                return;
+            }
+            hover_text.add(Component.translatable("tooltip.reactive.entity_bound")
+                    .append(bound.hasCustomName() ? bound.getCustomName() : bound.getName()));
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity wielder, int tick, boolean unknown) {
+        if(hasBoundEntity(stack)){
+            Entity bound = getBoundEntity(level, stack);
+            if(bound != null) {
+                ParticleScribe.drawParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
+                stack.getTag().put("CustomModelData", IntTag.valueOf(1));
+            }
+            else {
+                stack.getTag().remove(TAG_BOUND_ENTITY);
+            }
+        }else{
+            stack.getTag().put("CustomModelData", IntTag.valueOf(0));
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        ItemStack stack = user.getItemInHand(hand);
+
+        int range = 12;
+        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
+        var blockHitPos = blockHit.getLocation();
+        var start = user.getEyePosition();
+        var end = start.add(user.getLookAngle().scale(range));
+        var entityHit = ProjectileUtil.getEntityHitResult(
+                user, start, end, new AABB(start, end), Objects::nonNull, Double.MAX_VALUE
+        );
+
+        // Check which is closer
+        Vec3 beam_end;
+        if (entityHit == null) {
+            beam_end = blockHitPos;
+        } else if (entityHit.getLocation().distanceToSqr(start) < blockHitPos.distanceToSqr(start)) {
+            beam_end = entityHit.getLocation();
+        } else {
+            beam_end = blockHitPos;
+        }
+
+        if(user instanceof ServerPlayer) {
+            if (!hasBoundEntity(stack) && entityHit != null) {
+                // Items just get yoinked.
+                if(entityHit.getEntity() instanceof ItemEntity){
+                    entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
+                    stack.hurtAndBreak(1, user, (unused) -> {});
+                    return InteractionResultHolder.success(stack);
+                }
+                // Select the entity.
+                if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId())) {
+                    if(!stack.hasTag()){
+                        stack.setTag(new CompoundTag());
+                    }
+                    stack.getTag().put(TAG_BOUND_ENTITY, IntTag.valueOf(entityHit.getEntity().getId()));
+                    zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
+                }
+                stack.hurtAndBreak(1, user, (unused) -> {});
+                return InteractionResultHolder.success(stack);
+            } else if (hasBoundEntity(stack)) {
+                // Teleport the bound entity.
+                Entity bound = getBoundEntity(level, stack);
+                if(bound != null) {
+                    bound.teleportTo(beam_end.x, beam_end.y, beam_end.z);
+                    zap(user, beam_end, ParticleTypes.REVERSE_PORTAL);
+                    level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                }
+                stack.getTag().remove(TAG_BOUND_ENTITY);
+                stack.hurtAndBreak(1, user, (unused) -> {});
+                return InteractionResultHolder.success(stack);
+            }
+        }
+        return InteractionResultHolder.fail(stack);
+    }
+}

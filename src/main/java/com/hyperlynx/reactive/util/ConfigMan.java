@@ -15,7 +15,7 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue maxDisplaceCount;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
-
+        public ForgeConfigSpec.BooleanValue lightStaffLightsPermanent;
 
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -30,6 +30,8 @@ public class ConfigMan {
                     .define("acidMeltBlockEntities", false);
             maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]")
                     .defineInRange("maxDisplaceCount", 128, 4, 4096);
+            lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
+                    .define("lightStaffLightsPermanent", true);
             builder.pop();
         }
     }

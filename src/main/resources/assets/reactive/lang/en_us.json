@@ -127,5 +127,6 @@
   "advancement.reactive.text.rift": "Suspend a teleportation effect in the Crucible",
   "advancement.reactive.title.allay": "Artificial Friend",
   "advancement.reactive.text.allay": "Summon an Allay",
-  "reactive.display_source.crucible": "Power Amounts"
+  "reactive.display_source.crucible": "Power Amounts",
+  "tooltip.reactive.entity_bound": "Bound to "
 }

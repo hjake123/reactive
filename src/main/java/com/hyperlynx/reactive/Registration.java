@@ -204,17 +204,17 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1000), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200), StaffEffects::warping, false, WARP_BOTTLE.get()));
+            () -> new WarpStaffItem(STAFF_OF_WARP.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(500), WARP_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200).fireResistant(), StaffEffects::blazing, true, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, BLAZE_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
@@ -247,6 +247,9 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<DisplacedBlockEntity>> DISPLACED_BLOCK_BE = TILES.register("displaced_block_be",
             () -> BlockEntityType.Builder.of(DisplacedBlockEntity::new, DISPLACED_BLOCK.get()).build(null));
 
+    public static final RegistryObject<Block> GLOWING_AIR = BLOCKS.register("glowing_air",
+            () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
+
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
@@ -260,7 +263,7 @@ public class Registration {
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new QuartzBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
-            () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(16)));
+            () -> new CrystalIronItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(64)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
@@ -276,6 +279,8 @@ public class Registration {
     public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
             () -> new DisplacerItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)
                     .defaultDurability(350)));
+    public static final RegistryObject<Item> CURSED_PAPER = ITEMS.register("cursed_paper",
+            () -> new Item(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
