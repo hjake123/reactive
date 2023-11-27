@@ -48,9 +48,6 @@ public class WarpBottleItem extends PowerBottleItem{
                     if (CrystalIronItem.effectNotBlocked(player, 1)) {
                         player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
                         warp_occurred = true;
-                    } else {
-                        player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
-                        warp_occurred = SpecialCaseMan.tryTeleportNearbyEntity(player.getOnPos(), level, destination.pos(), false);
                     }
                 }
             }
