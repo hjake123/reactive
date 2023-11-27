@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.blocks.AirLightBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.ConfigMan;
@@ -8,6 +9,9 @@ import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -62,18 +66,17 @@ public class StaffEffects {
                     }
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
-                var entityBlockPos = new BlockPos(entityHit.getLocation());
-                if(user.level.getBlockState(entityBlockPos).isAir()){
-                    user.level.setBlock(entityBlockPos, Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
-                }
             }
             if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
-                // Try to put light on the side of the hit block.
+                // Try to toggle light on the side of the hit block.
                 BlockPos light_target = new BlockPos(blockHitPos.relative(blockHit.getDirection(), 1));
                 if(user.level.getBlockState(light_target).isAir()){
-                    user.level.setBlock(light_target, Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_ALL);
+                    user.level.setBlock(light_target,
+                            Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
+                            Block.UPDATE_ALL);
                 }
             }
+            user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
         }else{
             ParticleScribe.drawParticleLine(user.level, ParticleTypes.END_ROD,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
@@ -104,6 +107,7 @@ public class StaffEffects {
             SmallFireball fireball = new SmallFireball(user.level, user, aim.x, aim.y, aim.z);
             fireball.setPos(fireball_position);
             user.level.addFreshEntity(fireball);
+            user.level.playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
         }
         return user;
     }
@@ -122,6 +126,8 @@ public class StaffEffects {
                 victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                 victim.knockback(0.3, user.level.random.nextDouble()*0.2 - 0.1, user.level.random.nextDouble()*0.2 - 0.1);
             }
+            user.level.playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
+                    user.level.random.nextFloat()*0.1f + 0.95f);
         }else{
             ParticleScribe.drawParticleBox(user.level, ParticleTypes.SOUL, aoe, 10);
             user.level.addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
@@ -142,6 +148,8 @@ public class StaffEffects {
                 victim.hurt(DamageSource.playerAttack(user).setMagic(), 2);
                 ParticleScribe.drawParticleZigZag(user.level, Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
+                user.level.playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
+                        user.level.random.nextFloat()*0.1f + 0.8f);
             }
         }
         return user;
@@ -158,7 +166,7 @@ public class StaffEffects {
                     if(!mei.getEffect().isBeneficial())
                         victim.removeEffect(mei.getEffect());
                     else if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
-                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 100, 2));
+                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, 2));
                         has_hp_up = true;
                     }
                     else if(mei.getEffect().equals(MobEffects.REGENERATION)){
@@ -169,7 +177,7 @@ public class StaffEffects {
                 if(!has_regen)
                     victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, 2));
                 if(!has_hp_up)
-                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 100, 2));
+                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, 2));
             }
         }
 
@@ -177,6 +185,7 @@ public class StaffEffects {
             user.level.addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
                     user.getRandomZ(5.0), 0, 0, 0);
         }
+        user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
 
         return user;
     }

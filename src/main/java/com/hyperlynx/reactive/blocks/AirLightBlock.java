@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -22,12 +24,19 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class AirLightBlock extends Block {
+    public static final BooleanProperty DECAYING = BooleanProperty.create("decaying");
     public AirLightBlock(Properties props) {
         super(props);
+        registerDefaultState(stateDefinition.any().setValue(DECAYING, true));
+
+    }
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(DECAYING);
+        super.createBlockStateDefinition(builder);
     }
     @Override
     public boolean isRandomlyTicking(BlockState state) {
-        return !ConfigMan.COMMON.lightStaffLightsPermanent.get();
+        return state.getValue(DECAYING);
     }
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {

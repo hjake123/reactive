@@ -93,6 +93,8 @@ public class SpecialCaseMan {
             blazeEscape(c);
         if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
             verdantEscape(c);
+        if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 500, 800))
+            lightEscape(c);
         if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
             staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
     }
@@ -488,6 +490,12 @@ public class SpecialCaseMan {
         ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 
+    private static void lightEscape(CrucibleBlockEntity c) {
+        if(c.getLevel() == null || c.getLevel().isClientSide || !c.getLevel().getBlockState(c.getBlockPos().above()).isAir())
+            return;
+        c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+    }
+
     public static void solidifyPortal(Level l, BlockPos p, Direction.Axis axis){
         HyperPortalShape portal = new HyperPortalShape(l, p, axis);
         if(portal.isComplete()){
@@ -508,11 +516,9 @@ public class SpecialCaseMan {
     // Prevent anything from jumping when Immobilized.
     @SubscribeEvent(priority= EventPriority.LOWEST)
     public static void onJump(LivingEvent.LivingJumpEvent event) {
-        for(MobEffectInstance instance :event.getEntity().getActiveEffects()){
-            if(instance.getEffect().equals(Registration.IMMOBILE.get())){
-                event.getEntity().setJumping(false);
-                event.getEntity().setDeltaMovement(0, 0, 0);
-            }
+        if(event.getEntity().hasEffect(Registration.IMMOBILE.get())){
+            event.getEntity().setJumping(false);
+            event.getEntity().setDeltaMovement(0, 0, 0);
         }
     }
 }
