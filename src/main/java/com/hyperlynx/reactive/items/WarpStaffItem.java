@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.ConfigMan;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -15,9 +16,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
@@ -35,10 +39,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class WarpStaffItem extends StaffItem{
     public static final String TAG_BOUND_ENTITY = "BoundEntity";
+    public static final String TAG_BOUND_ENTITY_UUID = "BoundEntityUUID";
+    public static final String TAG_CUSTOM_MODEL_DATA = "CustomModelData";
+    public static final String TAG_TUTORIAL_FINISHED = "TutorialFinished";
+    private static final int RANGE_SQUARED = 4096;
 
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
         super(block, props, null, false, repair_item);
@@ -64,7 +73,19 @@ public class WarpStaffItem extends StaffItem{
     }
 
     public static @Nullable Entity getBoundEntity(Level level, ItemStack stack){
-        return level.getEntity((stack.getTag().getInt(TAG_BOUND_ENTITY)));
+        Entity entity = level.getEntity((stack.getTag().getInt(TAG_BOUND_ENTITY)));
+        if(entity == null)
+            return null;
+        UUID validity_check_uuid = stack.getTag().getUUID(TAG_BOUND_ENTITY_UUID);
+        if(entity.getUUID().equals(validity_check_uuid)) // Don't teleport if the entity id was (somehow?) reassigned to a different entity.
+            return entity;
+        return null;
+    }
+
+    public static void tryShowTutorial(Player user, ItemStack stack){
+        if(!stack.hasTag() || !stack.getTag().contains(TAG_TUTORIAL_FINISHED)){
+            user.displayClientMessage(Component.translatable("message.reactive.warp_staff_tutorial"), true);
+        }
     }
 
     private void zap(Player user, Vec3 target, ParticleOptions opt){
@@ -79,10 +100,13 @@ public class WarpStaffItem extends StaffItem{
         if(level != null && hasBoundEntity(stack)){
             Entity bound = getBoundEntity(level, stack);
             if(bound == null){
+                hover_text.add(Component.translatable("tooltip.reactive.no_entity_bound"));
                 return;
             }
             hover_text.add(Component.translatable("tooltip.reactive.entity_bound")
                     .append(bound.hasCustomName() ? bound.getCustomName() : bound.getName()));
+        }else{
+            hover_text.add(Component.translatable("tooltip.reactive.no_entity_bound"));
         }
     }
 
@@ -90,15 +114,16 @@ public class WarpStaffItem extends StaffItem{
     public void inventoryTick(ItemStack stack, Level level, Entity wielder, int tick, boolean unknown) {
         if(hasBoundEntity(stack)){
             Entity bound = getBoundEntity(level, stack);
-            if(bound != null) {
+            if(bound != null && bound.getPosition(0).distanceToSqr(wielder.getPosition(0)) < RANGE_SQUARED) {
                 ParticleScribe.drawParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
-                stack.getTag().put("CustomModelData", IntTag.valueOf(1));
+                stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(1));
             }
             else {
                 stack.getTag().remove(TAG_BOUND_ENTITY);
+                stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
             }
         }else{
-            stack.getTag().put("CustomModelData", IntTag.valueOf(0));
+            stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(0));
         }
     }
 
@@ -128,7 +153,7 @@ public class WarpStaffItem extends StaffItem{
         if(user instanceof ServerPlayer) {
             if (!hasBoundEntity(stack) && entityHit != null) {
                 // Items just get yoinked.
-                if(entityHit.getEntity() instanceof ItemEntity){
+                if(entityHit.getEntity() instanceof ItemEntity || entityHit.getEntity() instanceof ExperienceOrb){
                     entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
                     stack.hurtAndBreak(1, user, (unused) -> {});
                     return InteractionResultHolder.success(stack);
@@ -138,22 +163,36 @@ public class WarpStaffItem extends StaffItem{
                     if(!stack.hasTag()){
                         stack.setTag(new CompoundTag());
                     }
-                    stack.getTag().put(TAG_BOUND_ENTITY, IntTag.valueOf(entityHit.getEntity().getId()));
+                    if(entityHit.getEntity() instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
+                        man.hurt(DamageSource.playerAttack(user), 1);
+                        man.setBeingStaredAt();
+                        user.getCooldowns().addCooldown(stack.getItem(), 100);
+                    }else{
+                        stack.getTag().put(TAG_BOUND_ENTITY, IntTag.valueOf(entityHit.getEntity().getId()));
+                        stack.getTag().put(TAG_BOUND_ENTITY_UUID, NbtUtils.createUUID(entityHit.getEntity().getUUID()));
+                        stack.getTag().put(TAG_TUTORIAL_FINISHED, IntTag.valueOf(1));
+                    }
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
+                    level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
+                            0.6F, 1.0F + user.level.random.nextFloat()*0.2F);
                 }
                 stack.hurtAndBreak(1, user, (unused) -> {});
                 return InteractionResultHolder.success(stack);
             } else if (hasBoundEntity(stack)) {
                 // Teleport the bound entity.
                 Entity bound = getBoundEntity(level, stack);
-                if(bound != null) {
+                if (bound != null) {
                     bound.teleportTo(beam_end.x, beam_end.y, beam_end.z);
                     zap(user, beam_end, ParticleTypes.REVERSE_PORTAL);
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 }
                 stack.getTag().remove(TAG_BOUND_ENTITY);
-                stack.hurtAndBreak(1, user, (unused) -> {});
+                stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
+                stack.hurtAndBreak(1, user, (unused) -> {
+                });
                 return InteractionResultHolder.success(stack);
+            } else {
+                tryShowTutorial(user, stack);
             }
         }
         return InteractionResultHolder.fail(stack);
