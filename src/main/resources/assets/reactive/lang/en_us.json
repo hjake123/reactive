@@ -26,7 +26,7 @@
   "item.reactive.light_bottle": "Bottle of Light",
   "item.reactive.verdant_bottle": "Bottle of Nature",
   "item.reactive.body_bottle": "Bottle of Stock",
-  "item.reactive.vital_bottle": "Bottle of Vitality",
+  "item.reactive.vital_bottle": "Bottle of Life Force",
   "item.reactive.soup": "Witch's Stew",
   "item.reactive.crystal_iron": "Ferrous Crystal",
   "item.reactive.phantom_residue": "Phantom Residue",
@@ -102,7 +102,7 @@
   "text.reactive.measurement_empty": "WATER",
   "advancement.reactive.title.root": "Reactive Alchemy",
   "advancement.reactive.text.root": "Let's see what we can do...",
-  "advancement.reactive.title.crucible": "Mostly Universal Solvent",
+  "advancement.reactive.title.crucible": "Universal Medium",
   "advancement.reactive.text.crucible": "Make a Crucible using a Scroll of Transmutation",
   "advancement.reactive.title.synthesis": "Powers Combined",
   "advancement.reactive.text.synthesis": "Combine two Base Powers into something new",
@@ -129,5 +129,8 @@
   "advancement.reactive.title.allay": "Artificial Friend",
   "advancement.reactive.text.allay": "Summon an Allay",
   "reactive.display_source.crucible": "Power Amounts",
-  "tooltip.reactive.entity_bound": "Bound to "
+  "tooltip.reactive.entity_bound": "Bound to ",
+  "tooltip.reactive.no_entity_bound": "No entity is bound",
+  "tooltip.reactive.entity_out_of_range": "Entity is out of range",
+  "message.reactive.warp_staff_tutorial": "The Staff seeks an entity to target."
 }

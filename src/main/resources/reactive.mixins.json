@@ -9,6 +9,7 @@
     "AllayMixin",
     "CreeperMixin",
     "LightningBoltMixin",
+    "LivingEntityGravityMixin",
     "PhantomMixin",
     "SpiderMixin",
     "VexMixin",

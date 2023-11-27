@@ -297,9 +297,9 @@ public class Registration {
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 1400)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 3000)));
     public static final RegistryObject<Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 2800)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 8000)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);

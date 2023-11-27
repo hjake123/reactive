@@ -167,7 +167,7 @@ public class ReactionEffects {
         }
 
         for(LivingEntity e : nearby_ents){
-            if(CrystalIronItem.effectNotBlocked(e, 4)) {
+            if(CrystalIronItem.effectNotBlocked(e, 1)) {
                 e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                 if(e instanceof ServerPlayer player){
                     CriteriaTriggers.BE_LEVITATED_TRIGGER.trigger(player);
@@ -192,7 +192,7 @@ public class ReactionEffects {
         }
 
         for(LivingEntity e : nearby_ents){
-            if(CrystalIronItem.effectNotBlocked(e, 4)) {
+            if(CrystalIronItem.effectNotBlocked(e, 1)) {
                 e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                 if(e instanceof ServerPlayer player){
                     CriteriaTriggers.BE_SLOWFALLED_TRIGGER.trigger(player);

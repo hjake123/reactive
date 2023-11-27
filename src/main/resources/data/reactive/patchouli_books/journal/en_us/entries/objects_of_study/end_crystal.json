@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Surely putting one near my Crucible setup won't cause any unforeseen consequences..."
+      "text": "$(o)I've found $(4)two distinct reactions$(0) that can be induced by having one nearby."
     }
   ]
 }
