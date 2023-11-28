@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.rxn.CurseAssimilationReaction;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -26,28 +27,28 @@ public class ReactionComponentProcessor implements IComponentProcessor {
             for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()){
                 if(reaction.getAlias().equals(reaction_alias)){
                     StringBuilder formula = new StringBuilder();
-                    formula.append("Powers: $(br)");
+                    formula.append(Component.translatable("docs.reactive.powers_label").getString());
                     for(Power power : reaction.getReagents().keySet()){
                         formula.append(power.getName()).append("$(br)");
                     }
                     if(reaction instanceof CurseAssimilationReaction){
-                        formula.append("Curse$(br)");
+                        formula.append(Component.translatable("docs.reactive.curse_label").getString());
                     }
                     if(reaction.getReagents().keySet().isEmpty()){
-                        formula.append("Any$(br)");
+                        formula.append(Component.translatable("docs.reactive.any_label").getString());
                     }
-                    formula.append("$(br)Stimulus:$(br)");
+                    formula.append(Component.translatable("docs.reactive.stimulus_label").getString());
                     switch(reaction.getStimulus()){
-                        case NONE -> formula.append("None");
-                        case GOLD_SYMBOL -> formula.append("Gold Symbol");
-                        case ELECTRIC -> formula.append("Electric Charge");
-                        case SACRIFICE -> formula.append("Sacrificial");
-                        case END_CRYSTAL -> formula.append("End Crystal");
-                        case NO_ELECTRIC -> formula.append("Lack of Electric Charge");
-                        case NO_END_CRYSTAL -> formula.append("Lack of End Crystal");
+                        case NONE -> formula.append(Component.translatable("text.reactive.none").getString());
+                        case GOLD_SYMBOL -> formula.append(Component.translatable("block.reactive.gold_symbol").getString());
+                        case ELECTRIC -> formula.append(Component.translatable("text.reactive.electric_charge").getString());
+                        case SACRIFICE -> formula.append(Component.translatable("text.reactive.sacrificial").getString());
+                        case END_CRYSTAL -> formula.append(Component.translatable("item.minecraft.end_crystal").getString());
+                        case NO_ELECTRIC -> formula.append(Component.translatable("text.reactive.lack_of").getString() + Component.translatable("text.reactive.electric_charge").getString());
+                        case NO_END_CRYSTAL -> formula.append(Component.translatable("text.reactive.lack_of").getString() + Component.translatable("item.minecraft.end_crystal").getString());
                     }
                     if(reaction instanceof CatalystEffectReaction catre){
-                        formula.append("$(br2)Catalyst:$(br)");
+                        formula.append(Component.translatable("docs.reactive.catalyst_label").getString());
                         formula.append(catre.getCatalyst().getDescription().getString());
                     }
                     return IVariable.wrap(formula.toString());
