@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -43,10 +45,10 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class WarpStaffItem extends StaffItem{
-    public static final String TAG_BOUND_ENTITY = "BoundEntity";
     public static final String TAG_BOUND_ENTITY_UUID = "BoundEntityUUID";
     public static final String TAG_CUSTOM_MODEL_DATA = "CustomModelData";
     public static final String TAG_TUTORIAL_FINISHED = "TutorialFinished";
+    public static final String TAG_BOUND_ENTITY_ID = "BoundEntityId";
     private static final int RANGE_SQUARED = 4096;
 
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
@@ -69,17 +71,15 @@ public class WarpStaffItem extends StaffItem{
     }
 
     public static boolean hasBoundEntity(ItemStack stack){
-        return stack.hasTag() && stack.getTag().contains(TAG_BOUND_ENTITY);
+        return stack.hasTag() && stack.getTag().contains(TAG_BOUND_ENTITY_UUID);
     }
 
-    public static @Nullable Entity getBoundEntity(Level level, ItemStack stack){
-        Entity entity = level.getEntity((stack.getTag().getInt(TAG_BOUND_ENTITY)));
-        if(entity == null)
+    public @Nullable Entity getBoundEntity(Level level, ItemStack stack){
+        if(!stack.hasTag())
             return null;
-        UUID validity_check_uuid = stack.getTag().getUUID(TAG_BOUND_ENTITY_UUID);
-        if(entity.getUUID().equals(validity_check_uuid)) // Don't teleport if the entity id was (somehow?) reassigned to a different entity.
-            return entity;
-        return null;
+        if(!(level instanceof ServerLevel server))
+            return level.getEntity(stack.getTag().getInt(TAG_BOUND_ENTITY_ID));
+        return server.getEntity(stack.getTag().getUUID(TAG_BOUND_ENTITY_UUID));
     }
 
     public static void tryShowTutorial(Player user, ItemStack stack){
@@ -112,18 +112,27 @@ public class WarpStaffItem extends StaffItem{
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity wielder, int tick, boolean unknown) {
+        if(!(level instanceof ServerLevel))
+            return;
         if(hasBoundEntity(stack)){
             Entity bound = getBoundEntity(level, stack);
+            // Draw the particles and update the model data or unbind invalid or too distant entities.
             if(bound != null && bound.getPosition(0).distanceToSqr(wielder.getPosition(0)) < RANGE_SQUARED) {
                 ParticleScribe.drawParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
                 stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(1));
             }
             else {
-                stack.getTag().remove(TAG_BOUND_ENTITY);
                 stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
             }
+            // Update the internal id of the entity for syncing to the client.
+            if(stack.getTag().contains(TAG_BOUND_ENTITY_ID))
+                stack.getTag().remove(TAG_BOUND_ENTITY_ID);
+            if(bound != null)
+                stack.getTag().put(TAG_BOUND_ENTITY_ID, IntTag.valueOf(bound.getId()));
         }else{
             stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(0));
+            if(stack.getTag().contains(TAG_BOUND_ENTITY_ID))
+                stack.getTag().remove(TAG_BOUND_ENTITY_ID);
         }
     }
 
@@ -168,7 +177,6 @@ public class WarpStaffItem extends StaffItem{
                         man.setBeingStaredAt();
                         user.getCooldowns().addCooldown(stack.getItem(), 100);
                     }else{
-                        stack.getTag().put(TAG_BOUND_ENTITY, IntTag.valueOf(entityHit.getEntity().getId()));
                         stack.getTag().put(TAG_BOUND_ENTITY_UUID, NbtUtils.createUUID(entityHit.getEntity().getUUID()));
                         stack.getTag().put(TAG_TUTORIAL_FINISHED, IntTag.valueOf(1));
                     }
@@ -186,7 +194,6 @@ public class WarpStaffItem extends StaffItem{
                     zap(user, beam_end, ParticleTypes.REVERSE_PORTAL);
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 }
-                stack.getTag().remove(TAG_BOUND_ENTITY);
                 stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
                 stack.hurtAndBreak(1, user, (unused) -> {
                 });

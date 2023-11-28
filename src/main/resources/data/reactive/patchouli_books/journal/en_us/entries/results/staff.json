@@ -50,8 +50,7 @@
       "item": "reactive:soul_staff",
       "text": "$(1)The $(item)Spectral Staff of Power$(1) beings forth a cloud of spirits that obliterate living things in their area of effect. $(br2)Just be careful that you don't get too close...",
       "advancement": "reactive:get_soul_staff"
-    }
-  ,
+    },
     {
       "type": "patchouli:spotlight",
       "item": "reactive:warp_staff",

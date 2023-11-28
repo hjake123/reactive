@@ -99,12 +99,18 @@ public class LitmusPaperItem extends Item {
     public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible) {
         ListTag measurements = new ListTag();
 
+        if(crucible.integrity < 85){
+            CompoundTag warning = new CompoundTag();
+            warning.putString("value",  Component.translatable("text.reactive.litmus_integrity_failure").getString());
+            measurements.add(warning);
+        }
+
         for(Power p : crucible.getPowerMap().keySet()){
             int pow = crucible.getPowerLevel(p);
             if(pow == 0)
                 continue;
 
-            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : "TRACE");
+            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : Component.translatable("text.reactive.trace").getString());
 
             CompoundTag mt = new CompoundTag();
             mt.putString("value", measurement);

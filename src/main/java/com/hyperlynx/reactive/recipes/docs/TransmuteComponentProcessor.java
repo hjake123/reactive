@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +49,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
                 reagent_list.add(reagent.getName());
             }
 
-            return IVariable.wrap("$(4)Reagents: " + reagent_list.toString().substring(1, reagent_list.toString().length()-1));
+            return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1));
         }
         return null;
     }
