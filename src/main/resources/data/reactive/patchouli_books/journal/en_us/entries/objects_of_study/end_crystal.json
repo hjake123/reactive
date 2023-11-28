@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)I've found $(4)two distinct reactions$(0) that can be induced by having one nearby."
+      "text": "$(o)Research Update: I've found evidence of $(4)two distinct reactions$(0) that can be induced by having an End Crystal near your Crucible. $(br2)The safety implications of working with such volatile devices aside, I believe it is worth your attention."
     }
   ]
 }

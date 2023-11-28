@@ -28,15 +28,6 @@ public abstract class LivingEntityGravityMixin {
     public void onGetFrictionInfluencedSpeed(CallbackInfoReturnable<Float> cir) {
         if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY.get())){
             cir.setReturnValue((((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown()) ? 0.05f : 0f);
-        }
-    }
-    @Inject(method = "handleRelativeFrictionAndCalculateMovement", at = @At("RETURN"), cancellable = true)
-    private void enforceSpeedLimit(CallbackInfoReturnable<Vec3> cir) {
-        final double max_speed = 1.3;
-        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY.get())) {
-            if(cir.getReturnValue().length() > max_speed){
-                cir.setReturnValue(cir.getReturnValue().normalize().scale(max_speed));
-            }
             ((LivingEntity) (Object) this).resetFallDistance();
         }
     }

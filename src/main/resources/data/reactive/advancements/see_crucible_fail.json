@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:cauldron"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.failure"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.failure"
+    },
+    "hidden": true
+  },
+  "criteria": {
+    "see_synthesis": {
+      "trigger": "reactive:see_crucible_fail_criterion"
+    }
+  },
+  "parent": "reactive:be_cursed"
+}

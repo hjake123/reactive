@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy.rxn.docs;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.rxn.CatalystEffectReaction;
 import com.hyperlynx.reactive.alchemy.rxn.CurseAssimilationReaction;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import net.minecraft.client.Minecraft;
@@ -44,6 +45,10 @@ public class ReactionComponentProcessor implements IComponentProcessor {
                         case END_CRYSTAL -> formula.append("End Crystal");
                         case NO_ELECTRIC -> formula.append("Lack of Electric Charge");
                         case NO_END_CRYSTAL -> formula.append("Lack of End Crystal");
+                    }
+                    if(reaction instanceof CatalystEffectReaction catre){
+                        formula.append("$(br2)Catalyst:$(br)");
+                        formula.append(catre.getCatalyst().getDescription().getString());
                     }
                     return IVariable.wrap(formula.toString());
                 }

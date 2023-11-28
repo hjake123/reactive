@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:volt_cell"
+  },
+  "product": {
+    "item": "reactive:curse_cell"
+  },
+  "reagents": ["reactive:curse"],
+  "min": 1000,
+  "cost": 0
+}

@@ -250,8 +250,11 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
-        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity && !level.isClientSide){
-            CrucibleBlockEntity.empty(level, pos, state, (CrucibleBlockEntity) level.getBlockEntity(pos));
+        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible && !level.isClientSide){
+            CrucibleBlockEntity.empty(level, pos, state, crucible);
+            if(crucible.integrity < 10){
+                CrucibleBlockEntity.integrityFail(level, pos, state);
+            }
         }
 
         super.onRemove(state, level, pos, new_state, p_60519_);
@@ -271,6 +274,10 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible))
             return 0;
+
+        if(crucible.integrity < 85){
+            return 0;
+        }
 
         if(crucible.used_crystal_this_cycle){
             return 15;

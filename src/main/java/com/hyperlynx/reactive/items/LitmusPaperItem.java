@@ -52,6 +52,7 @@ public class LitmusPaperItem extends Item {
             case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition"));
             case POWER_TOO_WEAK -> text.add(Component.translatable("text.reactive.power_too_weak"));
             case MISSING_STIMULUS -> text.add(Component.translatable("text.reactive.multi_power_reaction_missing_condition"));
+            case MISSING_CATALYST -> text.add(Component.translatable("text.reactive.missing_catalyst"));
             case INHIBITED -> text.add(Component.translatable("text.reactive.inhibited"));
             case REACTING -> text.add(Component.translatable("text.reactive.reacting"));
         }

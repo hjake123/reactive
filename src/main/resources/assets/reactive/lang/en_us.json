@@ -53,6 +53,7 @@
   "block.reactive.blaze_rod": "Mounted Blaze Rod",
   "block.reactive.pure_quartz_block": "Pure Quartz Block",
   "block.reactive.volt_cell": "Volt Cell",
+  "block.reactive.curse_cell": "Corrupt Cell",
   "block.reactive.warp_sponge": "Effusive Sponge",
   "block.reactive.gold_foam": "Gold Foam",
   "block.reactive.active_gold_foam": "Active Gold Foam",
@@ -97,6 +98,7 @@
   "text.reactive.single_power_reaction_missing_condition": "SINGLE POWER REACTION MISSING STIMULUS",
   "text.reactive.multi_power_reaction_missing_condition": "MULTI POWER REACTION MISSING STIMULUS",
   "text.reactive.power_too_weak": "BELOW REACTION POWER THRESHOLD",
+  "text.reactive.missing_catalyst": "REACTION MISSING CATALYST ITEM",
   "text.reactive.inhibited": "REACTION INHIBITED",
   "text.reactive.reacting": "REACTING",
   "text.reactive.measurement_empty": "WATER",
@@ -128,9 +130,12 @@
   "advancement.reactive.text.rift": "Suspend a teleportation effect in the Crucible",
   "advancement.reactive.title.allay": "Artificial Friend",
   "advancement.reactive.text.allay": "Summon an Allay",
+  "advancement.reactive.title.failure": "Critical Failure",
+  "advancement.reactive.text.failure": "Destroy a Crucible with a certain block",
+  "advancement.reactive.title.all_staves": "Self Made Wizard",
+  "advancement.reactive.text.all_staves": "Obtain every form of the Staff of Power",
   "reactive.display_source.crucible": "Power Amounts",
   "tooltip.reactive.entity_bound": "Bound to ",
   "tooltip.reactive.no_entity_bound": "No entity is bound",
-  "tooltip.reactive.entity_out_of_range": "Entity is out of range",
-  "message.reactive.warp_staff_tutorial": "The Staff seeks an entity to target."
+  "message.reactive.warp_staff_tutorial": "The Staff needs an entity to target."
 }

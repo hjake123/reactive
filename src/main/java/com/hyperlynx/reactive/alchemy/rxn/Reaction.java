@@ -179,6 +179,7 @@ public abstract class Reaction {
     public enum Status {
         STABLE,
         VOLATILE,
+        MISSING_CATALYST,
         INHIBITED,
         POWER_TOO_WEAK,
         MISSING_STIMULUS,

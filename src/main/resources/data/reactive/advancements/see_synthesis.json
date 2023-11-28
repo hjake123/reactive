@@ -8,7 +8,8 @@
     },
     "description": {
       "translate": "advancement.reactive.text.synthesis"
-    }
+    },
+    "frame": "goal"
   },
   "parent": "reactive:make_crucible",
   "criteria": {

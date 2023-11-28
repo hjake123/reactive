@@ -177,6 +177,10 @@ public class Registration {
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
+    public static final RegistryObject<Block> CURSE_CELL = BLOCKS.register("curse_cell",
+            () -> new CellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
+    public static final RegistryObject<Item> CURSE_CELL_ITEM = fromBlock(CURSE_CELL, ReactiveMod.CREATIVE_TAB);
+
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties().tab(ReactiveMod.CREATIVE_TAB)));
