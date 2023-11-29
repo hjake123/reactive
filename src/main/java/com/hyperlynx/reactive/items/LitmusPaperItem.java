@@ -62,7 +62,9 @@ public class LitmusPaperItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, level, hover_text, tooltip_flag);
-        hover_text.addAll(buildMeasurmentText(stack));
+        if(stack.hasTag()) {
+            hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+        }
     }
 
 
