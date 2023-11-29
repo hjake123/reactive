@@ -41,7 +41,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
 
         int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
 
-        if(crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){
+        if(crucible.integrity < 20 && crucible.integrity > 8 || crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
         else if(crucible.getPowerLevel(Powers.MIND_POWER.get()) + crucible.getPowerLevel(Powers.LIGHT_POWER.get()) + crucible.getPowerLevel(Powers.Y_POWER.get()) > threshold){
