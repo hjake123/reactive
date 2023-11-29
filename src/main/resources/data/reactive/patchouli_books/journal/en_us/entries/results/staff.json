@@ -42,7 +42,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "reactive:light_staff",
-      "text": "$(1)The $(item)Radiant Staff of Power$(1) fires a beam of pure light energy. When the beam hits a block, it creates an invisible, intangible light source. Also, if the beam passes through an undead creature, it will combust.",
+      "text": "$(1)The $(item)Radiant Staff of Power$(1) fires a beam of pure light energy. When the beam hits a block, it creates an invisible, intangible light source. Also, if the beam passes through an undead creature, it will combust.$(br2)Swinging it as if to attack will destroy a nearby intangible light.",
       "advancement": "reactive:get_light_staff"
     },
     {
@@ -54,7 +54,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "reactive:warp_staff",
-      "text": "$(1)The $(item)Warping Staff of Power$(1) has the power to teleport entities. Using it once will select an entity, and using it again teleports that entity to the spot you are aiming. $(br2)The staff has a maximum range of 64 blocks; beyond that range, the connection to the bound entity is lost.",
+      "text": "$(1)The $(item)Warping Staff of Power$(1) has the power to teleport living beings. Using it once will select a creature, and using it again teleports that creature to the spot you are aiming. $(br2)The staff has a maximum range of 64 blocks; beyond that range, the connection to the bound entity is lost.",
       "advancement": "reactive:get_warp_staff"
     }
   ],

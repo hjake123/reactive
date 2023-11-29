@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:warp_bottle",
+      "nbt": "{TeleportPos:'example'}"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.teleport"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.teleport"
+    },
+    "frame": "goal"
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:be_teleported_criterion"
+    }
+  },
+  "parent": "reactive:make_rift"
+}
