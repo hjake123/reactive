@@ -1,7 +1,9 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +11,10 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -47,7 +53,12 @@ public class WarpBottleItem extends PowerBottleItem{
                 if(destination != null) {
                     if (CrystalIronItem.effectNotBlocked(player, 1)) {
                         player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
+                        level.playSound(null, destination.pos(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                         warp_occurred = true;
+                        if(player instanceof ServerPlayer splayer)
+                            CriteriaTriggers.BE_TELEPORTED_TRIGGER.trigger(splayer);
+                    }else if(!(level instanceof ServerLevel)){
+                        player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
                     }
                 }
             }

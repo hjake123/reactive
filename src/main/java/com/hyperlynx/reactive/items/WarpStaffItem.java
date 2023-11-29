@@ -160,7 +160,7 @@ public class WarpStaffItem extends StaffItem{
         }
 
         if(user instanceof ServerPlayer) {
-            if (!hasBoundEntity(stack) && entityHit != null) {
+            if (!hasBoundEntity(stack) && entityHit != null && entityHit.getEntity() instanceof LivingEntity) {
                 // Items just get yoinked.
                 if(entityHit.getEntity() instanceof ItemEntity || entityHit.getEntity() instanceof ExperienceOrb){
                     entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
