@@ -94,7 +94,7 @@
   "message.reactive.extract_verdant": "You feel strangely ill.",
   "message.reactive.bottle_broke": "The bottle shatters in your hand.",
   "message.reactive.warp_blocked": "Your Ferrous Crystal prevented you from teleporting.",
-  "text.reactive.litmus_instructions": "Shift-click to read the measurement.",
+  "text.reactive.litmus_instructions": "Shift-click in the air to read",
   "text.reactive.measurement_header": "-- Measurement --",
   "text.reactive.stable": "STABLE",
   "text.reactive.single_power_reaction_missing_condition": "SINGLE POWER REACTION MISSING STIMULUS",
@@ -142,6 +142,8 @@
   "advancement.reactive.text.blink": "Be teleported by throwing an Ender Pearl into the Crucible",
   "advancement.reactive.title.rift": "At Least it's Persistent",
   "advancement.reactive.text.rift": "Suspend a teleportation effect in the Crucible",
+  "advancement.reactive.title.teleport": "Portal in a Bottle",
+  "advancement.reactive.text.teleport": "Teleport using a bound Bottle of Warp",
   "advancement.reactive.title.allay": "Artificial Friend",
   "advancement.reactive.text.allay": "Summon an Allay",
   "advancement.reactive.title.failure": "Critical Failure",
@@ -151,5 +153,5 @@
   "reactive.display_source.crucible": "Power Amounts",
   "tooltip.reactive.entity_bound": "Bound to ",
   "tooltip.reactive.no_entity_bound": "No entity is bound",
-  "message.reactive.warp_staff_tutorial": "The Staff needs an entity to target."
+  "message.reactive.warp_staff_tutorial": "The Staff needs a creature to target."
 }

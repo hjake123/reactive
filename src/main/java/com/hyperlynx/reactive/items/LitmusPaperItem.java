@@ -70,7 +70,7 @@ public class LitmusPaperItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if(player.isCrouching() && level.isClientSide){
+        if(level.isClientSide){
             if(!player.getItemInHand(hand).hasTag())
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
