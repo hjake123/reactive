@@ -16,6 +16,7 @@ import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
 import com.ibm.icu.text.MessagePattern;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -197,6 +199,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
     }
 
+    public int getTickCount(){
+        return tick_counter;
+    }
+
     private static void checkIntegrity(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         if(crucible.integrity < 70){
             crucible.expendAnyPowerExcept(null, 1);
@@ -229,6 +235,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
         level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, 1.15f, 0.8f);
         level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Explosion.BlockInteraction.NONE);
+        if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
+            ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
+            level.addFreshEntity(dropped_shell);
+        }
         if(level instanceof ServerLevel slevel)
             FlagCriterion.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER, pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
@@ -253,7 +263,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
-    private void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
+    public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
         linked_crystal.setBeamTarget(null);
         linked_crystal = null;
         setDirty(level, pos, state);
@@ -717,8 +727,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         super.saveAdditional(main_tag);
         main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
         main_tag.put("integrity", IntTag.valueOf(integrity));
-        if(linked_crystal != null)
-            main_tag.put("LinkedCrystal", IntTag.valueOf(linked_crystal.getId()));
+        if(linked_crystal != null) {
+            main_tag.put("LinkedCrystal", NbtUtils.createUUID(linked_crystal.getUUID()));
+        }
 
         if(powers == null || powers.isEmpty()){
             return;
@@ -741,10 +752,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @Override
     public void load(@NotNull CompoundTag main_tag) {
         super.load(main_tag);
-        if(main_tag.contains("LinkedCrystal")){
-            int crystal_id = main_tag.getInt("LinkedCrystal");
-            if(level.getEntity(crystal_id) instanceof EndCrystal)
-                linked_crystal = (EndCrystal) level.getEntity(crystal_id);
+        if(main_tag.contains("LinkedCrystal") && this.getLevel() instanceof ServerLevel server){
+            UUID crystal_uuid = main_tag.getUUID("LinkedCrystal");
+            if(server.getEntity(crystal_uuid) instanceof EndCrystal crystal)
+                linked_crystal = crystal;
         }else{
             linked_crystal = null;
         }
