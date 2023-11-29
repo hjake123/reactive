@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.recipes.docs;
+package com.hyperlynx.reactive.integration.patchouli;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;

@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.alchemy.rxn.docs;
+package com.hyperlynx.reactive.integration.patchouli;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.Power;
