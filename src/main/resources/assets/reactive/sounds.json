@@ -1,0 +1,13 @@
+{
+  "zap": {
+    "subtitle": "subtitle.reactive.zap",
+    "sounds": [
+      "reactive:cc0_electric_zap",
+      "reactive:cc0_electric_zap_l",
+      "reactive:cc0_electric_zap_m",
+      "reactive:cc0_electric_zap_r",
+      "reactive:cc0_electric_zap_s"
+
+    ]
+  }
+}

@@ -10,6 +10,8 @@ import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -50,6 +52,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ReactiveMod.MODID);
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ReactiveMod.MODID);
 
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -62,6 +65,7 @@ public class Registration {
         Powers.POWERS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
+        SOUND_EVENTS.register(bus);
         bus.register(Registration.class);
     }
 
@@ -325,6 +329,10 @@ public class Registration {
     public static final SimpleParticleType ACID_BUBBLE_PARTICLE = new SimpleParticleType(false);
     public static final RegistryObject<ParticleType<SimpleParticleType>> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
             () -> ACID_BUBBLE_PARTICLE);
+
+    // Register sound events.
+    public static final RegistryObject<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
+            () -> new SoundEvent(new ResourceLocation("reactive:zap")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
