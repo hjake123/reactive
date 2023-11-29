@@ -262,6 +262,9 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
     // Shunt method to let Shulker Crucibles not empty when broken.
     public void onRemoveWithoutEmpty(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible && crucible.linked_crystal != null) {
+            crucible.unlinkCrystal(level, pos, state);
+        }
         super.onRemove(state, level, pos, new_state, p_60519_);
     }
 
