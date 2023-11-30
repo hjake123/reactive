@@ -150,7 +150,8 @@
   "advancement.reactive.text.failure": "Destroy a Crucible with a certain block",
   "advancement.reactive.title.all_staves": "Self Made Wizard",
   "advancement.reactive.text.all_staves": "Obtain every form of the Staff of Power",
-  "reactive.display_source.crucible": "Power Amounts",
+  "reactive.display_source.crucible_powers": "Power Amounts",
+  "reactive.display_source.crucible_integrity": "Integrity",
   "tooltip.reactive.entity_bound": "Bound to ",
   "tooltip.reactive.no_entity_bound": "No entity is bound",
   "message.reactive.warp_staff_tutorial": "The Staff needs a creature to target."
