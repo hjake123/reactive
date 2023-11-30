@@ -122,7 +122,7 @@ public class StaffEffects {
 
         if(user instanceof ServerPlayer) {
             for(LivingEntity victim : user.level.getEntitiesOfClass(LivingEntity.class, aoe)){
-                if(victim instanceof ServerPlayer && !(victim.equals(user)))
+                if(victim instanceof ServerPlayer && !(victim.equals(user)) && !CrystalIronItem.effectNotBlocked(victim, 1))
                     continue; // This staff cannot hurt players other than the user.
                 victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
                 victim.knockback(0.3, user.level.random.nextDouble()*0.2 - 0.1, user.level.random.nextDouble()*0.2 - 0.1);
