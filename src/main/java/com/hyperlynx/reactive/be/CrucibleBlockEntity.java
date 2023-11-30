@@ -74,7 +74,6 @@ import static com.hyperlynx.reactive.advancements.CriteriaTriggers.SEE_CRUCIBLE_
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     // Don't change the max power without updating the recipes.
-
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
     private int tick_counter = 0; // Used for counting active ticks. See tick().
@@ -771,7 +770,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             resetColor();
         }
         electricCharge = main_tag.getInt("electric_charge");
-        integrity = main_tag.getInt("integrity");
+        if(main_tag.contains("integrity"))
+            integrity = main_tag.getInt("integrity");
         sculkSpreader.load(main_tag);
     }
 
