@@ -1,0 +1,13 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:stick"
+  },
+  "product": {
+    "item": "minecraft:torch",
+    "count": 8
+  },
+  "reagents": ["reactive:blaze"],
+  "min": 10,
+  "cost": 1
+}

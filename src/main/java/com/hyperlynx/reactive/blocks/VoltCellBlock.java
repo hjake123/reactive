@@ -14,16 +14,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class VoltCellBlock extends Block {
-    private final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 8, 15);
+public class VoltCellBlock extends CellBlock {
 
     public VoltCellBlock(Properties prop) {
         super(prop);
-    }
-
-    @Override
-    public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return SHAPE;
     }
 
     @Override

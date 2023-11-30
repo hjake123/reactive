@@ -12,6 +12,8 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -53,6 +55,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ReactiveMod.MODID);
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ReactiveMod.MODID);
 
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -66,6 +69,7 @@ public class Registration {
         Powers.POWERS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
+        SOUND_EVENTS.register(bus);
         bus.register(Registration.class);
     }
 
@@ -182,6 +186,10 @@ public class Registration {
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
+    public static final RegistryObject<Block> CURSE_CELL = BLOCKS.register("curse_cell",
+            () -> new CellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
+    public static final RegistryObject<Item> CURSE_CELL_ITEM = fromBlock(CURSE_CELL);
+
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
@@ -199,6 +207,8 @@ public class Registration {
             () -> new PowerBottleItem(new Item.Properties()));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Item> VITAL_BOTTLE = ITEMS.register("vital_bottle",
+            () -> new PowerBottleItem(new Item.Properties()));
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
@@ -209,17 +219,17 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final RegistryObject<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1200), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
+            () -> new LightStaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1000), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(1200), StaffEffects::warping, false, WARP_BOTTLE.get()));
+            () -> new WarpStaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(500), WARP_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1200).fireResistant(), StaffEffects::blazing, true, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, BLAZE_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
@@ -234,7 +244,7 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(600), StaffEffects::living, true, Items.GHAST_TEAR));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(600), StaffEffects::living, true, VITAL_BOTTLE.get()));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -252,6 +262,9 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<DisplacedBlockEntity>> DISPLACED_BLOCK_BE = TILES.register("displaced_block_be",
             () -> BlockEntityType.Builder.of(DisplacedBlockEntity::new, DISPLACED_BLOCK.get()).build(null));
 
+    public static final RegistryObject<Block> GLOWING_AIR = BLOCKS.register("glowing_air",
+            () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
+
     // Register items.
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
@@ -265,7 +278,7 @@ public class Registration {
     public static final RegistryObject<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new QuartzBottleItem(new Item.Properties()));
     public static final RegistryObject<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
-            () -> new CrystalIronItem(new Item.Properties().defaultDurability(16)));
+            () -> new CrystalIronItem(new Item.Properties().defaultDurability(64)));
     public static final RegistryObject<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SOUP = ITEMS.register("soup",
@@ -297,9 +310,9 @@ public class Registration {
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 1400)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 3000)));
     public static final RegistryObject<Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 2800)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 8000)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
@@ -321,6 +334,10 @@ public class Registration {
     public static final SimpleParticleType ACID_BUBBLE_PARTICLE = new SimpleParticleType(false);
     public static final RegistryObject<ParticleType<SimpleParticleType>> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
             () -> ACID_BUBBLE_PARTICLE);
+
+    // Register sound events.
+    public static final RegistryObject<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
+            () -> new SoundEvent(new ResourceLocation("reactive:zap")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

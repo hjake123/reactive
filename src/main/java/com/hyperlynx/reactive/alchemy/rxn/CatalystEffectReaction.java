@@ -17,6 +17,10 @@ public class CatalystEffectReaction extends EffectReaction{
         this.reactant = reactant;
     }
 
+    public Item getCatalyst(){
+        return reactant;
+    }
+
     @Override
     public Status conditionsMet(CrucibleBlockEntity crucible) {
         Status reaction_status = super.conditionsMet(crucible);
@@ -28,6 +32,6 @@ public class CatalystEffectReaction extends EffectReaction{
         }
         // The catalyst is missing.
         // Return the super status, unless it is meant to react, in which case switch it to a missing condition.
-        return reaction_status == Status.REACTING ? Status.MISSING_STIMULUS : reaction_status;
+        return reaction_status == Status.REACTING ? Status.MISSING_CATALYST : reaction_status;
     }
 }

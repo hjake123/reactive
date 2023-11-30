@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.be;
 
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
@@ -13,7 +14,9 @@ import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
+import com.ibm.icu.text.MessagePattern;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -21,6 +24,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -36,15 +40,16 @@ import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.NetherPortalBlock;
-import net.minecraft.world.level.block.SculkSpreader;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -52,6 +57,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+
+import static com.hyperlynx.reactive.advancements.CriteriaTriggers.SEE_CRUCIBLE_FAIL_TRIGGER;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
@@ -68,7 +75,6 @@ import java.util.*;
 public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     // Don't change the max power without updating the recipes.
-
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
     public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
     private int tick_counter = 0; // Used for counting active ticks. See tick().
@@ -80,6 +86,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
+    public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
     public int render_tick_counter = 0; // Used for counting rendering ticks on the client in CrucibleRenderer.
@@ -129,6 +136,26 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                         }
                     }
+
+                    // Handle the various properties of the Curse Cell and Integrity.
+                    if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
+                        boolean hungers = true;
+                        for (Power base_power : ReactionMan.BASE_POWER_LIST) {
+                            if(crucible.getPowerLevel(base_power) > 0) {
+                                hungers = false;
+                                crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 3, 27));
+                            }
+                        }
+                        ParticleScribe.drawParticleBox(level, ParticleTypes.ASH, AABB.ofSize(Vec3.atCenterOf(pos.below()), 1, 1, 1), 2);
+                        if(hungers){
+                            // If the Cell can't take Power from a Crucible, it will start breaking down the magic of the Crucible itself.
+                            crucible.integrity--;
+                        }
+                    }else if(crucible.integrity < 100 && crucible.integrity > 10){
+                        crucible.integrity += Math.min(10, 100 - crucible.integrity);
+                    }else if(crucible.integrity < 10){
+                        crucible.integrity--;
+                    }
                 }
 
                 case 1 -> {
@@ -140,7 +167,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
                 case 2 -> {
                     // Process items inside the Crucible
-                    if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
+                    if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70){
                         if (processItemsInside(level, pos, state, crucible)) {
                             level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
                         }
@@ -153,11 +180,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         react(level, crucible);
                     }
 
-                    // Spread Sculk if applicable
+                    // Spread Sculk, if applicable
                     crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
                 }
 
                 case 4 -> {
+                    // Deal with integrity violations.
+                    checkIntegrity(level, pos, state, crucible);
+
                     // Synchronize the client and server.
                     crucible.setDirty();
                     crucible.process_stage = -1;
@@ -167,6 +197,54 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
             crucible.process_stage++;
         }
+    }
+
+    public int getTickCount(){
+        return tick_counter;
+    }
+
+    private static void checkIntegrity(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        if(crucible.integrity < 70){
+            crucible.expendAnyPowerExcept(null, 1);
+        }
+        if(crucible.integrity < 50 && crucible.integrity > 10){
+            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 1);
+        }
+        if(crucible.integrity < 20 && crucible.integrity > 12){
+            level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.2f, 0.9f);
+        }
+        if(crucible.integrity == 10){
+            if(state.getValue(CrucibleBlock.FULL))
+                crucible.addPower(Powers.MIND_POWER.get(), 23);
+            level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.2f, 0.9f);
+            crucible.integrity--;
+        }
+        else if(crucible.integrity == 2){
+            level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0f, 0.9f);
+        }
+        else if(crucible.integrity == 1){
+            level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0f, 0.9f);
+        }
+        else if(crucible.integrity < 1){
+            empty(level, pos, state, crucible);
+            integrityFail(level, pos, state);
+        }
+    }
+
+    public static void integrityFail(Level level, BlockPos pos, BlockState state) {
+        ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
+        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, 1.15f, 0.8f);
+        level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Explosion.BlockInteraction.NONE);
+        if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
+            ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
+            level.addFreshEntity(dropped_shell);
+        }
+        if(level instanceof ServerLevel slevel)
+            FlagCriterion.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER, pos, 24);
+        if(state.getValue(CrucibleBlock.FULL))
+            level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
+        else
+            level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
     public static void empty(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
@@ -185,7 +263,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
-    private void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
+    public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
         linked_crystal.setBeamTarget(null);
         linked_crystal = null;
         setDirty(level, pos, state);
@@ -648,8 +726,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     protected void saveAdditional(@NotNull CompoundTag main_tag) {
         super.saveAdditional(main_tag);
         main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
-        if(linked_crystal != null)
-            main_tag.put("LinkedCrystal", IntTag.valueOf(linked_crystal.getId()));
+        main_tag.put("integrity", IntTag.valueOf(integrity));
+        if(linked_crystal != null) {
+            main_tag.put("LinkedCrystal", NbtUtils.createUUID(linked_crystal.getUUID()));
+        }
 
         if(powers == null || powers.isEmpty()){
             return;
@@ -672,10 +752,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @Override
     public void load(@NotNull CompoundTag main_tag) {
         super.load(main_tag);
-        if(main_tag.contains("LinkedCrystal")){
-            int crystal_id = main_tag.getInt("LinkedCrystal");
-            if(level.getEntity(crystal_id) instanceof EndCrystal)
-                linked_crystal = (EndCrystal) level.getEntity(crystal_id);
+        if(main_tag.contains("LinkedCrystal") && this.getLevel() instanceof ServerLevel server){
+            UUID crystal_uuid = main_tag.getUUID("LinkedCrystal");
+            if(server.getEntity(crystal_uuid) instanceof EndCrystal crystal)
+                linked_crystal = crystal;
         }else{
             linked_crystal = null;
         }
@@ -691,6 +771,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             resetColor();
         }
         electricCharge = main_tag.getInt("electric_charge");
+        if(main_tag.contains("integrity"))
+            integrity = main_tag.getInt("integrity");
         sculkSpreader.load(main_tag);
     }
 

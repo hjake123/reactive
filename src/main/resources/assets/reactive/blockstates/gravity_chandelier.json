@@ -1,7 +1,10 @@
 {
   "variants":{
-    "":{
+    "offset=false":{
       "model": "reactive:block/chandelier"
+    },
+    "offset=true":{
+      "model": "reactive:block/chandelier_offset"
     }
   }
 }

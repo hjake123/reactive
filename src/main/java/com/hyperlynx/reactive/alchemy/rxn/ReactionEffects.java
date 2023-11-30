@@ -130,7 +130,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
-                    c.getLevel().playSound(null, potential_rod, SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.BLOCKS, 0.1F, 1.3F);
+                    c.getLevel().playSound(null, potential_rod, Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 1F);
                 }
             } else {
                 AABB aoe = new AABB(c.getBlockPos());
@@ -147,6 +147,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
+                    c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 0.98F + c.getLevel().random.nextFloat()*0.05F);
                 }
             }
             c.electricCharge = 0;
@@ -161,21 +162,21 @@ public class ReactionEffects {
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
 
-        BlockPos origin_pos = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
-        if(origin_pos == null){
-            origin_pos = c.getBlockPos();
-        }
+        BlockPos origin_pos = c.getBlockPos();
 
-        for(LivingEntity e : nearby_ents){
-            if(CrystalIronItem.effectNotBlocked(e, 4)) {
-                e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
-                if(e instanceof ServerPlayer player){
+        for(LivingEntity victim : nearby_ents){
+            if(CrystalIronItem.effectNotBlocked(victim, 1)) {
+                victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
+                if(victim instanceof ServerPlayer player){
                     CriteriaTriggers.BE_LEVITATED_TRIGGER.trigger(player);
                 }
             }
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
                     origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                    e.getX(),e.getEyeY()-0.2, e.getZ(), 8, 7, 0.74);
+                    victim.getX(),victim.getEyeY()-0.2, victim.getZ(), 8, 7, 0.74);
+            float pitch = 0.80F + c.getLevel().random.nextFloat()*0.1F;
+            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME, SoundSource.BLOCKS, 0.3F, pitch);
+            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME, SoundSource.BLOCKS, 0.3F, pitch/2);
         }
         return c;
     }
@@ -186,21 +187,16 @@ public class ReactionEffects {
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
 
-        BlockPos origin_pos = crucible.areaMemory.fetch(crucible.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
-        if(origin_pos == null){
-            origin_pos = crucible.getBlockPos();
-        }
-
-        for(LivingEntity e : nearby_ents){
-            if(CrystalIronItem.effectNotBlocked(e, 4)) {
-                e.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
-                if(e instanceof ServerPlayer player){
+        for(LivingEntity victim : nearby_ents){
+            if(CrystalIronItem.effectNotBlocked(victim, 1)) {
+                victim.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
+                if(victim instanceof ServerPlayer player){
                     CriteriaTriggers.BE_SLOWFALLED_TRIGGER.trigger(player);
                 }
             }
-            ParticleScribe.drawParticleZigZag(crucible.getLevel(), ParticleTypes.END_ROD,
-                    origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
-                    e.getX(),e.getEyeY()-0.3, e.getZ(), 5, 12, 0.5);
+            ParticleScribe.drawParticleRing(crucible.getLevel(), ParticleTypes.END_ROD, crucible.getBlockPos(), 0.5, 0.6, 1);
+            crucible.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.CONDUIT_AMBIENT_SHORT, SoundSource.BLOCKS, 0.1F, 1.2F);
+
         }
 
         // Craft the scales if levitation is also happening, and then empty the Crucible.

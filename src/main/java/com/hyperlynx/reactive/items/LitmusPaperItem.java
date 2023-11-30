@@ -52,6 +52,7 @@ public class LitmusPaperItem extends Item {
             case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition"));
             case POWER_TOO_WEAK -> text.add(Component.translatable("text.reactive.power_too_weak"));
             case MISSING_STIMULUS -> text.add(Component.translatable("text.reactive.multi_power_reaction_missing_condition"));
+            case MISSING_CATALYST -> text.add(Component.translatable("text.reactive.missing_catalyst"));
             case INHIBITED -> text.add(Component.translatable("text.reactive.inhibited"));
             case REACTING -> text.add(Component.translatable("text.reactive.reacting"));
         }
@@ -61,13 +62,15 @@ public class LitmusPaperItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, level, hover_text, tooltip_flag);
-        hover_text.addAll(buildMeasurmentText(stack));
+        if(stack.hasTag()) {
+            hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+        }
     }
 
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if(player.isCrouching() && level.isClientSide){
+        if(level.isClientSide){
             if(!player.getItemInHand(hand).hasTag())
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
@@ -98,12 +101,18 @@ public class LitmusPaperItem extends Item {
     public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible) {
         ListTag measurements = new ListTag();
 
+        if(crucible.integrity < 85){
+            CompoundTag warning = new CompoundTag();
+            warning.putString("value",  Component.translatable("text.reactive.litmus_integrity_failure").getString());
+            measurements.add(warning);
+        }
+
         for(Power p : crucible.getPowerMap().keySet()){
             int pow = crucible.getPowerLevel(p);
             if(pow == 0)
                 continue;
 
-            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : "TRACE");
+            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : Component.translatable("text.reactive.trace").getString());
 
             CompoundTag mt = new CompoundTag();
             mt.putString("value", measurement);

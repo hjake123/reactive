@@ -1,0 +1,92 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:mind_staff"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.all_staves"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.all_staves"
+    },
+    "frame": "challenge"
+  },
+  "parent": "reactive:portal_freeze",
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+    "blaze_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:blaze_staff"
+            ]
+          }
+        ]
+      }
+    },
+    "light_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:light_staff"
+            ]
+          }
+        ]
+      }
+    },
+    "mind_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:mind_staff"
+            ]
+          }
+        ]
+      }
+    },
+    "soul_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:soul_staff"
+            ]
+          }
+        ]
+      }
+    },
+    "vital_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:vital_staff"
+            ]
+          }
+        ]
+      }
+    },
+    "warp_staff": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:warp_staff"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

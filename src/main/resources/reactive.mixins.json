@@ -7,8 +7,10 @@
   "mixins": [
     "AbstractSkeletonMixin",
     "AllayMixin",
+    "BoatMixin",
     "CreeperMixin",
     "LightningBoltMixin",
+    "LivingEntityGravityMixin",
     "PhantomMixin",
     "SpiderMixin",
     "VexMixin",

@@ -20,6 +20,16 @@ public class ParticleScribe {
         }
     }
 
+    public static void drawParticleBox(Level level, ParticleOptions opt, AABB aabb, int frequency) {
+        double x, y, z;
+        for(int i = 0; i < frequency; i++){
+            x = level.random.nextDouble() * (aabb.maxX - aabb.minX) + aabb.minX;
+            y = level.random.nextDouble() * (aabb.maxY - aabb.minY) + aabb.minY;
+            z = level.random.nextDouble() * (aabb.maxZ - aabb.minZ) + aabb.minZ;
+            drawParticle(level, opt, x, y, z);
+        }
+    }
+
     public static void drawParticleLine(Level level, ParticleOptions opt, BlockPos a, BlockPos b, int frequency, double noise){
         drawParticleLine(level, opt, a.getX()+0.5, a.getY()+0.5,a.getZ()+0.5,
                 b.getX()+0.5, b.getY()+0.5, b.getZ()+0.5, frequency, noise);
@@ -100,14 +110,18 @@ public class ParticleScribe {
     }
 
     public static void drawParticleRing(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
-        double center_x = pos.getX() + 0.5;
-        double center_z = pos.getZ() + 0.5;
+        drawParticleRing(level, opt, Vec3.atBottomCenterOf(pos), height, radius, frequency);
+    }
+
+    public static void drawParticleRing(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency){
+        double center_x = pos.x;
+        double center_z = pos.z;
 
         for(int i = 0; i < frequency; i++){
             int deflection_angle = level.random.nextInt(1, 360);
             double x = Math.cos(Math.toRadians(deflection_angle)) * radius + center_x;
             double z = Math.sin(Math.toRadians(deflection_angle)) * radius + center_z;
-            drawParticle(level, opt, x, pos.getY() + height, z);
+            drawParticle(level, opt, x, pos.y + height, z);
         }
     }
 

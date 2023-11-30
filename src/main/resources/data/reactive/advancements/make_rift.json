@@ -1,17 +1,4 @@
 {
-  "display": {
-    "icon": {
-      "item": "reactive:warp_bottle"
-    },
-    "title": {
-      "translate": "advancement.reactive.title.rift"
-    },
-    "description": {
-      "translate": "advancement.reactive.text.rift"
-    },
-    "announce_to_chat": false,
-    "show_toast": false
-  },
   "criteria": {
     "see_synthesis": {
       "trigger": "reactive:make_rift_criterion"

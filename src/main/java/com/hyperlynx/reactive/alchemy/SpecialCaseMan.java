@@ -90,6 +90,8 @@ public class SpecialCaseMan {
             blazeEscape(c);
         if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
             verdantEscape(c);
+        if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
+            lightEscape(c);
         if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
             staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
     }
@@ -291,13 +293,30 @@ public class SpecialCaseMan {
         e.kill();
     }
 
-    // Putting a writable book in a crucible with Mind will fill it with gibberish.
+    // Putting a writable book in a crucible with Mind will change its contents.
+    /*
+    Specifically:
+        - If Mind is low, it consumes words from the book to generate more Mind.
+        - If Mind is medium, it transposes a few characters and does nothing.
+        - If Mind is high, it fills the book with gibberish and consumes Mind.
+     */
     private static void waterWriting(CrucibleBlockEntity c, ItemEntity e){
-        if(c.getPowerLevel(Powers.MIND_POWER.get()) < WorldSpecificValue.get("water_write_threshold",
-                WorldSpecificValue.get("water_write_cost", 20, 50), 700)) {
-            return;
+        int low = WorldSpecificValue.get("water_write_low_threshold", 200, 400);
+        int high = WorldSpecificValue.get("water_write_high_threshold", 500, 800);
+        if(c.getPowerLevel(Powers.MIND_POWER.get()) < low) {
+            boolean harvested = lowWaterWriting(c, e, low);
+            if(harvested){
+                e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+                e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.6F, 0.6F);
+            }
         }
-
+        else if(c.getPowerLevel(Powers.MIND_POWER.get()) > high){
+            highWaterWriting(c, e, high);
+            e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+            e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
+        }
+    }
+    private static void highWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold) {
         String CHAR_LIST = "abcdefhijklmnopqstuvwxyz, -;6'";
 
         CompoundTag book_tag = e.getItem().getTag();
@@ -307,22 +326,66 @@ public class SpecialCaseMan {
         }
 
         ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
-        int pagecount = Math.max(c.getPowerLevel(Powers.MIND_POWER.get()) / 220, pages.size());
-        for(int i = 0; i < pagecount; i++){
-            StringBuilder gibberish = new StringBuilder();
-            for(int j = 0; j < 200; j++){
-                gibberish.append(CHAR_LIST.charAt(e.level().random.nextInt(CHAR_LIST.length())));
+        for(int page_index = 0; page_index < pages.size(); page_index++){
+            if(c.getPowerLevel(Powers.MIND_POWER.get()) < threshold)
+                break;
+            List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
+            if(words.size() == 0){
+                if(e.getThrower() != null && e.level.getPlayerByUUID(e.getThrower()) != null)
+                    words.add(e.level.getPlayerByUUID(e.getThrower()).getName().getString());
+                else
+                    words.add("turning");
             }
-            if(i < pages.size())
-                pages.set(i, StringTag.valueOf(gibberish.toString()));
-            else
-                pages.add(i, StringTag.valueOf(gibberish.toString()));
-        }
+            if(e.level.random.nextFloat() < 0.3){
+                // Add a chaos word.
+                StringBuilder chaos = new StringBuilder();
+                for(int i = 0; i < e.level.random.nextInt(3, 25); i++){
+                    chaos.append(CHAR_LIST.charAt(e.level.random.nextInt(CHAR_LIST.length())));
+                }
+                words.add(e.level.random.nextInt(words.size()), chaos.toString());
+            }else{
+                // Copy an existing word.
+                int index = e.level.random.nextInt(words.size());
+                words.add(index, words.get(index));
+            }
 
-        e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
-        e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
-        c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 20, 50));
+            String text = words.stream().reduce((s1, s2) -> s1 + " " + s2).get();
+            if(text.length() > 250){
+                text = text.substring(0, 250);
+            }
+            pages.set(page_index, StringTag.valueOf(text));
+            c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20));
+        }
         c.setDirty();
+    }
+
+    private static void medWaterWriting(CrucibleBlockEntity c, ItemEntity e) {
+        // Nothing at the moment.
+    }
+
+    private static boolean lowWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold){
+        CompoundTag book_tag = e.getItem().getTag();
+        if(book_tag == null) {
+            e.getItem().addTagElement("pages", new ListTag());
+            book_tag = e.getItem().getTag();
+        }
+        boolean did_anything = false;
+        ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
+        for(int page_index = 0; page_index < pages.size(); page_index++) {
+            if(c.getPowerLevel(Powers.MIND_POWER.get()) > threshold)
+                break;
+            // Remove a random word from the page.
+            List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
+            if(words.size() == 0)
+                continue;
+            did_anything = true;
+            String victim = words.get(e.level.random.nextInt(words.size()));
+            String blank = " ".repeat(victim.length());
+            pages.set(page_index, StringTag.valueOf(pages.get(page_index).getAsString().replace(victim, blank)));
+            c.addPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);
+        }
+        c.setDirty();
+        return did_anything;
     }
 
     // Phantom residue + verdant = summon a slime.
@@ -424,6 +487,12 @@ public class SpecialCaseMan {
         ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 
+    private static void lightEscape(CrucibleBlockEntity c) {
+        if(c.getLevel() == null || c.getLevel().isClientSide || !c.getLevel().getBlockState(c.getBlockPos().above()).isAir())
+            return;
+        c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+    }
+
     public static void solidifyPortal(Level l, BlockPos p, Direction.Axis axis){
         HyperPortalShape portal = new HyperPortalShape(l, p, axis);
         if(portal.isComplete()){
@@ -444,11 +513,9 @@ public class SpecialCaseMan {
     // Prevent anything from jumping when Immobilized.
     @SubscribeEvent(priority= EventPriority.LOWEST)
     public static void onJump(LivingEvent.LivingJumpEvent event) {
-        for(MobEffectInstance instance :event.getEntity().getActiveEffects()){
-            if(instance.getEffect().equals(Registration.IMMOBILE.get())){
-                event.getEntity().setJumping(false);
-                event.getEntity().setDeltaMovement(0, 0, 0);
-            }
+        if(event.getEntity().hasEffect(Registration.IMMOBILE.get())){
+            event.getEntity().setJumping(false);
+            event.getEntity().setDeltaMovement(0, 0, 0);
         }
     }
 }

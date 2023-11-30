@@ -52,9 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, WorldlyContainerHolder {
-
     public static final BooleanProperty FULL = BooleanProperty.create("full");
-
 
     public CrucibleBlock(Properties p) {
         super(p);
@@ -115,7 +113,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){
         if(level.isClientSide()){
-            // Hacky method to make sure that acid bucket addition instantly updates the mix color.
+            // Workaround to make sure that acid bucket addition instantly updates the mix color.
             if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if(!(crucible instanceof CrucibleBlockEntity c)){
@@ -252,8 +250,11 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
-        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity && !level.isClientSide){
-            CrucibleBlockEntity.empty(level, pos, state, (CrucibleBlockEntity) level.getBlockEntity(pos));
+        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible && !level.isClientSide){
+            CrucibleBlockEntity.empty(level, pos, state, crucible);
+            if(crucible.integrity < 10){
+                CrucibleBlockEntity.integrityFail(level, pos, state);
+            }
         }
 
         super.onRemove(state, level, pos, new_state, p_60519_);
@@ -261,6 +262,9 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
     // Shunt method to let Shulker Crucibles not empty when broken.
     public void onRemoveWithoutEmpty(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        if(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible && crucible.linked_crystal != null) {
+            crucible.unlinkCrystal(level, pos, state);
+        }
         super.onRemove(state, level, pos, new_state, p_60519_);
     }
 
@@ -273,6 +277,10 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible))
             return 0;
+
+        if(crucible.integrity < 85){
+            return 0;
+        }
 
         if(crucible.used_crystal_this_cycle){
             return 15;

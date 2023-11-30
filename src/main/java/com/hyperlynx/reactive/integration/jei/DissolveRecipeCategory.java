@@ -23,6 +23,8 @@ import com.hyperlynx.reactive.util.ConfigMan;
 
 import java.util.List;
 
+import static com.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.POWER_TYPE;
+
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
@@ -51,7 +53,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         return  ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
     }
 
-//    @Override
+    @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, IFocusGroup focuses) {
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
@@ -64,7 +66,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
             IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 20);
             power_slot.setSlotName("power_result");
             for (ItemStack input : recipe.getReactant().getItems()) {
-                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(input));
+                power_slot.addIngredients(POWER_TYPE, Power.getSourcePower(input));
             }
         }
     }
