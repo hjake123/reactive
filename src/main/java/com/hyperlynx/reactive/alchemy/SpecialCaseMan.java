@@ -38,7 +38,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -306,14 +305,14 @@ public class SpecialCaseMan {
         if(c.getPowerLevel(Powers.MIND_POWER.get()) < low) {
             boolean harvested = lowWaterWriting(c, e, low);
             if(harvested){
-                e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
-                e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.6F, 0.6F);
+                e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+                e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.6F, 0.6F);
             }
         }
         else if(c.getPowerLevel(Powers.MIND_POWER.get()) > high){
             highWaterWriting(c, e, high);
-            e.level.playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
-            e.level.playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
+            e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
+            e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
         }
     }
     private static void highWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold) {
@@ -331,21 +330,21 @@ public class SpecialCaseMan {
                 break;
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
             if(words.size() == 0){
-                if(e.getThrower() != null && e.level.getPlayerByUUID(e.getThrower()) != null)
-                    words.add(e.level.getPlayerByUUID(e.getThrower()).getName().getString());
+                if(e.getOwner() != null)
+                    words.add(e.getOwner().getName().getString());
                 else
                     words.add("turning");
             }
-            if(e.level.random.nextFloat() < 0.3){
+            if(e.level().random.nextFloat() < 0.3){
                 // Add a chaos word.
                 StringBuilder chaos = new StringBuilder();
-                for(int i = 0; i < e.level.random.nextInt(3, 25); i++){
-                    chaos.append(CHAR_LIST.charAt(e.level.random.nextInt(CHAR_LIST.length())));
+                for(int i = 0; i < e.level().random.nextInt(3, 25); i++){
+                    chaos.append(CHAR_LIST.charAt(e.level().random.nextInt(CHAR_LIST.length())));
                 }
-                words.add(e.level.random.nextInt(words.size()), chaos.toString());
+                words.add(e.level().random.nextInt(words.size()), chaos.toString());
             }else{
                 // Copy an existing word.
-                int index = e.level.random.nextInt(words.size());
+                int index = e.level().random.nextInt(words.size());
                 words.add(index, words.get(index));
             }
 
@@ -379,7 +378,7 @@ public class SpecialCaseMan {
             if(words.size() == 0)
                 continue;
             did_anything = true;
-            String victim = words.get(e.level.random.nextInt(words.size()));
+            String victim = words.get(e.level().random.nextInt(words.size()));
             String blank = " ".repeat(victim.length());
             pages.set(page_index, StringTag.valueOf(pages.get(page_index).getAsString().replace(victim, blank)));
             c.addPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);

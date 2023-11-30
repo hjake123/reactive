@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -17,12 +18,12 @@ import vazkii.patchouli.api.PatchouliAPI;
 public class ReactionComponentProcessor implements IComponentProcessor {
     String reaction_alias = "error";
     @Override
-    public void setup(IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
         reaction_alias = variables.get("reaction").asString();
     }
 
     @Override
-    public IVariable process(String key) {
+    public IVariable process(Level level, String key) {
         if(key.equals("formula")){
             for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()){
                 if(reaction.getAlias().equals(reaction_alias)){

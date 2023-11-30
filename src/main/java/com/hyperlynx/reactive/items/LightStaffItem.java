@@ -52,7 +52,7 @@ public class LightStaffItem extends StaffItem {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        Level level = entity.level;
+        Level level = entity.level();
         if(entity instanceof Player){
             BlockPos light_to_break = BlockPos.findClosestMatch(entity.getOnPos(), LIGHT_BREAK_RANGE, LIGHT_BREAK_RANGE,
                     (BlockPos pos) -> level.getBlockState(pos).is(Registration.GLOWING_AIR.get())).orElseGet(() -> null);

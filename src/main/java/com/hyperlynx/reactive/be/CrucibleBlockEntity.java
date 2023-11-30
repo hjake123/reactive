@@ -233,8 +233,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public static void integrityFail(Level level, BlockPos pos, BlockState state) {
         ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
-        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, 1.15f, 0.8f);
-        level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Explosion.BlockInteraction.NONE);
+        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.get(), SoundSource.BLOCKS, 1.15f, 0.8f);
+        level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Level.ExplosionInteraction.NONE);
         if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
             ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
             level.addFreshEntity(dropped_shell);

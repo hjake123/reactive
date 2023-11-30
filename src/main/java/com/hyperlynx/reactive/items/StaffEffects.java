@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -63,23 +64,23 @@ public class StaffEffects {
                 if(entityHit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(DamageSource.playerAttack(user).setIsFire(), 7);
+                        victim.hurt(user.damageSources().inFire(), 7);
                     }
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
             }
             if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
                 // Try to toggle light on the side of the hit block.
-                BlockPos light_target = new BlockPos(blockHitPos.relative(blockHit.getDirection(), 1));
-                if(user.level.getBlockState(light_target).isAir()){
-                    user.level.setBlock(light_target,
+                BlockPos light_target = BlockPos.containing(blockHitPos.relative(blockHit.getDirection(), 1));
+                if(user.level().getBlockState(light_target).isAir()){
+                    user.level().setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
                             Block.UPDATE_ALL);
                 }
             }
-            user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
+            user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
         }else{
-            ParticleScribe.drawParticleLine(user.level, ParticleTypes.END_ROD,
+            ParticleScribe.drawParticleLine(user.level(), ParticleTypes.END_ROD,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                     blockHitPos.x, blockHitPos.y, blockHitPos.z, 2, 0.1);
         }
@@ -103,35 +104,35 @@ public class StaffEffects {
             }
             var fireball_position = start
                     .add(user.getLookAngle().scale(1.5))
-                    .add(user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1);
+                    .add(user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
-            SmallFireball fireball = new SmallFireball(user.level, user, aim.x, aim.y, aim.z);
+            SmallFireball fireball = new SmallFireball(user.level(), user, aim.x, aim.y, aim.z);
             fireball.setPos(fireball_position);
-            user.level.addFreshEntity(fireball);
-            user.level.playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
+            user.level().addFreshEntity(fireball);
+            user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
         }
         return user;
     }
 
     public static Player spectral(Player user){
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
+        var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
         aoe = aoe.inflate(1.5);
 
         if(user instanceof ServerPlayer) {
-            for(LivingEntity victim : user.level.getEntitiesOfClass(LivingEntity.class, aoe)){
+            for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer && !(victim.equals(user)) && !CrystalIronItem.effectNotBlocked(victim, 1))
                     continue; // This staff cannot hurt players other than the user.
-                victim.hurt(DamageSource.playerAttack(user).setMagic(), 3);
-                victim.knockback(0.3, user.level.random.nextDouble()*0.2 - 0.1, user.level.random.nextDouble()*0.2 - 0.1);
+                victim.hurt(user.damageSources().magic(), 3);
+                victim.knockback(0.3, user.level().random.nextDouble()*0.2 - 0.1, user.level().random.nextDouble()*0.2 - 0.1);
             }
-            user.level.playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
-                    user.level.random.nextFloat()*0.1f + 0.95f);
+            user.level().playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
+                    user.level().random.nextFloat()*0.1f + 0.95f);
         }else{
-            ParticleScribe.drawParticleBox(user.level, ParticleTypes.SOUL, aoe, 10);
-            user.level.addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
+            ParticleScribe.drawParticleBox(user.level(), ParticleTypes.SOUL, aoe, 10);
+            user.level().addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
         }
         return user;
     }
@@ -140,27 +141,27 @@ public class StaffEffects {
         if (user instanceof ServerPlayer) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
             aoe = aoe.inflate(6);
-            List<LivingEntity> nearby_ents = user.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
             for(int i = 0; i < 3; i++) {
                 if(nearby_ents.isEmpty())
                     break;
-                LivingEntity victim = nearby_ents.get(user.level.random.nextInt(0, nearby_ents.size()));
-                victim.hurt(DamageSource.playerAttack(user).setMagic(), 2);
-                ParticleScribe.drawParticleZigZag(user.level, Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
+                victim.hurt(user.damageSources().magic(), 2);
+                ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
-                user.level.playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
-                        user.level.random.nextFloat()*0.1f + 0.8f);
+                user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
+                        user.level().random.nextFloat()*0.1f + 0.8f);
             }
         }
         return user;
     }
 
     public static Player living(Player user){
-        if (user.getLevel().random.nextFloat() < 0.4) {
+        if (user.level().random.nextFloat() < 0.4) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
             aoe = aoe.inflate(5);
-            List<LivingEntity> nearby_ents = user.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : nearby_ents) {
                 boolean has_regen = false, has_hp_up = false;
                 for(MobEffectInstance mei : victim.getActiveEffects()){
@@ -183,10 +184,10 @@ public class StaffEffects {
         }
 
         for(int i = 0; i < 10; i++){
-            user.level.addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
+            user.level().addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
                     user.getRandomZ(5.0), 0, 0, 0);
         }
-        user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
+        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
 
         return user;
     }

@@ -4,8 +4,8 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -20,7 +20,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
     private TransmuteRecipe recipe;
 
     @Override
-    public void setup(IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
         String recipeId = "reactive:transmutation/" + variables.get("recipe").asString();
         if(Minecraft.getInstance().level == null)
             return;
@@ -36,12 +36,12 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
     }
 
     @Override
-    public IVariable process(@NotNull String key) {
+    public IVariable process(Level level, @NotNull String key) {
         if(key.equals("reactant")){
             return IVariable.from(recipe.getReactant().getItems());
         }
         if(key.equals("product")){
-            return IVariable.from(recipe.getResultItem());
+            return IVariable.from(recipe.getResultItem(level.registryAccess()));
         }
         if(key.equals("reagents")){
             List<String> reagent_list = new ArrayList<String>();
@@ -49,7 +49,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
                 reagent_list.add(reagent.getName());
             }
 
-            return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1));
+            return IVariable.wrap("$(4)Reagents: " + reagent_list.toString().substring(1, reagent_list.toString().length()-1));
         }
         return null;
     }

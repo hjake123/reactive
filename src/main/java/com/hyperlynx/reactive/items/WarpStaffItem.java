@@ -89,7 +89,7 @@ public class WarpStaffItem extends StaffItem{
     }
 
     private void zap(Player user, Vec3 target, ParticleOptions opt){
-        ParticleScribe.drawParticleZigZag(user.level, opt,
+        ParticleScribe.drawParticleZigZag(user.level(), opt,
                 user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                 target.x, target.y, target.z, 5, 3, 0.4);
     }
@@ -141,7 +141,7 @@ public class WarpStaffItem extends StaffItem{
         ItemStack stack = user.getItemInHand(hand);
 
         int range = 12;
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
+        var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
@@ -173,7 +173,7 @@ public class WarpStaffItem extends StaffItem{
                         stack.setTag(new CompoundTag());
                     }
                     if(entityHit.getEntity() instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
-                        man.hurt(DamageSource.playerAttack(user), 1);
+                        man.hurt(user.damageSources().magic(), 1);
                         man.setBeingStaredAt();
                         user.getCooldowns().addCooldown(stack.getItem(), 100);
                     }else{
@@ -182,7 +182,7 @@ public class WarpStaffItem extends StaffItem{
                     }
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
-                            0.6F, 1.0F + user.level.random.nextFloat()*0.2F);
+                            0.6F, 1.0F + user.level().random.nextFloat()*0.2F);
                 }
                 stack.hurtAndBreak(1, user, (unused) -> {});
                 return InteractionResultHolder.success(stack);

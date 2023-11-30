@@ -128,6 +128,10 @@ public class Registration {
             () -> new VoltCellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
     public static final RegistryObject<Item> VOLT_CELL_ITEM = fromBlock(VOLT_CELL);
 
+    public static final RegistryObject<Block> CURSE_CELL = BLOCKS.register("curse_cell",
+            () -> new CellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
+    public static final RegistryObject<Item> CURSE_CELL_ITEM = fromBlock(CURSE_CELL);
+
     public static final RegistryObject<Block> WARP_SPONGE = BLOCKS.register("warp_sponge",
             () -> new WarpSpongeBlock(BlockBehaviour.Properties.copy(Blocks.WET_SPONGE)));
     public static final RegistryObject<Item> WARP_SPONGE_ITEM = fromBlock(WARP_SPONGE);
@@ -185,10 +189,6 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
-
-    public static final RegistryObject<Block> CURSE_CELL = BLOCKS.register("curse_cell",
-            () -> new CellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
-    public static final RegistryObject<Item> CURSE_CELL_ITEM = fromBlock(CURSE_CELL);
 
     // Register Power bottles
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
@@ -337,7 +337,7 @@ public class Registration {
 
     // Register sound events.
     public static final RegistryObject<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
-            () -> new SoundEvent(new ResourceLocation("reactive:zap")));
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:zap")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

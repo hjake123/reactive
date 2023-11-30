@@ -175,8 +175,8 @@ public class ReactionEffects {
                     origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
                     victim.getX(),victim.getEyeY()-0.2, victim.getZ(), 8, 7, 0.74);
             float pitch = 0.80F + c.getLevel().random.nextFloat()*0.1F;
-            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME, SoundSource.BLOCKS, 0.3F, pitch);
-            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME, SoundSource.BLOCKS, 0.3F, pitch/2);
+            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.BLOCKS, 0.3F, pitch);
+            c.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME.get(), SoundSource.BLOCKS, 0.3F, pitch/2);
         }
         return c;
     }
