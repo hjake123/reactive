@@ -27,7 +27,7 @@ public class CrucibleIntegrityDisplaySource extends PercentOrProgressBarDisplayS
 
     @Override
     protected boolean progressBarActive(DisplayLinkContext context) {
-        return false;
+        return true;
     }
 
     @Override

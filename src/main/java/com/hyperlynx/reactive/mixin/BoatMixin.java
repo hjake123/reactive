@@ -28,7 +28,7 @@ public abstract class BoatMixin {
     public void tick(CallbackInfo ci) {
         // Draw End Rod particles under no gravity boats.
         Boat self = ((Boat) (Object) this);
-        if(self.level instanceof ClientLevel && self.isNoGravity()){
+        if(self.level.isClientSide && self.isNoGravity()){
             ParticleScribe.drawParticle(self.level, ParticleTypes.END_ROD, self.getX(), self.getY()-0.02, self.getZ());
         }
     }
