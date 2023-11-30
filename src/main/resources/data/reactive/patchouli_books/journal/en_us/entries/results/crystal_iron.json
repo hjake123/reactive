@@ -2,6 +2,7 @@
   "name": "Ferrous Crystal",
   "icon": "reactive:crystal_iron",
   "category": "reactive:results",
+  "advancement": "reactive:make_crucible",
   "pages": [
     {
       "type": "patchouli:spotlight",
