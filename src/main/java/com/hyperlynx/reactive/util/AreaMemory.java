@@ -2,6 +2,8 @@ package com.hyperlynx.reactive.util;
 
 import com.hyperlynx.reactive.blocks.WarpSpongeBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
@@ -14,11 +16,14 @@ import java.util.Optional;
 public class AreaMemory {
     BlockPos hostPos;
     Map<Block, BlockPos> model;
+    Map<TagKey<Block>, BlockPos> tag_model;
+
     public boolean cache_only_mode = false; // If this is true, the model is used exclusively; no new items are scanned in.
 
     public AreaMemory(BlockPos hostPos){
         this.hostPos = hostPos;
         model = new HashMap<>();
+        tag_model = new HashMap<>();
     }
 
     public boolean exists(Level l, int radius, Block target){
@@ -45,8 +50,34 @@ public class AreaMemory {
         return newlyFound;
     }
 
-    // Scan for a compatible block. This is expensive! If there is none, returns null.
+    // 7a: Check for blocks of a certain tag in the tag model.
+    public BlockPos fetch(Level l, int radius, TagKey<Block> target){
+        if(tag_model.containsKey(target)) {
+            BlockPos holder = tag_model.get(target);
+            if(l.getBlockState(holder).is(target)) {
+                return holder;
+            }
+        }
+
+        if(cache_only_mode)
+            return null;
+
+        // If we reach this point, the block must either not be cached or have changed. Either way...
+        BlockPos newlyFound = findAndAddNearest(l, radius, target);
+        if(newlyFound != null) {
+            tag_model.put(target, newlyFound);
+        }
+        return newlyFound;
+    }
+
+    // Scan for a certain block. This is expensive! If there is none, returns null.
     private BlockPos findAndAddNearest(Level l, int radius, Block target){
+        Optional<BlockPos> found_maybe = BlockPos.findClosestMatch(hostPos, radius, radius, blockPos -> l.getBlockState(blockPos).is(target));
+        return found_maybe.orElse(null);
+    }
+
+    // Scan for a block in the tag. This is expensive! If there is none, returns null.
+    private BlockPos findAndAddNearest(Level l, int radius, TagKey<Block> target){
         Optional<BlockPos> found_maybe = BlockPos.findClosestMatch(hostPos, radius, radius, blockPos -> l.getBlockState(blockPos).is(target));
         return found_maybe.orElse(null);
     }

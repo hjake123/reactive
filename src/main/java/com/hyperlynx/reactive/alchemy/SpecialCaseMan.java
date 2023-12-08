@@ -24,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.StructureTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -138,7 +139,7 @@ public class SpecialCaseMan {
             return;
 
         int cause = WorldSpecificValues.GOLEM_CAUSE.get();
-        BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
+        BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), BlockTags.CANDLES);
 
         if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
             conjureSpirit(level, e, c, cause, candlePos);
@@ -168,6 +169,7 @@ public class SpecialCaseMan {
 
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
+        c.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
         EntityType.BLAZE.spawn((ServerLevel) level, (CompoundTag) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
