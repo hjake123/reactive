@@ -211,7 +211,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 1);
         }
         if(crucible.integrity < 20 && crucible.integrity > 12){
-            level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.2f, 0.9f);
+            level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3f, 0.9f);
         }
         if(crucible.integrity == 10){
             if(state.getValue(CrucibleBlock.FULL))
