@@ -32,7 +32,10 @@ There are two config files; one in the config folder, and one in each world's se
 	#Range: 4 ~ 4096
 	maxDisplaceCount = 128
 (How many blocks can be displaced when a structure of adjacent Framed Motion Salt Block is electrified. Note that this many blocks will be operated on in one tick by the initial displacement, which might cause a lag spike if you set it too high.)
- 
+
+	#Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]
+	lightStaffLightsPermanent = true
+(If this is turned off, invisible lights left by the Radiant Staff of Power will decay on random ticks.)
 ```
 ### SERVER CONFIG
 ```
