@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.ParticleScribe;
+import com.hyperlynx.reactive.fx.ReactionRenders;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
@@ -19,10 +20,15 @@ public class AnnihilationReaction extends EffectReaction{
         reagents.put(p2, WorldSpecificValues.ANNIHILATION_THRESHOLD.get());
     }
 
+    public AnnihilationReaction(String alias, Power p1, Power p2, Function<CrucibleBlockEntity, CrucibleBlockEntity> function) {
+        super(alias, function, ReactionRenders::defaultAnnihilation,0);
+        reagents.put(p1, WorldSpecificValues.ANNIHILATION_THRESHOLD.get());
+        reagents.put(p2, WorldSpecificValues.ANNIHILATION_THRESHOLD.get());
+    }
+
     @Override
     public void render(Level l, CrucibleBlockEntity crucible) {
         renderFunction.apply(crucible);
-        ParticleScribe.drawParticleCrucibleTop(l, ParticleTypes.SMOKE, crucible.getBlockPos(), 0.2F);
     }
 
     @Override

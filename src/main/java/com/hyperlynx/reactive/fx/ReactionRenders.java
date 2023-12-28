@@ -23,6 +23,11 @@ public class ReactionRenders {
         return c;
     }
 
+    public static CrucibleBlockEntity defaultAnnihilation(CrucibleBlockEntity c) {
+        ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SMOKE, c.getBlockPos(), 0.2F);
+        return c;
+    }
+
     // Causes nearby bonemeal-ables to be fertilized occasionally.
     public static CrucibleBlockEntity growth(CrucibleBlockEntity c) {
         ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.HAPPY_VILLAGER, c.getBlockPos(), 0.1F);
