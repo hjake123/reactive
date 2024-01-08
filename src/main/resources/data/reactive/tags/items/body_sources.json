@@ -13,6 +13,10 @@
     {
       "id": "irons_spellbooks:hogskin",
       "required": false
+    },
+    {
+      "id": "mna:bone_ash",
+      "required": false
     }
   ]
 }

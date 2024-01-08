@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "1.19.2-7"
+version = "1.19.2-7a"
 group = 'com.hyperlynx.reactive' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'reactive'
 

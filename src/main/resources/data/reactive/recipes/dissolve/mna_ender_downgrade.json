@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "mna:greater_mote_ender"
+  },
+  "product": {
+    "item": "mna:mote_ender"
+  }
+}

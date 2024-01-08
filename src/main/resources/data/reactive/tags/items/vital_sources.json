@@ -20,6 +20,14 @@
     {
       "id": "irons_spellbooks:blood_vial",
       "required": false
+    },
+    {
+      "id": "aether:regeneration_stone",
+      "required": false
+    },
+    {
+      "id": "mna:animus_dust",
+      "required": false
     }
   ]
 }

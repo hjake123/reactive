@@ -51,6 +51,22 @@
     {
       "id": "irons_spellbooks:arcane_cloth",
       "required": false
+    },
+    {
+      "id": "mna:purified_vinteum_dust",
+      "required": false
+    },
+    {
+      "id": "mna:cerublossom",
+      "required": false
+    },
+    {
+      "id": "mna:mote_arcane",
+      "required": false
+    },
+    {
+      "id": "mna:greater_mote_arcane",
+      "required": false
     }
   ]
 }

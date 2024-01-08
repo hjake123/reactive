@@ -53,6 +53,10 @@
     {
       "id": "irons_spellbooks:arcane_cloth",
       "required": false
+    },
+    {
+      "id": "aether:regeneration_stone",
+      "required": false
     }
   ]
 }

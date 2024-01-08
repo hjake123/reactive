@@ -95,6 +95,7 @@ public class SpecialCaseMan {
             verdantEscape(c);
         if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
             lightEscape(c);
+        c.areaMemory.cache_only_mode = false;
         if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
             staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
     }

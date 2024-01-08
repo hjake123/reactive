@@ -34,6 +34,22 @@
     {
       "id": "irons_spellbooks:dragonskin",
       "required": false
+    },
+    {
+      "id": "primalmagick:mana_salts",
+      "required": false
+    },
+    {
+      "id": "mna:resonating_dust",
+      "required": false
+    },
+    {
+      "id": "mna:mote_ender",
+      "required": false
+    },
+    {
+      "id": "mna:greater_mote_ender",
+      "required": false
     }
   ]
 }
