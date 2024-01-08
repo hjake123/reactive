@@ -69,6 +69,14 @@
     {
       "id": "irons_spellbooks:arcane_salvage",
       "required": false
+    },
+    {
+      "id": "aether:ambrosium_shard",
+      "required": false
+    },
+    {
+      "id": "mna:chimerite_gem",
+      "required": false
     }
   ]
 }

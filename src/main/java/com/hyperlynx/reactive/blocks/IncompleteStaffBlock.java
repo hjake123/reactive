@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
@@ -68,14 +69,12 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
             level.playSound(null, pos, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS, 1.0F, 1.0F);
             return;
         }
-
         if (order == 1 && order1[state.getValue(PROGRESS)].equals(exposed_power)
                 || order == 2 && order2[state.getValue(PROGRESS)].equals(exposed_power)
                 || order == 3 && order3[state.getValue(PROGRESS)].equals(exposed_power)) {
 
             level.setBlock(pos, state.setValue(PROGRESS, state.getValue(PROGRESS) + 1), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
-
         }
         else{
             if(exposed_power.equals(Powers.X_POWER.get())

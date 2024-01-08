@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "aether:regeneration_stone"
+  },
+  "product": {
+    "item": "minecraft:diamond"
+  }
+}

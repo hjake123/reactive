@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "mna:chimerite_gem"
+  },
+  "product": {
+    "item": "reactive:quartz"
+  }
+}
