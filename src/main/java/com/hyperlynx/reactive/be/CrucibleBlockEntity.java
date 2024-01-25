@@ -337,9 +337,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             crucible.gather_stage++;
         }
 
-        // Slowly dilute powers in the rain.
-        if(level.canSeeSky(crucible.getBlockPos()) && level.isRainingAt(crucible.getBlockPos())){
-            crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
+        // Slowly dilute powers in the rain, or accumulate light at noon.
+        if(level.canSeeSky(crucible.getBlockPos())){
+            if(level.isRainingAt(crucible.getBlockPos())) {
+                crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 80);
+            }else if(level.getDayTime() > 5900 && level.getDayTime() < 6100){
+                crucible.addPower(Powers.LIGHT_POWER.get(), 5);
+                ParticleScribe.drawParticleLine(level, ParticleTypes.END_ROD, crucible.getBlockPos(), crucible.getBlockPos().above(15), 5, 0);
+            }
         }
     }
 
