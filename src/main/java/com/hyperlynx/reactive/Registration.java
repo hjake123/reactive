@@ -82,7 +82,8 @@ public class Registration {
     // Register the Shulker Crucible
     public static final RegistryObject<Block> SHULKER_CRUCIBLE = BLOCKS.register("shulker_crucible",
             () -> new ShulkerCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.SHULKER_BOX)));
-    public static final RegistryObject<Item> SHULKER_CRUCIBLE_ITEM = fromBlock(SHULKER_CRUCIBLE);
+    public static final RegistryObject<Item> SHULKER_CRUCIBLE_ITEM = ITEMS.register(SHULKER_CRUCIBLE.getId().getPath(),
+            () -> new ShulkerCrucibleItem(new Item.Properties()));
 
     // Register the Crucible BE.
     public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",

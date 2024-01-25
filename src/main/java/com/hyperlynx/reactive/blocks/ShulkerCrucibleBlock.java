@@ -1,9 +1,12 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
+import com.hyperlynx.reactive.items.ShulkerCrucibleItem;
 import com.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -30,6 +33,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
                 ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
                 if(crucible.getTotalPowerLevel() > 0) {
                     crucible.saveToItem(drop_stack);
+                    drop_stack.getTag().put(ShulkerCrucibleItem.TAG_LABEL, StringTag.valueOf(getItemLabel(crucible)));
                 }else if(state.getValue(FULL)){
                     level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
                 }
@@ -42,6 +46,15 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
         super.playerWillDestroy(level, pos, state, player);
     }
 
+    private static String getItemLabel(CrucibleBlockEntity crucible){
+        StringBuilder label = new StringBuilder();
+        for(Power p : crucible.getPowerMap().keySet()){
+            if(crucible.getPowerLevel(p) > 0) {
+                label.append(p.getName()).append(", ");
+            }
+        }
+        return label.substring(0, label.length() - 2);
+    }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {

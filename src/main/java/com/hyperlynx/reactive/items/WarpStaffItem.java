@@ -175,7 +175,7 @@ public class WarpStaffItem extends StaffItem{
                         stack.getTag().put(TAG_BOUND_ENTITY_UUID, NbtUtils.createUUID(entityHit.getEntity().getUUID()));
                         stack.getTag().put(TAG_TUTORIAL_FINISHED, IntTag.valueOf(1));
                         stack.getTag().put(TAG_BOUND_ENTITY_NAME,
-                                StringTag.valueOf(String.valueOf(entityHit.getEntity().hasCustomName() ? entityHit.getEntity().getCustomName() : entityHit.getEntity().getName())));
+                                StringTag.valueOf(entityHit.getEntity().hasCustomName() ? entityHit.getEntity().getCustomName().getString() : entityHit.getEntity().getName().getString()));
                     }
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
