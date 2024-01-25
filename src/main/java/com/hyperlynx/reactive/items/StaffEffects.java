@@ -148,9 +148,6 @@ public class StaffEffects {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level.random.nextInt(0, nearby_ents.size()));
-                victim.hurt(DamageSource.playerAttack(user).setMagic(), 2);
-                ParticleScribe.drawParticleZigZag(user.level, Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
-                LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
                 if(victim instanceof ArmorStand)
                     continue;
                 if(victim instanceof TamableAnimal tamable_victim){
@@ -158,8 +155,8 @@ public class StaffEffects {
                         continue;
                     }
                 }
-                victim.hurt(user.damageSources().magic(), 2);
-                ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                victim.hurt(DamageSource.playerAttack(user).setMagic(), 2);
+                ParticleScribe.drawParticleZigZag(user.level, Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                 user.level.playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
                         user.level.random.nextFloat()*0.1f + 0.8f);
