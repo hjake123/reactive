@@ -224,22 +224,22 @@ public class Registration {
     public static final RegistryObject<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final RegistryObject<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, 10, BLAZE_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200), StaffEffects::spectral, false, SOUL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(800), StaffEffects::spectral, false, 14, SOUL_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200), StaffEffects::missile, false, MIND_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(1200), StaffEffects::missile, false, 10, MIND_BOTTLE.get()));
 
     public static final RegistryObject<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final RegistryObject<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(600), StaffEffects::living, true, VITAL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().tab(ReactiveMod.CREATIVE_TAB).defaultDurability(600), StaffEffects::living, true, 10, VITAL_BOTTLE.get()));
 
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
