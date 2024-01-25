@@ -17,6 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: "com.modrinth.minotaur"
+apply plugin: "com.matthewprenger.cursegradle"
 
 version = "1.19.2-7a"
 group = 'com.hyperlynx.reactive' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -217,20 +218,24 @@ modrinth {
         // scope.type
         // The scope can be `required`, `optional`, `incompatible`, or `embedded`
         // The type can either be `project` or `version`
-        required.project "patchouli" // Creates a new required dependency on Fabric API
+        required.project "patchouli" // Creates a new required dependency on Patchouli
     }
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
-//publishing {
-//    publications {
-//        register('mavenJava', MavenPublication) {
-//            artifact jar
-//        }
-//    }
-//    repositories {
-//        maven {
-//            url "file://${project.projectDir}/mcmodsrepo"
-//        }
-//    }
-//}
+curseforge {
+    project {
+        apiKey = System.getenv("CURSEFORGE_TOKEN")
+        id = "${curseforge_project_id}"
+        changelog = file("LATEST_CHANGELOG.md") // A file can also be set using: changelog = file('changelog.txt')
+        releaseType = 'release'
+        addGameVersion "NeoForge"
+        addGameVersion "${minecraft_version}"
+        mainArtifact(jar)
+        relations{
+            requiredDependency "patchouli"
+        }
+    }
+    options {
+        forgeGradleIntegration = false
+    }
+}
