@@ -1,9 +1,9 @@
 plugins {
     id 'eclipse'
     id 'idea'
-    id 'maven-publish'
     id 'net.neoforged.gradle' version '[6.0.18,6.2)'
     id 'org.spongepowered.mixin' version '0.7.+'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -217,19 +217,44 @@ tasks.named('jar', Jar).configure {
 //     dependsOn 'reobfJar'
 // }
 
-// Example configuration to allow publishing using the maven-publish plugin
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            artifact jar
-        }
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
+    projectId = "${mod_id}" // This can be the project ID or the slug. Either will work!
+    versionNumber = "${mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+    versionName = "reactive-${mod_version}"
+    versionType = "release" // This is the default -- can also be `beta` or `alpha`
+    uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+
+    // Try to read the changelog from the provided file.
+    var changelog_file_stream = new FileInputStream("${changelog_file}")
+    var changelog_lines = changelog_file_stream.readLines()
+    var changelog_builder = new StringBuilder();
+    for(String line : changelog_lines){
+        changelog_builder.append(line).append('\n');
     }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+    changelog = changelog_builder.toString()
+
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "patchouli" // Creates a new required dependency on Fabric API
     }
 }
+
+// Example configuration to allow publishing using the maven-publish plugin
+//publishing {
+//    publications {
+//        register('mavenJava', MavenPublication) {
+//            artifact jar
+//        }
+//    }
+//    repositories {
+//        maven {
+//            url "file://${project.projectDir}/mcmodsrepo"
+//        }
+//    }
+//}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
