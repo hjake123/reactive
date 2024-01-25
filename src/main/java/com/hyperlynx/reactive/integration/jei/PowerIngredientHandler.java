@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.integration.jei;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import mezz.jei.api.ingredients.IIngredientHelper;
@@ -26,7 +27,7 @@ public class PowerIngredientHandler implements IIngredientHelper<Power> {
 
     @Override
     public ResourceLocation getResourceLocation(Power ingredient) {
-        return Powers.POWER_SUPPLIER.get().getKey(ingredient);
+        return new ResourceLocation(ReactiveMod.MODID, ingredient.getId());
     }
 
     @Override
