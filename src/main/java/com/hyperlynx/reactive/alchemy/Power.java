@@ -9,6 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
@@ -62,6 +64,10 @@ public class Power {
         render_item = renderItem;
     }
 
+    public static TagKey<Item> getSourceTag(String id){
+        return ItemTags.create(new ResourceLocation(ReactiveMod.MODID, id + "_sources"));
+    }
+
     // Searches the Power Registry to locate the power referred to by the name in the tag.
     public static Power readPower(CompoundTag tag){
         return readPower(tag, "name");
@@ -94,18 +100,12 @@ public class Power {
         return adjusted_power_level >= threshold;
     }
 
-    // Checks if the ItemStack is assigned any of the Power-related tags, and if so, returns which power it is.
+    // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        if (i.is(AlchemyTags.acidSource)) stack_powers.add(Powers.ACID_POWER.get());
-        if (i.is(AlchemyTags.verdantSource)) stack_powers.add(Powers.VERDANT_POWER.get());
-        if (i.is(AlchemyTags.curseSource)) stack_powers.add(Powers.CURSE_POWER.get());
-        if (i.is(AlchemyTags.lightSource)) stack_powers.add(Powers.LIGHT_POWER.get());
-        if (i.is(AlchemyTags.mindSource)) stack_powers.add(Powers.MIND_POWER.get());
-        if (i.is(AlchemyTags.soulSource)) stack_powers.add(Powers.SOUL_POWER.get());
-        if (i.is(AlchemyTags.vitalSource)) stack_powers.add(Powers.VITAL_POWER.get());
-        if (i.is(AlchemyTags.warpSource)) stack_powers.add(Powers.WARP_POWER.get());
-        if (i.is(AlchemyTags.bodySource)) stack_powers.add(Powers.BODY_POWER.get());
+        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
+            if (i.is(Power.getSourceTag(reg.get().id))) stack_powers.add(reg.get());
+        }
         return stack_powers;
     }
 
