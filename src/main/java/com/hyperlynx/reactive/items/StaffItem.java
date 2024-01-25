@@ -24,13 +24,19 @@ import java.util.function.Function;
 public class StaffItem extends BlockItem {
     Function<Player, Player> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
+    int frequency; // Beam abilities activate once in this many ticks.
     public Item repair_item;
 
-    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Item repair_item) {
+    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, int frequency, Item repair_item) {
         super(block, props);
         effectFunction = effect;
         this.beam = beam;
         this.repair_item = repair_item;
+        this.frequency = frequency;
+    }
+
+    public static boolean onLastDurability(ItemStack stack){
+        return stack.getDamageValue() == stack.getMaxDamage() - 1;
     }
 
     @Override
@@ -40,7 +46,9 @@ public class StaffItem extends BlockItem {
 
     @Override
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
-        if(ticks % 10 == 1) {
+        if(onLastDurability(stack))
+            return;
+        if(ticks % frequency == 1) {
             if(level.isClientSide && !beam)
                 effectFunction.apply((Player) player);
 
@@ -67,6 +75,8 @@ public class StaffItem extends BlockItem {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if(onLastDurability(player.getItemInHand(hand)))
+            return InteractionResultHolder.fail(player.getItemInHand(hand));
         if(!player.isCrouching())
             player.startUsingItem(hand);
         return super.use(level, player, hand);

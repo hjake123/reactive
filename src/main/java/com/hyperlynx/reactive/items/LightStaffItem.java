@@ -47,7 +47,19 @@ public class LightStaffItem extends StaffItem {
     private final static int LIGHT_BREAK_RANGE = 24;
 
     public LightStaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Item repair_item) {
-        super(block, props, effect, beam, repair_item);
+        super(block, props, effect, beam, 7, repair_item);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if(onLastDurability(player.getItemInHand(hand)))
+            return InteractionResultHolder.fail(player.getItemInHand(hand));
+
+        if(!level.isClientSide) {
+            effectFunction.apply((Player) player);
+            player.getItemInHand(hand).hurtAndBreak(1, player, (LivingEntity l) -> {});
+        }
+        return super.use(level, player, hand);
     }
 
     @Override

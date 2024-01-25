@@ -19,6 +19,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Vex;
 import net.minecraft.world.entity.player.Player;
@@ -147,6 +149,13 @@ public class StaffEffects {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
+                if(victim instanceof ArmorStand)
+                    continue;
+                if(victim instanceof TamableAnimal tamable_victim){
+                    if(tamable_victim.getOwner() != null && tamable_victim.getOwner().equals(user)){
+                        continue;
+                    }
+                }
                 victim.hurt(user.damageSources().magic(), 2);
                 ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
