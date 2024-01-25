@@ -16,6 +16,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: "com.modrinth.minotaur"
 
 version = "1.19.2-7a"
 group = 'com.hyperlynx.reactive' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -190,15 +191,46 @@ jar.finalizedBy('reobfJar')
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 // publish.dependsOn('reobfJar')
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing:
+// tasks.named('publish').configure {
+//     dependsOn 'reobfJar'
+// }
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") // Remember to have the MODRINTH_TOKEN environment variable set or else this will fail - just make sure it stays private!
+    projectId = "${mod_id}" // This can be the project ID or the slug. Either will work!
+    versionNumber = "${mod_version}" // You don't need to set this manually. Will fail if Modrinth has this version already
+    versionName = "reactive-${mod_version}"
+    versionType = "release" // This is the default -- can also be `beta` or `alpha`
+    uploadFile = jar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+
+    // Try to read the changelog from the provided file.
+    var changelog_file_stream = new FileInputStream("${changelog_file}")
+    var changelog_lines = changelog_file_stream.readLines()
+    var changelog_builder = new StringBuilder();
+    for(String line : changelog_lines){
+        changelog_builder.append(line).append('\n');
     }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+    changelog = changelog_builder.toString()
+
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+        required.project "patchouli" // Creates a new required dependency on Fabric API
     }
 }
+
+// Example configuration to allow publishing using the maven-publish plugin
+//publishing {
+//    publications {
+//        register('mavenJava', MavenPublication) {
+//            artifact jar
+//        }
+//    }
+//    repositories {
+//        maven {
+//            url "file://${project.projectDir}/mcmodsrepo"
+//        }
+//    }
+//}
