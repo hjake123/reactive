@@ -184,4 +184,4 @@ Though the mod doesn't describe them in JEI, there are also Precipitation Recipe
 
 All recipes support item stack definitions with "count" greater than 1.
 # Further Customization
-At this time, there is no more you can do to alter the behavior of the mod. I'll likely add an API or similar sooner or later, especially if it's asked for. You can get in touch with me through the issues section or my discord (HyperLynx#7548) to talk about this.
+At this time, there is no more you can do to alter the behavior of the mod. I'll likely add an API or similar sooner or later, especially if it's asked for. You can get in touch with me through the issues section or my discord (hyperlynx) to talk about this.
