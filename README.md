@@ -4,6 +4,8 @@ Reactive is an alchemy-themed magic mod based on in-world experimentation.
 If you're here, you're either curious about the source code, or want to know the format for recipes.
 Either way, this is a passion project but I tried to put in work to make it understandable at least. 
 
+See the [Wiki](https://github.com/hjake123/reactive/wiki/Reactive-Alchemy-Wiki) for more information.
+
 # Config Options
 There are two config files; one in the config folder, and one in each world's serverconfigs. For reference, these are the options each contain:
 ### COMMON CONFIG
