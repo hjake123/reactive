@@ -75,6 +75,7 @@
   "block.reactive.acid_block": "Acid",
   "block.reactive.shulker_crucible": "Shulker Crucible",
   "block.reactive.gravity_chandelier": "Gravity Chandelier",
+  "block.reactive.power_bottle": "Bottle of Undefined",
   "effect.reactive.no_gravity": "Weightless",
   "effect.reactive.immobility": "Immobilized",
   "subtitle.reactive.zap": "Electricity zaps",

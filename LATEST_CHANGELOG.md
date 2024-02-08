@@ -1,1 +1,0 @@
-* Fix "Gold Manipulation" being duplicated in the book.

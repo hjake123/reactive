@@ -1,0 +1,25 @@
+{
+  "variants":{
+    "axis=x,bottles=1":{
+      "model": "reactive:block/bottle/acid_bottle",
+      "y": 90
+    },
+    "axis=z,bottles=1":{
+      "model": "reactive:block/bottle/acid_bottle"
+    },
+    "axis=x,bottles=2":{
+      "model": "reactive:block/bottle/two_acid_bottles",
+      "y": 90
+    },
+    "axis=z,bottles=2":{
+      "model": "reactive:block/bottle/two_acid_bottles"
+    },
+    "axis=x,bottles=3":{
+      "model": "reactive:block/bottle/three_acid_bottles",
+      "y": 90
+    },
+    "axis=z,bottles=3":{
+      "model": "reactive:block/bottle/three_acid_bottles"
+    }
+  }
+}

@@ -192,8 +192,12 @@ public class Registration {
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
     // Register Power bottles
+    public static final RegistryObject<Block> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
             () -> new BlazeBottleItem(new Item.Properties()));
     public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
