@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.blocks.PowerBottleBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -18,16 +19,20 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Objects;
 
-public class PowerBottleItem extends Item {
+public class PowerBottleItem extends BlockItem {
     public final static int BOTTLE_COST = 600;
 
-    public PowerBottleItem(Properties props) {
-        super(props);
+    public PowerBottleItem(Properties props, Block block) {
+        super(block, props);
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
@@ -81,6 +86,28 @@ public class PowerBottleItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        if((context.getLevel().getBlockState(context.getClickedPos()).getBlock().equals(this.getBlock()))){
+            /*
+            Deal with clicking on a Power Bottle with another of the same kind.
+             */
+            BlockState clicked_state = context.getLevel().getBlockState(context.getClickedPos());
+            if(clicked_state.getValue(PowerBottleBlock.BOTTLES) == 3)
+                return InteractionResult.PASS;
+
+            Level level = context.getLevel();
+            BlockPos clicked_pos = context.getClickedPos();
+            level.setBlock(context.getClickedPos(),
+                    clicked_state.setValue(PowerBottleBlock.BOTTLES, clicked_state.getValue(PowerBottleBlock.BOTTLES) + 1),
+                    Block.UPDATE_CLIENTS);
+            SoundType soundtype = clicked_state.getSoundType(level, clicked_pos, context.getPlayer());
+            level.playSound(context.getPlayer(), clicked_pos, this.getPlaceSound(clicked_state, level, clicked_pos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_PLACE, clicked_pos, GameEvent.Context.of(context.getPlayer(), clicked_state));
+            if (!context.getPlayer().getAbilities().instabuild) {
+                context.getItemInHand().shrink(1);
+            }
+            return InteractionResult.SUCCESS;
+        }
+
         if(!(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof CrucibleBlock)){
             return super.useOn(context);
         }

@@ -12,8 +12,8 @@ import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class BlazeBottleItem extends PowerBottleItem {
-    public BlazeBottleItem(Properties p) {
-        super(p);
+    public BlazeBottleItem(Properties props, Block block) {
+        super(props, block);
     }
 
     int tick_count = 0;

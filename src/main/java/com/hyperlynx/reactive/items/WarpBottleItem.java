@@ -29,8 +29,8 @@ public class WarpBottleItem extends PowerBottleItem{
     public static final String TAG_TELEPORT_DESTINATION = "TeleportPos";
     public static final String TAG_TELEPORT_DIMENSION = "TeleportDimension";
 
-    public WarpBottleItem(Properties props) {
-        super(props);
+    public WarpBottleItem(Properties props, Block block) {
+        super(props, block);
     }
 
     @Override
