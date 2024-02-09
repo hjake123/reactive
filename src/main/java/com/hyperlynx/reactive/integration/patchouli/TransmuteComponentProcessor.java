@@ -35,15 +35,16 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
 
     @Override
     public IVariable process(@NotNull String key) {
-        if(recipe == null)
-            return null;
-        if(key.equals("reactant")){
+        if(recipe != null && key.equals("reactant")){
             return IVariable.from(recipe.getReactant().getItems());
         }
-        if(key.equals("product")){
+        if(recipe != null && key.equals("product")){
             return IVariable.from(recipe.getResultItem());
         }
         if(key.equals("reagents")){
+            if(recipe == null){
+                return IVariable.wrap(Component.translatable("docs.reactive.removed_recipe").getString());
+            }
             List<String> reagent_list = new ArrayList<String>();
             for(Power reagent : recipe.getReagents()){
                 reagent_list.add(reagent.getName());
