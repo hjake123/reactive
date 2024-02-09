@@ -1,6 +1,6 @@
 {
   "parent": "reactive:block/bottle/three_power_bottles",
   "textures": {
-    "power": "reactive:block/blaze_in_bottle"
+    "power": "reactive:block/vital_in_bottle"
   }
 }

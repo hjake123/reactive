@@ -197,21 +197,35 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
     public static final RegistryObject<Block> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
-            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 7)));
     public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
             () -> new BlazeBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> MIND_BOTTLE_BLOCK = BLOCKS.register("mind_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> SOUL_BOTTLE_BLOCK = BLOCKS.register("soul_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> WARP_BOTTLE_BLOCK = BLOCKS.register("warp_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
             () -> new WarpBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> VERDANT_BOTTLE_BLOCK = BLOCKS.register("verdant_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> BODY_BOTTLE_BLOCK = BLOCKS.register("body_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> LIGHT_BOTTLE_BLOCK = BLOCKS.register("light_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 15)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
+    public static final RegistryObject<Block> VITAL_BOTTLE_BLOCK = BLOCKS.register("vital_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 2)));
     public static final RegistryObject<Item> VITAL_BOTTLE = ITEMS.register("vital_bottle",
             () -> new PowerBottleItem(new Item.Properties()));
 

@@ -1,0 +1,25 @@
+{
+  "variants":{
+    "axis=x,bottles=1":{
+      "model": "reactive:block/bottle/mind_bottle",
+      "y": 90
+    },
+    "axis=z,bottles=1":{
+      "model": "reactive:block/bottle/mind_bottle"
+    },
+    "axis=x,bottles=2":{
+      "model": "reactive:block/bottle/two_mind_bottles",
+      "y": 90
+    },
+    "axis=z,bottles=2":{
+      "model": "reactive:block/bottle/two_mind_bottles"
+    },
+    "axis=x,bottles=3":{
+      "model": "reactive:block/bottle/three_mind_bottles",
+      "y": 90
+    },
+    "axis=z,bottles=3":{
+      "model": "reactive:block/bottle/three_mind_bottles"
+    }
+  }
+}
