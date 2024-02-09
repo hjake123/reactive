@@ -28,21 +28,28 @@ import static com.hyperlynx.reactive.be.GravityChandelierBlockEntity.RANGE;
 
 public class GravityChandelierBlock extends WaterloggableBlock implements EntityBlock {
     public static final BooleanProperty OFFSET = BooleanProperty.create("offset");
+    public static final BooleanProperty SHOW_RADIUS = BooleanProperty.create("show_radius");
 
     public GravityChandelierBlock(Properties props) {
         super(props);
-        registerDefaultState(this.defaultBlockState().setValue(OFFSET, false));
+        registerDefaultState(this.defaultBlockState().setValue(OFFSET, true).setValue(SHOW_RADIUS, true));
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        level.setBlock(pos, state.setValue(OFFSET, !state.getValue(OFFSET)), Block.UPDATE_CLIENTS);
-        level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1.0F, 0.72F);
+        if(player.isShiftKeyDown()) {
+            level.setBlock(pos, state.setValue(SHOW_RADIUS, !state.getValue(SHOW_RADIUS)), Block.UPDATE_CLIENTS);
+            level.playSound(null, pos, SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.BLOCKS, 1.0F, 1.2F);
+        }else{
+            level.setBlock(pos, state.setValue(OFFSET, !state.getValue(OFFSET)), Block.UPDATE_CLIENTS);
+            level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 1.0F, 0.72F);
+        }
         return InteractionResult.SUCCESS;
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OFFSET);
+        builder.add(SHOW_RADIUS);
         super.createBlockStateDefinition(builder);
     }
 
@@ -63,10 +70,12 @@ public class GravityChandelierBlock extends WaterloggableBlock implements Entity
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        level.addParticle(ParticleTypes.END_ROD, pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5,
+                0, 0, 0);
+        if(!state.getValue(SHOW_RADIUS))
+            return;
         BlockPos center = state.getValue(OFFSET) ? pos.above((int) RANGE) : pos;
         ParticleScribe.drawParticleSphere(level, ParticleTypes.END_ROD, center, 0,
                 RANGE, 30);
-        level.addParticle(ParticleTypes.END_ROD, pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5,
-                0, 0, 0);
     }
 }
