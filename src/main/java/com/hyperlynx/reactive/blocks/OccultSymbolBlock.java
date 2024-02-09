@@ -37,7 +37,7 @@ public class OccultSymbolBlock extends SymbolBlock{
 
     public OccultSymbolBlock(Properties props) {
         super(props);
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP).setValue(ACTIVE, false));
+        registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.UP).setValue(ACTIVE, false));
     }
 
     @Override

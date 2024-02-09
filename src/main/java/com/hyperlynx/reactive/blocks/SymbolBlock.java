@@ -20,7 +20,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SymbolBlock extends Block implements EntityBlock {
+public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private Item symbol_item = Items.BARRIER;
 
@@ -32,8 +32,8 @@ public class SymbolBlock extends Block implements EntityBlock {
     protected static final VoxelShape SOUTH_SHAPE = Block.box(2, 2, 0, 14, 14, 1);
 
     public SymbolBlock(BlockBehaviour.Properties props) {
-        super(props);
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP));
+        super(props.pushReaction(PushReaction.DESTROY));
+        registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.UP));
     }
 
     @Override
@@ -71,11 +71,12 @@ public class SymbolBlock extends Block implements EntityBlock {
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+        super.createBlockStateDefinition(builder);
     }
 
     @javax.annotation.Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace());
+        return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace());
     }
 
     @Nullable

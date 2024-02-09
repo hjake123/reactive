@@ -23,11 +23,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class AirLightBlock extends Block {
+public class AirLightBlock extends WaterloggableBlock {
     public static final BooleanProperty DECAYING = BooleanProperty.create("decaying");
     public AirLightBlock(Properties props) {
         super(props);
-        registerDefaultState(stateDefinition.any().setValue(DECAYING, true));
+        registerDefaultState(this.defaultBlockState().setValue(DECAYING, true));
 
     }
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

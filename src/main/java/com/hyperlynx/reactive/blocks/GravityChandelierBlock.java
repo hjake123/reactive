@@ -26,12 +26,12 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.hyperlynx.reactive.be.GravityChandelierBlockEntity.RANGE;
 
-public class GravityChandelierBlock extends Block implements EntityBlock {
+public class GravityChandelierBlock extends WaterloggableBlock implements EntityBlock {
     public static final BooleanProperty OFFSET = BooleanProperty.create("offset");
 
     public GravityChandelierBlock(Properties props) {
         super(props);
-        registerDefaultState(stateDefinition.any().setValue(OFFSET, false));
+        registerDefaultState(this.defaultBlockState().setValue(OFFSET, false));
     }
 
     @Override

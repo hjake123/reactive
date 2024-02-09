@@ -27,10 +27,11 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
 
     public IncompleteStaffBlock(Properties props) {
         super(props.lightLevel((BlockState bs) -> bs.getValue(PROGRESS) > 0 ? 0 : 8));
-        registerDefaultState(stateDefinition.any().setValue(PROGRESS, 0));
+        registerDefaultState(this.defaultBlockState().setValue(PROGRESS, 0));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(PROGRESS);
     }
 

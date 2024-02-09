@@ -10,36 +10,17 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.GlowLichenBlock;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.MultifaceSpreader;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class MindLichenBlock extends MultifaceBlock implements BonemealableBlock {
-    private final MultifaceSpreader spreader = new MultifaceSpreader(this);
-
+public class MindLichenBlock extends GlowLichenBlock {
     public MindLichenBlock(Properties props) {
         super(props);
-    }
-
-    @Override
-    public @NotNull MultifaceSpreader getSpreader() {
-        return spreader;
-    }
-
-    public boolean isValidBonemealTarget(BlockGetter getter, BlockPos pos, BlockState state, boolean flag) {
-        return Direction.stream().anyMatch((matching_direction) -> {
-            return this.spreader.canSpreadInAnyDirection(state, getter, pos, matching_direction.getOpposite());
-        });
-    }
-
-    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos pos, BlockState state) {
-        return true;
-    }
-
-    public void performBonemeal(ServerLevel level, RandomSource randomSource, BlockPos pos, BlockState state) {
-        this.spreader.spreadFromRandomFaceTowardRandomDirection(state, level, pos, randomSource);
     }
 
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
