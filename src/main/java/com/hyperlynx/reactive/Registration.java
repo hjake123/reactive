@@ -171,7 +171,7 @@ public class Registration {
     public static final RegistryObject<Item> FLOWER_VINES_ITEM = fromBlock(FLOWER_VINES);
 
     public static final RegistryObject<Block> MIND_LICHEN = BLOCKS.register("mind_lichen",
-            () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN).lightLevel((state) -> 7)));
+            () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN)));
 
     public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN);
 

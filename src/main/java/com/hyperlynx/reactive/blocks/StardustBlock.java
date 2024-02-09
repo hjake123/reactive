@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class StardustBlock extends Block {
+public class StardustBlock extends WaterloggableBlock {
     VoxelShape SHAPE = Block.box(5, 5, 5, 11, 11, 11);
 
     public StardustBlock(Properties props) {

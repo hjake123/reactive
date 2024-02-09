@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class PowerBottleBlock extends Block {
+public class PowerBottleBlock extends WaterloggableBlock {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     public static final IntegerProperty BOTTLES = IntegerProperty.create("bottles", 1, 3);
     protected static final VoxelShape ONE_BOTTLE_BOUNDS = Block.box(6, 0, 6, 10, 8, 10);
@@ -30,9 +30,10 @@ public class PowerBottleBlock extends Block {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
         builder.add(BOTTLES);
+        super.createBlockStateDefinition(builder);
     }
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(AXIS, context.getHorizontalDirection().getAxis());
+        return super.getStateForPlacement(context).setValue(AXIS, context.getHorizontalDirection().getAxis());
     }
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
