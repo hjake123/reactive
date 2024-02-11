@@ -35,6 +35,10 @@ public class ParticleScribe {
                 b.getX()+0.5, b.getY()+0.5, b.getZ()+0.5, frequency, noise);
     }
 
+    public static void drawParticleLine(Level level, ParticleOptions opt, Vec3 a, Vec3 b, int frequency, double noise){
+        drawParticleLine(level, opt, a.x, a.y,a.z, b.x, b.y, b.z, frequency, noise);
+    }
+
     public static void drawParticleLine(Level level, ParticleOptions opt, double x1, double y1, double z1, double x2, double y2, double z2, int frequency, double noise) {
         for (int i = 0; i < frequency; i++) {
             double u = level.random.nextDouble();

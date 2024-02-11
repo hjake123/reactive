@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "reactive:gravity_beam"
+        }
+      ],
+      "name": "gravity_chandelier",
+      "rolls": 1.0
+    }
+  ]
+}

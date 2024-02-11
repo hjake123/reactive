@@ -162,6 +162,11 @@ public class Registration {
             () -> new FramedMotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
     public static final RegistryObject<Item> FRAMED_MOTION_SALT_BLOCK_ITEM = fromBlock(FRAMED_MOTION_SALT_BLOCK);
 
+    public static final RegistryObject<Block> GRAVITY_BEAM = BLOCKS.register("gravity_beam",
+            () -> new GravityBeamBlock(BlockBehaviour.Properties.copy(Blocks.DISPENSER)));
+
+    public static final RegistryObject<Item> GRAVITY_BEAM_ITEM = fromBlock(GRAVITY_BEAM);
+
     public static final RegistryObject<Block> FLOWER_VINES = BLOCKS.register("flower_vine",
             () -> new FlowerVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
 
@@ -186,10 +191,14 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
 
-    // Register the Gravity Chandelier BE
+    // Register the Gravity related BEs
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<GravityBeamBlockEntity>> GRAVITY_BEAM_BE_TYPE =
+            TILES.register("gravity_beam_be",
+                    () -> BlockEntityType.Builder.of(GravityBeamBlockEntity::new, GRAVITY_BEAM.get()).build(null));
 
     // Register Power bottles
     public static final RegistryObject<Block> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
