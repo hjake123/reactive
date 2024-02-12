@@ -17,7 +17,7 @@ Also, the class sets the seed to the world seed for default configurations.
 To ensure the values are different from each other, I add the value from a hash of a placeholder alias string, which is
 meant to be unique per instance. This also prevents drawing from the randomizer more than once.
 
-When called outside of a world (by the data generator) it uses a seed of 0.
+When called outside a world (by the data generator) it uses a seed of 0.
 */
 public class WorldSpecificValue {
     private static long getSeed(){

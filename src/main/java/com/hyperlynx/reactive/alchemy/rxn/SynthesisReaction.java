@@ -24,7 +24,7 @@ public class SynthesisReaction extends Reaction{
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
         for(Power p : reagents.keySet()){
-            crucible.expendPower(p, (int) Math.ceil(rate/(double) reagents.size()));
+            crucible.expendPower(p, rate);
         }
         crucible.addPower(resultPower, rate);
         if(!Objects.requireNonNull(crucible.getLevel()).isClientSide)

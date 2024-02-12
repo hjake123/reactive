@@ -13,6 +13,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -44,7 +45,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         if(crucible.integrity < 20 && crucible.integrity > 8 || crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Powers.MIND_POWER.get()) + crucible.getPowerLevel(Powers.LIGHT_POWER.get()) + crucible.getPowerLevel(Powers.Y_POWER.get()) > threshold){
+        else if(crucible.getPowerLevel(Powers.MIND_POWER.get()) + crucible.getPowerLevel(Powers.LIGHT_POWER.get()) + crucible.getPowerLevel(Powers.Y_POWER.get()) + crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > threshold){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
         else if(crucible.getPowerLevel(Powers.SOUL_POWER.get()) + crucible.getPowerLevel(Powers.X_POWER.get()) > threshold){
@@ -94,18 +95,24 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     @Override
-    public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack poseStack, @NotNull MultiBufferSource bufferSource, int combinedLight, int combinedOverlay) {
-        poseStack.pushPose();
+    public void render(@NotNull CrucibleBlockEntity crucible, float partialTicks, PoseStack pose_stack, @NotNull MultiBufferSource buffer_source, int light, int overlay) {
+        pose_stack.pushPose();
         // 0.5625 is the 'full' water level.
-        poseStack.translate(0, 0.5625, 0);
-        poseStack.mulPose(Axis.XP.rotationDegrees(90f));
+        pose_stack.translate(0, 0.5625, 0);
+        pose_stack.mulPose(Axis.XP.rotationDegrees(90f));
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = getSprite(crucible);
             Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
-            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
-            renderIcon(poseStack, buffer, sprite, color, crucible.getOpacity(), combinedOverlay, combinedLight);
+            VertexConsumer consumer = buffer_source.getBuffer(Sheets.translucentCullBlockSheet());
+            renderIcon(pose_stack, consumer, sprite, color, crucible.getOpacity(), overlay, light);
+
+            if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0){
+                pose_stack.translate(0, 0, 0.05);
+                consumer = buffer_source.getBuffer(RenderType.endPortal());
+                renderEndPortalWater(pose_stack, consumer, overlay, light);
+            }
         }
-        poseStack.popPose();
+        pose_stack.popPose();
 
         // Every 30 frames, check which reactions to render.
         crucible.render_tick_counter++;
@@ -119,7 +126,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         renderSculkCharge(crucible);
     }
 
-    // Stolen from Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)
+    // From Botania's repository here: (https://github.com/VazkiiMods/Botania/blob/9d468aadc9293ea8652092bc4caf804b61fc04c9/Xplat/src/main/java/vazkii/botania/client/render/tile/RenderTileAltar.java)
     public static void renderIcon(PoseStack ms, VertexConsumer builder, TextureAtlasSprite sprite, Color color, float alpha, int overlay, int light) {
         Matrix4f mat = ms.last().pose();
         // Due to previous rotation, Y and Z are switched.
@@ -129,4 +136,12 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         builder.vertex(mat, 0.19f, 0.19f, 0).color(color.red, color.green, color.blue, (int) (alpha * 255F)).uv(sprite.getU0(), sprite.getV0()).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
     }
 
+    public static void renderEndPortalWater(PoseStack pose_stack, VertexConsumer consumer, int overlay, int light) {
+        Matrix4f pose = pose_stack.last().pose();
+        // Due to previous rotation, Y and Z are switched.
+        consumer.vertex(pose, 0.19f, 0.81f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        consumer.vertex(pose, 0.81f, 0.81f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        consumer.vertex(pose, 0.81f, 0.19f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+        consumer.vertex(pose, 0.19f, 0.19f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+    }
 }

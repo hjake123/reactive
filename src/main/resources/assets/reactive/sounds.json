@@ -9,5 +9,11 @@
       "reactive:cc0_electric_zap_s"
 
     ]
+  },
+  "rumble": {
+    "subtitle": "subtitle.reactive.rumble",
+    "sounds": [
+      "reactive:cc0_deep_rumble"
+    ]
   }
 }

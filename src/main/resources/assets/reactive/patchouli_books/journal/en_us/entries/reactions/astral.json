@@ -1,0 +1,16 @@
+{
+  "name": "Astral Manifestation",
+  "icon": "minecraft:paper",
+  "category": "reactive:reactions",
+  "advancement": "reactive:reactions/astral",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Visual:$()$(br)Stardust particles appear at the surface of the water while assimilating.$(p)$(bold)Effect:$()$(br)The Crucible is instantly filled with Astral Power, and...?"
+    },
+    {
+      "type": "reactive:reaction",
+      "reaction": "astral"
+    }
+  ]
+}

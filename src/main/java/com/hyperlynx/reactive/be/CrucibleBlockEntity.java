@@ -94,7 +94,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public Reaction.Status reaction_status = Reaction.Status.STABLE; // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
-
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
         MinecraftForge.EVENT_BUS.register(this);
@@ -141,21 +140,25 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
                         boolean hungers = true;
                         for (Power base_power : ReactionMan.BASE_POWER_LIST) {
-                            if(crucible.getPowerLevel(base_power) > 0) {
+                            if (crucible.getPowerLevel(base_power) > 0) {
                                 hungers = false;
                                 crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 3, 27));
                             }
                         }
                         ParticleScribe.drawParticleBox(level, ParticleTypes.ASH, AABB.ofSize(Vec3.atCenterOf(pos.below()), 1, 1, 1), 2);
-                        if(hungers){
+                        if (hungers) {
                             // If the Cell can't take Power from a Crucible, it will start breaking down the magic of the Crucible itself.
                             crucible.integrity--;
                         }
+                    }else if(crucible.integrity < 100 && crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 1){
+                        crucible.integrity++;
                     }else if(crucible.integrity < 100 && crucible.integrity > 10){
                         crucible.integrity += Math.min(10, 100 - crucible.integrity);
                     }else if(crucible.integrity < 10){
                         crucible.integrity--;
                     }
+
+                    crucible.integrity = Math.min(crucible.integrity, 100);
                 }
 
                 case 1 -> {
@@ -248,6 +251,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     public static void empty(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 400){
+            // Astral takes multiple clicks to empty.
+            crucible.expendPower(Powers.ASTRAL_POWER.get(), crucible.getPowerLevel(Powers.ASTRAL_POWER.get())/2);
+            level.setBlock(pos, state.setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+            return;
+        }
         if(crucible.getTotalPowerLevel() > 0) {
             SpecialCaseMan.checkEmptySpecialCases(crucible);
             crucible.expendPower();
