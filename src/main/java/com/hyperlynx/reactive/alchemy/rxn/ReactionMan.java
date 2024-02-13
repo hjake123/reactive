@@ -54,6 +54,7 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("slowfall_effect");
         CRITERIA_BUILDER.add("astral_synthesis");
         CRITERIA_BUILDER.add("astral");
+        CRITERIA_BUILDER.add("astral_curse_annihilation");
         CRITERIA_BUILDER.build();
     }
 
@@ -149,6 +150,7 @@ public class ReactionMan {
 
         REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
+        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), null, null));
 
         initialized = true;
         initializer_lock = false;

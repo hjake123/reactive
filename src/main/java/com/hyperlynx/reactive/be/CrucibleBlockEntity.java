@@ -94,6 +94,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public Reaction.Status reaction_status = Reaction.Status.STABLE; // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
+
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
         MinecraftForge.EVENT_BUS.register(this);
@@ -374,6 +375,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 crucible.reaction_status = reaction_status;
             }
         }
+
         if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null)
             crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
     }

@@ -18,20 +18,25 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -277,6 +282,7 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
 
+
     // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
             () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
@@ -294,6 +300,10 @@ public class Registration {
             () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
 
     // Register items.
+    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
+            () -> new DisplacerItem(new Item.Properties()
+                    .defaultDurability(350)));
+
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
@@ -319,9 +329,12 @@ public class Registration {
             () -> new ForceRockItem(new Item.Properties()));
     public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
-    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
-            () -> new DisplacerItem(new Item.Properties()
-                    .defaultDurability(350)));
+    public static final RegistryObject<Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(1.4F)
+                    .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
+                    .build())));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
@@ -411,10 +424,26 @@ public class Registration {
         CriteriaTriggers.enqueue(evt);
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
-        SecretScaleItem.registerGravPotions(evt);
+        registerPotions(evt);
         if(ModList.get().isLoaded("create")){
             ReactiveCreatePlugin.init();
         }
+    }
+
+    // Set up the potion items.
+    public static void registerPotions(FMLCommonSetupEvent evt) {
+        ItemStack thick_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(thick_potion, Potions.THICK);
+
+        ItemStack grav_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(grav_potion, NULL_GRAVITY_POTION.get());
+        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(thick_potion),
+                Ingredient.of(SECRET_SCALE.get()), grav_potion));
+
+        ItemStack long_grav_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(long_grav_potion, LONG_NULL_GRAVITY_POTION.get());
+        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(grav_potion),
+                Ingredient.of(Items.REDSTONE), long_grav_potion));
     }
 
     @SubscribeEvent

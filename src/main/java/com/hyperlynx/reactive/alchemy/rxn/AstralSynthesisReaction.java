@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -20,6 +21,7 @@ public class AstralSynthesisReaction extends SynthesisReaction{
     @Override
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
+        crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
         Vec3 loc = Vec3.atCenterOf(crucible.getBlockPos());
         crucible.getLevel().explode(null, loc.x, loc.y, loc.z, 1, Level.ExplosionInteraction.NONE);
         crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS);

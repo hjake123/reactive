@@ -12,6 +12,7 @@
     "#forge:gunpowder",
     "minecraft:magma_cream",
     "minecraft:dragon_breath",
+    "reactive:universal_solvent",
     {
       "id": "byg:brim_powder",
       "required": false

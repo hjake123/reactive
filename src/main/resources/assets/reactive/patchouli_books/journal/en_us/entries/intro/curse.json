@@ -44,8 +44,7 @@
     },
     {
       "type": "patchouli:image",
-      "images": ["reactive:textures/gui/astral_diagram.png"],
-      "text": "$(o)Top to bottom: $(br)'ASTRAL', 'BASE', 'CURSE'"
+      "images": ["reactive:textures/gui/astral_diagram.png"]
     }
   ]
 }
