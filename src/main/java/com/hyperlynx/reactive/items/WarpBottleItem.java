@@ -46,28 +46,31 @@ public class WarpBottleItem extends PowerBottleItem{
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         if(isRiftBottle(player.getItemInHand(hand))){
-            CompoundTag tag = player.getItemInHand(hand).getTag();
-            boolean warp_occurred = false;
-
-            if(tag != null && level.dimension().equals(getTeleportDimension(tag).orElse(null))){
-                GlobalPos destination = getTeleportPosition(tag);
-                if(destination != null) {
-                    if (CrystalIronItem.effectNotBlocked(player, 1)) {
-                        player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
-                        level.playSound(null, destination.pos(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-                        warp_occurred = true;
-                        if(player instanceof ServerPlayer splayer)
-                            CriteriaTriggers.BE_TELEPORTED_TRIGGER.trigger(splayer);
-                    }else if(!(level instanceof ServerLevel)){
-                        player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
-                    }
-                }
-            }
-            if(warp_occurred && !player.isCreative())
+            if(attemptWarp(level, player, hand) && !player.isCreative())
                 player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
         return super.use(level, player, hand);
+    }
+
+    public static boolean attemptWarp(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+        boolean warp_occurred = false;
+        CompoundTag tag = player.getItemInHand(hand).getTag();
+        if(tag != null && level.dimension().equals(getTeleportDimension(tag).orElse(null))){
+            GlobalPos destination = getTeleportPosition(tag);
+            if(destination != null) {
+                if (CrystalIronItem.effectNotBlocked(player, 1)) {
+                    player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
+                    level.playSound(null, destination.pos(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    warp_occurred = true;
+                    if(player instanceof ServerPlayer splayer)
+                        CriteriaTriggers.BE_TELEPORTED_TRIGGER.trigger(splayer);
+                }else if(!(level instanceof ServerLevel)){
+                    player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
+                }
+            }
+        }
+        return warp_occurred;
     }
 
     @Override

@@ -115,9 +115,13 @@ public class Registration {
             () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = SymbolItem.fromBlock(OCCULT_SYMBOL);
 
+    public static final RegistryObject<Block> DIVINE_SYMBOL = BLOCKS.register("divine_symbol",
+            () -> new DivineSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> DIVINE_SYMBOL_ITEM = SymbolItem.fromBlock(DIVINE_SYMBOL);
+
     // Register the Symbol BE
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
-            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get()).build(null));
+            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get(), DIVINE_SYMBOL.get()).build(null));
 
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
             () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
@@ -348,6 +352,10 @@ public class Registration {
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
+                    .addAttributeModifier(ForgeMod.BLOCK_REACH.get(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
+                            2, AttributeModifier.Operation.ADDITION));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
@@ -421,6 +429,7 @@ public class Registration {
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
+        ((SymbolBlock) DIVINE_SYMBOL.get()).setSymbolItem(DIVINE_SYMBOL_ITEM.get());
         CriteriaTriggers.enqueue(evt);
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);

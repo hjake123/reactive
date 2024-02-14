@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.blocks.DivineSymbolBlock;
 import com.hyperlynx.reactive.blocks.PowerBottleBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -106,6 +107,10 @@ public class PowerBottleItem extends BlockItem {
                 context.getItemInHand().shrink(1);
             }
             return InteractionResult.SUCCESS;
+        }
+
+        if((context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof DivineSymbolBlock)){
+            return InteractionResult.PASS;
         }
 
         if(!(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof CrucibleBlock)){
