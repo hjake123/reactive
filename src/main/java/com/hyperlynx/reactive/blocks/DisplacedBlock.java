@@ -106,11 +106,18 @@ public class DisplacedBlock extends Block implements EntityBlock {
     // When broken, the displacement should end. If needed, this will instead break the Volt Cell.
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        reform(level, pos, Blocks.AIR.defaultBlockState());
+        return true;
+    }
+
+    private static void reform(Level level, BlockPos pos, BlockState new_state) {
         if(level.getBlockEntity(pos) instanceof DisplacedBlockEntity displaced){
+            if(displaced.self_state.is(new_state.getBlock()))
+                return;
             if(displaced.self_state.getBlock() instanceof DisplacedBlock){
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
-                return true;
+                return;
             }
             if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
                 level.destroyBlock(pos.below(), true);
@@ -120,7 +127,14 @@ public class DisplacedBlock extends Block implements EntityBlock {
         }else{
             System.err.println("Didn't find a valid block entity associated with the displaced block at " + pos + "! Report this to hyperlynx!");
         }
-        return true;
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean moving) {
+        if (new_state.is(Registration.DISPLACED_BLOCK.get()))
+            return;
+        reform(level, pos, new_state);
+        super.onRemove(state, level, pos, new_state, moving);
     }
 
     // Middle click brings up the block being displaced.
