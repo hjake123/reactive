@@ -25,22 +25,20 @@ public class WorldSpecificValue {
             return ConfigMan.SERVER.seed.get();
         return 0;
     }
-    public static int get(String alias, int min, int max){
+    public static Random getSource(String alias){
         long seed = getSeed();
-        Random rand = new Random(seed + alias.hashCode());
-        return rand.nextInt(max-min + 1) + min; // Note that this function return between min and max INCLUSIVE
+        return new Random(seed + alias.hashCode());
+    }
+    public static int get(String alias, int min, int max){
+        return getSource(alias).nextInt(max-min + 1) + min; // Note that this function return between min and max INCLUSIVE
     }
 
     public static float get(String alias, float min, float max){
-        long seed = getSeed();
-        Random rand = new Random(seed + alias.hashCode());
-        return rand.nextFloat(min, max);
+        return getSource(alias).nextFloat(min, max);
     }
 
     public static boolean getBool(String alias, float chance){
-        long seed = getSeed();
-        Random rand = new Random(seed + alias.hashCode());
-        return rand.nextFloat() < chance;
+        return getSource(alias).nextFloat() < chance;
     }
 
     public static <T> T getFromCollection(String alias, Collection<T> c) {

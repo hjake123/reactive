@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Power;
@@ -7,9 +8,12 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -84,17 +88,22 @@ public class DivineSymbolBlock extends SymbolBlock{
                 }else{
                     accepted = true;
                 }
-            }else{
-                player.displayClientMessage(Component.translatable("message.reactive.reject_warp"), true);
+            }else if(player instanceof ServerPlayer splayer){
+                ResourceLocation warp_research = new ResourceLocation(ReactiveMod.MODID, "be_teleported");
+                if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(warp_research)).isDone()){
+                    player.displayClientMessage(Component.translatable("message.reactive.reject_warp_knowledgeable"), true);
+                }else{
+                    player.displayClientMessage(Component.translatable("message.reactive.reject_warp_naive"), true);
+                }
             }
         }else if(Powers.MIND_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(Registration.FAR_REACH.get(), 1200, 0, true, false));
+            player.addEffect(new MobEffectInstance(Registration.FAR_REACH.get(), 2800, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
             accepted = true;
         }else if(Powers.BLAZE_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 400, 0, true, false));
-            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 390, 0, true, false));
-            player.setRemainingFireTicks(390);
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2000, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 1900, 0, true, false));
+            player.setRemainingFireTicks(1900);
             player.setTicksFrozen(0);
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);
             accepted = true;

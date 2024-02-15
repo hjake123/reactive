@@ -8,6 +8,7 @@ import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -30,10 +31,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
@@ -302,6 +305,14 @@ public class Registration {
 
     public static final RegistryObject<Block> GLOWING_AIR = BLOCKS.register("glowing_air",
             () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
+
+    public static final RegistryObject<Block> UNFORMED_MATTER = BLOCKS.register("unformed_matter",
+            () -> new UnformedMatterBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
+                    .sound(SoundType.HONEY_BLOCK)
+                    .lightLevel((state) -> 15)
+                    .hasPostProcess((a, b, c) -> true)
+                    .emissiveRendering((a, b, c) -> true)
+                    .pushReaction(PushReaction.DESTROY)));
 
     // Register items.
     public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",

@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
 import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -38,6 +39,7 @@ public class AstralReaction extends Reaction{
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
         crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
+        crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get());
     }
 
     @Override

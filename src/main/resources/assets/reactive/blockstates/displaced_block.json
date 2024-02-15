@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "reactive:block/gold_symbol_placeholder"
+        "model": "reactive:block/iron_symbol_placeholder"
       }
     }
   ]

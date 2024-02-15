@@ -41,10 +41,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 // Just a holder class for the various reaction effect methods. Only for use on the server side.
 public class ReactionEffects {
@@ -313,5 +310,33 @@ public class ReactionEffects {
             }
         }
         return crucible;
+    }
+
+    public static CrucibleBlockEntity creation(CrucibleBlockEntity crucible){
+        Level level = Objects.requireNonNull(crucible.getLevel());
+        if(level.random.nextFloat() < 0.2){
+            crucible.expendPower(Powers.CURSE_POWER.get(), 3);
+            for(BlockPos creation_point : get_creation_points(crucible.getBlockPos())){
+                if(level.getBlockState(creation_point).isAir() && level.isLoaded(creation_point)){
+                    level.setBlock(creation_point, Registration.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                    level.updateNeighborsAt(creation_point, Registration.UNFORMED_MATTER.get());
+                    ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, crucible.getBlockPos(), creation_point, 10, 5, 0.5F);
+                    break;
+                }
+            }
+        }
+        return crucible;
+    }
+
+    public static Set<BlockPos> get_creation_points(BlockPos origin){
+        Set<BlockPos> points = new HashSet<>();
+        Random wsv_source = WorldSpecificValue.getSource("creation_points");
+        while(points.size() < 3){
+            points.add(origin.offset(
+                    wsv_source.nextInt(0, 3) * 2 - 3,
+                    wsv_source.nextInt(0, 2) * 2 + 2,
+                    wsv_source.nextInt(0, 3) * 2 - 3));
+        }
+        return points;
     }
 }

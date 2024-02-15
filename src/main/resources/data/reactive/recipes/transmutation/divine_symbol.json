@@ -1,12 +1,12 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "item": "reactive:flower_vine"
+    "item": "reactive:iron_symbol"
   },
   "product": {
-    "item": "reactive:eternal_life_sprig"
+    "item": "reactive:divine_symbol"
   },
   "reagents": ["reactive:astral"],
-  "min": 800,
+  "min": 1000,
   "cost": 0
 }
