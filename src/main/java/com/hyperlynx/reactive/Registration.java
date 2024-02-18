@@ -8,7 +8,6 @@ import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -31,7 +30,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -356,7 +354,6 @@ public class Registration {
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
-
     public static final RegistryObject<MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
@@ -367,6 +364,8 @@ public class Registration {
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
                     .addAttributeModifier(ForgeMod.BLOCK_REACH.get(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
                             2, AttributeModifier.Operation.ADDITION));
+    public static final RegistryObject<MobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
