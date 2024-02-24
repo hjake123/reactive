@@ -311,9 +311,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 }
 
                 case 3 -> {
-                    // Occult Symbols and Wither Skeleton Skulls add curse.
+                    // Occult Symbols and Wither Skeleton Skulls add curse, while Divine Symbols remove it.
                     if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
                         crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
+                    }
+                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.DIVINE_SYMBOL.get())){
+                        crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("divine_cleanse_amount", 200, 400));
                     }
                 }
 
