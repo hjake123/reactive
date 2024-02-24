@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
+import java.util.Objects;
+
 public class IncompleteStaffBlock extends BaseStaffBlock{
 
     public static final IntegerProperty PROGRESS = IntegerProperty.create("progress", 0, 3);
@@ -28,6 +31,14 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     public IncompleteStaffBlock(Properties props) {
         super(props.lightLevel((BlockState bs) -> bs.getValue(PROGRESS) > 0 ? 0 : 8));
         registerDefaultState(this.defaultBlockState().setValue(PROGRESS, 0));
+    }
+
+    public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
+        for(Power p : c.getPowerMap().keySet()){
+            if(c.getPowerLevel(p) > 800){
+                tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
+            }
+        }
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

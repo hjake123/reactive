@@ -1,6 +1,8 @@
 package com.hyperlynx.reactive.be;
 
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
+import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
@@ -14,9 +16,7 @@ import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
-import com.ibm.icu.text.MessagePattern;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -24,7 +24,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -41,13 +40,11 @@ import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -389,6 +386,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
             if(entity_inside instanceof ItemEntity item_entity){
                 SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
+                PowerBottleItem.tryEmptyPowerBottle((ItemEntity) entity_inside, crucible);
                 // The special case may have removed the item entity; continue to the next if it has died.
                 if(!item_entity.isAlive()) continue;
 

@@ -1,8 +1,7 @@
 package com.hyperlynx.reactive.items;
 
-import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
+import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.core.BlockPos;

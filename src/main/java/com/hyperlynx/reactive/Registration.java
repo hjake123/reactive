@@ -2,6 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
@@ -435,6 +436,7 @@ public class Registration {
 
     @SubscribeEvent
     public static void commonSetupHandler(FMLCommonSetupEvent evt){
+        SpecialCaseMan.bootstrap();
         ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());

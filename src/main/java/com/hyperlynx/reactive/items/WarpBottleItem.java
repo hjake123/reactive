@@ -2,8 +2,6 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
-import com.hyperlynx.reactive.alchemy.SpecialCaseMan;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;

@@ -1,8 +1,10 @@
-package com.hyperlynx.reactive.alchemy;
+package com.hyperlynx.reactive.alchemy.special;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
+import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
@@ -44,63 +46,158 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.*;
 
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
 public class SpecialCaseMan {
-    public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
-        if(e.getItem().is(Registration.LITMUS_PAPER.get()))
-            LitmusPaperItem.takeMeasurement(e.getItem(), c);
-        else if(e.getItem().is(Tags.Items.ENDER_PEARLS))
-            enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
-        else if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10)
-            explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
-        else if(e.getItem().is(Items.CARVED_PUMPKIN))
-            pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
-        else if(e.getItem().is(Items.WRITABLE_BOOK))
-            waterWriting(c, e);
-        else if(e.getItem().is(Tags.Items.INGOTS_COPPER) && c.getPowerLevel(Powers.ACID_POWER.get()) > 10)
-            copperCharging(c);
-        else if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get()) < 10)
-            enderEyeFlyAway(c, e);
-        else if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700)
-            residualSlime(c, e);
-        else if(e.getItem().is(Items.SCULK_CATALYST))
-            sculkMagic(c, e);
-        else if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
-                && c.electricCharge > 0)
-            displaceNearby(c, e);
+    public static List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
+    public static List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
+    public static List<BottleSpecialCase> BOTTLE_SPECIAL_CASES = new ArrayList<>();
 
-        PowerBottleItem.tryEmptyPowerBottle(e, c);
+    public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
+        for(DissolveSpecialCase dissolve_case : DISSOLVE_SPECIAL_CASES){
+            if(dissolve_case.attempt(c, e)){
+                break;
+            }
+        }
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
         if(c.getLevel() == null) return;
-        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get("soul_escape_threshold", 300, 600))
-            soulEscape(c);
-        if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 665)
-            curseEscape(c);
-        if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get("blaze_escape_threshold", 20, 100))
-            blazeEscape(c);
-        if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
-            verdantEscape(c);
-        if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
-            lightEscape(c);
-        c.areaMemory.cache_only_mode = false;
-        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
-            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
+        for(EmptySpecialCase empty_case : EMPTY_SPECIAL_CASES){
+            empty_case.attempt(c);
+        }
     }
 
-    public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack bottle){
-        if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
-            return makeRiftBottle(c, bottle);
+    public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack b){
+        ItemStack bottle = b.copy();
+        for(BottleSpecialCase bottle_case : BOTTLE_SPECIAL_CASES){
+            bottle = bottle_case.attempt(c, bottle);
+        }
         return bottle;
     }
+
+    public static void bootstrap() {
+        register_dissolve_cases();
+        register_empty_cases();
+        register_bottle_cases();
+    }
+
+    public static void register_dissolve_cases(){
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Registration.LITMUS_PAPER.get())) {
+                LitmusPaperItem.takeMeasurement(e.getItem(), c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Tags.Items.ENDER_PEARLS)) {
+                enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10) {
+                explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Items.CARVED_PUMPKIN)) {
+                pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Items.WRITABLE_BOOK)) {
+                waterWriting(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Tags.Items.INGOTS_COPPER) && c.getPowerLevel(Powers.ACID_POWER.get()) > 10) {
+                copperCharging(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get()) < 10) {
+                enderEyeFlyAway(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700) {
+                residualSlime(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(e.getItem().is(Items.SCULK_CATALYST)) {
+                sculkMagic(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
+                    && c.electricCharge > 0) {
+                displaceNearby(c, e);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    public static void register_empty_cases(){
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get("soul_escape_threshold", 300, 600))
+                soulEscape(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 665)
+                curseEscape(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get("blaze_escape_threshold", 20, 100))
+                blazeEscape(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
+                verdantEscape(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
+                lightEscape(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            boolean com = c.areaMemory.cache_only_mode;
+            c.areaMemory.cache_only_mode = false;
+            if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
+                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
+            c.areaMemory.cache_only_mode = com;
+        });
+    }
+
+    public static void register_bottle_cases() {
+        BOTTLE_SPECIAL_CASES.add((c, bottle) -> {
+            if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
+                return makeRiftBottle(c, bottle);
+            return bottle;
+        });
+    }
+
+    // -- SPECIAL CASE CODE METHODS --
 
     // Copper ingots in acid charge the Crucible.
     private static void copperCharging(CrucibleBlockEntity c) {
@@ -503,11 +600,4 @@ public class SpecialCaseMan {
         }
     }
 
-    public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
-        for(Power p : c.getPowerMap().keySet()){
-            if(c.getPowerLevel(p) > 800){
-                IncompleteStaffBlock.tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
-            }
-        }
-    }
 }
