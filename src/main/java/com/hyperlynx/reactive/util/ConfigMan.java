@@ -11,7 +11,7 @@ public class ConfigMan {
     public static class Common {
         public ForgeConfigSpec.IntValue crucibleTickDelay;
         public ForgeConfigSpec.IntValue crucibleRange;
-        public ForgeConfigSpec.IntValue displaceRange;
+        public ForgeConfigSpec.IntValue areaMemoryRange;
         public ForgeConfigSpec.IntValue maxDisplaceCount;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
@@ -22,8 +22,10 @@ public class ConfigMan {
                     .push("config");
             crucibleTickDelay = builder.comment("The crucible performs a stage of its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 5]")
                     .defineInRange("crucibleTickDelay", 5, 1, 900);
-            crucibleRange = builder.comment("The crucible may check an area this many blocks in radius for some effects. Do not set this too high. [Default: 12]")
+            crucibleRange = builder.comment("The crucible affect entities with an area of this radius. [Default: 12]")
                     .defineInRange("crucibleRange", 12, 2, 64);
+            areaMemoryRange = builder.comment("The crucible checks an area this many blocks in radius up to a few times a second. Do not set this too high. [Default: 6]")
+                    .defineInRange("areaMemoryRange", 6, 2, 64);
             doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\", \"minecraft:warden\"]")
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")

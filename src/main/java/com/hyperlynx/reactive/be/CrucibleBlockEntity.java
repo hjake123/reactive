@@ -277,16 +277,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
-        crucible.areaMemory.cache_only_mode = !(level.random.nextFloat() < 0.2);
-
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
-        if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, 3, Registration.IRON_SYMBOL.get())){
+        if(crucible.areaMemory.exists(level, Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, Registration.IRON_SYMBOL.get())){
             switch(crucible.gather_stage){
                 case 0 -> {
                     // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL) && crucible.getTotalPowerLevel() > 400){
+                    if(crucible.areaMemory.exists(level, Blocks.NETHER_PORTAL) && crucible.getTotalPowerLevel() > 400){
                         if (crucible.getPowerLevel(Powers.MIND_POWER.get()) > 1300) {
-                            BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Blocks.NETHER_PORTAL);
+                            BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, Blocks.NETHER_PORTAL);
                             SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
                             crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
                         }
@@ -298,32 +296,32 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
                 case 1 -> {
                     // Blaze Rods add blaze.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get())){
+                    if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
                     }
                 }
 
                 case 2 -> {
                     // End Rods add light.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.END_ROD)){
+                    if(crucible.areaMemory.exists(level, Blocks.END_ROD)){
                         crucible.addPower(Powers.LIGHT_POWER.get(), WorldSpecificValue.get("end_rod_power_amount", 100, 300));
                     }
                 }
 
                 case 3 -> {
                     // Occult Symbols and Wither Skeleton Skulls add curse, while Divine Symbols remove it.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.WITHER_SKELETON_WALL_SKULL)){
+                    if(crucible.areaMemory.exists(level, Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_WALL_SKULL)){
                         crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
                     }
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.DIVINE_SYMBOL.get())){
+                    if(crucible.areaMemory.exists(level, Registration.DIVINE_SYMBOL.get())){
                         crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("divine_cleanse_amount", 200, 400));
                     }
                 }
 
                 case 4 -> {
                     // Active conduits give add either soul or warp, depending on the world.
-                    if(crucible.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT)){
-                        Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CONDUIT), BlockEntityType.CONDUIT);
+                    if(crucible.areaMemory.exists(level, Blocks.CONDUIT)){
+                        Optional<ConduitBlockEntity> maybe_conduit = level.getBlockEntity(crucible.areaMemory.fetch(level, Blocks.CONDUIT), BlockEntityType.CONDUIT);
                         if(maybe_conduit.isPresent() && maybe_conduit.get().isActive()){
                             if(WorldSpecificValues.CONDUIT_POWER.get() == 1){
                                 crucible.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get("conduit_power_amount", 120, 140));
@@ -498,7 +496,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())) {
+        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), Registration.IRON_SYMBOL.get())) {
             return;
         }
 

@@ -180,11 +180,8 @@ public class SpecialCaseMan {
                 lightEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            boolean com = c.areaMemory.cache_only_mode;
-            c.areaMemory.cache_only_mode = false;
-            if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
-                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
-            c.areaMemory.cache_only_mode = com;
+            if(c.areaMemory.exists(c.getLevel(), Registration.INCOMPLETE_STAFF.get()))
+                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), Registration.INCOMPLETE_STAFF.get()));
         });
     }
 
@@ -222,10 +219,10 @@ public class SpecialCaseMan {
 
     // Dissolving a carved pumpkin might have many effects.
     private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
-        if (level.isClientSide || c.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()))
+        if (level.isClientSide || c.areaMemory.exists(level, Registration.IRON_SYMBOL.get()))
             return;
 
-        BlockPos blazeRodPos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get());
+        BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
         if(blazeRodPos != null){
             conjureBlaze(level, e, c, blazeRodPos);
             return;
