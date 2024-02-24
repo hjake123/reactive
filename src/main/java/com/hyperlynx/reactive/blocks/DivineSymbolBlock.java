@@ -44,6 +44,8 @@ public class DivineSymbolBlock extends SymbolBlock{
             return InteractionResult.PASS;
 
         boolean accepted = false;
+        BlockPos player_start_pos = player.blockPosition().above(); // Captured because the player might teleport.
+
         ItemStack stack = player.getItemInHand(hand);
         if(Powers.VITAL_POWER.get().matchesBottle(stack)){
             if(player.getHealth() < 20F){
@@ -97,13 +99,13 @@ public class DivineSymbolBlock extends SymbolBlock{
             player.displayClientMessage(Component.translatable("message.reactive.donate_reject_generic"), true);
         }
 
-        if(!player.isCreative() && accepted) {
+        if(!player.isCreative() && accepted && !Powers.WARP_POWER.get().matchesBottle(stack)) {
             player.getItemInHand(hand).shrink(1);
             player.addItem(new ItemStack(Registration.QUARTZ_BOTTLE.get()));
         }
 
         if(accepted){
-            ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos, player.blockPosition().above(), 4, 5, 0.4);
+            ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos, player_start_pos, 4, 5, 0.4);
             player.getCooldowns().addCooldown(stack.getItem(), 100);
         }
 
