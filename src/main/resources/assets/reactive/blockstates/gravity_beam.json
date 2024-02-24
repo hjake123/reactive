@@ -1,0 +1,48 @@
+{
+  "variants": {
+    "facing=down,enabled=false": {
+      "model": "reactive:block/gravity_beam_vertical",
+      "x": 180
+    },
+    "facing=east,enabled=false": {
+      "model": "reactive:block/gravity_beam",
+      "y": 90
+    },
+    "facing=north,enabled=false": {
+      "model": "reactive:block/gravity_beam"
+    },
+    "facing=south,enabled=false": {
+      "model": "reactive:block/gravity_beam",
+      "y": 180
+    },
+    "facing=up,enabled=false": {
+      "model": "reactive:block/gravity_beam_vertical"
+    },
+    "facing=west,enabled=false": {
+      "model": "reactive:block/gravity_beam",
+      "y": 270
+    },
+    "facing=down,enabled=true": {
+      "model": "reactive:block/gravity_beam_vertical_on",
+      "x": 180
+    },
+    "facing=east,enabled=true": {
+      "model": "reactive:block/gravity_beam_on",
+      "y": 90
+    },
+    "facing=north,enabled=true": {
+      "model": "reactive:block/gravity_beam_on"
+    },
+    "facing=south,enabled=true": {
+      "model": "reactive:block/gravity_beam_on",
+      "y": 180
+    },
+    "facing=up,enabled=true": {
+      "model": "reactive:block/gravity_beam_vertical_on"
+    },
+    "facing=west,enabled=true": {
+      "model": "reactive:block/gravity_beam_on",
+      "y": 270
+    }
+  }
+}

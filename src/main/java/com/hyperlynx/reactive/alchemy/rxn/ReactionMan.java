@@ -52,6 +52,9 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("formation_effect");
         CRITERIA_BUILDER.add("block_fall_effect");
         CRITERIA_BUILDER.add("slowfall_effect");
+        CRITERIA_BUILDER.add("astral_synthesis");
+        CRITERIA_BUILDER.add("astral");
+        CRITERIA_BUILDER.add("astral_curse_annihilation");
         CRITERIA_BUILDER.build();
     }
 
@@ -144,6 +147,10 @@ public class ReactionMan {
                 REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.Y_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
         }
+
+        REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
+        REACTIONS.add(new AstralReaction("astral"));
+        REACTIONS.add(new AnnihilationReaction("creation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
         initialized = true;
         initializer_lock = false;

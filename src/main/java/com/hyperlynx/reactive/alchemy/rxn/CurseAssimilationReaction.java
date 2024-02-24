@@ -32,7 +32,7 @@ public class CurseAssimilationReaction extends Reaction{
     @Override
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
-        crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), rate);
+        crucible.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
         crucible.addPower(Powers.CURSE_POWER.get(), rate);
 
         if(Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.2 && crucible.getPowerLevel(Powers.CURSE_POWER.get()) >

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "c": {
+      "item": "minecraft:cobblestone"
+    },
+    "l": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "s": {
+      "item": "reactive:secret_scale"
+    }
+  },
+  "pattern": [
+    "ccc",
+    "clc",
+    "csc"
+  ],
+  "result": {
+    "item": "reactive:gravity_beam"
+  }
+}

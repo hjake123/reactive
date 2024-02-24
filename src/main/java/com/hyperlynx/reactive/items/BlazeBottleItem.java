@@ -7,12 +7,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class BlazeBottleItem extends PowerBottleItem {
-    public BlazeBottleItem(Properties p) {
-        super(p);
+    public BlazeBottleItem(Properties props, Block block) {
+        super(props, block);
     }
 
     int tick_count = 0;

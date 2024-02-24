@@ -19,6 +19,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
     public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
     public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
+    public static final FlagCriterion HARVEST_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "harvest_criterion"), new ResourceLocation(ReactiveMod.MODID, "see_synthesis"));
     public static final FlagCriterion SEE_DISPLACEMENT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_displacement_criterion"), new ResourceLocation(ReactiveMod.MODID, "get_motion_salts"));
     public static final FlagCriterion BE_SLOWFALLED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_slowfalled_criterion"));
     public static final FlagCriterion BE_LEVITATED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_levitated_criterion"));
@@ -46,6 +47,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_ALLAY_SUMMON_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_CRUCIBLE_FAIL_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_TELEPORTED_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(HARVEST_TRIGGER));
         ReactionMan.CRITERIA_BUILDER.register(evt);
     }
 }

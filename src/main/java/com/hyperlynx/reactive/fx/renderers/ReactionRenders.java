@@ -2,11 +2,15 @@ package com.hyperlynx.reactive.fx.renderers;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+
+import java.util.Objects;
+import java.util.Set;
 
 // Just a holder class for the various reaction render methods. Please only call these on the client thank you.
 public class ReactionRenders {
@@ -31,6 +35,15 @@ public class ReactionRenders {
             ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 0.1F, 0, 0.1, 0);
         }
 
+        return c;
+    }
+
+    public static CrucibleBlockEntity creation(CrucibleBlockEntity c){
+        Set<BlockPos> points = ReactionEffects.get_creation_points(c.getBlockPos());
+        for(BlockPos pos : points){
+            if(c.getLevel().getBlockState(pos).isAir())
+                ParticleScribe.drawParticleSphere(Objects.requireNonNull(c.getLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
+        }
         return c;
     }
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "s": {
+      "item": "reactive:eternal_life_sprig"
+    }
+  },
+  "pattern": [
+    " s ",
+    " G ",
+    " G "
+  ],
+  "result": {
+    "item": "minecraft:totem_of_undying"
+  }
+}

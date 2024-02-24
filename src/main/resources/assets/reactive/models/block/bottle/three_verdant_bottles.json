@@ -1,0 +1,6 @@
+{
+  "parent": "reactive:block/bottle/three_power_bottles",
+  "textures": {
+    "power": "reactive:block/verdant_in_bottle"
+  }
+}

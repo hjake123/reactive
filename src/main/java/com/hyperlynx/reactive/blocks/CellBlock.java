@@ -8,7 +8,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class CellBlock extends Block {
+public class CellBlock extends WaterloggableBlock {
     private final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 8, 15);
 
     public CellBlock(Properties prop) {

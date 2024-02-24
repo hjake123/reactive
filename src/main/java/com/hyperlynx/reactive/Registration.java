@@ -18,20 +18,26 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -110,9 +116,13 @@ public class Registration {
             () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
     public static final RegistryObject<Item> OCCULT_SYMBOL_ITEM = SymbolItem.fromBlock(OCCULT_SYMBOL);
 
+    public static final RegistryObject<Block> DIVINE_SYMBOL = BLOCKS.register("divine_symbol",
+            () -> new DivineSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
+    public static final RegistryObject<Item> DIVINE_SYMBOL_ITEM = SymbolItem.fromBlock(DIVINE_SYMBOL);
+
     // Register the Symbol BE
     public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
-            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get()).build(null));
+            () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get(), DIVINE_SYMBOL.get()).build(null));
 
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
             () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
@@ -162,6 +172,11 @@ public class Registration {
             () -> new FramedMotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
     public static final RegistryObject<Item> FRAMED_MOTION_SALT_BLOCK_ITEM = fromBlock(FRAMED_MOTION_SALT_BLOCK);
 
+    public static final RegistryObject<Block> GRAVITY_BEAM = BLOCKS.register("gravity_beam",
+            () -> new GravityBeamBlock(BlockBehaviour.Properties.copy(Blocks.DISPENSER)));
+
+    public static final RegistryObject<Item> GRAVITY_BEAM_ITEM = fromBlock(GRAVITY_BEAM);
+
     public static final RegistryObject<Block> FLOWER_VINES = BLOCKS.register("flower_vine",
             () -> new FlowerVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
 
@@ -171,7 +186,7 @@ public class Registration {
     public static final RegistryObject<Item> FLOWER_VINES_ITEM = fromBlock(FLOWER_VINES);
 
     public static final RegistryObject<Block> MIND_LICHEN = BLOCKS.register("mind_lichen",
-            () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN).lightLevel((state) -> 7)));
+            () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN)));
 
     public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN);
 
@@ -186,30 +201,52 @@ public class Registration {
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
 
-    // Register the Gravity Chandelier BE
+    // Register the Gravity related BEs
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
+    public static final RegistryObject<BlockEntityType<GravityBeamBlockEntity>> GRAVITY_BEAM_BE_TYPE =
+            TILES.register("gravity_beam_be",
+                    () -> BlockEntityType.Builder.of(GravityBeamBlockEntity::new, GRAVITY_BEAM.get()).build(null));
+
     // Register Power bottles
+    public static final RegistryObject<Block> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), ACID_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 7)));
     public static final RegistryObject<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
-            () -> new BlazeBottleItem(new Item.Properties()));
+            () -> new BlazeBottleItem(new Item.Properties(), BLAZE_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> MIND_BOTTLE_BLOCK = BLOCKS.register("mind_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), MIND_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> SOUL_BOTTLE_BLOCK = BLOCKS.register("soul_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), SOUL_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> WARP_BOTTLE_BLOCK = BLOCKS.register("warp_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
-            () -> new WarpBottleItem(new Item.Properties()));
+            () -> new WarpBottleItem(new Item.Properties(), WARP_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> VERDANT_BOTTLE_BLOCK = BLOCKS.register("verdant_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), VERDANT_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> BODY_BOTTLE_BLOCK = BLOCKS.register("body_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final RegistryObject<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), BODY_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> LIGHT_BOTTLE_BLOCK = BLOCKS.register("light_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 15)));
     public static final RegistryObject<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), LIGHT_BOTTLE_BLOCK.get()));
+    public static final RegistryObject<Block> VITAL_BOTTLE_BLOCK = BLOCKS.register("vital_bottle",
+            () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 2)));
     public static final RegistryObject<Item> VITAL_BOTTLE = ITEMS.register("vital_bottle",
-            () -> new PowerBottleItem(new Item.Properties()));
+            () -> new PowerBottleItem(new Item.Properties(), VITAL_BOTTLE_BLOCK.get()));
 
     // Register staves
     public static final RegistryObject<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
@@ -250,6 +287,7 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
 
+
     // Register technical blocks.
     public static final RegistryObject<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
             () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
@@ -266,7 +304,19 @@ public class Registration {
     public static final RegistryObject<Block> GLOWING_AIR = BLOCKS.register("glowing_air",
             () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
 
+    public static final RegistryObject<Block> UNFORMED_MATTER = BLOCKS.register("unformed_matter",
+            () -> new UnformedMatterBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
+                    .sound(SoundType.HONEY_BLOCK)
+                    .lightLevel((state) -> 15)
+                    .hasPostProcess((a, b, c) -> true)
+                    .emissiveRendering((a, b, c) -> true)
+                    .pushReaction(PushReaction.DESTROY)));
+
     // Register items.
+    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
+            () -> new DisplacerItem(new Item.Properties()
+                    .defaultDurability(350)));
+
     public static final RegistryObject<Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> STARDUST_ITEM = ITEMS.register("stardust",
@@ -292,22 +342,30 @@ public class Registration {
             () -> new ForceRockItem(new Item.Properties()));
     public static final RegistryObject<Item> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
-    public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",
-            () -> new DisplacerItem(new Item.Properties()
-                    .defaultDurability(350)));
+    public static final RegistryObject<Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(1.4F)
+                    .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
+                    .build())));
 
     // Register mob effects
     public static final RegistryObject<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
                     .addAttributeModifier(ForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
-
     public static final RegistryObject<MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+    public static final RegistryObject<MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
+                    .addAttributeModifier(ForgeMod.BLOCK_REACH.get(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
+                            2, AttributeModifier.Operation.ADDITION));
+    public static final RegistryObject<MobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
@@ -339,6 +397,9 @@ public class Registration {
     // Register sound events.
     public static final RegistryObject<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:zap")));
+
+    public static final RegistryObject<SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
+            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:rumble")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
@@ -378,13 +439,30 @@ public class Registration {
         ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
         ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
         ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
+        ((SymbolBlock) DIVINE_SYMBOL.get()).setSymbolItem(DIVINE_SYMBOL_ITEM.get());
         CriteriaTriggers.enqueue(evt);
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
-        SecretScaleItem.registerGravPotions(evt);
+        registerPotions(evt);
         if(ModList.get().isLoaded("create")){
             ReactiveCreatePlugin.init();
         }
+    }
+
+    // Set up the potion items.
+    public static void registerPotions(FMLCommonSetupEvent evt) {
+        ItemStack thick_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(thick_potion, Potions.THICK);
+
+        ItemStack grav_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(grav_potion, NULL_GRAVITY_POTION.get());
+        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(thick_potion),
+                Ingredient.of(SECRET_SCALE.get()), grav_potion));
+
+        ItemStack long_grav_potion = Items.POTION.getDefaultInstance();
+        PotionUtils.setPotion(long_grav_potion, LONG_NULL_GRAVITY_POTION.get());
+        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(StrictNBTIngredient.of(grav_potion),
+                Ingredient.of(Items.REDSTONE), long_grav_potion));
     }
 
     @SubscribeEvent

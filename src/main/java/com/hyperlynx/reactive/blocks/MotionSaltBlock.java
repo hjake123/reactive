@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,7 +67,8 @@ public class MotionSaltBlock extends Block {
         if(!level.getBlockState(neighbor_pos.below()).isAir())
             return;
 
-        if(HarvestChecker.canMineBlock(level, neighbor_pos, level.getBlockState(neighbor_pos), 35F)){
+        if(HarvestChecker.canMineBlock(level, neighbor_pos, level.getBlockState(neighbor_pos), 35F)
+        && !level.getBlockState(neighbor_pos).is(AlchemyTags.notRelocatable)){
             FallingBlockEntity.fall(level, neighbor_pos, level.getBlockState(neighbor_pos));
         }
     }

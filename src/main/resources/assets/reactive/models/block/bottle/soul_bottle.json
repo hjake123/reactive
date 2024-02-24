@@ -1,0 +1,6 @@
+{
+  "parent": "reactive:block/bottle/power_bottle",
+  "textures": {
+    "power": "reactive:block/soul_in_bottle"
+  }
+}

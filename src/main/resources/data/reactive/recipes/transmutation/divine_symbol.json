@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:iron_symbol"
+  },
+  "product": {
+    "item": "reactive:divine_symbol"
+  },
+  "reagents": ["reactive:astral"],
+  "min": 1000,
+  "cost": 0
+}

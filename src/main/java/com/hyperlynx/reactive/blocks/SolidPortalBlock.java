@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-public class SolidPortalBlock extends Block {
+public class SolidPortalBlock extends WaterloggableBlock {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     public SolidPortalBlock(Properties prop) {
@@ -39,6 +39,7 @@ public class SolidPortalBlock extends Block {
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override

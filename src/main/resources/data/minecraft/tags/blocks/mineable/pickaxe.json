@@ -10,6 +10,7 @@
     "reactive:salt_block",
     "reactive:motion_salt_block",
     "reactive:framed_motion_salt_block",
-    "reactive:curse_cell"
+    "reactive:curse_cell",
+    "reactive:gravity_beam"
   ]
 }

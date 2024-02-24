@@ -32,12 +32,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+import static com.hyperlynx.reactive.advancements.CriteriaTriggers.HARVEST_TRIGGER;
+
 public class OccultSymbolBlock extends SymbolBlock{
     public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
 
     public OccultSymbolBlock(Properties props) {
         super(props);
-        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.UP).setValue(ACTIVE, false));
+        registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.UP).setValue(ACTIVE, false));
     }
 
     @Override
@@ -87,7 +89,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         // Which bottle will be extracted, from the list above.
         // Rolls beyond the table shatter the bottle.
         // (Remember, nextInt is exclusive at the top end!)
-        int roll = level.random.nextInt(0, 8);
+        int roll = level.random.nextInt(0, 7);
         boolean bottle_broke = false;
 
         switch(roll){
@@ -125,6 +127,9 @@ public class OccultSymbolBlock extends SymbolBlock{
             case 5 -> {
                 // A Bottle of Mind was extracted.
                 if(player.experienceLevel > 4){
+                    if(player instanceof ServerPlayer splayer){
+                        HARVEST_TRIGGER.trigger(splayer);
+                    }
                     player.giveExperienceLevels(-4);
                     player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 150, 2));
                     player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
@@ -151,7 +156,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.8F);
         }
 
-        player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 120);
+        player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 100);
 
         return InteractionResult.SUCCESS;
     }

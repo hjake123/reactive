@@ -31,5 +31,6 @@ public class Powers {
     public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF, null, Items.MAGENTA_DYE));
     public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12,null, Items.LIME_DYE));
     public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8, null, Items.GRAY_DYE));
+    public static final RegistryObject<Power> ASTRAL_POWER = POWERS.register("astral", () -> new Power("astral", 0xE9D7FA, null, Items.WHITE_DYE));
 
 }

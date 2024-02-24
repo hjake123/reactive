@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:harvest_criterion"
+    }
+  }
+}
