@@ -32,7 +32,6 @@ public class ReactiveMod
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(REACTION_MAN);
         MinecraftForge.EVENT_BUS.register(WORLD_SPECIFIC_VALUE);
-        MinecraftForge.EVENT_BUS.register(SpecialCaseMan.class);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);

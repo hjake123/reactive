@@ -3,6 +3,8 @@ package com.hyperlynx.reactive.effect;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -18,6 +20,13 @@ public class EffectHandlers {
                 event.setCanceled(true);
             else
                 event.setAmount(damage - 2);
+        }
+    }
+    @SubscribeEvent(priority= EventPriority.LOWEST)
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if(event.getEntity().hasEffect(Registration.IMMOBILE.get())){
+            event.getEntity().setJumping(false);
+            event.getEntity().setDeltaMovement(0, 0, 0);
         }
     }
 }

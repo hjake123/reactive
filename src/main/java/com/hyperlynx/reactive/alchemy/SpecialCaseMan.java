@@ -510,13 +510,4 @@ public class SpecialCaseMan {
             }
         }
     }
-
-    // Prevent anything from jumping when Immobilized.
-    @SubscribeEvent(priority= EventPriority.LOWEST)
-    public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if(event.getEntity().hasEffect(Registration.IMMOBILE.get())){
-            event.getEntity().setJumping(false);
-            event.getEntity().setDeltaMovement(0, 0, 0);
-        }
-    }
 }
