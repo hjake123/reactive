@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class WarpBottleItem extends PowerBottleItem{
@@ -29,6 +31,16 @@ public class WarpBottleItem extends PowerBottleItem{
 
     public WarpBottleItem(Properties props, Block block) {
         super(props, block);
+    }
+
+    // Make a Warp Bottle into a Rift Bottle.
+    public static ItemStack makeRiftBottle(CrucibleBlockEntity c, ItemStack bottle){
+        if(bottle.getTag() == null){
+            bottle.setTag(new CompoundTag());
+        }
+        addTeleportTags(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos(), bottle.getTag());
+        c.enderRiftStrength = 0;
+        return bottle;
     }
 
     @Override

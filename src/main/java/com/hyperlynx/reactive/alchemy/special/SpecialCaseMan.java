@@ -11,7 +11,6 @@ import com.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.LitmusPaperItem;
-import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.HyperPortalShape;
@@ -192,7 +191,7 @@ public class SpecialCaseMan {
     public static void register_bottle_cases() {
         BOTTLE_SPECIAL_CASES.add((c, bottle) -> {
             if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
-                return makeRiftBottle(c, bottle);
+                return WarpBottleItem.makeRiftBottle(c, bottle);
             return bottle;
         });
     }
@@ -375,16 +374,6 @@ public class SpecialCaseMan {
         return true;
     }
 
-    // Make a Warp Bottle into a Rift Bottle.
-    public static ItemStack makeRiftBottle(CrucibleBlockEntity c, ItemStack bottle){
-        if(bottle.getTag() == null){
-            bottle.setTag(new CompoundTag());
-        }
-        WarpBottleItem.addTeleportTags(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos(), bottle.getTag());
-        c.enderRiftStrength = 0;
-        return bottle;
-    }
-
     // Explode gunpowder due to blaze.
     private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
         l.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
@@ -455,10 +444,6 @@ public class SpecialCaseMan {
             c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20));
         }
         c.setDirty();
-    }
-
-    private static void medWaterWriting(CrucibleBlockEntity c, ItemEntity e) {
-        // Nothing at the moment.
     }
 
     private static boolean lowWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold){
