@@ -37,14 +37,6 @@
     {
       "type": "reactive:transmute",
       "recipe": "cursed_symbol"
-    },
-    {
-      "type": "patchouli:empty",
-      "draw_filler": false
-    },
-    {
-      "type": "patchouli:image",
-      "images": ["reactive:textures/gui/astral_diagram.png"]
     }
   ]
 }

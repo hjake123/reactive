@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
 import net.minecraft.advancements.Advancement;
@@ -81,10 +82,13 @@ public class DivineSymbolBlock extends SymbolBlock{
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
             accepted = true;
         }else if(Powers.BLAZE_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2000, 0, true, false));
-            player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD.get(), 1900, 0, true, false));
-            player.setRemainingFireTicks(1900);
-            player.setTicksFrozen(0);
+            if(player.getTicksFrozen() > 0)
+                player.setTicksFrozen(0);
+            else {
+                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2000, 0, true, false));
+                player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD.get(), 1900, 0, true, false));
+                player.setRemainingFireTicks(1900);
+            }
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);
             accepted = true;
         }else if(Powers.SOUL_POWER.get().matchesBottle(stack)){
@@ -96,6 +100,11 @@ public class DivineSymbolBlock extends SymbolBlock{
         if(!player.isCreative() && accepted) {
             player.getItemInHand(hand).shrink(1);
             player.addItem(new ItemStack(Registration.QUARTZ_BOTTLE.get()));
+        }
+
+        if(accepted){
+            ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos, player.blockPosition().above(), 4, 5, 0.4);
+            player.getCooldowns().addCooldown(stack.getItem(), 100);
         }
 
         return InteractionResult.SUCCESS;

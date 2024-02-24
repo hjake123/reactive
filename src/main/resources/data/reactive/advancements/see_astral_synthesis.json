@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:divine_symbol"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.astral"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.astral"
+    },
+    "hidden": true
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:reaction/astral_synthesis_criterion"
+    }
+  },
+  "parent": "reactive:activate_eye"
+}

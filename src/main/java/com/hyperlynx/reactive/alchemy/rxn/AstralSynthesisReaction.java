@@ -23,8 +23,7 @@ public class AstralSynthesisReaction extends SynthesisReaction{
         super.run(crucible);
         crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
         Vec3 loc = Vec3.atCenterOf(crucible.getBlockPos());
-        crucible.getLevel().explode(null, loc.x, loc.y, loc.z, 1, Level.ExplosionInteraction.NONE);
-        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS);
+        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.END_GATEWAY_SPAWN, SoundSource.BLOCKS);
         crucible.integrity = 12;
     }
 }

@@ -152,7 +152,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             crucible.integrity--;
                         }
                     }else if(crucible.integrity < 100 && crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 1){
-                        crucible.integrity++;
+                        crucible.integrity += 2;
                     }else if(crucible.integrity < 100 && crucible.integrity > 10){
                         crucible.integrity += Math.min(10, 100 - crucible.integrity);
                     }else if(crucible.integrity < 10){
