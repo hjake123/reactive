@@ -53,27 +53,27 @@ public class ReactionEffects {
         BlockPos pos = c.getBlockPos();
 
         ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, pos, c.areaMemory.fetch(c.getLevel(),
-                ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), 20, 7, 0.8F);
+                Registration.GOLD_SYMBOL.get()), 20, 7, 0.8F);
 
-        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get())){
+        if(c.areaMemory.exists(c.getLevel(), Registration.IRON_SYMBOL.get())){
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.SMOKE, c.areaMemory.fetch(c.getLevel(),
-                    ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), c.areaMemory.fetch(c.getLevel(),
-                    ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()), 20, 7, 0.8F);
+                    Registration.GOLD_SYMBOL.get()), c.areaMemory.fetch(c.getLevel(),
+                    Registration.IRON_SYMBOL.get()), 20, 7, 0.8F);
         }else{
             SpecialCaseMan.checkEmptySpecialCases(c);
             c.expendPower();
             c.getLevel().setBlock(pos, c.getLevel().getBlockState(pos).setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
             c.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Explosion.BlockInteraction.NONE);
 
-            if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()))
-                c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get()), true);
+            if(c.areaMemory.exists(c.getLevel(), Registration.GOLD_SYMBOL.get()))
+                c.getLevel().removeBlock(c.areaMemory.fetch(c.getLevel(), Registration.GOLD_SYMBOL.get()), true);
         }
         return c;
     }
 
     // Changes the Gold Symbol into Active Gold Foam, which spreads outwards for a limited distance and leaves Gold Foam behind.
     public static CrucibleBlockEntity foaming(CrucibleBlockEntity c) {
-        BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        BlockPos symbol_position = c.areaMemory.fetch(c.getLevel(), Registration.GOLD_SYMBOL.get());
         if(symbol_position == null)
             return c;
 
@@ -123,7 +123,7 @@ public class ReactionEffects {
     public static CrucibleBlockEntity discharge(CrucibleBlockEntity c) {
         c.electricCharge += 5;
         if (c.electricCharge > 21) {
-            BlockPos potential_rod = c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Blocks.LIGHTNING_ROD);
+            BlockPos potential_rod = c.areaMemory.fetch(c.getLevel(), Blocks.LIGHTNING_ROD);
             if (potential_rod != null) {
                 if (!c.getLevel().isClientSide) {
                     ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(c.getLevel().getBlockState(potential_rod), c.getLevel(), potential_rod);
@@ -272,7 +272,7 @@ public class ReactionEffects {
     public static CrucibleBlockEntity blockfall(CrucibleBlockEntity c) {
         Level level = c.getLevel();
         RandomSource random = level.random;
-        BlockPos symbol_pos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+        BlockPos symbol_pos = c.areaMemory.fetch(level, Registration.GOLD_SYMBOL.get());
         if(symbol_pos == null)
             return c;
 

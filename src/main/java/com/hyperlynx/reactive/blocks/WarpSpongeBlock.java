@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -41,13 +42,9 @@ public class WarpSpongeBlock extends WetSpongeBlock {
                 level.setBlock(target, level.getBlockState(target).setValue(LayeredCauldronBlock.LEVEL, 3), Block.UPDATE_CLIENTS);
             }else if(level.getBlockState(target).is(Registration.CRUCIBLE.get())){
                 level.setBlock(target, level.getBlockState(target).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
-            }else if(stateIsBlocking(level.getBlockState(target))){
+            }else if(AreaMemory.stateIsBlocking(level.getBlockState(target))){
                 return;
             }
         }
-    }
-
-    public static boolean stateIsBlocking(BlockState state){
-        return !state.isAir() && (!(state.getBlock() instanceof TrapDoorBlock) || !state.getValue(TrapDoorBlock.OPEN));
     }
 }

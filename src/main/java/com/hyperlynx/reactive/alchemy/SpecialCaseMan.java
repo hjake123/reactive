@@ -130,10 +130,10 @@ public class SpecialCaseMan {
 
     // Dissolving a carved pumpkin might have many effects.
     private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
-        if (level.isClientSide || c.areaMemory.exists(level, ConfigMan.COMMON.crucibleRange.get(), Registration.IRON_SYMBOL.get()))
+        if (level.isClientSide || c.areaMemory.exists(level, Registration.IRON_SYMBOL.get()))
             return;
 
-        BlockPos blazeRodPos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Registration.BLAZE_ROD.get());
+        BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
         if(blazeRodPos != null){
             conjureBlaze(level, e, c, blazeRodPos);
             return;

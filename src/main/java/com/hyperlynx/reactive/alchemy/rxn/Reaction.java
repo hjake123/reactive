@@ -110,7 +110,7 @@ public abstract class Reaction {
     private boolean checkStimulus(CrucibleBlockEntity crucible){
         return switch (stimulus) {
             case END_CRYSTAL -> checkEndCrystal(crucible);
-            case GOLD_SYMBOL -> crucible.areaMemory.exists(crucible.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.GOLD_SYMBOL.get());
+            case GOLD_SYMBOL -> crucible.areaMemory.exists(crucible.getLevel(), Registration.GOLD_SYMBOL.get());
             case ELECTRIC -> crucible.electricCharge > 0;
             case NO_ELECTRIC -> crucible.electricCharge == 0;
             case SACRIFICE -> crucible.sacrificeCount >= 10;
