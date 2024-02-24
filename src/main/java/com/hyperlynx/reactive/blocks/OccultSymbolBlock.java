@@ -97,20 +97,20 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Acid was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 1500, 1));
                 player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 1500, 0));
-                player.hurt(level.damageSources().magic(), 12);
+                player.hurt(level.damageSources().magic(), Math.min(12, player.getHealth() - 1));
                 player.displayClientMessage(Component.translatable("message.reactive.extract_acid"), true);
             }
             case 1 -> {
                 // A Bottle of Stock was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 1000, 1));
-                player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - 16);
+                player.getFoodData().setFoodLevel(Math.min(0, player.getFoodData().getFoodLevel() - 16));
                 player.displayClientMessage(Component.translatable("message.reactive.extract_body"), true);
             }
             case 2 -> {
                 // A Bottle of Blaze was extracted.
                 player.setTicksFrozen(800);
                 player.setRemainingFireTicks(0);
-                player.hurt(level.damageSources().freeze(), 5);
+                player.hurt(level.damageSources().freeze(), Math.min(5, player.getHealth() - 1));
                 player.displayClientMessage(Component.translatable("message.reactive.extract_blaze"), true);
             }
             case 3 -> {

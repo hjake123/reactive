@@ -87,9 +87,9 @@ public class DivineSymbolBlock extends SymbolBlock{
             if(player.getTicksFrozen() > 0)
                 player.setTicksFrozen(0);
             else {
-                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 2000, 0, true, false));
+                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, true, false));
                 player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD.get(), 1900, 0, true, false));
-                player.setRemainingFireTicks(1900);
+                player.setRemainingFireTicks(100);
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);
             accepted = true;
