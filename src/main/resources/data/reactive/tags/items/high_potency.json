@@ -10,7 +10,6 @@
     "reactive:flower_vine",
     "minecraft:nether_star",
     "minecraft:dragon_breath",
-    "reactive:universal_solvent",
     {
       "id": "hexcasting:charged_amethyst",
       "required": false

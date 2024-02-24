@@ -23,19 +23,15 @@ import javax.annotation.Nonnull;
 @Mod(ReactiveMod.MODID)
 public class ReactiveMod
 {
-    public static final ReactionMan REACTION_MAN = new ReactionMan();
-    public static final DataGenerationMan DATA_GENERATION_MAN = new DataGenerationMan();
-    public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
     public static final String MODID = "reactive";
-    public static final Logger LOGGER = LogManager.getLogger();
-
+    public static final ReactionMan REACTION_MAN = new ReactionMan();
+    public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
     public ReactiveMod() {
         Registration.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientRegistration::init);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(REACTION_MAN);
         MinecraftForge.EVENT_BUS.register(WORLD_SPECIFIC_VALUE);
-        MinecraftForge.EVENT_BUS.register(DATA_GENERATION_MAN);
         MinecraftForge.EVENT_BUS.register(SpecialCaseMan.class);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
