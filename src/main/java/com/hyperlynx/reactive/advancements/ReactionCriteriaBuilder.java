@@ -11,32 +11,21 @@ import java.util.Map;
 
 /*
 This class creates a FlagCriterion for each Reaction alias string it is fed.
+It must be populated before FMLCommonSetupEvent -- for example at class load in constructors.
  */
 public class ReactionCriteriaBuilder {
     private final List<String> aliases = new ArrayList<>();
-    private final Map<String, FlagCriterion> criteria = new HashMap<>();
     public void add(String alias){
         aliases.add(alias);
     }
-    public void build(){
-        for(String alias : aliases){
-            FlagCriterion criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_criterion"));
-            criteria.put(alias, criterion);
-            FlagCriterion perfect_criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_perfect_criterion"));
-            criteria.put(alias+"_perfect", perfect_criterion);
-        }
-    }
 
     public void register(FMLCommonSetupEvent evt){
-        for(String key : criteria.keySet()){
-            evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(criteria.get(key)));
+        for(String alias : aliases){
+            FlagCriterion criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_criterion"));
+            evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(criterion));
+            FlagCriterion perfect_criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_perfect_criterion"));
+            evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(perfect_criterion));
         }
-    }
-
-    public @Nullable FlagCriterion get(String alias){
-        if(criteria.containsKey(alias))
-            return criteria.get(alias);
-        return null;
     }
 
     public List<String> getAliases(){

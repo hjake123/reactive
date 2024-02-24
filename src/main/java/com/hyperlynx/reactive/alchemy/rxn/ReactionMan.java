@@ -7,7 +7,9 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -55,7 +57,6 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("astral_synthesis");
         CRITERIA_BUILDER.add("astral");
         CRITERIA_BUILDER.add("astral_curse_annihilation");
-        CRITERIA_BUILDER.build();
     }
 
     public List<Reaction> getReactions(){
@@ -152,6 +153,8 @@ public class ReactionMan {
         REACTIONS.add(new AstralReaction("astral"));
         REACTIONS.add(new AnnihilationReaction("creation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
+        MinecraftForge.EVENT_BUS.post(new ReactionConstructEvent());
+
         initialized = true;
         initializer_lock = false;
         return REACTIONS;
@@ -166,5 +169,15 @@ public class ReactionMan {
         initialized = false;
         REACTIONS.clear();
         BASE_POWER_LIST.clear();
+    }
+
+    /**
+     * This event is fired after ReactionMan constructs the world's reactions.
+     * You can add new reactions using ReactionMan.REACTIONS.add()<br><br>
+     * You will need to also register the reaction's alias to ReactionCriteriaBuilder.add() at class load
+     * if you want reaction advancements and their data gen to work.
+     */
+    public static class ReactionConstructEvent extends Event {
+
     }
 }
