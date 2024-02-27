@@ -8,18 +8,17 @@
     "minecraft:crimson_stem",
     "minecraft:moss_block",
     "#minecraft:coral_blocks",
-    "#minecraft:coal_ores",
     "#minecraft:copper_ores",
     "#minecraft:iron_ores",
     "#minecraft:lapis_ores",
     "#minecraft:emerald_ores",
     "#minecraft:redstone_ores",
+    "#minecraft:diamond_ores",
     "#minecraft:gold_ores",
     "minecraft:amethyst_block",
     "minecraft:sculk",
     "minecraft:honeycomb_block",
-    "minecraft:bone_block",
-    "minecraft:white_wool"
+    "minecraft:bone_block"
   ],
   "remove": [
     "#minecraft:terracotta"
