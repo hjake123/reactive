@@ -103,7 +103,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             case 1 -> {
                 // A Bottle of Stock was extracted.
                 player.addEffect(new MobEffectInstance(MobEffects.HUNGER, 1000, 1));
-                player.getFoodData().setFoodLevel(Math.min(0, player.getFoodData().getFoodLevel() - 16));
+                player.getFoodData().setFoodLevel(Math.max(0, player.getFoodData().getFoodLevel() - 16));
                 player.displayClientMessage(Component.translatable("message.reactive.extract_body"), true);
             }
             case 2 -> {

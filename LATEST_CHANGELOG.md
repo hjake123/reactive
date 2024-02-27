@@ -19,4 +19,6 @@
 - Fixed an issue that could cause displaced blocks to be overwritten or deleted when their blockstate is changed externally
 - Fixed Motion Salt Blocks not respecting the forge:relocation_not_supported tag
 - Fixed the Motion Salt Block special case destroying the item
+- Fixed attenuation being absent on custom sounds
+- Fixed the Living Staff of Power crashing if you have a bad effect
 - Refactored some internal systems to make the mod more extensible
