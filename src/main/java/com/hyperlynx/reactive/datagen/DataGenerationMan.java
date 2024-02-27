@@ -1,10 +1,12 @@
 package com.hyperlynx.reactive.datagen;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import net.minecraft.data.DataProvider;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
@@ -20,6 +22,9 @@ Currently, it can generate:
 public class DataGenerationMan {
     @SubscribeEvent
     public static void gatherData (GatherDataEvent event){
+        if(ModList.get().isLoaded("pehkui")){
+            ReactivePehkuiPlugin.data_init();
+        }
         event.getGenerator().addProvider(
                 event.includeServer(),
                 (DataProvider.Factory<ForgeAdvancementProvider>) output -> new ForgeAdvancementProvider(

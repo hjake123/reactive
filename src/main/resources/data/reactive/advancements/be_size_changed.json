@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:size_change_criterion"
+    }
+  }
+}
