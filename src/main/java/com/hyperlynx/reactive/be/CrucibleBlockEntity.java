@@ -140,7 +140,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         for (Power base_power : ReactionMan.BASE_POWER_LIST) {
                             if (crucible.getPowerLevel(base_power) > 0) {
                                 hungers = false;
-                                crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 3, 27));
+                                crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 16, 45));
                             }
                         }
                         ParticleScribe.drawParticleBox(level, ParticleTypes.ASH, AABB.ofSize(Vec3.atCenterOf(pos.below()), 1, 1, 1), 2);
