@@ -59,6 +59,8 @@ public class WarpBottleItem extends PowerBottleItem{
     public InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().getBlockState(context.getClickedPos()).is(Registration.DIVINE_SYMBOL.get())){
             return InteractionResult.FAIL;
+        }else if(isRiftBottle(context.getItemInHand())){
+            return InteractionResult.PASS;
         }
         return super.useOn(context);
     }
