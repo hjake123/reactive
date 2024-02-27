@@ -156,7 +156,8 @@ public class OccultSymbolBlock extends SymbolBlock{
             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.8F);
         }
 
-        player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 100);
+        if(!player.getAbilities().instabuild)
+            player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 80);
 
         return InteractionResult.SUCCESS;
     }
