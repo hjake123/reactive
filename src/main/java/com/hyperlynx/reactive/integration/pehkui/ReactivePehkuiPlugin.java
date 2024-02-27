@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.EffectReaction;
+import com.hyperlynx.reactive.alchemy.rxn.FreeEffectReaction;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.resources.ResourceLocation;
@@ -32,10 +33,10 @@ public class ReactivePehkuiPlugin {
             return;
 
         ReactionMan.addReactions(
-            new EffectReaction("size_shrink_effect", ResizeReactionEffects::shrink, ResizeReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
-            new EffectReaction("size_grow_effect", ResizeReactionEffects::grow, ResizeReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
-            new EffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC),
-            new EffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC)
+            new FreeEffectReaction("size_shrink_effect", ResizeReactionEffects::shrink, ResizeReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
+            new FreeEffectReaction("size_grow_effect", ResizeReactionEffects::grow, ResizeReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
+            new FreeEffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC),
+            new FreeEffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC)
         );
     }
 
