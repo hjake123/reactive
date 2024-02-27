@@ -69,6 +69,11 @@ There are two config files; one in the config folder, and one in each world's se
 	#Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.
 	doNotChangeWaterTexture = false
 	(This is a Rubidium compat feature, since with Rubidium installed Crucible water will not render correctly.)
+
+	#Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.
+	colorizeLitmusOutput = true
+	(As of version 8, Litmus Paper will attempt to color the lines of its measurements to match the powers they're discussing. This setting disables that system, in case it causes eyestrain or readability issues.)
+
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
