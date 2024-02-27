@@ -151,7 +151,7 @@ public class SpecialCaseMan {
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
                     && c.electricCharge > 0) {
-                displaceNearby(c, e);
+                displaceNearby(c);
                 return true;
             }
             return false;
@@ -483,8 +483,7 @@ public class SpecialCaseMan {
     }
 
     // Throwing a Motion Salt Block into an electrified crucible displaces a nearby block.
-    private static void displaceNearby(CrucibleBlockEntity c, ItemEntity e) {
-        e.kill();
+    private static void displaceNearby(CrucibleBlockEntity c) {
         Optional<BlockPos> target = BlockPos.findClosestMatch(c.getBlockPos(), ConfigMan.COMMON.crucibleRange.get(), ConfigMan.COMMON.crucibleRange.get(),
                 blockPos -> {
                     BlockState state = Objects.requireNonNull(c.getLevel()).getBlockState(blockPos);
