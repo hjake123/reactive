@@ -17,11 +17,16 @@ There are two config files; one in the config folder, and one in each world's se
 	crucibleTickDelay = 5
  (If the crucible is causing server tick lag, this is the first thing you can change.)
  
-	#The crucible may check an area this many blocks in radius for some effects. Do not set this too high. [Default: 12]
+	#The crucible affect entities with an area of this radius. [Default: 12]
 	#Range: 2 ~ 64
 	crucibleRange = 12
- (This is the range for symbol effects, reaction effects, and some other things, so it also affects performance.)
- 
+ (This is the range for reaction effects, and some other things.)
+
+	#The crucible checks an area this many blocks in radius up to a few times a second. Do not set this too high. [Default: 6]
+	#Range: 2 ~ 64
+	areaMemoryRange = 6
+ (This is the range for the area memory system. The time of each area memory update increases in an n-cubed fashion with this value.)
+
 	#Certain effects might teleport entities if they are not in this blacklist. [Default: "minecraft:ender_dragon", "minecraft:wither"]
 	doNotTeleport = ["minecraft:ender_dragon", "minecraft:wither"]
  (Add any LivingEntity entities that you need to never be teleportable.)
@@ -67,6 +72,8 @@ There are two config files; one in the config folder, and one in each world's se
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
+
+The ```reactive:can_be_generated``` block tag decides which blocks are created spontaneously by a certain reaction. The reaction is hard to start, but can be made maintained with renewable resources.
 
 # Adding Power Sources
 Any item can be added as a power source by adding it to one of these following tags:
