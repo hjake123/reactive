@@ -173,9 +173,7 @@ public class StaffEffects {
             for (LivingEntity victim : nearby_ents) {
                 boolean has_regen = false, has_hp_up = false;
                 for(MobEffectInstance mei : victim.getActiveEffects()){
-                    if(!mei.getEffect().isBeneficial())
-                        victim.removeEffect(mei.getEffect());
-                    else if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
+                    if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
                         mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, 2));
                         has_hp_up = true;
                     }
