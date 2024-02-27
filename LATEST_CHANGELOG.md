@@ -1,4 +1,7 @@
-* Made Light Staves more responsive
-* Removed the range limitation from the Warp Staff
-* Prevented the Arcane Staff from attacking armor stands or the wielder's pets
-* Made Shulker Crucibles items show their contents in their tooltip
+- Enable waterlogging for all reasonable blocks
+  - Allows Radiant Staff of Power to set lights underwater
+- Added colorized output for Litmus Paper
+- Made Bottle of Warp rename to Linked Bottle of Warp when linked to a destination
+- Allowed book to load with missing recipes
+- Fixed issue where Displaced Blocks could be overwritten
+- Seperated 
