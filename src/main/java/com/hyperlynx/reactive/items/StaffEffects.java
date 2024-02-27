@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -76,6 +78,12 @@ public class StaffEffects {
                 if(user.level.getBlockState(light_target).isAir()){
                     user.level.setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
+                            Block.UPDATE_ALL);
+                } else if (user.level.getBlockState(light_target).is(Blocks.WATER)) {
+                    user.level.setBlock(light_target,
+                            Registration.GLOWING_AIR.get().defaultBlockState()
+                                    .setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get())
+                                    .setValue(AirLightBlock.WATERLOGGED, true),
                             Block.UPDATE_ALL);
                 }
             }
