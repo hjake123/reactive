@@ -32,7 +32,7 @@ public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
     protected static final VoxelShape SOUTH_SHAPE = Block.box(2, 2, 0, 14, 14, 1);
 
     public SymbolBlock(BlockBehaviour.Properties props) {
-        super(props.pushReaction(PushReaction.DESTROY));
+        super(props);
         registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.UP));
     }
 

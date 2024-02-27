@@ -86,6 +86,11 @@ public class WarpBottleItem extends PowerBottleItem{
         return compoundtag != null && compoundtag.contains(TAG_TELEPORT_DESTINATION);
     }
 
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return isRiftBottle(stack) ? Component.translatable("item.reactive.linked_warp_bottle") : super.getName(stack);
+    }
+
     private static Optional<ResourceKey<Level>> getTeleportDimension(CompoundTag p_40728_) {
         return Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, p_40728_.get(TAG_TELEPORT_DIMENSION)).result();
     }
