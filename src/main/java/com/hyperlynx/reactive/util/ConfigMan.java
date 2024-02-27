@@ -63,6 +63,7 @@ public class ConfigMan {
     public static class Client {
         public ForgeConfigSpec.BooleanValue showPowerSources;
         public ForgeConfigSpec.BooleanValue doNotChangeWaterTexture;
+        public ForgeConfigSpec.BooleanValue colorizeLitmusOutput;
 
         Client(ForgeConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
@@ -71,6 +72,8 @@ public class ConfigMan {
                     .define("showPowerSources", false);
             doNotChangeWaterTexture = builder.comment("Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.")
                     .define("doNotChangeWaterTexture", false);
+            colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")
+                    .define("colorizeLitmusOutput", true);
 
             builder.pop();
         }

@@ -4,8 +4,10 @@ public class Color {
     public int red;
     public int green;
     public int blue;
+    public int hex;
 
     public Color(int color){
+        hex = color;
         red = (((color >> 16) & 0xFF));
         green = (((color >> 8) & 0xFF));
         blue = ((color & 0xFF));

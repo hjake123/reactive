@@ -5,8 +5,13 @@ import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
+import com.hyperlynx.reactive.util.ConfigMan;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -29,18 +34,27 @@ public class LitmusPaperItem extends Item {
     }
 
     // Create a list of lines that is the measurment.
-    private List<Component> buildMeasurmentText(ItemStack stack){
+    private List<Component> buildMeasurmentText(ItemStack stack, int water_color){
         List<Component> text = new ArrayList<>();
         if(!stack.hasTag())
             return text;
 
         ListTag measurements = stack.getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
         for(Tag tag : measurements){
-            text.add(Component.literal(((CompoundTag) tag).getString("value")));
+            if(tag instanceof CompoundTag measurement){
+                String m = "";
+                TextColor color = TextColor.fromRgb(0xFFFFFF);
+                if(measurement.contains("power") && ConfigMan.CLIENT.colorizeLitmusOutput.get()){
+                    color = Power.readPower(measurement, "power").getTextColor();
+                }
+                m += measurement.getString("value");
+                text.add(Component.literal(m).withStyle(Style.EMPTY.withColor(color)));
+            }
         }
 
         if(measurements.isEmpty()){
-            text.add(Component.translatable("text.reactive.measurement_empty"));
+            text.add(Component.translatable("text.reactive.measurement_empty")
+                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
         }
 
         StringTag reaction_status = (StringTag) stack.getTag().get(TAG_STATUS);
@@ -48,12 +62,12 @@ public class LitmusPaperItem extends Item {
             return text;
 
         switch(Reaction.Status.valueOf(reaction_status.getAsString())){
-            case STABLE -> text.add(Component.translatable("text.reactive.stable"));
-            case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition"));
-            case POWER_TOO_WEAK -> text.add(Component.translatable("text.reactive.power_too_weak"));
-            case MISSING_STIMULUS -> text.add(Component.translatable("text.reactive.multi_power_reaction_missing_condition"));
-            case MISSING_CATALYST -> text.add(Component.translatable("text.reactive.missing_catalyst"));
-            case INHIBITED -> text.add(Component.translatable("text.reactive.inhibited"));
+            case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
+            case VOLATILE -> text.add(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY));
+            case POWER_TOO_WEAK -> text.add(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY));
+            case MISSING_STIMULUS -> text.add(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY));
+            case MISSING_CATALYST -> text.add(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY));
+            case INHIBITED -> text.add(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY));
             case REACTING -> text.add(Component.translatable("text.reactive.reacting"));
         }
         return text;
@@ -74,8 +88,8 @@ public class LitmusPaperItem extends Item {
             if(!player.getItemInHand(hand).hasTag())
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-            player.sendSystemMessage(Component.translatable("text.reactive.measurement_header"));
-            for(Component line : buildMeasurmentText(player.getItemInHand(hand))){
+            player.sendSystemMessage(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+            for(Component line : buildMeasurmentText(player.getItemInHand(hand), BiomeColors.getAverageWaterColor(level, player.getOnPos()))){
                 player.sendSystemMessage(line);
             }
         }
@@ -115,6 +129,7 @@ public class LitmusPaperItem extends Item {
             String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : Component.translatable("text.reactive.trace").getString());
 
             CompoundTag mt = new CompoundTag();
+            mt.putString("power", p.getId());
             mt.putString("value", measurement);
             measurements.add(mt);
         }

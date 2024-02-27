@@ -8,6 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -87,6 +88,9 @@ public class Power {
 
     public Color getColor(){
         return color;
+    }
+    public TextColor getTextColor(){
+        return TextColor.fromRgb(color.hex);
     }
     public String getId() { return id; }
     public String getName(){
