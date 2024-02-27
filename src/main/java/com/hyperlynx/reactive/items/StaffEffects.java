@@ -31,6 +31,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -71,17 +72,23 @@ public class StaffEffects {
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
             }
-            if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
+            if(!blockHit.getType().equals(BlockHitResult.Type.MISS)) {
                 // Try to toggle light on the side of the hit block.
                 BlockPos light_target = BlockPos.containing(blockHitPos.relative(blockHit.getDirection(), 1));
-                if(user.level().getBlockState(light_target).isAir()){
+                if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
                     user.level().setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
                             Block.UPDATE_ALL);
+                } else if (user.level().getBlockState(light_target).is(Blocks.WATER)) {
+                    user.level().setBlock(light_target,
+                            Registration.GLOWING_AIR.get().defaultBlockState()
+                                    .setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get())
+                                    .setValue(AirLightBlock.WATERLOGGED, true),
+                            Block.UPDATE_ALL);
                 }
+                user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
             }
-            user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
-        }else{
+        } else {
             ParticleScribe.drawParticleLine(user.level(), ParticleTypes.END_ROD,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                     blockHitPos.x, blockHitPos.y, blockHitPos.z, 2, 0.1);
