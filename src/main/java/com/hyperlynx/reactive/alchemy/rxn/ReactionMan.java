@@ -160,6 +160,10 @@ public class ReactionMan {
         return REACTIONS;
     }
 
+    public static void addReactions(Reaction... reactions){
+        REACTIONS.addAll(List.of(reactions));
+    }
+
     @SubscribeEvent
     public void worldUnload(LevelEvent.Unload event){
         reset();
@@ -173,7 +177,7 @@ public class ReactionMan {
 
     /**
      * This event is fired after ReactionMan constructs the world's reactions.
-     * You can add new reactions using ReactionMan.REACTIONS.add()<br><br>
+     * You can add new reactions using ReactionMan.addReactions(). <br><br>
      * You will need to also register the reaction's alias to ReactionCriteriaBuilder.add() at class load
      * if you want reaction advancements and their data gen to work.
      */
