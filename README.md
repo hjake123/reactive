@@ -72,6 +72,7 @@ There are two config files; one in the config folder, and one in each world's se
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
+
 The ```reactive:can_be_generated``` block tag decides which blocks are created spontaneously by a certain reaction. The reaction is hard to start, but can be made maintained with renewable resources.
 
 # Adding Power Sources
