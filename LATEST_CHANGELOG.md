@@ -1,0 +1,22 @@
+- **Added "Astral Synthesis" Object of Study**
+  - Added a new kind of Power
+  - Added Divine Symbol
+  - Added Sprig of Eternal Life
+  - Added various associated potion effects
+  - Added a new effect reaction
+- **Added Pehkui Interaction**
+  - Adds reactions to shrink, grow, and restore creatures
+  - Includes a new Object of Study
+- Added Gravity Disruptor
+- Added a block form of Power Bottles, allowing them to be placed
+- Made Litmus Paper output colorized text
+- Enabled waterlogging for certain blocks
+  - The Staff of Radiance can now illuminate underwater areas
+- Gravity Chandelier particles can now be turned off
+- Linked Bottles of Warp are now more clearly labelled
+- Buffed the Corrupt Cell
+- Split Area Memory range into its own config line and decreased the default radius to combat poor performance of that system
+- Fixed an issue that could cause displaced blocks to be overwritten or deleted when their blockstate is changed externally
+- Fixed Motion Salt Blocks not respecting the forge:relocation_not_supported tag
+- Fixed the Motion Salt Block special case destroying the item
+- Refactored some internal systems to make the mod more extensible
