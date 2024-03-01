@@ -75,6 +75,8 @@ public class StaffEffects {
             if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
                 // Try to toggle light on the side of the hit block.
                 BlockPos light_target = new BlockPos(blockHitPos.relative(blockHit.getDirection(), 1));
+                if(user.level.getBlockState(light_target).is(Registration.GLOWING_AIR.get()))
+                    return user;
                 if(user.level.getBlockState(light_target).isAir()){
                     user.level.setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
