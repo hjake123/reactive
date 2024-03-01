@@ -117,6 +117,7 @@ reactive:warp
 reactive:esoteric_x
 reactive:esoteric_y
 reactive:esoteric_z
+reactive:astral
 ```
 
 ### Specifying Reactants
