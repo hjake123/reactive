@@ -31,12 +31,12 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
                 break;
             }
         }
-        if(recipe == null)
-            throw new IllegalArgumentException();
     }
 
     @Override
     public IVariable process(@NotNull String key) {
+        if(recipe == null)
+            return null;
         if(key.equals("reactant")){
             return IVariable.from(recipe.getReactant().getItems());
         }
