@@ -95,9 +95,8 @@ public class SpecialCaseMan {
             verdantEscape(c);
         if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
             lightEscape(c);
-        c.areaMemory.cache_only_mode = false;
-        if(c.areaMemory.exists(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()))
-            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ConfigMan.COMMON.crucibleRange.get(), Registration.INCOMPLETE_STAFF.get()));
+        if(c.areaMemory.exists(c.getLevel(), Registration.INCOMPLETE_STAFF.get()))
+            staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), Registration.INCOMPLETE_STAFF.get()));
     }
 
     public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack bottle){
@@ -143,7 +142,7 @@ public class SpecialCaseMan {
             return;
 
         int cause = WorldSpecificValues.GOLEM_CAUSE.get();
-        BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), Blocks.CANDLE);
+        BlockPos candlePos = c.areaMemory.fetch(level, Blocks.CANDLE);
 
         if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
             conjureSpirit(level, e, c, cause, candlePos);
