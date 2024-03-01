@@ -1,7 +1,11 @@
 - Enable waterlogging for all reasonable blocks
   - Allows Radiant Staff of Power to set lights underwater
 - Added colorized output for Litmus Paper
+- Separated Area Memory range from Crucible range for better default performance
 - Made Bottle of Warp rename to Linked Bottle of Warp when linked to a destination
 - Allowed book to load with missing recipes
 - Fixed issue where Displaced Blocks could be overwritten
-- Seperated 
+- Fixed sounds being stereo, which caused them not to attenuate
+- Fixed crash on using a Living Staff of Power with negative potion effects
+- Adjusted Occult Symbol cooldown
+- Adjusted a hint
