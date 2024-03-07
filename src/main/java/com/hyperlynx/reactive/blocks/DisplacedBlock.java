@@ -51,12 +51,12 @@ public class DisplacedBlock extends Block implements EntityBlock {
         // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
         if(!level.isClientSide)
             FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER, pos, 16);
-        return displaceWithChain(state_to_be_displaced, pos, level, duration, null);
+        return displaceWithChain(state_to_be_displaced, pos, level, duration, 0, null);
     }
 
     // Convert some other block into a Displaced Block, and then link it to the chain target.
     // If the chain target is also a Displaced Block, it will NEVER revert. Be careful here!
-    public static boolean displaceWithChain(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration, BlockPos chain){
+    public static boolean displaceWithChain(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration, int depth, BlockPos chain){
         if(level.getBlockEntity(pos) != null || !HarvestChecker.canMineBlock(level, pos, state_to_be_displaced, 35F)
                 || state_to_be_displaced.isAir()){
             return false;
@@ -69,8 +69,9 @@ public class DisplacedBlock extends Block implements EntityBlock {
             return false;
         }
 
-        displaced.self_state = state_to_be_displaced;
+        displaced.setSelfState(state_to_be_displaced);
         displaced.chain_target = chain;
+        displaced.depth = depth;
 
         level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), duration);
         return true;
@@ -87,18 +88,23 @@ public class DisplacedBlock extends Block implements EntityBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
         BlockEntity blockentity = level.getBlockEntity(pos);
-        if (!(blockentity instanceof DisplacedBlockEntity)){
+        if (!(blockentity instanceof DisplacedBlockEntity displaced)){
             System.err.println("Something went wrong restoring block from displaced block. Report this to hyperlynx! I hope it wasn't expensive...");
             level.setBlock(pos, Blocks.GRAVEL.defaultBlockState(), Block.UPDATE_CLIENTS);
             return;
         }
 
-        if(shouldNotReappear(level, pos, (DisplacedBlockEntity) blockentity)){
-            level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 20);
+        if(shouldNotReappear(level, pos, displaced)){
+            if(displaced.first_tick){
+                level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 2 + displaced.depth);
+                displaced.first_tick = false;
+            }else {
+                level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 20);
+            }
             return;
         }
 
-        level.setBlockAndUpdate(pos, ((DisplacedBlockEntity) blockentity).self_state);
+        level.setBlockAndUpdate(pos, displaced.getSelfState());
         level.updateNeighborsAt(pos, this);
     }
 
@@ -111,9 +117,9 @@ public class DisplacedBlock extends Block implements EntityBlock {
 
     private static void reform(Level level, BlockPos pos, BlockState new_state) {
         if(level.getBlockEntity(pos) instanceof DisplacedBlockEntity displaced){
-            if(displaced.self_state.is(new_state.getBlock()))
+            if(displaced.getSelfState().is(new_state.getBlock()))
                 return;
-            if(displaced.self_state.getBlock() instanceof DisplacedBlock){
+            if(displaced.getSelfState().getBlock() instanceof DisplacedBlock){
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
                 return;
@@ -121,7 +127,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
             if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
                 level.destroyBlock(pos.below(), true);
             }
-            level.setBlockAndUpdate(pos, displaced.self_state);
+            level.setBlockAndUpdate(pos, displaced.getSelfState());
             level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         }else{
             System.err.println("Didn't find a valid block entity associated with the displaced block at " + pos + "! Report this to hyperlynx!");
@@ -142,9 +148,9 @@ public class DisplacedBlock extends Block implements EntityBlock {
         BlockEntity entity = getter.getBlockEntity(pos);
         if(!(entity instanceof DisplacedBlockEntity displaced_entity))
             return ItemStack.EMPTY;
-        if(displaced_entity.self_state.getBlock() instanceof DisplacedBlock)
+        if(displaced_entity.getSelfState().getBlock() instanceof DisplacedBlock)
             return ItemStack.EMPTY;
-        return displaced_entity.self_state.getBlock().getCloneItemStack(getter, pos, state);
+        return displaced_entity.getSelfState().getBlock().getCloneItemStack(getter, pos, state);
     }
 
     @Nullable
