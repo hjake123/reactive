@@ -77,8 +77,9 @@ public class DisplacedBlockEntity extends BlockEntity {
 
     public BlockState getSelfState() {
         if(self_state == null) {
-            if (Minecraft.getInstance().level == null)
-                return Blocks.AIR.defaultBlockState();
+            if (Minecraft.getInstance().level == null) {
+                return null;
+            }
             setSelfState(NbtUtils.readBlockState(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), unresolved_self_state));
         }
         return self_state;
