@@ -78,6 +78,8 @@ public class DisplacedBlock extends Block implements EntityBlock {
     }
 
     private boolean shouldNotReappear(ServerLevel level, BlockPos pos, DisplacedBlockEntity self_entity){
+        if(self_entity.getSelfState() == null)
+            return true;
         boolean ret = level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get());
         if(self_entity.chain_target != null)
             ret = ret || level.getBlockState(self_entity.chain_target).is(Registration.DISPLACED_BLOCK.get());
