@@ -29,12 +29,13 @@ public class DissolveComponentProcessor implements IComponentProcessor {
                     recipe = r;
             }
         }
-        if(recipe == null)
-            throw new IllegalArgumentException();
     }
 
     @Override
     public IVariable process(Level level, @NotNull String key) {
+        if(recipe == null) {
+            return IVariable.empty();
+        }
         if(key.equals("product")){
             return IVariable.from(recipe.getResultItem(level.registryAccess()));
         }
