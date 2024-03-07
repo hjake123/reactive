@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.HarvestChecker;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -54,17 +55,17 @@ public class StaffEffects {
      */
     public static Player radiance(Player user){
         int range = 64;
-        var blockHit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, range);
-        var blockHitPos = blockHit.getLocation();
+        var block_hit = BeamHelper.playerRayTrace(user.level, user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, range);
+        var block_hit_pos = block_hit.getBlockPos();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
-        var entityHit = ProjectileUtil.getEntityHitResult(
+        var entity_hit = ProjectileUtil.getEntityHitResult(
                 user, start, end, new AABB(start, end), e -> e instanceof LivingEntity, Double.MAX_VALUE
         );
 
         if(user instanceof ServerPlayer){
-            if(entityHit != null){
-                if(entityHit.getEntity() instanceof LivingEntity victim){
+            if(entity_hit != null){
+                if(entity_hit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
                         victim.hurt(DamageSource.playerAttack(user).setIsFire(), 7);
@@ -72,28 +73,25 @@ public class StaffEffects {
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
             }
-            if(!blockHit.getType().equals(BlockHitResult.Type.MISS)){
-                // Try to toggle light on the side of the hit block.
-                BlockPos light_target = new BlockPos(blockHitPos.relative(blockHit.getDirection(), 1));
-                if(user.level.getBlockState(light_target).is(Registration.GLOWING_AIR.get()))
-                    return user;
-                if(user.level.getBlockState(light_target).isAir()){
+            if(!block_hit.getType().equals(BlockHitResult.Type.MISS)) {
+                BlockPos light_target = block_hit_pos.relative(block_hit.getDirection(), 1);
+                if (user.level.getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
                     user.level.setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
-                            Block.UPDATE_ALL);
+                            Block.UPDATE_ALL_IMMEDIATE);
                 } else if (user.level.getBlockState(light_target).is(Blocks.WATER)) {
                     user.level.setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState()
                                     .setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get())
                                     .setValue(AirLightBlock.WATERLOGGED, true),
-                            Block.UPDATE_ALL);
+                            Block.UPDATE_ALL_IMMEDIATE);
                 }
+                user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
             }
-            user.level.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.4F, 1.2F);
-        }else{
+        } else {
             ParticleScribe.drawParticleLine(user.level, ParticleTypes.END_ROD,
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
-                    blockHitPos.x, blockHitPos.y, blockHitPos.z, 2, 0.1);
+                    block_hit.getLocation().x, block_hit.getLocation().y, block_hit.getLocation().z, 2, 0.1);
         }
         return user;
     }
@@ -115,7 +113,7 @@ public class StaffEffects {
             }
             var fireball_position = start
                     .add(user.getLookAngle().scale(1.5))
-                    .add(user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1);
+                    .add(user.level.random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
             SmallFireball fireball = new SmallFireball(user.level, user, aim.x, aim.y, aim.z);
             fireball.setPos(fireball_position);

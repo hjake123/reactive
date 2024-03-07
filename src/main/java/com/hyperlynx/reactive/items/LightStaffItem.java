@@ -70,7 +70,7 @@ public class LightStaffItem extends StaffItem {
                     (BlockPos pos) -> level.getBlockState(pos).is(Registration.GLOWING_AIR.get())).orElseGet(() -> null);
             if(light_to_break != null){
                 level.setBlock(light_to_break, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
-                ParticleScribe.drawParticleSphere(level, ParticleTypes.SMOKE, light_to_break, 0, 0.2, 5);
+                ParticleScribe.drawParticleSphere(level, ParticleTypes.SMOKE, light_to_break, 0.5, 0.2, 5);
                 level.playSound(null, light_to_break, SoundEvents.GENERIC_BURN, SoundSource.PLAYERS, 0.5F, 1F);
             }
         }
