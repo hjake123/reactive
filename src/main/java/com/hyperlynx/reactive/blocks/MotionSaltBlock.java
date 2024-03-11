@@ -54,9 +54,11 @@ public class MotionSaltBlock extends Block {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
         DisplacedBlock.displace(state, pos, level, 200);
+        // TODO: Displacement research event 1
         if(state.getValue(POWERED)){
             // Also displace the block above this one.
-            DisplacedBlock.displaceWithChain(level.getBlockState(pos.above()), pos.above(), level, 210, 0, pos);
+            DisplacedBlock.displaceWithChain(level.getBlockState(pos.above()), pos.above(), level, 210, pos);
+            // TODO: Displacement research event 2
         }
     }
 

@@ -41,7 +41,7 @@ public interface ChainDisplacingBlock {
                             && !level.getBlockState(target.relative(direction)).isAir()
                             && !level.getBlockState(target.relative(direction)).is(Registration.VOLT_CELL.get())
                             && !level.getBlockState(target.relative(direction)).is(Registration.DISPLACED_BLOCK.get())){
-                        DisplacedBlock.displaceWithChain(level.getBlockState(target.relative(direction)), target.relative(direction), level, 2+count, count, target);
+                        DisplacedBlock.displaceWithChain(level.getBlockState(target.relative(direction)), target.relative(direction), level, 2+count, target);
                     }
                 }
             }
@@ -49,7 +49,7 @@ public interface ChainDisplacingBlock {
             if(target.equals(source))
                 DisplacedBlock.displace(level.getBlockState(target), target, level, 20);
             else if(source != null)
-                DisplacedBlock.displaceWithChain(level.getBlockState(target), target, level, 2 + count, count, prior);
+                DisplacedBlock.displaceWithChain(level.getBlockState(target), target, level, 2 + count, prior);
             else
                 DisplacedBlock.displace(level.getBlockState(target), target, level, 10 + count);
 
