@@ -75,7 +75,7 @@ public class StaffEffects {
             }
             if(!block_hit.getType().equals(BlockHitResult.Type.MISS)) {
                 BlockPos light_target = block_hit_pos.relative(block_hit.getDirection(), 1);
-                if (user.level.getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
+                if (user.level.getBlockState(light_target).isAir() && !user.level.getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
                     user.level.setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
                             Block.UPDATE_ALL_IMMEDIATE);
@@ -113,7 +113,7 @@ public class StaffEffects {
             }
             var fireball_position = start
                     .add(user.getLookAngle().scale(1.5))
-                    .add(user.level.random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
+                    .add(user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1, user.level.random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
             SmallFireball fireball = new SmallFireball(user.level, user, aim.x, aim.y, aim.z);
             fireball.setPos(fireball_position);
