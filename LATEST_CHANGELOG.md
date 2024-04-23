@@ -1,10 +1,2 @@
-- Improved water writing
-- Made Blazes only summon if Blaze is in the Crucible during Pumpkin Magic
-- Clarify the Pehkui interaction's documentation
-- Made Pehkui reaction strengths configurable
-- Changed Create Display Board integration to use percentages for "Shortened" mode
-- Add tags `#do_not_displace` and `#do_not_make_fall`
-- Made doors unable to be displaced
-- Made piston heads unable to be displaced or made to fall 
-- Fixed an issue where displacement would ignore the `#forge:relocation_not_supported` tag
-- Fixed a crash that could occur if a displaced block was broken very quickly after formed
+- Fixed an issue that resulted in broken text in Transmutation journal entries
+- Clarified the first Ender Pearl entry
