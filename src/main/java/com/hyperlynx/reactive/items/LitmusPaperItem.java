@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -125,7 +126,7 @@ public class LitmusPaperItem extends Item {
             if(pow == 0)
                 continue;
 
-            String measurement = p.getName().toUpperCase() + " - " + (pow > 16 ? crucible.getPowerLevel(p)/16 + "%" : Component.translatable("text.reactive.trace").getString());
+            String measurement = p.getName().toUpperCase() + " - " + getPercent(pow);
 
             CompoundTag mt = new CompoundTag();
             mt.putString("power", p.getId());
@@ -138,5 +139,10 @@ public class LitmusPaperItem extends Item {
         paper.getTag().put(TAG_MEASUREMENT, measurements);
         paper.getTag().put(TAG_STATUS, StringTag.valueOf(crucible.reaction_status.toString()));
 
+    }
+
+    @NotNull
+    public static String getPercent(int pow) {
+        return pow > 16 ? pow / 16 + "%" : Component.translatable("text.reactive.trace").getString();
     }
 }
