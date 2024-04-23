@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.ConfigMan;
+import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -29,18 +30,24 @@ public interface ChainDisplacingBlock {
                 Collections.shuffle(shuffled_directions);
 
                 for(Direction direction : shuffled_directions){
-                    if(displace_queue.contains(target.relative(direction)))
+                    BlockPos next_target = target.relative(direction);
+                    if(displace_queue.contains(next_target) || !level.isLoaded(next_target))
                         continue;
-                    if(stateMatchesSelf(level.getBlockState(target.relative(direction)))){
-                        displace_queue.add(target.relative(direction));
+                    BlockPos conduct_start = next_target;
+                    while(level.getBlockState(next_target).is(AlchemyTags.displaceConductive)
+                            && next_target.closerThan(conduct_start, ConfigMan.COMMON.displaceConductRange.get())){
+                        next_target = next_target.relative(direction);
+                    }
+                    if(stateMatchesSelf(level.getBlockState(next_target))){
+                        displace_queue.add(next_target);
                         found_child = true;
                         count++;
                     }
                     else if(displace_surroundings
-                            && !level.getBlockState(target.relative(direction)).isAir()
-                            && !level.getBlockState(target.relative(direction)).is(Registration.VOLT_CELL.get())
-                            && !level.getBlockState(target.relative(direction)).is(Registration.DISPLACED_BLOCK.get())){
-                        DisplacedBlock.displaceWithChain(level.getBlockState(target.relative(direction)), target.relative(direction), level, 2+count, count, target);
+                            && !level.getBlockState(next_target).isAir()
+                            && !level.getBlockState(next_target).is(Registration.VOLT_CELL.get())
+                            && !level.getBlockState(next_target).is(Registration.DISPLACED_BLOCK.get())){
+                        DisplacedBlock.displaceWithChain(level.getBlockState(next_target), next_target, level, 2+count, count, target);
                     }
                 }
             }

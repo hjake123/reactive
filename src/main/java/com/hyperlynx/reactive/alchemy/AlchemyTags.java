@@ -14,6 +14,7 @@ public class AlchemyTags {
     public static final TagKey<Block> canBeGenerated = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "can_be_generated"));
     public static final TagKey<Block> doNotDisplace = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "do_not_displace"));
     public static final TagKey<Block> doNotBlockFall = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "do_not_make_fall"));
+    public static final TagKey<Block> displaceConductive = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "displacement_conductive"));
     public static final TagKey<Block> notRelocatable = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
 
 }

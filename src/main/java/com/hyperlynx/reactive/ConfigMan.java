@@ -13,6 +13,7 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue crucibleRange;
         public ForgeConfigSpec.IntValue areaMemoryRange;
         public ForgeConfigSpec.IntValue maxDisplaceCount;
+        public ForgeConfigSpec.IntValue displaceConductRange;
         public ForgeConfigSpec.DoubleValue maxMoveBlockBreakTime;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
@@ -35,6 +36,8 @@ public class ConfigMan {
                     .defineInRange("maxMoveBlockBreakTime", 35.0, 0.0, 10000.0);
             maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]")
                     .defineInRange("maxDisplaceCount", 128, 4, 4096);
+            displaceConductRange = builder.comment("The maximum distance that a block like Copper can convey a displacement pulse [Default: 8]")
+                    .defineInRange("copperDisplaceConductRange", 8, 1, 4096);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
             builder.pop();
