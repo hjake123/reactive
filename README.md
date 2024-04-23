@@ -43,6 +43,11 @@ There are two config files; one in the config folder, and one in each world's se
 	#Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]
 	lightStaffLightsPermanent = true
 (If this is turned off, invisible lights left by the Radiant Staff of Power will decay on random ticks.)
+
+	#Blocks with a base break time beyond this cannot be displaced or made to fall. For finer control, use the relevant block tags. [Default: 35.0]
+	#Range: 0.0 ~ 10000.0
+	maxMoveBlockBreakTime = 35.0
+(This controls how tough blocks can be before they are not able to be displaced or made to fall by Motion Salts. For reference, an Iron Block passes the default threshold, but Deepslate does not. Higher values are more permissive. Blocks with negative hardness (e.g. Bedrock) are always unmovable by this system, and an additional deny list exists in the block tags.)
 ```
 ### SERVER CONFIG
 ```
@@ -79,6 +84,10 @@ There are two config files; one in the config folder, and one in each world's se
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
 
 The ```reactive:can_be_generated``` block tag decides which blocks are created spontaneously by a certain reaction. The reaction is hard to start, but can be made maintained with renewable resources.
+
+The ```reactive:do_not_displace``` block tag is a deny list for blocks that don't behave when displaced. This includes multi-part blocks like doors and piston heads, since displacement can cut them in half. Blocks above the configured hardness are already immune.
+
+The ```reactive:do_not_make_fall``` block tag is a deny list for blocks that do not fall when adjacent to a Motion Salt Block. Blocks above the configured hardness are already immune.
 
 # Adding Power Sources
 Any item can be added as a power source by adding it to one of these following tags:
