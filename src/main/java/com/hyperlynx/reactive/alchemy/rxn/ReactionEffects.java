@@ -247,12 +247,13 @@ public class ReactionEffects {
 
     // Causes nearby undead to catch fire.
     public static CrucibleBlockEntity sunlight(CrucibleBlockEntity c) {
+        int range = 12;
         AABB aoe = new AABB(c.getBlockPos());
-        aoe = aoe.inflate(12);
+        aoe = aoe.inflate(range);
         List<Monster> nearby_monsters = c.getLevel().getEntitiesOfClass(Monster.class, aoe);
 
         for(Monster m : nearby_monsters){
-            if(m.getMobType().equals(MobType.UNDEAD)){
+            if(m.getMobType().equals(MobType.UNDEAD) && m.getPosition(0).distanceTo(c.getBlockPos().getCenter()) < range){
                 m.hurt(c.getLevel().damageSources().inFire(), 3);
                 m.setSecondsOnFire(5);
             }
