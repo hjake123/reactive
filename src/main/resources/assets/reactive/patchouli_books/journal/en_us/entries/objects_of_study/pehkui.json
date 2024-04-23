@@ -11,7 +11,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(1)He had apparently been experimenting with $(item)Mind Power$(1) and $(item)Body Power$(1) in combination, and had added some other ingredient...$(p)He made sure to check for any kind of Reaction Stimulus, and concluded none exist.$(p)The first step to remedy is replication, so let's see what we can do..."
+      "text": "$(1)He had apparently been experimenting with $(item)Mind Power$(1) and $(item)Body Power$(1) in combination, and had added some other Power.$(p)He made sure to check for any kind of Reaction Stimulus, and concluded none exist.$(p)The first step to remedy is replication, so let's see what we can do..."
     }
   ]
 }

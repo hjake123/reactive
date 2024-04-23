@@ -1,5 +1,6 @@
 - Improved water writing
 - Made Blazes only summon if Blaze is in the Crucible during Pumpkin Magic
+- Clarify the Pehkui interaction's documentation
 - Add tags `#do_not_displace` and `#do_not_make_fall`
 - Made doors unable to be displaced
 - Made piston heads unable to be displaced or made to fall 

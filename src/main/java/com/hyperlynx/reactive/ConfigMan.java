@@ -47,6 +47,9 @@ public class ConfigMan {
     public static class Server {
         public ForgeConfigSpec.BooleanValue useWorldSeed;
         public ForgeConfigSpec.LongValue seed;
+        public ForgeConfigSpec.DoubleValue pehkuiSmallSize;
+        public ForgeConfigSpec.DoubleValue pehkuiLargeSize;
+
 
         Server(ForgeConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
@@ -55,7 +58,13 @@ public class ConfigMan {
                     .defineInRange("seed", 42, Long.MIN_VALUE, Long.MAX_VALUE);
             useWorldSeed = builder.comment("Whether to reset the seed to your world seed when loading.")
                     .define("resetSeed", true);
-
+            builder.pop();
+            builder.comment("Mod Integration Options:")
+                    .push("config");
+            pehkuiSmallSize = builder.comment(":Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]")
+                    .defineInRange("pehkuiSmallSize", 0.65, 0.05, 0.95);
+            pehkuiLargeSize = builder.comment(":Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]")
+                    .defineInRange("pehkuiLargeSize", 1.33, 1.05, 10);
             builder.pop();
         }
     }

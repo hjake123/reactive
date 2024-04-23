@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.integration.pehkui;
 
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
@@ -20,12 +21,12 @@ import java.util.Objects;
 
 public class ResizeReactionEffects {
     public static CrucibleBlockEntity shrink(CrucibleBlockEntity crucible) {
-        resizeNearby(crucible, 0.65F, Mode.REDUCE, Registration.ACID_BUBBLE_PARTICLE);
+        resizeNearby(crucible, (float) ConfigMan.SERVER.pehkuiSmallSize.get().doubleValue(), Mode.REDUCE, Registration.ACID_BUBBLE_PARTICLE);
         return crucible;
     }
 
     public static CrucibleBlockEntity grow(CrucibleBlockEntity crucible) {
-        resizeNearby(crucible, 1.33F, Mode.ENLARGE, ParticleTypes.HAPPY_VILLAGER);
+        resizeNearby(crucible, (float) ConfigMan.SERVER.pehkuiLargeSize.get().doubleValue(), Mode.ENLARGE, ParticleTypes.HAPPY_VILLAGER);
         return crucible;
     }
 

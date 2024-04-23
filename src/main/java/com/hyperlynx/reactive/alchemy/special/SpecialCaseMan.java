@@ -223,7 +223,7 @@ public class SpecialCaseMan {
             return;
 
         BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
-        if(blazeRodPos != null && c.getPowerLevel(Powers.SOUL_POWER.get()) != 0){
+        if(blazeRodPos != null && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 0){
             conjureBlaze(level, e, c, blazeRodPos);
             return;
         }
