@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.be;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.items.PowerBottleItem;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;

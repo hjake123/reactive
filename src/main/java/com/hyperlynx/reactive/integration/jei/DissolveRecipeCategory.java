@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 
 import java.util.List;
 

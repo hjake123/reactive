@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.util;
+package com.hyperlynx.reactive;
 
 import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfig;
@@ -13,6 +13,7 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue crucibleRange;
         public ForgeConfigSpec.IntValue areaMemoryRange;
         public ForgeConfigSpec.IntValue maxDisplaceCount;
+        public ForgeConfigSpec.DoubleValue maxMoveBlockBreakTime;
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
         public ForgeConfigSpec.BooleanValue lightStaffLightsPermanent;
@@ -30,6 +31,8 @@ public class ConfigMan {
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
                     .define("acidMeltBlockEntities", false);
+            maxMoveBlockBreakTime = builder.comment("Blocks with a base break time beyond this cannot be displaced or made to fall. For finer control, use the relevant block tags. [Default: 35.0]")
+                    .defineInRange("maxMoveBlockBreakTime", 35.0, 0.0, 10000.0);
             maxDisplaceCount = builder.comment("The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]")
                     .defineInRange("maxDisplaceCount", 128, 4, 4096);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")

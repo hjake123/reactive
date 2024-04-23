@@ -80,6 +80,12 @@ public class DisplacedBlockEntity extends BlockEntity {
             if (Minecraft.getInstance().level == null) {
                 return null;
             }
+            if (Minecraft.getInstance().level.isClientSide && unresolved_self_state == null) {
+                // On the client, sometimes the block entity state is not synced for at least a tick.
+                // This means that things being placed and removed extremely can have no known state.
+                // The server will deal with it, so there's no worries really.
+                return Blocks.AIR.defaultBlockState();
+            }
             setSelfState(NbtUtils.readBlockState(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), unresolved_self_state));
         }
         return self_state;

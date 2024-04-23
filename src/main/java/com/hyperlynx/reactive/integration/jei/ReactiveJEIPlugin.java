@@ -6,7 +6,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.items.StaffItem;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;

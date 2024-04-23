@@ -1,11 +1,10 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.alchemy.Power;
-import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.nbt.*;

@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.mixin;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,9 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.animal.allay.Allay;
-import net.minecraft.world.entity.monster.Phantom;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

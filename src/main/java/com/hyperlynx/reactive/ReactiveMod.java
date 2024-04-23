@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import com.hyperlynx.reactive.util.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;

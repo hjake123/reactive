@@ -4,7 +4,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.be.DisplacedBlockEntity;
-import com.hyperlynx.reactive.util.HarvestChecker;
+import com.hyperlynx.reactive.util.BlockMoveChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -58,7 +58,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     // Convert some other block into a Displaced Block, and then link it to the chain target.
     // If the chain target is also a Displaced Block, it will NEVER revert. Be careful here!
     public static boolean displaceWithChain(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration, int depth, BlockPos chain){
-        if(level.getBlockEntity(pos) != null || !HarvestChecker.canMineBlock(level, pos, state_to_be_displaced, 35F)
+        if(level.getBlockEntity(pos) != null || !BlockMoveChecker.canDisplaceBlock(level, pos, state_to_be_displaced)
                 || state_to_be_displaced.isAir()){
             return false;
         }

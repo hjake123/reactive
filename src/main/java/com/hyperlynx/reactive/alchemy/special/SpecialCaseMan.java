@@ -12,7 +12,7 @@ import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import com.hyperlynx.reactive.items.LitmusPaperItem;
 import com.hyperlynx.reactive.items.WarpBottleItem;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.util.HyperPortalShape;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -223,7 +223,7 @@ public class SpecialCaseMan {
             return;
 
         BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
-        if(blazeRodPos != null){
+        if(blazeRodPos != null && c.getPowerLevel(Powers.SOUL_POWER.get()) != 0){
             conjureBlaze(level, e, c, blazeRodPos);
             return;
         }
@@ -417,6 +417,7 @@ public class SpecialCaseMan {
                 break;
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
             if(words.isEmpty()){
+                // Add the thrower's name or a spooky word.
                 if(e.getOwner() != null && Objects.requireNonNull(c.getLevel()).random.nextFloat() < 0.2F)
                     words.add(e.getOwner().getName().getString());
                 else

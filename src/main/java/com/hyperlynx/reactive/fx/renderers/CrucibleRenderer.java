@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import com.hyperlynx.reactive.util.ConfigMan;
+import com.hyperlynx.reactive.ConfigMan;
 
 import java.util.Objects;
 

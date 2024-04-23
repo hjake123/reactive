@@ -1,8 +1,7 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;

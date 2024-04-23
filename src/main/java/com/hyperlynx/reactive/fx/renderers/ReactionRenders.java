@@ -5,7 +5,6 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
-import com.hyperlynx.reactive.util.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 

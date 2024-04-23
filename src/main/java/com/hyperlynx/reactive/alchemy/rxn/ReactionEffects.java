@@ -9,8 +9,8 @@ import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.CrystalIronItem;
-import com.hyperlynx.reactive.util.ConfigMan;
-import com.hyperlynx.reactive.util.HarvestChecker;
+import com.hyperlynx.reactive.ConfigMan;
+import com.hyperlynx.reactive.util.BlockMoveChecker;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -274,7 +274,7 @@ public class ReactionEffects {
             BlockPos target = symbol_pos.offset(random.nextInt(-4, 4), random.nextInt(0, 4), random.nextInt(-4, 4));
             if (target == c.getBlockPos() || target == symbol_pos) continue;
             BlockState target_state = level.getBlockState(target);
-            if (!target_state.isAir() && HarvestChecker.canMineBlock(c.getLevel(), target, target_state, 35F)) {
+            if (!target_state.isAir() && BlockMoveChecker.canMakeBlockFall(c.getLevel(), target, target_state)) {
                 FallingBlockEntity.fall(level, target, target_state);
                 ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, c.getBlockPos(), target, 8, 32, 0.7F);
                 ItemEntity drop = new ItemEntity(level, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.6, c.getBlockPos().getZ()+0.5,
