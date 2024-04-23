@@ -1,4 +1,7 @@
-- Removed an exception that would throw if a recipe mentioned in the Journal is absent
-- Fixed displaced blocks not smoothly reappearing if the chunk is unloaded
-- Fixed displaced blocks losing data at world spawn
-- Fixed light staff behaving inconsistently at certain angles
+- Improved water writing
+- Made Blazes only summon if Blaze is in the Crucible during Pumpkin Magic
+- Add tags `#do_not_displace` and `#do_not_make_fall`
+- Made doors unable to be displaced
+- Made piston heads unable to be displaced or made to fall 
+- Fixed an issue where displacement would ignore the `#forge:relocation_not_supported` tag
+- Fixed a crash that could occur if a displaced block was broken very quickly after formed
