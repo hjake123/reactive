@@ -381,7 +381,6 @@ public class SpecialCaseMan {
     /*
     Specifically:
         - If Mind is low, it consumes words from the book to generate more Mind.
-        - If Mind is medium, it transposes a few characters and does nothing.
         - If Mind is high, it fills the book with gibberish and consumes Mind.
      */
     private static void waterWriting(CrucibleBlockEntity c, ItemEntity e){
@@ -410,15 +409,18 @@ public class SpecialCaseMan {
         }
 
         ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
+        if (pages.isEmpty()) {
+            pages.add(0, StringTag.valueOf(""));
+        }
         for(int page_index = 0; page_index < pages.size(); page_index++){
             if(c.getPowerLevel(Powers.MIND_POWER.get()) < threshold)
                 break;
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
-            if(words.size() == 0){
-                if(e.getOwner() != null)
+            if(words.isEmpty()){
+                if(e.getOwner() != null && Objects.requireNonNull(c.getLevel()).random.nextFloat() < 0.2F)
                     words.add(e.getOwner().getName().getString());
                 else
-                    words.add("turning");
+                    words.add(WorldSpecificValue.getFromCollection("devoid_word_" + page_index, List.of("turning", "seeing", "hearing", "eating", "fading", "mixing", "changing", "learning", "yearning", "hoping", "crying")));
             }
             if(e.level().random.nextFloat() < 0.3){
                 // Add a chaos word.
