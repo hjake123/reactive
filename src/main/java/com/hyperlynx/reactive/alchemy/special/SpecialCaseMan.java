@@ -21,6 +21,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -409,19 +410,26 @@ public class SpecialCaseMan {
         }
 
         ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
-        if (pages.isEmpty()) {
-            pages.add(0, StringTag.valueOf(""));
+        if (pages.isEmpty() || (e.level().random.nextFloat() < 0.5F && pages.size() < 40)) {
+            pages.add(StringTag.valueOf(""));
         }
         for(int page_index = 0; page_index < pages.size(); page_index++){
             if(c.getPowerLevel(Powers.MIND_POWER.get()) < threshold)
                 break;
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
-            if(words.isEmpty()){
-                // Add the thrower's name or a spooky word.
-                if(e.getOwner() != null && Objects.requireNonNull(c.getLevel()).random.nextFloat() < 0.2F)
+            if(words.isEmpty() || e.level().random.nextFloat() < 0.1F){
+                // Add the thrower's name sometimes.
+                if(e.getOwner() != null && page_index == WorldSpecificValue.get("player_name_index", 0, 10))
                     words.add(e.getOwner().getName().getString());
-                else
-                    words.add(WorldSpecificValue.getFromCollection("devoid_word_" + page_index, List.of("turning", "seeing", "hearing", "eating", "fading", "mixing", "changing", "learning", "yearning", "hoping", "crying")));
+
+                // Add fragments of something long gone.
+                if(page_index == WorldSpecificValue.get("devoid_prayer_index", 10, 40)){
+                    words.addAll(List.of(Component.translatable("text.reactive.devoid").getString().split("\\s+")));
+                }
+                else {
+                    words.add(WorldSpecificValue.getFromCollection("devoid_word_" + page_index,
+                            List.of(Component.translatable("text.reactive.devoid").getString().split("\\s+"))));
+                }
             }
             if(e.level().random.nextFloat() < 0.3){
                 // Add a chaos word.
