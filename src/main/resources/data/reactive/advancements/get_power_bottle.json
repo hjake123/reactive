@@ -1,0 +1,15 @@
+{
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "reactive:power_bottles"
+          }
+        ]
+      }
+    }
+  }
+}

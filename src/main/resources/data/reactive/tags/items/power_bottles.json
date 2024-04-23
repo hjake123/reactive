@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "reactive:blaze_bottle",
+    "reactive:vital_bottle",
+    "reactive:light_bottle",
+    "reactive:mind_bottle",
+    "reactive:soul_bottle",
+    "reactive:warp_bottle",
+    "reactive:body_bottle",
+    "reactive:acid_bottle",
+    "reactive:verdant_bottle"
+  ]
+}
