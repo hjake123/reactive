@@ -298,6 +298,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
+                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 

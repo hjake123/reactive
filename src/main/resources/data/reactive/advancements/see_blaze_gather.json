@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "see_sacrifice": {
+      "trigger": "reactive:see_blaze_gather_criterion"
+    }
+  }
+}

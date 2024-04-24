@@ -19,6 +19,7 @@ public class ReactivePehkuiPlugin {
         ReactivePehkuiPlugin.has_pehkui = has_pehkui;
         data_init();
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SIZE_CHANGED));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SIZE_REVERTED));
     }
     public static void data_init() {
         ReactionMan.CRITERIA_BUILDER.add("size_grow_effect");
@@ -27,6 +28,8 @@ public class ReactivePehkuiPlugin {
         ReactionMan.CRITERIA_BUILDER.add("size_revert_effect_2");
     }
     protected static final FlagCriterion SIZE_CHANGED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_change_criterion"));
+    protected static final FlagCriterion SIZE_REVERTED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_revert_criterion"));
+
     @SubscribeEvent
     public static void onReactionConstruct(ReactionMan.ReactionConstructEvent evt){
         if(!has_pehkui)

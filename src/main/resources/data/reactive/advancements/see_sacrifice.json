@@ -1,6 +1,6 @@
 {
   "criteria": {
-    "see_synthesis": {
+    "see_sacrifice": {
       "trigger": "reactive:see_sacrifice_criterion"
     }
   }

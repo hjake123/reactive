@@ -1,0 +1,14 @@
+{
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "curse_hint": {
+      "trigger": "reactive:be_cursed_criterion"
+    },
+    "pearl_hint": {
+      "trigger": "reactive:dissolve_tp_criterion"
+    },
+    "sacrifice_hint": {
+      "trigger": "reactive:see_sacrifice_criterion"
+    }
+  }
+}

@@ -26,6 +26,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion SEE_ALLAY_SUMMON_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_allay_summon_criterion"));
     public static final FlagCriterion SEE_CRUCIBLE_FAIL_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_crucible_fail_criterion"));
     public static final FlagCriterion BE_TELEPORTED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_teleported_criterion"));
+    public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_blaze_gather_criterion"));
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
@@ -48,6 +49,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_CRUCIBLE_FAIL_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_TELEPORTED_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(HARVEST_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_BLAZE_GATHER_TRIGGER));
         ReactionMan.CRITERIA_BUILDER.register(evt);
     }
 }

@@ -58,7 +58,11 @@ public class ResizeReactionEffects {
                         crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + crucible.getLevel().random.nextFloat()*0.2F);
                         victim.hurt(crucible.getLevel().damageSources().magic(), 1);
                         if(victim instanceof ServerPlayer splayer){
-                            ReactivePehkuiPlugin.SIZE_CHANGED.trigger(splayer);
+                            if (new_scale == 1.0) {
+                                ReactivePehkuiPlugin.SIZE_REVERTED.trigger(splayer);
+                            } else {
+                                ReactivePehkuiPlugin.SIZE_CHANGED.trigger(splayer);
+                            }
                         }
                     }
                 }
