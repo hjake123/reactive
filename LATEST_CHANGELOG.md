@@ -1,4 +1,5 @@
+- Implemented Patchouli turn-in advancements for every Object of Study that unlocks something else
 - Added the ability for displacement to 'conduct' through Copper Blocks and their variants
 - Fixed an issue that resulted in broken text in Transmutation journal entries
 - Clarified the first Ender Pearl entry
-- Further improved Water Writing
+- Further refined Water Writing
