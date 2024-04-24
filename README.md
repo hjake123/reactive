@@ -105,6 +105,8 @@ The ```reactive:do_not_displace``` block tag is a deny list for blocks that don'
 
 The ```reactive:do_not_make_fall``` block tag is a deny list for blocks that do not fall when adjacent to a Motion Salt Block. Blocks above the configured hardness are already immune.
 
+The ```reactive:displacement_conductive``` block tag defines which blocks are allowed to act as a bridge between Framed Motion Salt Blocks during displacement. These blocks are immune to displacement as a side effect.
+
 # Adding Power Sources
 Any item can be added as a power source by adding it to one of these following tags:
 ```
