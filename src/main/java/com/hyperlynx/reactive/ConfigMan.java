@@ -56,14 +56,14 @@ public class ConfigMan {
 
         Server(ForgeConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
-                    .push("config");
+                    .push("wsv");
             seed = builder.comment("The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!")
                     .defineInRange("seed", 42, Long.MIN_VALUE, Long.MAX_VALUE);
             useWorldSeed = builder.comment("Whether to reset the seed to your world seed when loading.")
                     .define("resetSeed", true);
             builder.pop();
             builder.comment("Mod Integration Options:")
-                    .push("config");
+                    .push("integration");
             pehkuiSmallSize = builder.comment(":Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]")
                     .defineInRange("pehkuiSmallSize", 0.65, 0.05, 0.95);
             pehkuiLargeSize = builder.comment(":Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]")
