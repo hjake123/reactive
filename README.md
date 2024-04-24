@@ -40,6 +40,11 @@ There are two config files; one in the config folder, and one in each world's se
 	maxDisplaceCount = 128
 (How many blocks can be displaced when a structure of adjacent Framed Motion Salt Block is electrified. Note that this many blocks will be operated on in one tick by the initial displacement, which might cause a lag spike if you set it too high.)
 
+	#The maximum distance that a block like Copper can convey a displacement pulse [Default: 8]
+	#Range: 1 ~ 4096
+	copperDisplaceConductRange = 8
+(If a displacement-conductive block is placed next to a Framed Motion Salt Block, the displacement effect scans up to this many blocks in a direction to find another Framed Motion Salt Block to chain with.)
+
 	#Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]
 	lightStaffLightsPermanent = true
 (If this is turned off, invisible lights left by the Radiant Staff of Power will decay on random ticks.)
@@ -52,7 +57,7 @@ There are two config files; one in the config folder, and one in each world's se
 ### SERVER CONFIG
 ```
 #World Specific Value Options:
-[config]
+[wsv]
 	#The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!
 	#Range: -9223372036854775808 ~ 9223372036854775807
 	seed = 0
@@ -61,6 +66,17 @@ There are two config files; one in the config folder, and one in each world's se
 	resetSeed = true 
  (is true by default and set to false after the world seed is written to this file)
  (if you want deterministic behavior, set this to false in a defaultconfigs copy of the file and choose your own seed)
+
+#Mod Integration Options:
+[integration]
+	#:Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]
+	#Range: 0.05 ~ 0.95
+	pehkuiSmallSize = 0.65
+	#:Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]
+	#Range: 1.05 ~ 10.0
+	pehkuiLargeSize = 1.33
+(Defines the sizes that the Pehkui interaction reactions make things. Keep in mind that there is research to be done to undo these effects, so the player needs to be able to operate at either altered size.)
+
 ```
 ### CLIENT CONFIG
 ```
