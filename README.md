@@ -7,7 +7,7 @@ Either way, this is a passion project but I tried to put in work to make it unde
 See the [Wiki](https://github.com/hjake123/reactive/wiki) for more information.
 
 # Config Options
-There are two config files; one in the config folder, and one in each world's serverconfigs. For reference, these are the options each contain:
+There are three config files; two in the config folder, and one in each world's serverconfigs. For reference, these are the options each contain:
 ### COMMON CONFIG
 ```
 #Options:
