@@ -139,7 +139,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                     fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
                     player.setItemInHand(hand, fluidHandler.getContainer());
                 }
-                return InteractionResult.PASS;
+                return InteractionResult.CONSUME;
             }
             if (checkFluidInStack(fluidHandler, Fluids.LAVA)) {
                 lavaCrucibleFill(level, pos, (ServerPlayer) player);
@@ -147,12 +147,12 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                     fluidHandler.drain(new FluidStack(Fluids.LAVA, 1000), IFluidHandler.FluidAction.EXECUTE);
                     player.setItemInHand(hand, fluidHandler.getContainer());
                 }
-                return InteractionResult.PASS;
+                return InteractionResult.CONSUME;
             }
             if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if (!(crucible instanceof CrucibleBlockEntity c)) {
-                    return InteractionResult.PASS;
+                    return InteractionResult.CONSUME;
                 }
                 becomeFull(state, level, pos, (ServerPlayer) player);
                 c.addPower(Powers.ACID_POWER.get(), WorldSpecificValues.BOTTLE_RETURN.get()*3);
