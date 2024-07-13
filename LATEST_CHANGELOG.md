@@ -1,6 +1,2 @@
-- Implemented Patchouli turn-in advancements for every Object of Study that unlocks something else
-- Added the ability for displacement to 'conduct' through Copper Blocks and their variants
-- Fixed an issue that resulted in broken text in Transmutation journal entries
-- Fixed an issue that corrupted server config files. If you use a custom alchemy seed and do not have a defaultconfig, you will need to reapply it
-- Clarified the first Ender Pearl entry
-- Further refined Water Writing
+ - Added basic Goety interaction
+ - Fixed an issue where fluid-containing blocks could duplicate when used to fill the Crucible

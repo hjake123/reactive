@@ -57,6 +57,10 @@
     {
       "id": "aether:regeneration_stone",
       "required": false
+    },
+    {
+      "id": "goety:ectoplasm",
+      "required": false
     }
   ]
 }

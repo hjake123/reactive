@@ -44,6 +44,10 @@
     {
       "id": "ars_nouveau:experience_gem",
       "required": false
+    },
+    {
+      "id": "goety:ectoplasm",
+      "required": false
     }
   ]
 }

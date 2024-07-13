@@ -12,6 +12,10 @@
     {
       "id": "botania:virus_nullodermal",
       "required": false
+    },
+    {
+      "id": "goety:cursed_ingot",
+      "required": false
     }
   ]
 }

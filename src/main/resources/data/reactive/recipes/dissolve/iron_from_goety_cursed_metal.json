@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "goety:cursed_ingot"
+  },
+  "product": {
+    "item": "minecraft:iron_ingot"
+  }
+}
