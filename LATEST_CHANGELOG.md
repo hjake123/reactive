@@ -1,1 +1,1 @@
-- Fixed light staff aiming issue
+- Fixed an issue where fluid-containing blocks could duplicate when used to fill the Crucible
