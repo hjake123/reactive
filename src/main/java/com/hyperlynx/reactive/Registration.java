@@ -5,8 +5,8 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
-import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
-import com.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
+//import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+//import com.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
@@ -446,10 +446,10 @@ public class Registration {
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
         registerPotions(evt);
-        if(ModList.get().isLoaded("create")){
-            ReactiveCreatePlugin.init();
-        }
-        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
+//        if(ModList.get().isLoaded("create")){
+//            ReactiveCreatePlugin.init();
+//        }
+//        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
         CriteriaTriggers.enqueue(evt);
     }
 

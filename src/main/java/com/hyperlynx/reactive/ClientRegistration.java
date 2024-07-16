@@ -3,7 +3,7 @@ package com.hyperlynx.reactive;
 import com.hyperlynx.reactive.fx.particles.*;
 import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
-import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+//import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 //import com.simibubi.create.foundation.ponder.PonderRegistry;
 //import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import net.minecraft.client.Minecraft;
@@ -38,9 +38,9 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void onClientSetupEvent(FMLClientSetupEvent evt){
-        if(ModList.get().isLoaded("create")){
-            ReactiveCreatePlugin.initClient();
-        }
+//        if(ModList.get().isLoaded("create")){
+//            ReactiveCreatePlugin.initClient();
+//        }
     }
 
 }
