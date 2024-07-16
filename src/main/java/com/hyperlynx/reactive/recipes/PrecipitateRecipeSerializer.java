@@ -4,9 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.extensions.IFriendlyByteBufExtension;
@@ -18,25 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrecipitateRecipeSerializer implements RecipeSerializer<PrecipitateRecipe> {
+
+    public static final Codec<PrecipitateRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.optionalFieldOf("group", "transmute").forGetter(PrecipitateRecipe::getGroup),
+            ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
+            Powers.POWER_REGISTRY.get().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
+            Codec.INT.fieldOf("min").forGetter(PrecipitateRecipe::getMinimum),
+            Codec.INT.fieldOf("cost").forGetter(PrecipitateRecipe::getCost),
+            Codec.INT.fieldOf("reagent_count").forGetter(PrecipitateRecipe::getReagentCount),
+            Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(PrecipitateRecipe::isElectricityRequired)
+    ).apply(instance, PrecipitateRecipe::new));
+
     @Override
-    @NotNull
-    public PrecipitateRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
-        ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
-        List<Power> reagents = new ArrayList<>();
-        for(JsonElement j : json.get("reagents").getAsJsonArray()){
-            DeferredHolder<Power, Power> powObj = DeferredHolder.create(Powers.POWER_REGISTRY_KEY, ResourceLocation.tryParse(j.getAsString()));
-            if(powObj.asOptional().isPresent())
-                reagents.add(powObj.get());
-            else
-                System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
-        }
-        int min = json.get("min").getAsInt();
-        int cost = json.get("cost").getAsInt();
-        int reagent_count = json.get("reagent_count").getAsInt();
-        boolean needs_electricity = false;
-        if(json.has("needs_electricity"))
-            needs_electricity = json.get("needs_electricity").getAsBoolean();
-        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
+    public Codec<PrecipitateRecipe> codec() {
+        return CODEC;
     }
 
     @Override
@@ -47,7 +45,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
         boolean needs_electricity = buffer.readBoolean();
-        return new PrecipitateRecipe(id, "precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
+        return new PrecipitateRecipe("precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
     }
 
     @Override

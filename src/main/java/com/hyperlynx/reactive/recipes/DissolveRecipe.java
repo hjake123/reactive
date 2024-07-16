@@ -13,14 +13,12 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class DissolveRecipe implements Recipe<Container> {
-    protected final ResourceLocation id;
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
     public boolean needs_electricity;
 
-    public DissolveRecipe(ResourceLocation id, String group, Ingredient reactant, ItemStack product, boolean needs_electricity) {
-        this.id = id;
+    public DissolveRecipe(String group, Ingredient reactant, ItemStack product, boolean needs_electricity) {
         this.group = group;
         this.reactant = reactant;
         this.product = product;
@@ -48,11 +46,13 @@ public class DissolveRecipe implements Recipe<Container> {
         return product;
     }
 
-    public ItemStack getResultItem() {
+    public ItemStack getProduct() {
         return product;
     }
 
     public Ingredient getReactant(){ return reactant; }
+
+    public boolean isElectricityRequired(){ return needs_electricity; }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -62,10 +62,6 @@ public class DissolveRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return Registration.DISSOLVE_RECIPE_TYPE.get();
-    }
-
-    public String toString(){
-        return id.toString();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

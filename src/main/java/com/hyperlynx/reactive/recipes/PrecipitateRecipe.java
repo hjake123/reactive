@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrecipitateRecipe implements Recipe<Container> {
-    protected final ResourceLocation id;
     protected final String group;
     protected final ItemStack product;
     protected final List<Power> reagents;
@@ -27,8 +26,7 @@ public class PrecipitateRecipe implements Recipe<Container> {
     int reagent_count;
     public boolean needs_electricity;
 
-    public PrecipitateRecipe(ResourceLocation id, String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
-        this.id = id;
+    public PrecipitateRecipe(String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
         this.group = group;
         this.product = product;
         this.reagents = reagents;
@@ -38,9 +36,14 @@ public class PrecipitateRecipe implements Recipe<Container> {
         this.needs_electricity = needs_electricity;
     }
 
+    @Override
+    public String getGroup() {
+        return group;
+    }
+
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
     public boolean powerMet(PowerBearer bearer, Level level){
-        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(id + "_reagent_order", reagents);
+        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(reagents.hashCode() + "-" + product.hashCode() + "_reagent_order", reagents);
 
         int power_level = 0;
         int iterations = 0;
@@ -86,6 +89,26 @@ public class PrecipitateRecipe implements Recipe<Container> {
 
     public List<Power> getReagents(){ return reagents;}
 
+    public int getMinimum() {
+        return minimum;
+    }
+
+    public int getReagentCount() {
+        return reagent_count;
+    }
+
+    public boolean isElectricityRequired() {
+        return needs_electricity;
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public ItemStack getProduct() {
+        return product;
+    }
+
     @Override
     public RecipeSerializer<?> getSerializer() {
         return Registration.PRECIPITATE_SERIALIZER.get();
@@ -94,10 +117,6 @@ public class PrecipitateRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return Registration.PRECIPITATE_RECIPE_TYPE.get();
-    }
-
-    public String toString(){
-        return id.toString();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

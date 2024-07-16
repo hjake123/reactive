@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TransmuteRecipe implements Recipe<Container> {
-    protected final ResourceLocation id;
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
@@ -26,8 +25,7 @@ public class TransmuteRecipe implements Recipe<Container> {
     int minimum;
     public boolean needs_electricity;
 
-    public TransmuteRecipe(ResourceLocation id, String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
-        this.id = id;
+    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
         this.group = group;
         this.reactant = reactant;
         this.product = product;
@@ -35,6 +33,10 @@ public class TransmuteRecipe implements Recipe<Container> {
         this.minimum = min;
         this.cost = cost;
         this.needs_electricity = needs_electricity;
+    }
+
+    public @NotNull String getGroup(){
+        return group;
     }
 
     public boolean powerMet(PowerBearer bearer){
@@ -83,9 +85,19 @@ public class TransmuteRecipe implements Recipe<Container> {
         return product;
     }
 
+    public ItemStack getProduct() {
+        return product;
+    }
+
     public Ingredient getReactant(){ return reactant; }
 
     public List<Power> getReagents(){ return reagents;}
+
+    public int getCost(){ return cost; }
+
+    public int getMinimum(){ return minimum; }
+
+    public boolean isElectricityRequired(){ return needs_electricity; }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -95,10 +107,6 @@ public class TransmuteRecipe implements Recipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return Registration.TRANS_RECIPE_TYPE.get();
-    }
-
-    public String toString(){
-        return id.toString();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

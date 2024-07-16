@@ -2,6 +2,10 @@ package com.hyperlynx.reactive.recipes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.hyperlynx.reactive.Registration;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -12,27 +16,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe> {
-    @Override
-    @NotNull
-    public DissolveRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
-        try {
-            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject(), false);
-            ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
-            boolean needs_electricity = false;
-            if(json.has("needs_electricity"))
-                needs_electricity = json.get("needs_electricity").getAsBoolean();
-            return new DissolveRecipe(id, "dissolve", reactant, product, needs_electricity);
-        }catch(JsonSyntaxException e){
-            return null;
-        }
-    }
+
+    public static final Codec<DissolveRecipe> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                    Codec.STRING.optionalFieldOf("group", "dissolve").forGetter(DissolveRecipe::getGroup),
+                    Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(DissolveRecipe::getReactant),
+                    ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(DissolveRecipe::getProduct),
+                    Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(DissolveRecipe::isElectricityRequired)
+            ).apply(instance, DissolveRecipe::new));
 
     @Override
-    public @Nullable DissolveRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
-        Ingredient reactant = Ingredient.fromNetwork(buffer);
-        ItemStack product = buffer.readItem();
-        boolean needs_electricity = buffer.readBoolean();
-        return new DissolveRecipe(id, "dissolve", reactant, product, needs_electricity);
+    public Codec<DissolveRecipe> codec() {
+        return CODEC;
     }
 
     @Override
@@ -40,6 +35,14 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
         recipe.getReactant().toNetwork(buffer);
         buffer.writeItem(recipe.product);
         buffer.writeBoolean(recipe.needs_electricity);
+    }
+
+    @Override
+    public @Nullable DissolveRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
+        Ingredient reactant = Ingredient.fromNetwork(buffer);
+        ItemStack product = buffer.readItem();
+        boolean needs_electricity = buffer.readBoolean();
+        return new DissolveRecipe("dissolve", reactant, product, needs_electricity);
     }
 
 }

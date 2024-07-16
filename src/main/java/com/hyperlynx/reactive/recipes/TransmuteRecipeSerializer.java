@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -19,41 +21,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteRecipe> {
+
+    public static final Codec<TransmuteRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.STRING.optionalFieldOf("group", "transmute").forGetter(TransmuteRecipe::getGroup),
+            Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
+            ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
+            Powers.POWER_REGISTRY.get().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
+            Codec.INT.fieldOf("min").forGetter(TransmuteRecipe::getMinimum),
+            Codec.INT.fieldOf("cost").forGetter(TransmuteRecipe::getCost),
+            Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(TransmuteRecipe::isElectricityRequired)
+    ).apply(instance, TransmuteRecipe::new));
+
     @Override
-    @NotNull
-    public TransmuteRecipe fromJson(@NotNull ResourceLocation id, JsonObject json) {
-        try {
-            Ingredient reactant = CraftingHelper.getIngredient(json.get("reactant").getAsJsonObject(), false);
-            ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
-            List<Power> reagents = new ArrayList<>();
-            for (JsonElement j : json.get("reagents").getAsJsonArray()) {
-                RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_REGISTRY.get());
-                if (powObj.isPresent())
-                    reagents.add(powObj.get());
-                else
-                    System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
-            }
-            int min = json.get("min").getAsInt();
-            int cost = json.get("cost").getAsInt();
-            boolean needs_electricity = false;
-            if(json.has("needs_electricity"))
-                needs_electricity = json.get("needs_electricity").getAsBoolean();
-            return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost, needs_electricity);
-        }
-        catch(JsonSyntaxException e){
-            return null;
-        }
+    public Codec<TransmuteRecipe> codec() {
+        return CODEC;
     }
 
     @Override
-    public @Nullable TransmuteRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
+    public @Nullable TransmuteRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.fromNetwork(buffer);
         ItemStack product = buffer.readItem();
         List<Power> reagents = buffer.readCollection(ArrayList::new, IFriendlyByteBufExtension::readRegistryId);
         int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();
-        return new TransmuteRecipe(id, "transmutation", reactant, product, reagents, min, cost, needs_electricity);
+        return new TransmuteRecipe("transmutation", reactant, product, reagents, min, cost, needs_electricity);
     }
 
     @Override
