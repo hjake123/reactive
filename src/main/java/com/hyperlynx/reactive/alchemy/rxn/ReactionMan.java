@@ -7,14 +7,13 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 // Uh-oh, looks like ReactionMan's on the hunt!
 // This class manages the world's reactions.
@@ -153,7 +152,7 @@ public class ReactionMan {
         REACTIONS.add(new AstralReaction("astral"));
         REACTIONS.add(new AnnihilationReaction("creation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
-        MinecraftForge.EVENT_BUS.post(new ReactionConstructEvent());
+        NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 
         initialized = true;
         initializer_lock = false;

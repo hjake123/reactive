@@ -3,12 +3,11 @@ package com.hyperlynx.reactive.datagen;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import net.minecraft.data.DataProvider;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.List;
 
 /*

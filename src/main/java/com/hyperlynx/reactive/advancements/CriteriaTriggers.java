@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.advancements;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {
     //Register advancement criteria for the book

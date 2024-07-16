@@ -3,7 +3,7 @@ package com.hyperlynx.reactive.alchemy;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.util.Color;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

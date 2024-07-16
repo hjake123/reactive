@@ -14,8 +14,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.neoforge.registries.RegistryObject;
 import java.util.ArrayList;
 import java.util.List;
 

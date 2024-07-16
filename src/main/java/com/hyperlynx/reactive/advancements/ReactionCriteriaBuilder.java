@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.advancements;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

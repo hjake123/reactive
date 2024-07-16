@@ -8,9 +8,8 @@ import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
-
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;

@@ -5,11 +5,10 @@ import com.hyperlynx.reactive.Registration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistryObject;
-
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.IForgeRegistry;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.neoforged.neoforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 // Registers the Alchemical Powers.

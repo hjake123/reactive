@@ -3,9 +3,8 @@ package com.hyperlynx.reactive.util;
 import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.LevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

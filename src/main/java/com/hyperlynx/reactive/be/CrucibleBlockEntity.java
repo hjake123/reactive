@@ -48,9 +48,9 @@ import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -94,7 +94,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }
 

@@ -10,9 +10,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.extensions.IForgeFriendlyByteBuf;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
+import net.neoforged.neoforge.common.extensions.IFriendlyByteBufExtension;
+import net.neoforged.neoforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public @Nullable TransmuteRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.fromNetwork(buffer);
         ItemStack product = buffer.readItem();
-        List<Power> reagents = buffer.readCollection(ArrayList::new, IForgeFriendlyByteBuf::readRegistryId);
+        List<Power> reagents = buffer.readCollection(ArrayList::new, IFriendlyByteBufExtension::readRegistryId);
         int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();

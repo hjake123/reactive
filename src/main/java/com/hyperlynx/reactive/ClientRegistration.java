@@ -4,16 +4,16 @@ import com.hyperlynx.reactive.fx.particles.*;
 import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
 import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
-import com.simibubi.create.infrastructure.ponder.AllPonderTags;
+//import com.simibubi.create.foundation.ponder.PonderRegistry;
+//import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class ClientRegistration {
     public static void init() {

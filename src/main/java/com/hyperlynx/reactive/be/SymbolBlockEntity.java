@@ -21,9 +21,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 public class SymbolBlockEntity extends BlockEntity {
 
@@ -32,7 +32,7 @@ public class SymbolBlockEntity extends BlockEntity {
 
     public SymbolBlockEntity(BlockPos pos, BlockState state, Item item) {
         super(Registration.SYMBOL_BE_TYPE.get(), pos, state);
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         setItem(item);
     }
 

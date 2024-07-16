@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.extensions.IForgeBlockState;
+import net.neoforged.neoforge.common.extensions.IBlockExtensionState;
 
 // Verbatim clone of PortalShape, but it pretends SolidPortalBlocks are empty space.
 // Only other way to do this was a mixin or something so this seems preferable.
@@ -42,7 +42,7 @@ public class HyperPortalShape {
     }
 
     // Everything else matches PortalShape (with some removals).
-    private static final BlockBehaviour.StatePredicate FRAME = IForgeBlockState::isPortalFrame;
+    private static final BlockBehaviour.StatePredicate FRAME = IBlockExtensionState::isPortalFrame;
     private final LevelAccessor level;
     private final Direction.Axis axis;
     private final Direction rightDir;
