@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -20,8 +20,8 @@ public abstract class Reaction {
 
     protected HashMap<Power, Integer> reagents = new HashMap<>();
     protected Stimulus stimulus = Stimulus.NONE;
-    public FlagCriterion criterion;
-    public FlagCriterion perfect_criterion;
+    public FlagTrigger observe_trigger;
+    public FlagTrigger perfect_trigger;
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
@@ -30,8 +30,8 @@ public abstract class Reaction {
     // Creates the reaction with a random set of reagents.
     public Reaction(String alias, int max_reagent_count){
         this.alias = alias;
-        criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
-        perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
+        observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
+        perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
 
         int reagent_count;
         if(max_reagent_count < 3){
@@ -52,8 +52,8 @@ public abstract class Reaction {
     // Creates the reaction with preset powers, but random minimum requirements.
     public Reaction(String alias, Power... powers){
         this.alias = alias;
-        criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
-        perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
+        observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
+        perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         for(Power p : powers){
             reagents.put(p, WorldSpecificValue.get(alias+p.getId(), 1, 400));
         }
@@ -145,14 +145,14 @@ public abstract class Reaction {
     public void run(CrucibleBlockEntity crucible){
         if(!(crucible.getLevel() instanceof ServerLevel server))
             return;
-        if(criterion != null) {
+        if(observe_trigger != null) {
             // Award the completion criteria.
-            FlagCriterion.triggerForNearbyPlayers(server, criterion, crucible.getBlockPos(), 6);
+            FlagTrigger.triggerForNearbyPlayers(server, observe_trigger, crucible.getBlockPos(), 6);
         }
-        if(perfect_criterion != null){
+        if(perfect_trigger != null){
             if(always_perfect || isPerfect(crucible)){
                 // Award the perfect criterion.
-                FlagCriterion.triggerForNearbyPlayers(server, perfect_criterion, crucible.getBlockPos(), 6);
+                FlagTrigger.triggerForNearbyPlayers(server, perfect_trigger, crucible.getBlockPos(), 6);
             }
         }
     }

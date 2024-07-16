@@ -7,26 +7,26 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {
     //Register advancement criteria for the book
-    public static final FlagCriterion MAKE_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_crucible_criterion"));
-    public static final FlagCriterion ENDER_PEARL_DISSOLVE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
-    public static final FlagCriterion SEE_SYNTHESIS_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
-    public static final FlagCriterion BE_CURSED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
-    public static final FlagCriterion TRY_NETHER_CRUCIBLE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
-    public static final FlagCriterion TRY_LAVA_CRUCIBLE_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"), new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible"));
-    public static final FlagCriterion SEE_SACRIFICE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
-    public static final FlagCriterion MAKE_RIFT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"), new ResourceLocation(ReactiveMod.MODID, "dissolve_tp"));
-    public static final FlagCriterion PORTAL_TRADE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
-    public static final FlagCriterion PORTAL_FREEZE_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
-    public static final FlagCriterion PLACE_OCCULT_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
-    public static final FlagCriterion OCCULT_AWAKENING_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
-    public static final FlagCriterion HARVEST_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "harvest_criterion"), new ResourceLocation(ReactiveMod.MODID, "see_synthesis"));
-    public static final FlagCriterion SEE_DISPLACEMENT_TRIGGER = new StagedFlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_displacement_criterion"), new ResourceLocation(ReactiveMod.MODID, "get_motion_salts"));
-    public static final FlagCriterion BE_SLOWFALLED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_slowfalled_criterion"));
-    public static final FlagCriterion BE_LEVITATED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_levitated_criterion"));
-    public static final FlagCriterion SEE_ALLAY_SUMMON_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_allay_summon_criterion"));
-    public static final FlagCriterion SEE_CRUCIBLE_FAIL_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_crucible_fail_criterion"));
-    public static final FlagCriterion BE_TELEPORTED_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "be_teleported_criterion"));
-    public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "see_blaze_gather_criterion"));
+    public static final FlagTrigger MAKE_CRUCIBLE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "make_crucible_criterion"));
+    public static final FlagTrigger ENDER_PEARL_DISSOLVE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "dissolve_tp_criterion"));
+    public static final FlagTrigger SEE_SYNTHESIS_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_synthesis_criterion"));
+    public static final FlagTrigger BE_CURSED_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "be_cursed_criterion"));
+    public static final FlagTrigger TRY_NETHER_CRUCIBLE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible_criterion"));
+    public static final FlagTrigger TRY_LAVA_CRUCIBLE_TRIGGER = new StagedFlagTrigger(new ResourceLocation(ReactiveMod.MODID, "try_lava_crucible_criterion"), new ResourceLocation(ReactiveMod.MODID, "try_nether_crucible"));
+    public static final FlagTrigger SEE_SACRIFICE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_sacrifice_criterion"));
+    public static final FlagTrigger MAKE_RIFT_TRIGGER = new StagedFlagTrigger(new ResourceLocation(ReactiveMod.MODID, "make_rift_criterion"), new ResourceLocation(ReactiveMod.MODID, "dissolve_tp"));
+    public static final FlagTrigger PORTAL_TRADE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "portal_trade_criterion"));
+    public static final FlagTrigger PORTAL_FREEZE_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "portal_freeze_criterion"));
+    public static final FlagTrigger PLACE_OCCULT_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "place_eye_criterion"));
+    public static final FlagTrigger OCCULT_AWAKENING_TRIGGER = new StagedFlagTrigger(new ResourceLocation(ReactiveMod.MODID, "activate_eye_criterion"), new ResourceLocation(ReactiveMod.MODID, "place_eye"));
+    public static final FlagTrigger HARVEST_TRIGGER = new StagedFlagTrigger(new ResourceLocation(ReactiveMod.MODID, "harvest_criterion"), new ResourceLocation(ReactiveMod.MODID, "see_synthesis"));
+    public static final FlagTrigger SEE_DISPLACEMENT_TRIGGER = new StagedFlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_displacement_criterion"), new ResourceLocation(ReactiveMod.MODID, "get_motion_salts"));
+    public static final FlagTrigger BE_SLOWFALLED_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "be_slowfalled_criterion"));
+    public static final FlagTrigger BE_LEVITATED_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "be_levitated_criterion"));
+    public static final FlagTrigger SEE_ALLAY_SUMMON_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_allay_summon_criterion"));
+    public static final FlagTrigger SEE_CRUCIBLE_FAIL_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_crucible_fail_criterion"));
+    public static final FlagTrigger BE_TELEPORTED_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "be_teleported_criterion"));
+    public static final FlagTrigger SEE_BLAZE_GATHER_TRIGGER = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "see_blaze_gather_criterion"));
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {

@@ -1,9 +1,9 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -28,7 +28,7 @@ public class SynthesisReaction extends Reaction{
         }
         crucible.addPower(resultPower, rate);
         if(!Objects.requireNonNull(crucible.getLevel()).isClientSide)
-            FlagCriterion.triggerForNearbyPlayers((ServerLevel) crucible.getLevel(), CriteriaTriggers.SEE_SYNTHESIS_TRIGGER, crucible.getBlockPos(), 8);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) crucible.getLevel(), CriteriaTriggers.SEE_SYNTHESIS_TRIGGER, crucible.getBlockPos(), 8);
     }
 
     @Override

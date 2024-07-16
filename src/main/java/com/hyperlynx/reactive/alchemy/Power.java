@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -14,7 +15,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.RegistryObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,9 +75,9 @@ public class Power {
 
     public static Power readPower(CompoundTag tag, String power_key){
         Power ret = null;
-        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if(reg.get().getId().equals(tag.getString(power_key))){
-                ret = reg.get();
+        for(Holder<Power> reg : Powers.POWERS.getEntries()){
+            if(reg.value().getId().equals(tag.getString(power_key))){
+                ret = reg.value();
                 break;
             }
         }
@@ -106,8 +106,8 @@ public class Power {
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if (i.is(Power.getSourceTag(reg.get().id))) stack_powers.add(reg.get());
+        for(Holder<Power> reg : Powers.POWERS.getEntries()){
+            if (i.is(Power.getSourceTag(reg.value().id))) stack_powers.add(reg.value());
         }
         return stack_powers;
     }

@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.blocks.StardustBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;

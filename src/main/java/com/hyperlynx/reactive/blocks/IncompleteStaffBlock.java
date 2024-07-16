@@ -1,6 +1,5 @@
 package com.hyperlynx.reactive.blocks;
 
-import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;

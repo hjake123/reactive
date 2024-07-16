@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.common.extensions.IFriendlyByteBufExtension;
-import net.neoforged.neoforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,8 +24,8 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
         List<Power> reagents = new ArrayList<>();
         for(JsonElement j : json.get("reagents").getAsJsonArray()){
-            RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
-            if(powObj.isPresent())
+            DeferredHolder<Power, Power> powObj = DeferredHolder.create(Powers.POWER_REGISTRY_KEY, ResourceLocation.tryParse(j.getAsString()));
+            if(powObj.asOptional().isPresent())
                 reagents.add(powObj.get());
             else
                 System.err.println("Tried to read a fake power " + j.getAsString() + " in recipe " + id);
@@ -40,7 +40,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     }
 
     @Override
-    public @Nullable PrecipitateRecipe fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buffer) {
+    public @Nullable PrecipitateRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
         ItemStack product = buffer.readItem();
         List<Power> reagents = buffer.readCollection(ArrayList::new, IFriendlyByteBufExtension::readRegistryId);
         int min = buffer.readInt();
@@ -53,7 +53,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
         buffer.writeItem(recipe.product);
-        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_REGISTRY.get(), p));
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
         buffer.writeInt(recipe.reagent_count);

@@ -17,7 +17,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -63,7 +62,7 @@ public class PowerBottleItem extends BlockItem {
             }
 
             boolean changed = false;
-            for(Power p : Powers.POWER_SUPPLIER.get()){
+            for(Power p : Powers.POWER_REGISTRY.get()){
                 if(p.matchesBottle(stack)){
                     if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                         if(stack.is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(stack)){
@@ -123,7 +122,7 @@ public class PowerBottleItem extends BlockItem {
         }
 
         boolean changed = false;
-        for(Power p : Powers.POWER_SUPPLIER.get()){
+        for(Power p : Powers.POWER_REGISTRY.get()){
             if(p.matchesBottle(context.getItemInHand())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                     if(context.getItemInHand().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getItemInHand())){
@@ -151,7 +150,7 @@ public class PowerBottleItem extends BlockItem {
 
     public static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
         boolean changed = false;
-        for(Power p : Powers.POWER_SUPPLIER.get()){
+        for(Power p : Powers.POWER_REGISTRY.get()){
             if(p.matchesBottle(e.getItem())){
                 if(c.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                     if(e.getItem().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(e.getItem())){

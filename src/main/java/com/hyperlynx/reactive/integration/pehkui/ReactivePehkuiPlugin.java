@@ -1,9 +1,8 @@
 package com.hyperlynx.reactive.integration.pehkui;
 
 import com.hyperlynx.reactive.ReactiveMod;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.alchemy.rxn.EffectReaction;
 import com.hyperlynx.reactive.alchemy.rxn.FreeEffectReaction;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
@@ -27,8 +26,8 @@ public class ReactivePehkuiPlugin {
         ReactionMan.CRITERIA_BUILDER.add("size_revert_effect");
         ReactionMan.CRITERIA_BUILDER.add("size_revert_effect_2");
     }
-    protected static final FlagCriterion SIZE_CHANGED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_change_criterion"));
-    protected static final FlagCriterion SIZE_REVERTED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_revert_criterion"));
+    protected static final FlagTrigger SIZE_CHANGED = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "size_change_criterion"));
+    protected static final FlagTrigger SIZE_REVERTED = new FlagTrigger(new ResourceLocation(ReactiveMod.MODID, "size_revert_criterion"));
 
     @SubscribeEvent
     public static void onReactionConstruct(ReactionMan.ReactionConstructEvent evt){

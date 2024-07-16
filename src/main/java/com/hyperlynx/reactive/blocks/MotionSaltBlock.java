@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import com.hyperlynx.reactive.util.BlockMoveChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

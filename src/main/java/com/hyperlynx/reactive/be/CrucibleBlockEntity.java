@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.be;
 
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.items.PowerBottleItem;
@@ -7,7 +8,6 @@ import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -40,6 +40,7 @@ import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -234,14 +235,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public static void integrityFail(Level level, BlockPos pos, BlockState state) {
         ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
-        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.get(), SoundSource.BLOCKS, 1.15f, 0.8f);
+        level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.15f, 0.8f);
         level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Level.ExplosionInteraction.NONE);
         if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
             ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
             level.addFreshEntity(dropped_shell);
         }
         if(level instanceof ServerLevel slevel)
-            FlagCriterion.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER, pos, 24);
+            FlagTrigger.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER, pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
             level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
         else
@@ -290,7 +291,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -298,7 +299,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagCriterion.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -430,14 +431,15 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
     private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
-        List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
-        for (DissolveRecipe r : purify_recipes) {
-            if(r.needs_electricity && crucible.electricCharge < 1)
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        for (RecipeHolder<DissolveRecipe> holder : purify_recipes) {
+            DissolveRecipe recipe = holder.value();
+            if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if(r.matches(new FakeContainer(stack), level)){
+            if(recipe.matches(new FakeContainer(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, r.assemble(new FakeContainer(reactant), level.registryAccess())));
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, recipe.assemble(new FakeContainer(reactant), level.registryAccess())));
                 return true;
             }
         }
@@ -446,13 +448,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
-        List<TransmuteRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
-        for (TransmuteRecipe r : purify_recipes) {
-            if(r.needs_electricity && crucible.electricCharge < 1)
+        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
+        for (RecipeHolder<TransmuteRecipe> holder : purify_recipes) {
+            var recipe = holder.value();
+            if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if (r.matches(new FakeContainer(itemEntity.getItem()), level)) {
-                if (r.powerMet(crucible)) {
-                    ItemStack result = r.apply(itemEntity.getItem(), crucible);
+            if (recipe.matches(new FakeContainer(itemEntity.getItem()), level)) {
+                if (recipe.powerMet(crucible)) {
+                    ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
                     level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
                     crucible.setDirty(level, pos, state);
                     return true;
@@ -464,12 +467,13 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     // Attempts to find a precipitation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
-        List<PrecipitateRecipe> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
-        for(PrecipitateRecipe r : creation_recipes){
-            if(r.needs_electricity && crucible.electricCharge < 1)
+        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
+        for(var holder : creation_recipes){
+            var recipe = holder.value();
+            if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if(r.powerMet(crucible, level)){
-                ItemStack result = r.apply(crucible, level);
+            if(recipe.powerMet(crucible, level)){
+                ItemStack result = recipe.apply(crucible, level);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
                 crucible.setDirty(level, pos, state);
                 return true;
@@ -508,7 +512,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         sacrificeCount++;
-        FlagCriterion.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();

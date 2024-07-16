@@ -6,7 +6,7 @@ import net.minecraft.data.DataProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class DataGenerationMan {
         }
         event.getGenerator().addProvider(
                 event.includeServer(),
-                (DataProvider.Factory<ForgeAdvancementProvider>) output -> new ForgeAdvancementProvider(
+                (DataProvider.Factory<AdvancementProvider>) output -> new AdvancementProvider(
                         output,
                         event.getLookupProvider(),
                         event.getExistingFileHelper(),

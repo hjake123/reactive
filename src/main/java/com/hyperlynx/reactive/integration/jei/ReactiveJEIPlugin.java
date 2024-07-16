@@ -50,7 +50,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues(), POWER_HANDLER, POWER_RENDERER);
+        registration.register(POWER_TYPE, Powers.POWER_REGISTRY.get().getValues(), POWER_HANDLER, POWER_RENDERER);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
-        registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues());
+        registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.get().getValues());
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
     }
@@ -114,7 +114,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addPowerDescriptions(IRecipeRegistration registration){
-        for(Power power : Powers.POWER_SUPPLIER.get().getValues()){
+        for(Power power : Powers.POWER_REGISTRY.get().getValues()){
             registration.addIngredientInfo(power, POWER_TYPE, Component.translatable("jei.reactive.power"));
         }
     }

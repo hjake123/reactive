@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.integration.create;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;

@@ -2,13 +2,8 @@ package com.hyperlynx.reactive.util;
 
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 
 public class OccultSymbolAttractGoal extends MoveToBlockGoal {

@@ -48,11 +48,8 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import net.neoforged.neoforge.common.crafting.StrictNBTIngredient;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.ForgeRegistries;
-import net.neoforged.neoforge.registries.DeferredHolder;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -91,225 +88,225 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> CRUCIBLE_ITEM = ITEMS.registerSimpleBlockItem(CRUCIBLE);
 
     // Register the Shulker Crucible
-    public static final DeferredHolder<Block> SHULKER_CRUCIBLE = BLOCKS.register("shulker_crucible",
+    public static final DeferredHolder<Block, ShulkerCrucibleBlock> SHULKER_CRUCIBLE = BLOCKS.register("shulker_crucible",
             () -> new ShulkerCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.SHULKER_BOX)));
-    public static final DeferredHolder<Item> SHULKER_CRUCIBLE_ITEM = ITEMS.register(SHULKER_CRUCIBLE.getId().getPath(),
+    public static final DeferredHolder<Item, ShulkerCrucibleItem> SHULKER_CRUCIBLE_ITEM = ITEMS.register(SHULKER_CRUCIBLE.getId().getPath(),
             () -> new ShulkerCrucibleItem(new Item.Properties()));
 
     // Register the Crucible BE.
-    public static final DeferredHolder<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get(), SHULKER_CRUCIBLE.get()).build(null));
 
     // Register the rest of the blocks
-    public static final DeferredHolder<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
+    public static final DeferredHolder<Block, SaltFilledCrucibleBlock> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
             () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
-    public static final DeferredHolder<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
+    public static final DeferredHolder<Item, BlockItem> SALTY_CRUCIBLE_ITEM = ITEMS.registerSimpleBlockItem(SALTY_CRUCIBLE);
 
-    public static final DeferredHolder<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
+    public static final DeferredHolder<Block, SymbolBlock> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final DeferredHolder<Item> COPPER_SYMBOL_ITEM = SymbolItem.fromBlock(COPPER_SYMBOL);
+    public static final DeferredHolder<Item, SymbolItem> COPPER_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(COPPER_SYMBOL);
 
-    public static final DeferredHolder<Block> IRON_SYMBOL = BLOCKS.register("iron_symbol",
+    public static final DeferredHolder<Block, SymbolBlock> IRON_SYMBOL = BLOCKS.register("iron_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final DeferredHolder<Item> IRON_SYMBOL_ITEM = SymbolItem.fromBlock(IRON_SYMBOL);
+    public static final DeferredHolder<Item, SymbolItem> IRON_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(IRON_SYMBOL);
 
-    public static final DeferredHolder<Block> GOLD_SYMBOL = BLOCKS.register("gold_symbol",
+    public static final DeferredHolder<Block, SymbolBlock> GOLD_SYMBOL = BLOCKS.register("gold_symbol",
             () -> new SymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final DeferredHolder<Item> GOLD_SYMBOL_ITEM = SymbolItem.fromBlock(GOLD_SYMBOL);
+    public static final DeferredHolder<Item, SymbolItem> GOLD_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(GOLD_SYMBOL);
 
-    public static final DeferredHolder<Block> OCCULT_SYMBOL = BLOCKS.register("occult_symbol",
+    public static final DeferredHolder<Block, SymbolBlock> OCCULT_SYMBOL = BLOCKS.register("occult_symbol",
             () -> new OccultSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final DeferredHolder<Item> OCCULT_SYMBOL_ITEM = SymbolItem.fromBlock(OCCULT_SYMBOL);
+    public static final DeferredHolder<Item, SymbolItem> OCCULT_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(OCCULT_SYMBOL);
 
-    public static final DeferredHolder<Block> DIVINE_SYMBOL = BLOCKS.register("divine_symbol",
+    public static final DeferredHolder<Block, SymbolBlock> DIVINE_SYMBOL = BLOCKS.register("divine_symbol",
             () -> new DivineSymbolBlock(BlockBehaviour.Properties.copy(Blocks.TRIPWIRE_HOOK)));
-    public static final DeferredHolder<Item> DIVINE_SYMBOL_ITEM = SymbolItem.fromBlock(DIVINE_SYMBOL);
+    public static final DeferredHolder<Item, SymbolItem> DIVINE_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(DIVINE_SYMBOL);
 
     // Register the Symbol BE
-    public static final DeferredHolder<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get(), DIVINE_SYMBOL.get()).build(null));
 
-    public static final DeferredHolder<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
+    public static final DeferredHolder<Block, BlazeRodBlock> BLAZE_ROD = BLOCKS.register("blaze_rod",
             () -> new BlazeRodBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
-    public static final DeferredHolder<Item> BLAZE_ROD_ITEM = fromBlock(BLAZE_ROD);
+    public static final DeferredHolder<Item, BlockItem> BLAZE_ROD_ITEM = ITEMS.registerSimpleBlockItem(BLAZE_ROD);
 
-    public static final DeferredHolder<Block> STARDUST = BLOCKS.register("stardust",
+    public static final DeferredHolder<Block, StardustBlock> STARDUST = BLOCKS.register("stardust",
             () -> new StardustBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).lightLevel((BlockState s) -> 15).sound(SoundType.WOOL)));
 
-    public static final DeferredHolder<Block> PURE_QUARTZ_BLOCK = BLOCKS.register("pure_quartz_block",
+    public static final DeferredHolder<Block, PureQuartzBlock> PURE_QUARTZ_BLOCK = BLOCKS.register("pure_quartz_block",
             () -> new PureQuartzBlock(BlockBehaviour.Properties.copy(Blocks.QUARTZ_BLOCK)));
-    public static final DeferredHolder<Item> PURE_QUARTZ_BLOCK_ITEM = fromBlock(PURE_QUARTZ_BLOCK);
+    public static final DeferredHolder<Item, BlockItem> PURE_QUARTZ_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(PURE_QUARTZ_BLOCK);
 
-    public static final DeferredHolder<Block> VOLT_CELL = BLOCKS.register("volt_cell",
+    public static final DeferredHolder<Block, VoltCellBlock> VOLT_CELL = BLOCKS.register("volt_cell",
             () -> new VoltCellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
-    public static final DeferredHolder<Item> VOLT_CELL_ITEM = fromBlock(VOLT_CELL);
+    public static final DeferredHolder<Item, BlockItem> VOLT_CELL_ITEM = ITEMS.registerSimpleBlockItem(VOLT_CELL);
 
-    public static final DeferredHolder<Block> CURSE_CELL = BLOCKS.register("curse_cell",
+    public static final DeferredHolder<Block, CellBlock> CURSE_CELL = BLOCKS.register("curse_cell",
             () -> new CellBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
-    public static final DeferredHolder<Item> CURSE_CELL_ITEM = fromBlock(CURSE_CELL);
+    public static final DeferredHolder<Item, BlockItem> CURSE_CELL_ITEM = ITEMS.registerSimpleBlockItem(CURSE_CELL);
 
-    public static final DeferredHolder<Block> WARP_SPONGE = BLOCKS.register("warp_sponge",
+    public static final DeferredHolder<Block, WarpSpongeBlock> WARP_SPONGE = BLOCKS.register("warp_sponge",
             () -> new WarpSpongeBlock(BlockBehaviour.Properties.copy(Blocks.WET_SPONGE)));
-    public static final DeferredHolder<Item> WARP_SPONGE_ITEM = fromBlock(WARP_SPONGE);
+    public static final DeferredHolder<Item, BlockItem> WARP_SPONGE_ITEM = ITEMS.registerSimpleBlockItem(WARP_SPONGE);
 
-    public static final DeferredHolder<Block> GOLD_FOAM = BLOCKS.register("gold_foam",
+    public static final DeferredHolder<Block, GoldFoamBlock> GOLD_FOAM = BLOCKS.register("gold_foam",
             () -> new GoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK)
                     .jumpFactor(0.7F).sound(SoundType.WOOL).speedFactor(1.15F)));
-    public static final DeferredHolder<Item> GOLD_FOAM_ITEM = fromBlock(GOLD_FOAM);
+    public static final DeferredHolder<Item, BlockItem> GOLD_FOAM_ITEM = ITEMS.registerSimpleBlockItem(GOLD_FOAM);
 
-    public static final DeferredHolder<Block> SOLID_PORTAL = BLOCKS.register("solid_portal",
+    public static final DeferredHolder<Block, SolidPortalBlock> SOLID_PORTAL = BLOCKS.register("solid_portal",
             () -> new SolidPortalBlock(BlockBehaviour.Properties.copy(Blocks.GLOWSTONE)));
-    public static final DeferredHolder<Item> SOLID_PORTAL_ITEM = fromBlock(SOLID_PORTAL);
+    public static final DeferredHolder<Item, BlockItem> SOLID_PORTAL_ITEM = ITEMS.registerSimpleBlockItem(SOLID_PORTAL);
 
-    public static final DeferredHolder<Block> RUNESTONE = BLOCKS.register("runestone",
+    public static final DeferredHolder<Block, RunestoneBlock> RUNESTONE = BLOCKS.register("runestone",
             () -> new RunestoneBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE)));
-    public static final DeferredHolder<Item> RUNESTONE_ITEM = fromBlock(RUNESTONE);
+    public static final DeferredHolder<Item, BlockItem> RUNESTONE_ITEM = ITEMS.registerSimpleBlockItem(RUNESTONE);
 
-    public static final DeferredHolder<Block> SALT_BLOCK = BLOCKS.register("salt_block",
+    public static final DeferredHolder<Block, Block> SALT_BLOCK = BLOCKS.register("salt_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.SAND)));
-    public static final DeferredHolder<Item> SALT_BLOCK_ITEM = fromBlock(SALT_BLOCK);
+    public static final DeferredHolder<Item, BlockItem> SALT_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(SALT_BLOCK);
 
-    public static final DeferredHolder<Block> MOTION_SALT_BLOCK = BLOCKS.register("motion_salt_block",
+    public static final DeferredHolder<Block, MotionSaltBlock> MOTION_SALT_BLOCK = BLOCKS.register("motion_salt_block",
             () -> new MotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).sound(SoundType.CALCITE)));
-    public static final DeferredHolder<Item> MOTION_SALT_BLOCK_ITEM = fromBlock(MOTION_SALT_BLOCK);
+    public static final DeferredHolder<Item, BlockItem> MOTION_SALT_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(MOTION_SALT_BLOCK);
 
-    public static final DeferredHolder<Block> FRAMED_MOTION_SALT_BLOCK = BLOCKS.register("framed_motion_salt_block",
+    public static final DeferredHolder<Block, FramedMotionSaltBlock> FRAMED_MOTION_SALT_BLOCK = BLOCKS.register("framed_motion_salt_block",
             () -> new FramedMotionSaltBlock(BlockBehaviour.Properties.copy(Blocks.COPPER_BLOCK)));
-    public static final DeferredHolder<Item> FRAMED_MOTION_SALT_BLOCK_ITEM = fromBlock(FRAMED_MOTION_SALT_BLOCK);
+    public static final DeferredHolder<Item, BlockItem> FRAMED_MOTION_SALT_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(FRAMED_MOTION_SALT_BLOCK);
 
-    public static final DeferredHolder<Block> GRAVITY_BEAM = BLOCKS.register("gravity_beam",
+    public static final DeferredHolder<Block, GravityBeamBlock> GRAVITY_BEAM = BLOCKS.register("gravity_beam",
             () -> new GravityBeamBlock(BlockBehaviour.Properties.copy(Blocks.DISPENSER)));
 
-    public static final DeferredHolder<Item> GRAVITY_BEAM_ITEM = fromBlock(GRAVITY_BEAM);
+    public static final DeferredHolder<Item, BlockItem> GRAVITY_BEAM_ITEM = ITEMS.registerSimpleBlockItem(GRAVITY_BEAM);
 
-    public static final DeferredHolder<Block> FLOWER_VINES = BLOCKS.register("flower_vine",
+    public static final DeferredHolder<Block, FlowerVineBlock> FLOWER_VINES = BLOCKS.register("flower_vine",
             () -> new FlowerVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
 
-    public static final DeferredHolder<Block> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
+    public static final DeferredHolder<Block, FlowerVinePlantBlock> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
             () -> new FlowerVinePlantBlock(BlockBehaviour.Properties.copy(Blocks.VINE)));
 
-    public static final DeferredHolder<Item> FLOWER_VINES_ITEM = fromBlock(FLOWER_VINES);
+    public static final DeferredHolder<Item, BlockItem> FLOWER_VINES_ITEM = ITEMS.registerSimpleBlockItem(FLOWER_VINES);
 
-    public static final DeferredHolder<Block> MIND_LICHEN = BLOCKS.register("mind_lichen",
+    public static final DeferredHolder<Block, MindLichenBlock> MIND_LICHEN = BLOCKS.register("mind_lichen",
             () -> new MindLichenBlock(BlockBehaviour.Properties.copy(Blocks.GLOW_LICHEN)));
 
-    public static final DeferredHolder<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN);
+    public static final DeferredHolder<Item, BlockItem> MIND_LICHEN_ITEM = ITEMS.registerSimpleBlockItem(MIND_LICHEN);
 
-    public static final DeferredHolder<Block> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
+    public static final DeferredHolder<Block, GravityChandelierBlock> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
             () -> new GravityChandelierBlock(BlockBehaviour.Properties.copy(Blocks.TORCH)));
 
-    public static final DeferredHolder<Item> GRAVITY_CHANDELIER_ITEM = fromBlock(GRAVITY_CHANDELIER);
+    public static final DeferredHolder<Item, BlockItem> GRAVITY_CHANDELIER_ITEM = ITEMS.registerSimpleBlockItem(GRAVITY_CHANDELIER);
 
-    public static final DeferredHolder<Block> ACID_BLOCK = BLOCKS.register("acid_block",
+    public static final DeferredHolder<Block, AcidBlock> ACID_BLOCK = BLOCKS.register("acid_block",
             () -> new AcidBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).speedFactor(0.65F).strength(1.4F)));
 
-    public static final DeferredHolder<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
+    public static final DeferredHolder<Item, AcidBucketItem> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
 
     // Register the Gravity related BEs
-    public static final DeferredHolder<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
             () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
-    public static final DeferredHolder<BlockEntityType<GravityBeamBlockEntity>> GRAVITY_BEAM_BE_TYPE =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GravityBeamBlockEntity>> GRAVITY_BEAM_BE_TYPE =
             TILES.register("gravity_beam_be",
                     () -> BlockEntityType.Builder.of(GravityBeamBlockEntity::new, GRAVITY_BEAM.get()).build(null));
 
     // Register Power bottles
-    public static final DeferredHolder<Block> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> ACID_BOTTLE = ITEMS.register("acid_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties(), ACID_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 7)));
-    public static final DeferredHolder<Item> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
+    public static final DeferredHolder<Item, BlazeBottleItem> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
             () -> new BlazeBottleItem(new Item.Properties(), BLAZE_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> MIND_BOTTLE_BLOCK = BLOCKS.register("mind_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> MIND_BOTTLE_BLOCK = BLOCKS.register("mind_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> MIND_BOTTLE = ITEMS.register("mind_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> MIND_BOTTLE = ITEMS.register("mind_bottle",
             () -> new PowerBottleItem(new Item.Properties(), MIND_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> SOUL_BOTTLE_BLOCK = BLOCKS.register("soul_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> SOUL_BOTTLE_BLOCK = BLOCKS.register("soul_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> SOUL_BOTTLE = ITEMS.register("soul_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> SOUL_BOTTLE = ITEMS.register("soul_bottle",
             () -> new PowerBottleItem(new Item.Properties(), SOUL_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> WARP_BOTTLE_BLOCK = BLOCKS.register("warp_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> WARP_BOTTLE_BLOCK = BLOCKS.register("warp_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> WARP_BOTTLE = ITEMS.register("warp_bottle",
+    public static final DeferredHolder<Item, WarpBottleItem> WARP_BOTTLE = ITEMS.register("warp_bottle",
             () -> new WarpBottleItem(new Item.Properties(), WARP_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> VERDANT_BOTTLE_BLOCK = BLOCKS.register("verdant_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> VERDANT_BOTTLE_BLOCK = BLOCKS.register("verdant_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
             () -> new PowerBottleItem(new Item.Properties(), VERDANT_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> BODY_BOTTLE_BLOCK = BLOCKS.register("body_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> BODY_BOTTLE_BLOCK = BLOCKS.register("body_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
-    public static final DeferredHolder<Item> BODY_BOTTLE = ITEMS.register("body_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> BODY_BOTTLE = ITEMS.register("body_bottle",
             () -> new PowerBottleItem(new Item.Properties(), BODY_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> LIGHT_BOTTLE_BLOCK = BLOCKS.register("light_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> LIGHT_BOTTLE_BLOCK = BLOCKS.register("light_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 15)));
-    public static final DeferredHolder<Item> LIGHT_BOTTLE = ITEMS.register("light_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties(), LIGHT_BOTTLE_BLOCK.get()));
-    public static final DeferredHolder<Block> VITAL_BOTTLE_BLOCK = BLOCKS.register("vital_bottle",
+    public static final DeferredHolder<Block, PowerBottleBlock> VITAL_BOTTLE_BLOCK = BLOCKS.register("vital_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.copy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 2)));
-    public static final DeferredHolder<Item> VITAL_BOTTLE = ITEMS.register("vital_bottle",
+    public static final DeferredHolder<Item, PowerBottleItem> VITAL_BOTTLE = ITEMS.register("vital_bottle",
             () -> new PowerBottleItem(new Item.Properties(), VITAL_BOTTLE_BLOCK.get()));
 
     // Register staves
-    public static final DeferredHolder<Block> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
+    public static final DeferredHolder<Block, IncompleteStaffBlock> INCOMPLETE_STAFF = BLOCKS.register("incomplete_staff",
             () -> new IncompleteStaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
-    public static final DeferredHolder<Item> INCOMPLETE_STAFF_ITEM = ITEMS.register(INCOMPLETE_STAFF.getId().getPath(),
+    public static final DeferredHolder<Item, BlockItem> INCOMPLETE_STAFF_ITEM = ITEMS.register(INCOMPLETE_STAFF.getId().getPath(),
             () -> new BlockItem(INCOMPLETE_STAFF.get(), new Item.Properties().stacksTo(1)));
 
-    public static final DeferredHolder<Block> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
-    public static final DeferredHolder<Item> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
+    public static final DeferredHolder<Item, LightStaffItem> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
             () -> new LightStaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1000), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
-    public static final DeferredHolder<Block> STAFF_OF_WARP = BLOCKS.register("warp_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
-    public static final DeferredHolder<Item> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
+    public static final DeferredHolder<Item, WarpStaffItem> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
             () -> new WarpStaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(500), WARP_BOTTLE.get()));
 
-    public static final DeferredHolder<Block> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
-    public static final DeferredHolder<Item> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
+    public static final DeferredHolder<Item, StaffItem> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
             () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, 10, BLAZE_BOTTLE.get()));
 
-    public static final DeferredHolder<Block> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
-    public static final DeferredHolder<Item> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
+    public static final DeferredHolder<Item, StaffItem> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
             () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().defaultDurability(800), StaffEffects::spectral, false, 14, SOUL_BOTTLE.get()));
 
-    public static final DeferredHolder<Block> STAFF_OF_MIND = BLOCKS.register("mind_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
-    public static final DeferredHolder<Item> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
+    public static final DeferredHolder<Item, StaffItem> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
             () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().defaultDurability(1200), StaffEffects::missile, false, 10, MIND_BOTTLE.get()));
 
-    public static final DeferredHolder<Block> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
+    public static final DeferredHolder<Block, StaffBlock> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.copy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
-    public static final DeferredHolder<Item> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
+    public static final DeferredHolder<Item, StaffItem> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
             () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(600), StaffEffects::living, true, 10, VITAL_BOTTLE.get()));
 
-    public static final DeferredHolder<BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
 
 
     // Register technical blocks.
-    public static final DeferredHolder<Block> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
+    public static final DeferredHolder<Block, ActiveGoldFoamBlock> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
             () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
 
-    public static final DeferredHolder<BlockEntityType<ActiveFoamBlockEntity>> ACTIVE_GOLD_FOAM_BE = TILES.register("active_gold_foam_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ActiveFoamBlockEntity>> ACTIVE_GOLD_FOAM_BE = TILES.register("active_gold_foam_be",
             () -> BlockEntityType.Builder.of(ActiveFoamBlockEntity::new, ACTIVE_GOLD_FOAM.get()).build(null));
 
-    public static final DeferredHolder<Block> DISPLACED_BLOCK = BLOCKS.register("displaced_block",
+    public static final DeferredHolder<Block, DisplacedBlock> DISPLACED_BLOCK = BLOCKS.register("displaced_block",
             DisplacedBlock::new);
 
-    public static final DeferredHolder<BlockEntityType<DisplacedBlockEntity>> DISPLACED_BLOCK_BE = TILES.register("displaced_block_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DisplacedBlockEntity>> DISPLACED_BLOCK_BE = TILES.register("displaced_block_be",
             () -> BlockEntityType.Builder.of(DisplacedBlockEntity::new, DISPLACED_BLOCK.get()).build(null));
 
-    public static final DeferredHolder<Block> GLOWING_AIR = BLOCKS.register("glowing_air",
+    public static final DeferredHolder<Block, AirLightBlock> GLOWING_AIR = BLOCKS.register("glowing_air",
             () -> new AirLightBlock(BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel((state) -> 15)));
 
-    public static final DeferredHolder<Block> UNFORMED_MATTER = BLOCKS.register("unformed_matter",
+    public static final DeferredHolder<Block, UnformedMatterBlock> UNFORMED_MATTER = BLOCKS.register("unformed_matter",
             () -> new UnformedMatterBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
                     .sound(SoundType.HONEY_BLOCK)
                     .lightLevel((state) -> 15)
@@ -318,36 +315,36 @@ public class Registration {
                     .pushReaction(PushReaction.DESTROY)));
 
     // Register items.
-    public static final DeferredHolder<Item> DISPLACER = ITEMS.register("displacer",
+    public static final DeferredHolder<Item, DisplacerItem> DISPLACER = ITEMS.register("displacer",
             () -> new DisplacerItem(new Item.Properties()
                     .defaultDurability(350)));
 
-    public static final DeferredHolder<Item> PURE_QUARTZ = ITEMS.register("quartz",
+    public static final DeferredHolder<Item, Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item> STARDUST_ITEM = ITEMS.register("stardust",
+    public static final DeferredHolder<Item, StardustItem> STARDUST_ITEM = ITEMS.register("stardust",
             () -> new StardustItem(new Item.Properties()));
-    public static final DeferredHolder<Item> SCROLL = ITEMS.register("scroll",
+    public static final DeferredHolder<Item, AlchemyScrollItem> SCROLL = ITEMS.register("scroll",
             () -> new AlchemyScrollItem(new Item.Properties()
                     .stacksTo(1).rarity(Rarity.RARE)));
-    public static final DeferredHolder<Item> LITMUS_PAPER = ITEMS.register("litmus_paper",
+    public static final DeferredHolder<Item, LitmusPaperItem> LITMUS_PAPER = ITEMS.register("litmus_paper",
             () -> new LitmusPaperItem(new Item.Properties()));
-    public static final DeferredHolder<Item> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
+    public static final DeferredHolder<Item, QuartzBottleItem> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new QuartzBottleItem(new Item.Properties()));
-    public static final DeferredHolder<Item> CRYSTAL_IRON = ITEMS.register("crystal_iron",
+    public static final DeferredHolder<Item, CrystalIronItem> CRYSTAL_IRON = ITEMS.register("crystal_iron",
             () -> new CrystalIronItem(new Item.Properties().defaultDurability(64)));
-    public static final DeferredHolder<Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
+    public static final DeferredHolder<Item, Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item> SOUP = ITEMS.register("soup",
+    public static final DeferredHolder<Item, SoupItem> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder().nutrition(7).saturationMod(0.5F)).build())));
-    public static final DeferredHolder<Item> SALT = ITEMS.register("salt",
+    public static final DeferredHolder<Item, Item> SALT = ITEMS.register("salt",
             () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item> MOTION_SALT = ITEMS.register("motion_salt",
+    public static final DeferredHolder<Item, Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties()));
-    public static final DeferredHolder<Item> FORCE_ROCK = ITEMS.register("force_rock",
+    public static final DeferredHolder<Item, ForceRockItem> FORCE_ROCK = ITEMS.register("force_rock",
             () -> new ForceRockItem(new Item.Properties()));
-    public static final DeferredHolder<Item> SECRET_SCALE = ITEMS.register("secret_scale",
+    public static final DeferredHolder<Item, SecretScaleItem> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
-    public static final DeferredHolder<Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
+    public static final DeferredHolder<Item, Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
                     .saturationMod(1.4F)
@@ -355,82 +352,82 @@ public class Registration {
                     .build())));
 
     // Register mob effects
-    public static final DeferredHolder<MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
+    public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
-                    .addAttributeModifier(NeoForgeMod.ENTITY_GRAVITY.get(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
+                    .addAttributeModifier(NeoForgeMod.ENTITY_GRAVITY.value(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
-    public static final DeferredHolder<MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
+    public static final DeferredHolder<MobEffect, MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
                             -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
-    public static final DeferredHolder<MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
+    public static final DeferredHolder<MobEffect, MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
-                    .addAttributeModifier(NeoForgeMod.BLOCK_REACH.get(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
+                    .addAttributeModifier(NeoForgeMod.BLOCK_REACH.value(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
                             2, AttributeModifier.Operation.ADDITION));
-    public static final DeferredHolder<MobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
+    public static final DeferredHolder<MobEffect, HyperMobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
     // Register potions
-    public static final DeferredHolder<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
+    public static final DeferredHolder<Potion, Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 3000)));
-    public static final DeferredHolder<Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
+    public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 8000)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
-    public static final DeferredHolder<ParticleType<SimpleParticleType>> STARDUST_PARTICLE_TYPE = PARTICLES.register("stardust",
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> STARDUST_PARTICLE_TYPE = PARTICLES.register("stardust",
             () -> STARDUST_PARTICLE);
 
     public static final SimpleParticleType RUNE_PARTICLE = new SimpleParticleType(false);
-    public static final DeferredHolder<ParticleType<SimpleParticleType>> RUNE_PARTICLE_TYPE = PARTICLES.register("runes",
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> RUNE_PARTICLE_TYPE = PARTICLES.register("runes",
             () -> RUNE_PARTICLE);
 
     public static final SimpleParticleType SMALL_RUNE_PARTICLE = new SimpleParticleType(false);
-    public static final DeferredHolder<ParticleType<SimpleParticleType>> SMALL_RUNE_PARTICLE_TYPE = PARTICLES.register("small_runes",
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SMALL_RUNE_PARTICLE_TYPE = PARTICLES.register("small_runes",
             () -> SMALL_RUNE_PARTICLE);
 
     public static final SimpleParticleType SMALL_BLACK_RUNE_PARTICLE = new SimpleParticleType(false);
-    public static final DeferredHolder<ParticleType<SimpleParticleType>> SMALL_BLACK_RUNE_PARTICLE_TYPE = PARTICLES.register("small_black_runes",
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SMALL_BLACK_RUNE_PARTICLE_TYPE = PARTICLES.register("small_black_runes",
             () -> SMALL_BLACK_RUNE_PARTICLE);
 
     public static final SimpleParticleType ACID_BUBBLE_PARTICLE = new SimpleParticleType(false);
-    public static final DeferredHolder<ParticleType<SimpleParticleType>> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
             () -> ACID_BUBBLE_PARTICLE);
 
     // Register sound events.
-    public static final DeferredHolder<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:zap")));
 
-    public static final DeferredHolder<SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
+    public static final DeferredHolder<SoundEvent, SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
             () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:rumble")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
-    public static final DeferredHolder<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
+    public static final DeferredHolder<Block, Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
-    public static final DeferredHolder<Block> DUMMY_NOISE_WATER = BLOCKS.register("noisy_water",
+    public static final DeferredHolder<Block, Block> DUMMY_NOISE_WATER = BLOCKS.register("noisy_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
-    public static final DeferredHolder<Block> DUMMY_FAST_WATER = BLOCKS.register("fast_water",
+    public static final DeferredHolder<Block, Block> DUMMY_FAST_WATER = BLOCKS.register("fast_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     //Register the recipe types and serializers.
-    public static final DeferredHolder<RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));
-    public static final DeferredHolder<RecipeSerializer<TransmuteRecipe>> TRANS_SERIALIZER = RECIPE_SERIALIZERS.register("transmutation", TransmuteRecipeSerializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<TransmuteRecipe>> TRANS_SERIALIZER = RECIPE_SERIALIZERS.register("transmutation", TransmuteRecipeSerializer::new);
 
-    public static final DeferredHolder<RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
-    public static final DeferredHolder<RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<DissolveRecipe>> DISSOLVE_RECIPE_TYPE = RECIPE_TYPES.register("dissolve", () -> getRecipeType("dissolve"));
+    public static final DeferredHolder<RecipeSerializer<?>,RecipeSerializer<DissolveRecipe>> DISSOLVE_SERIALIZER = RECIPE_SERIALIZERS.register("dissolve", DissolveRecipeSerializer::new);
 
-    public static final DeferredHolder<RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
-    public static final DeferredHolder<RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
 
     // Register the creative mode tab.
-    public static final DeferredHolder<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
                     .icon(() -> CRUCIBLE_ITEM.get().getDefaultInstance())
                     .title(Component.translatable("reactive.tab"))
                     .displayItems((params, output) -> {
-                        for(DeferredHolder<Item> item_reg : ITEMS.getEntries()){
+                        for(DeferredHolder<Item, ? extends Item> item_reg : ITEMS.getEntries()){
                                 output.accept(item_reg.get());
                         }
                     })
@@ -475,8 +472,8 @@ public class Registration {
     @SubscribeEvent
     public void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == REACTIVE_TAB.getKey()) {
-            for(DeferredHolder<Item> item_reg : ITEMS.getEntries()){
-                event.accept(item_reg.get());
+            for(DeferredHolder<Item, ? extends Item> item_holder : ITEMS.getEntries()){
+                event.accept(item_holder.get());
             }
         }
     }

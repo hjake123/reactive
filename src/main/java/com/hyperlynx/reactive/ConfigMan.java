@@ -4,21 +4,21 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
-import net.neoforged.neoforge.common.NeoForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ConfigMan {
     public static class Common {
-        public NeoForgeConfigSpec.IntValue crucibleTickDelay;
-        public NeoForgeConfigSpec.IntValue crucibleRange;
-        public NeoForgeConfigSpec.IntValue areaMemoryRange;
-        public NeoForgeConfigSpec.IntValue maxDisplaceCount;
-        public NeoForgeConfigSpec.IntValue displaceConductRange;
-        public NeoForgeConfigSpec.DoubleValue maxMoveBlockBreakTime;
-        public NeoForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
-        public NeoForgeConfigSpec.BooleanValue acidMeltBlockEntities;
-        public NeoForgeConfigSpec.BooleanValue lightStaffLightsPermanent;
+        public ModConfigSpec.IntValue crucibleTickDelay;
+        public ModConfigSpec.IntValue crucibleRange;
+        public ModConfigSpec.IntValue areaMemoryRange;
+        public ModConfigSpec.IntValue maxDisplaceCount;
+        public ModConfigSpec.IntValue displaceConductRange;
+        public ModConfigSpec.DoubleValue maxMoveBlockBreakTime;
+        public ModConfigSpec.ConfigValue<List<String>> doNotTeleport;
+        public ModConfigSpec.BooleanValue acidMeltBlockEntities;
+        public ModConfigSpec.BooleanValue lightStaffLightsPermanent;
 
-        Common(NeoForgeConfigSpec.Builder builder){
+        Common(ModConfigSpec.Builder builder){
             builder.comment("Options:")
                     .push("config");
             crucibleTickDelay = builder.comment("The crucible performs a stage of its calculations once every X game ticks. Lower numbers are more responsive, but laggier. [Default: 5]")
@@ -43,17 +43,17 @@ public class ConfigMan {
         }
     }
 
-    public static final NeoForgeConfigSpec commonSpec;
+    public static final ModConfigSpec commonSpec;
     public static final Common COMMON;
 
     public static class Server {
-        public NeoForgeConfigSpec.BooleanValue useWorldSeed;
-        public NeoForgeConfigSpec.LongValue seed;
-        public NeoForgeConfigSpec.DoubleValue pehkuiSmallSize;
-        public NeoForgeConfigSpec.DoubleValue pehkuiLargeSize;
+        public ModConfigSpec.BooleanValue useWorldSeed;
+        public ModConfigSpec.LongValue seed;
+        public ModConfigSpec.DoubleValue pehkuiSmallSize;
+        public ModConfigSpec.DoubleValue pehkuiLargeSize;
 
 
-        Server(NeoForgeConfigSpec.Builder builder){
+        Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
                     .push("wsv");
             seed = builder.comment("The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!")
@@ -71,15 +71,15 @@ public class ConfigMan {
         }
     }
 
-    public static final NeoForgeConfigSpec serverSpec;
+    public static final ModConfigSpec serverSpec;
     public static final Server SERVER;
 
     public static class Client {
-        public NeoForgeConfigSpec.BooleanValue showPowerSources;
-        public NeoForgeConfigSpec.BooleanValue doNotChangeWaterTexture;
-        public NeoForgeConfigSpec.BooleanValue colorizeLitmusOutput;
+        public ModConfigSpec.BooleanValue showPowerSources;
+        public ModConfigSpec.BooleanValue doNotChangeWaterTexture;
+        public ModConfigSpec.BooleanValue colorizeLitmusOutput;
 
-        Client(NeoForgeConfigSpec.Builder builder){
+        Client(ModConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
                     .push("config");
             showPowerSources = builder.comment("Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.")
@@ -93,19 +93,19 @@ public class ConfigMan {
         }
     }
 
-    public static final NeoForgeConfigSpec clientSpec;
+    public static final ModConfigSpec clientSpec;
     public static final Client CLIENT;
 
     static {
-        final Pair<Common, NeoForgeConfigSpec> commonSpecPair = new NeoForgeConfigSpec.Builder().configure(Common::new);
+        final Pair<Common, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(Common::new);
         commonSpec = commonSpecPair.getRight();
         COMMON = commonSpecPair.getLeft();
 
-        final Pair<Server, NeoForgeConfigSpec> serverSpecPair = new NeoForgeConfigSpec.Builder().configure(Server::new);
+        final Pair<Server, ModConfigSpec> serverSpecPair = new ModConfigSpec.Builder().configure(Server::new);
         serverSpec = serverSpecPair.getRight();
         SERVER = serverSpecPair.getLeft();
 
-        final Pair<Client, NeoForgeConfigSpec> clientSpecPair = new NeoForgeConfigSpec.Builder().configure(Client::new);
+        final Pair<Client, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(Client::new);
         clientSpec = clientSpecPair.getRight();
         CLIENT = clientSpecPair.getLeft();
     }

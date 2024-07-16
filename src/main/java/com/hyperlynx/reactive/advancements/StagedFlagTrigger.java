@@ -4,10 +4,10 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public class StagedFlagCriterion extends FlagCriterion{
+public class StagedFlagTrigger extends FlagTrigger {
     ResourceLocation prereq;
 
-    public StagedFlagCriterion(ResourceLocation crit_rl, ResourceLocation prerequisite_advancement_rl) {
+    public StagedFlagTrigger(ResourceLocation crit_rl, ResourceLocation prerequisite_advancement_rl) {
         super(crit_rl);
         prereq = prerequisite_advancement_rl;
     }

@@ -28,7 +28,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             ItemStack product = CraftingHelper.getItemStack(json.get("product").getAsJsonObject(), false);
             List<Power> reagents = new ArrayList<>();
             for (JsonElement j : json.get("reagents").getAsJsonArray()) {
-                RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_SUPPLIER.get());
+                RegistryObject<Power> powObj = RegistryObject.create(ResourceLocation.tryParse(j.getAsString()), Powers.POWER_REGISTRY.get());
                 if (powObj.isPresent())
                     reagents.add(powObj.get());
                 else
@@ -61,7 +61,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
         recipe.reactant.toNetwork(buffer);
         buffer.writeItem(recipe.product);
-        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_SUPPLIER.get(), p));
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_REGISTRY.get(), p));
         buffer.writeVarInt(recipe.minimum);
         buffer.writeVarInt(recipe.cost);
         buffer.writeBoolean(recipe.needs_electricity);

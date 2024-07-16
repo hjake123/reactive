@@ -2,7 +2,7 @@ package com.hyperlynx.reactive.alchemy.special;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
-import com.hyperlynx.reactive.advancements.FlagCriterion;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -332,7 +332,7 @@ public class SpecialCaseMan {
             }
         }
         if(!foundTarget){
-            FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.MAKE_RIFT_TRIGGER, p, 20);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.MAKE_RIFT_TRIGGER, p, 20);
             c.enderRiftStrength = 2000;
         }
         e.kill();
@@ -587,7 +587,7 @@ public class SpecialCaseMan {
         if(portal.isComplete()){
             portal.createSolidPortalBlocks();
             if(!l.isClientSide)
-                FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.PORTAL_FREEZE_TRIGGER, p, 9);
+                FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.PORTAL_FREEZE_TRIGGER, p, 9);
         }
     }
 

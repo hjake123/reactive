@@ -1,25 +1,17 @@
 package com.hyperlynx.reactive.util;
 
-import java.util.Optional;
-import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import com.hyperlynx.reactive.Registration;
-import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.extensions.IBlockExtensionState;
+import net.neoforged.neoforge.common.extensions.IBlockStateExtension;
 
 // Verbatim clone of PortalShape, but it pretends SolidPortalBlocks are empty space.
 // Only other way to do this was a mixin or something so this seems preferable.
@@ -42,7 +34,7 @@ public class HyperPortalShape {
     }
 
     // Everything else matches PortalShape (with some removals).
-    private static final BlockBehaviour.StatePredicate FRAME = IBlockExtensionState::isPortalFrame;
+    private static final BlockBehaviour.StatePredicate FRAME = IBlockStateExtension::isPortalFrame;
     private final LevelAccessor level;
     private final Direction.Axis axis;
     private final Direction rightDir;
