@@ -28,7 +28,7 @@ public class ReactiveAdvancementGenerator implements AdvancementProvider.Advance
             }
             Advancement.Builder builder = Advancement.Builder.advancement();
             builder.addCriterion("criterion", new Criterion<>(ReactionMan.CRITERIA_BUILDER.get(alias),
-                    ReactionMan.CRITERIA_BUILDER.get(alias).createInstance()));
+                    ReactionMan.CRITERIA_BUILDER.get(alias).createInstance())); // TODO: Possibly broken!
             builder.requirements(AdvancementRequirements.Strategy.AND);
             builder.rewards(AdvancementRewards.EMPTY);
             builder.save(consumer, ReactiveMod.MODID + REACTION_ADVANCEMENT_PREFIX + alias);
@@ -39,8 +39,8 @@ public class ReactiveAdvancementGenerator implements AdvancementProvider.Advance
                 continue;
             }
             Advancement.Builder perfect_builder = Advancement.Builder.advancement();
-            perfect_builder.addCriterion("criterion", Objects.requireNonNull(ReactionMan.CRITERIA_BUILDER.get(alias + "_perfect"))
-                    .createInstance(ContextAwarePredicate.ANY));
+            perfect_builder.addCriterion("criterion", new Criterion<>(ReactionMan.CRITERIA_BUILDER.get(alias),
+                    ReactionMan.CRITERIA_BUILDER.get(alias).createInstance()));
             perfect_builder.requirements(AdvancementRequirements.Strategy.AND);
             perfect_builder.rewards(AdvancementRewards.EMPTY);
             perfect_builder.save(consumer, ReactiveMod.MODID +REACTION_ADVANCEMENT_PREFIX + alias +"_perfect");

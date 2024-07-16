@@ -9,7 +9,7 @@ import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.blocks.DivineSymbolBlock;
 import com.hyperlynx.reactive.blocks.PowerBottleBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
@@ -51,12 +51,12 @@ public class PowerBottleItem extends BlockItem {
 
         @Override
         public ItemStack dispense(BlockSource source, ItemStack stack) {
-            BlockPos target = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            if(!(source.getLevel().getBlockState(target).getBlock() instanceof CrucibleBlock)){
+            BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+            if(!(source.level().getBlockState(target).getBlock() instanceof CrucibleBlock)){
                 return defaultDispenseItemBehavior.dispense(source, stack);
             }
 
-            CrucibleBlockEntity crucible = (CrucibleBlockEntity) source.getLevel().getBlockEntity(target);
+            CrucibleBlockEntity crucible = (CrucibleBlockEntity) source.level().getBlockEntity(target);
             if(crucible == null) {
                 return defaultDispenseItemBehavior.dispense(source, stack);
             }
@@ -69,8 +69,8 @@ public class PowerBottleItem extends BlockItem {
                             crucible.enderRiftStrength = 2000;
                         }
                         stack.shrink(1);
-                        ItemEntity quartz_bottle_drop = new ItemEntity(source.getLevel(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                        source.getLevel().addFreshEntity(quartz_bottle_drop);
+                        ItemEntity quartz_bottle_drop = new ItemEntity(source.level(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        source.level().addFreshEntity(quartz_bottle_drop);
                         changed = true;
                     }
                 }

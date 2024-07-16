@@ -30,26 +30,30 @@ public class CriteriaTriggers {
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(MAKE_CRUCIBLE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(ENDER_PEARL_DISSOLVE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_SYNTHESIS_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_CURSED_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(TRY_NETHER_CRUCIBLE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(TRY_LAVA_CRUCIBLE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_SACRIFICE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(MAKE_RIFT_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(PORTAL_TRADE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(PORTAL_FREEZE_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(PLACE_OCCULT_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(OCCULT_AWAKENING_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_DISPLACEMENT_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_SLOWFALLED_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_LEVITATED_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_ALLAY_SUMMON_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_CRUCIBLE_FAIL_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(BE_TELEPORTED_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(HARVEST_TRIGGER));
-        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_BLAZE_GATHER_TRIGGER));
+        evt.enqueueWork(() -> register(MAKE_CRUCIBLE_TRIGGER));
+        evt.enqueueWork(() -> register(ENDER_PEARL_DISSOLVE_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_SYNTHESIS_TRIGGER));
+        evt.enqueueWork(() -> register(BE_CURSED_TRIGGER));
+        evt.enqueueWork(() -> register(TRY_NETHER_CRUCIBLE_TRIGGER));
+        evt.enqueueWork(() -> register(TRY_LAVA_CRUCIBLE_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_SACRIFICE_TRIGGER));
+        evt.enqueueWork(() -> register(MAKE_RIFT_TRIGGER));
+        evt.enqueueWork(() -> register(PORTAL_TRADE_TRIGGER));
+        evt.enqueueWork(() -> register(PORTAL_FREEZE_TRIGGER));
+        evt.enqueueWork(() -> register(PLACE_OCCULT_TRIGGER));
+        evt.enqueueWork(() -> register(OCCULT_AWAKENING_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_DISPLACEMENT_TRIGGER));
+        evt.enqueueWork(() -> register(BE_SLOWFALLED_TRIGGER));
+        evt.enqueueWork(() -> register(BE_LEVITATED_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_ALLAY_SUMMON_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_CRUCIBLE_FAIL_TRIGGER));
+        evt.enqueueWork(() -> register(BE_TELEPORTED_TRIGGER));
+        evt.enqueueWork(() -> register(HARVEST_TRIGGER));
+        evt.enqueueWork(() -> register(SEE_BLAZE_GATHER_TRIGGER));
         ReactionMan.CRITERIA_BUILDER.register(evt);
+    }
+
+    static void register(FlagTrigger trigger){
+        net.minecraft.advancements.CriteriaTriggers.register(trigger.path(), trigger);
     }
 }

@@ -26,6 +26,10 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
         this.crit_rl = crit_rl;
     }
 
+    public String path(){
+        return crit_rl.getPath();
+    }
+
     public static void triggerForNearbyPlayers(ServerLevel l, FlagTrigger crit, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
@@ -35,6 +39,11 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
 
     @Override
     protected @NotNull FlagTriggerInstance createInstance(JsonObject jsonObject, Optional<ContextAwarePredicate> optional, DeserializationContext deserializationContext) {
+        return new FlagTriggerInstance();
+    }
+
+    @NotNull
+    public FlagTriggerInstance createInstance() {
         return new FlagTriggerInstance();
     }
 

@@ -87,11 +87,6 @@ public class PrecipitateRecipe implements Recipe<Container> {
     public List<Power> getReagents(){ return reagents;}
 
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return Registration.PRECIPITATE_SERIALIZER.get();
     }

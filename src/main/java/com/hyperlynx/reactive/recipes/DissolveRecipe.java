@@ -55,11 +55,6 @@ public class DissolveRecipe implements Recipe<Container> {
     public Ingredient getReactant(){ return reactant; }
 
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return Registration.DISSOLVE_SERIALIZER.get();
     }

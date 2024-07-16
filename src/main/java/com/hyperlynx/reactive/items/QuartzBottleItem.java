@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.sounds.SoundEvents;
@@ -14,6 +14,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 
 public class QuartzBottleItem extends Item {
     public QuartzBottleItem(Properties props) {
@@ -25,13 +26,13 @@ public class QuartzBottleItem extends Item {
         private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
 
         @Override
-        public ItemStack dispense(BlockSource source, ItemStack stack) {
-            BlockPos target = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            if(!(source.getLevel().getBlockState(target).getBlock() instanceof CrucibleBlock)){
+        public @NotNull ItemStack dispense(BlockSource source, @NotNull ItemStack stack) {
+            BlockPos target = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+            if(!(source.level().getBlockState(target).getBlock() instanceof CrucibleBlock)){
                 return defaultDispenseItemBehavior.dispense(source, stack);
             }
 
-            CrucibleBlockEntity crucible = (CrucibleBlockEntity) source.getLevel().getBlockEntity(target);
+            CrucibleBlockEntity crucible = (CrucibleBlockEntity) source.level().getBlockEntity(target);
             if(crucible == null) {
                 return defaultDispenseItemBehavior.dispense(source, stack);
             }
@@ -42,10 +43,10 @@ public class QuartzBottleItem extends Item {
                 if(crucible.getPowerLevel(p) > PowerBottleItem.BOTTLE_COST){
                     crucible.expendPower(p, PowerBottleItem.BOTTLE_COST);
                     stack.shrink(1);
-                    source.getLevel().playSound(null, source.getPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
-                    ItemEntity power_bottle_drop = new ItemEntity(source.getLevel(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5,
+                    source.level().playSound(null, source.pos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
+                    ItemEntity power_bottle_drop = new ItemEntity(source.level(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5,
                             SpecialCaseMan.checkBottleSpecialCases(crucible, p.getBottle()));
-                    source.getLevel().addFreshEntity(power_bottle_drop);
+                    source.level().addFreshEntity(power_bottle_drop);
                 }
             }
             crucible.setDirty();

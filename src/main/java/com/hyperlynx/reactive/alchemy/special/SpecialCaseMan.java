@@ -545,7 +545,7 @@ public class SpecialCaseMan {
                     CriteriaTriggers.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
                 }
             }
-            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.get(), SoundSource.BLOCKS, 1, 1);
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.value(), SoundSource.BLOCKS, 1, 1);
         }
     }
 
