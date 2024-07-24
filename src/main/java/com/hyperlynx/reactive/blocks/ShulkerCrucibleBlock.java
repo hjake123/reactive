@@ -4,7 +4,6 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.items.ShulkerCrucibleItem;
-import com.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +25,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
     // Drop a ShulkerCrucibleBlock BlockItem with block entity data saved.
     // This negates the need for loot tables to be applied to this block.
     @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof CrucibleBlockEntity crucible) {
             if (!level.isClientSide) {
@@ -44,6 +43,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
         }
 
         super.playerWillDestroy(level, pos, state, player);
+        return state;
     }
 
     private static String getItemLabel(CrucibleBlockEntity crucible){

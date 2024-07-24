@@ -15,11 +15,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -27,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class DisplacedBlock extends Block implements EntityBlock {
     public DisplacedBlock() {
-        super(Properties.copy(Blocks.GLASS)
+        super(Properties.ofFullCopy(Blocks.GLASS)
                 .isViewBlocking((BlockState state, BlockGetter getter, BlockPos pos) -> false)
                 .noOcclusion()
                 .noLootTable()
@@ -147,13 +149,13 @@ public class DisplacedBlock extends Block implements EntityBlock {
 
     // Middle click brings up the block being displaced.
     @Override
-    public ItemStack getCloneItemStack(BlockGetter getter, BlockPos pos, BlockState state) {
-        BlockEntity entity = getter.getBlockEntity(pos);
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        BlockEntity entity = level.getBlockEntity(pos);
         if(!(entity instanceof DisplacedBlockEntity displaced_entity))
             return ItemStack.EMPTY;
         if(displaced_entity.getSelfState().getBlock() instanceof DisplacedBlock)
             return ItemStack.EMPTY;
-        return displaced_entity.getSelfState().getBlock().getCloneItemStack(getter, pos, state);
+        return displaced_entity.getSelfState().getBlock().getCloneItemStack(state, target, level, pos, player);
     }
 
     @Nullable

@@ -132,7 +132,7 @@ public abstract class Reaction {
         }
 
         int range = ConfigMan.COMMON.crucibleRange.get();
-        AABB aoe = new AABB(crucible.getBlockPos().offset(-range, -range, -range), crucible.getBlockPos().offset(range, range, range));
+        AABB aoe = new AABB(crucible.getBlockPos().offset(-range, -range, -range).getCenter(), crucible.getBlockPos().offset(range, range, range).getCenter());
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;

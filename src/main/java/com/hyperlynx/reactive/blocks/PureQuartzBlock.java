@@ -2,15 +2,15 @@ package com.hyperlynx.reactive.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class PureQuartzBlock extends AbstractGlassBlock {
+public class PureQuartzBlock extends TransparentBlock {
     public PureQuartzBlock(Properties prop) {
         super(prop);
     }

@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.GravityBeamBlockEntity;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -18,11 +19,17 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
 
 public class GravityBeamBlock extends DirectionalBlock implements EntityBlock {
+    public static final MapCodec<GravityBeamBlock> CODEC = simpleCodec(GravityBeamBlock::new);
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
     public GravityBeamBlock(Properties props) {
         super(props);
         registerDefaultState(this.defaultBlockState().setValue(ENABLED, false));
+    }
+
+    @Override
+    protected MapCodec<? extends DirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override

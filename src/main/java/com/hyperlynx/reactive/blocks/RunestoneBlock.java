@@ -1,11 +1,13 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,10 +17,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class RunestoneBlock extends HorizontalDirectionalBlock {
+    public static final MapCodec<RunestoneBlock> CODEC = simpleCodec(RunestoneBlock::new);
 
     public RunestoneBlock(BlockBehaviour.Properties props) {
         super(props);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
+        return CODEC;
     }
 
     @Override
