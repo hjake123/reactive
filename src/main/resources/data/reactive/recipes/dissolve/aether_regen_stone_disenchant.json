@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "aether"
+    }
+  ],
   "type": "reactive:dissolve",
   "reactant": {
     "item": "aether:regeneration_stone"

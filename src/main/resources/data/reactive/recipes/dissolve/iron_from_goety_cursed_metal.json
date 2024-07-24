@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "goety"
+    }
+  ],
   "type": "reactive:dissolve",
   "reactant": {
     "item": "goety:cursed_ingot"

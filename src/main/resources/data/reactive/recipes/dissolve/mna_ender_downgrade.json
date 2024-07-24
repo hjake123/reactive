@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mna"
+    }
+  ],
   "type": "reactive:dissolve",
   "reactant": {
     "item": "mna:greater_mote_ender"

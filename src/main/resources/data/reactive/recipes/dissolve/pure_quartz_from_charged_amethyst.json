@@ -1,4 +1,10 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "hexcasting"
+    }
+  ],
   "type": "reactive:dissolve",
   "reactant": {
     "item": "hexcasting:charged_amethyst"
