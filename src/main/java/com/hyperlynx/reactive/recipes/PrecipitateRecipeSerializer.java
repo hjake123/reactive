@@ -7,6 +7,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -40,7 +41,11 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     @Override
     public @Nullable PrecipitateRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
         ItemStack product = buffer.readItem();
-        List<Power> reagents = buffer.readCollection(ArrayList::new, IFriendlyByteBufExtension::readRegistryId);
+        List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
+        List<Power> reagents = new ArrayList<>();
+        for(var location : reagent_locations){
+            reagents.add(Powers.POWER_REGISTRY.get().get(location));
+        }
         int min = buffer.readInt();
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
@@ -51,7 +56,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     @Override
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
         buffer.writeItem(recipe.product);
-        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_REGISTRY.get(), p));
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
         buffer.writeInt(recipe.reagent_count);

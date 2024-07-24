@@ -95,6 +95,7 @@ public class Power {
     public String getName(){
         return Component.translatable(name).getString();
     }
+    public ResourceLocation getResourceLocation() { return new ResourceLocation(ReactiveMod.MODID, id); }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){

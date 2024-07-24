@@ -41,8 +41,11 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public @Nullable TransmuteRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.fromNetwork(buffer);
         ItemStack product = buffer.readItem();
-        List<Power> reagents = buffer.readCollection(ArrayList::new, IFriendlyByteBufExtension::readRegistryId);
-        int min = buffer.readVarInt();
+        List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
+        List<Power> reagents = new ArrayList<>();
+        for(var location : reagent_locations){
+            reagents.add(Powers.POWER_REGISTRY.get().get(location));
+        }        int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();
         return new TransmuteRecipe("transmutation", reactant, product, reagents, min, cost, needs_electricity);
@@ -52,7 +55,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
         recipe.reactant.toNetwork(buffer);
         buffer.writeItem(recipe.product);
-        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeRegistryId(Powers.POWER_REGISTRY.get(), p));
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
         buffer.writeVarInt(recipe.minimum);
         buffer.writeVarInt(recipe.cost);
         buffer.writeBoolean(recipe.needs_electricity);
