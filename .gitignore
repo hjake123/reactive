@@ -29,3 +29,5 @@ img/pointer_demo.gif
 
 src/generated/
 LATEST_CHANGELOG.md
+/runs/
+/runs/client/
