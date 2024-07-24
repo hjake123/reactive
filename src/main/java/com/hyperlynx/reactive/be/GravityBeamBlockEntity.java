@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class GravityBeamBlockEntity extends BlockEntity {
     public GravityBeamBlockEntity(BlockPos pos, BlockState state) {
@@ -31,7 +32,7 @@ public class GravityBeamBlockEntity extends BlockEntity {
             return;
         }
         BlockHitResult hit = BeamHelper.rayTrace(level, start_pos(pos, state.getValue(GravityBeamBlock.FACING)),
-                xrot(state), yrot(state), ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32, null);
+                xrot(state), yrot(state), ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32, null, CollisionContext.empty());
         Vec3 particle_start = Vec3.atCenterOf(pos);
         particle_start.add(0, 0.1, 0);
         ParticleScribe.drawParticleLine(level, ParticleTypes.END_ROD, particle_start, Vec3.atCenterOf(hit.getBlockPos()), 1, 0.05);

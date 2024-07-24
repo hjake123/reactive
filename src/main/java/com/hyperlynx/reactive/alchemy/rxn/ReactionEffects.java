@@ -162,7 +162,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    CriteriaTriggers.BE_LEVITATED_TRIGGER.trigger(player);
+                    CriteriaTriggers.BE_LEVITATED_TRIGGER.get().trigger(player);
                 }
             }
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
@@ -185,7 +185,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    CriteriaTriggers.BE_SLOWFALLED_TRIGGER.trigger(player);
+                    CriteriaTriggers.BE_SLOWFALLED_TRIGGER.get().trigger(player);
                 }
             }
             ParticleScribe.drawParticleRing(crucible.getLevel(), ParticleTypes.END_ROD, crucible.getBlockPos(), 0.5, 0.6, 1);

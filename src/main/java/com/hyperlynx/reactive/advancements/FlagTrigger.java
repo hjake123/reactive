@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.advancements;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 // Represents an advancement criterion that always occurs when triggered.
 public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerInstance> {
+    public static final FlagTriggerInstance INSTANCE = new FlagTriggerInstance();
 
     private final ResourceLocation crit_rl;
 
@@ -38,28 +40,32 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
     }
 
     @Override
-    protected @NotNull FlagTriggerInstance createInstance(JsonObject jsonObject, Optional<ContextAwarePredicate> optional, DeserializationContext deserializationContext) {
-        return new FlagTriggerInstance();
+    public Codec<FlagTriggerInstance> codec() {
+        return FlagTriggerInstance.CODEC;
     }
 
-    @NotNull
-    public FlagTriggerInstance createInstance() {
-        return new FlagTriggerInstance();
+    public Criterion<FlagTriggerInstance> instance() {
+        return this.createCriterion(new FlagTriggerInstance());
     }
 
-    public class FlagTriggerInstance implements SimpleInstance {
+    public static class FlagTriggerInstance implements SimpleInstance {
+        public static final Codec<FlagTriggerInstance> CODEC = Codec.unit(INSTANCE);
+
+        public FlagTriggerInstance(){
+        }
+
         public boolean matches() {
             return true;
         }
 
         @Override
-        public @NotNull Optional<ContextAwarePredicate> playerPredicate() {
-            return Optional.empty();
+        public void validate(CriterionValidator validator) {
+            SimpleInstance.super.validate(validator);
         }
 
         @Override
-        public JsonObject serializeToJson() {
-            return null;
+        public Optional<ContextAwarePredicate> player() {
+            return Optional.empty();
         }
     }
 

@@ -40,7 +40,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -64,8 +63,7 @@ public class Registration {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, ReactiveMod.MODID);
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ReactiveMod.MODID);
 
-    public static void init() {
-        IEventBus bus = NeoForge.EVENT_BUS;
+    public static void init(IEventBus bus) {
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
@@ -74,6 +72,7 @@ public class Registration {
         PARTICLES.register(bus);
         TILES.register(bus);
         Powers.POWERS.register(bus);
+        CriteriaTriggers.TRIGGERS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
@@ -449,7 +448,6 @@ public class Registration {
 //            ReactiveCreatePlugin.init();
 //        }
 //        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
-        CriteriaTriggers.enqueue(evt);
     }
 
     // Set up the potion items.
@@ -469,7 +467,7 @@ public class Registration {
     }
 
     @SubscribeEvent
-    public void buildContents(BuildCreativeModeTabContentsEvent event) {
+    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == REACTIVE_TAB.getKey()) {
             for(DeferredHolder<Item, ? extends Item> item_holder : ITEMS.getEntries()){
                 event.accept(item_holder.get());

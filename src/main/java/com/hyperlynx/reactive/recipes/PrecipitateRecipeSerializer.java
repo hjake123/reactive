@@ -26,7 +26,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     public static final Codec<PrecipitateRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(PrecipitateRecipe::getGroup),
             ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
-            Powers.POWER_REGISTRY.get().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
+            Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(PrecipitateRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(PrecipitateRecipe::getCost),
             Codec.INT.fieldOf("reagent_count").forGetter(PrecipitateRecipe::getReagentCount),
@@ -44,7 +44,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
-            reagents.add(Powers.POWER_REGISTRY.get().get(location));
+            reagents.add(Powers.POWERS.getRegistry().get().get(location));
         }
         int min = buffer.readInt();
         int cost = buffer.readInt();

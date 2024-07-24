@@ -7,16 +7,30 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+
 import java.util.function.Supplier;
 
 // Registers the Alchemical Powers.
+@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
 public class Powers {
     // Handles registration of Powers.
     public static final ResourceKey<Registry<Power>> POWER_REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(ReactiveMod.MODID, "powers"));
-    public static final DeferredRegister<Power> POWERS = DeferredRegister.create(POWER_REGISTRY_KEY, ReactiveMod.MODID);
-    public static final Supplier<Registry<Power>> POWER_REGISTRY = POWERS.getRegistry();
+    public static final Registry<Power> POWER_REGISTRY = new RegistryBuilder<>(POWER_REGISTRY_KEY)
+            .sync(true)
+            .defaultKey(new ResourceLocation(ReactiveMod.MODID, "nothing"))
+            .create();
+    public static final DeferredRegister<Power> POWERS = DeferredRegister.create(POWER_REGISTRY, ReactiveMod.MODID);
+
+    @SubscribeEvent
+    public static void registerRegistries(NewRegistryEvent event) {
+        event.register(POWER_REGISTRY);
+    }
 
     public static final DeferredHolder<Power, Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze", 0xFFA300, Registration.BLAZE_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind", 0x7A5BB5, Registration.MIND_BOTTLE.get()));

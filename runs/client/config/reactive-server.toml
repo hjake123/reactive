@@ -1,0 +1,18 @@
+
+#World Specific Value Options:
+[wsv]
+	#The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!
+	#Range: -9223372036854775808 ~ 9223372036854775807
+	seed = -2540158132583979343
+	#Whether to reset the seed to your world seed when loading.
+	resetSeed = false
+
+#Mod Integration Options:
+[integration]
+	#:Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]
+	#Range: 0.05 ~ 0.95
+	pehkuiSmallSize = 0.65
+	#:Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]
+	#Range: 1.05 ~ 10.0
+	pehkuiLargeSize = 1.33
+

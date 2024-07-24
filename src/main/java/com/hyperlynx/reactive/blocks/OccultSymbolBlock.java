@@ -44,7 +44,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if(entity instanceof ServerPlayer){
-            CriteriaTriggers.PLACE_OCCULT_TRIGGER.trigger((ServerPlayer) entity);
+            CriteriaTriggers.PLACE_OCCULT_TRIGGER.get().trigger((ServerPlayer) entity);
         }
     }
 
@@ -127,7 +127,7 @@ public class OccultSymbolBlock extends SymbolBlock{
                 // A Bottle of Mind was extracted.
                 if(player.experienceLevel > 4){
                     if(player instanceof ServerPlayer splayer){
-                        HARVEST_TRIGGER.trigger(splayer);
+                        HARVEST_TRIGGER.get().trigger(splayer);
                     }
                     player.giveExperienceLevels(-4);
                     player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 150, 2));

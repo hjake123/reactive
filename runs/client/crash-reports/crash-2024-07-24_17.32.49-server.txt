@@ -1,0 +1,149 @@
+---- Minecraft Crash Report ----
+// You're mean.
+
+Time: 2024-07-24 17:32:49
+Description: Ticking block entity
+
+java.lang.NullPointerException: Cannot invoke "net.minecraft.world.entity.Entity.isDescending()" because "pEntity" is null
+	at net.minecraft.world.phys.shapes.EntityCollisionContext.<init>(EntityCollisionContext.java:38) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.phys.shapes.CollisionContext.of(CollisionContext.java:14) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.ClipContext.<init>(ClipContext.java:24) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at com.hyperlynx.reactive.util.BeamHelper.rayTrace(BeamHelper.java:28) ~[%23193!/:?] {re:classloading}
+	at com.hyperlynx.reactive.be.GravityBeamBlockEntity.tick(GravityBeamBlockEntity.java:33) ~[%23193!/:?] {re:classloading}
+	at com.hyperlynx.reactive.blocks.GravityBeamBlock.lambda$getTicker$0(GravityBeamBlock.java:62) ~[%23193!/:?] {re:classloading}
+	at net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:691) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:771) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.Level.tickBlockEntities(Level.java:582) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:412) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:999) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:885) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:112) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:718) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:255) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:840) ~[?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.minecraft.world.phys.shapes.EntityCollisionContext.<init>(EntityCollisionContext.java:38) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.phys.shapes.CollisionContext.of(CollisionContext.java:14) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.ClipContext.<init>(ClipContext.java:24) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at com.hyperlynx.reactive.util.BeamHelper.rayTrace(BeamHelper.java:28) ~[%23193!/:?] {re:classloading}
+	at com.hyperlynx.reactive.be.GravityBeamBlockEntity.tick(GravityBeamBlockEntity.java:33) ~[%23193!/:?] {re:classloading}
+	at com.hyperlynx.reactive.blocks.GravityBeamBlock.lambda$getTicker$0(GravityBeamBlock.java:62) ~[%23193!/:?] {re:classloading}
+	at net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:691) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:771) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.Level.tickBlockEntities(Level.java:582) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+-- Block entity being ticked --
+Details:
+	Name: reactive:gravity_beam_be // com.hyperlynx.reactive.be.GravityBeamBlockEntity
+	Block: Block{reactive:gravity_beam}[enabled=true,facing=up]
+	Block location: World: (1,-60,-4), Section: (at 1,4,12 in 0,-4,-1; chunk contains blocks 0,-64,-16 to 15,319,-1), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+	Block: Block{reactive:gravity_beam}[enabled=true,facing=up]
+	Block location: World: (1,-60,-4), Section: (at 1,4,12 in 0,-4,-1; chunk contains blocks 0,-64,-16 to 15,319,-1), Region: (0,-1; contains chunks 0,-32 to 31,-1, blocks 0,-64,-512 to 511,319,-1)
+Stacktrace:
+	at net.minecraft.world.level.chunk.LevelChunk$BoundTickingBlockEntity.tick(LevelChunk.java:691) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.chunk.LevelChunk$RebindableTickingBlockEntityWrapper.tick(LevelChunk.java:771) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading}
+	at net.minecraft.world.level.Level.tickBlockEntities(Level.java:582) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:412) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:999) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:885) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:112) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:718) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:255) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:840) ~[?:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 0 total; []
+	Chunk stats: 2209
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (0,-60,0), Section: (at 0,4,0 in 0,-4,0; chunk contains blocks 0,-64,0 to 15,319,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,-64,0 to 511,319,511)
+	Level time: 1466 game time, 1466 day time
+	Level name: Blank
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+	Level weather: Rain time: 162679 (now: false), thunder time: 141874 (now: false)
+	Known server brands: neoforge
+	Removed feature flags: 
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+	Loaded entity count: 0
+Stacktrace:
+	at net.minecraft.server.level.ServerLevel.fillReportDetails(ServerLevel.java:1740) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1002) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:885) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:112) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:718) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:255) ~[neoforge-20.4.237.jar%23192!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:840) ~[?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.20.4
+	Minecraft Version ID: 1.20.4
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 17.0.11, Amazon.com Inc.
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Amazon.com Inc.
+	Memory: 784815032 bytes (748 MiB) / 2170552320 bytes (2070 MiB) up to 4280287232 bytes (4082 MiB)
+	CPUs: 8
+	Processor Vendor: GenuineIntel
+	Processor Name: Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz
+	Identifier: Intel64 Family 6 Model 158 Stepping 9
+	Microarchitecture: Kaby Lake
+	Frequency (GHz): 4.20
+	Number of physical packages: 1
+	Number of physical CPUs: 4
+	Number of logical CPUs: 8
+	Graphics card #0 name: NVIDIA GeForce RTX 3060 Ti
+	Graphics card #0 vendor: NVIDIA (0x10de)
+	Graphics card #0 VRAM (MB): 4095.00
+	Graphics card #0 deviceId: 0x2489
+	Graphics card #0 versionInfo: DriverVersion=31.0.15.5222
+	Memory slot #0 capacity (MB): 8192.00
+	Memory slot #0 clockSpeed (GHz): 2.40
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MB): 8192.00
+	Memory slot #1 clockSpeed (GHz): 2.40
+	Memory slot #1 type: DDR4
+	Virtual memory max (MB): 21966.08
+	Virtual memory used (MB): 19525.38
+	Swap memory total (MB): 5642.27
+	Swap memory used (MB): 1160.70
+	JVM Flags: 1 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	Server Running: true
+	Player Count: 0 / 8; []
+	Data Packs: vanilla, mod_data, mod:reactive (incompatible), mod:neoforge
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Launched Version: 20.4.237
+	ModLauncher: 10.0.9+10.0.9+main.dcd20f30
+	ModLauncher launch target: forgeclientuserdev
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		sponge-mixin-0.13.1+mixin.0.8.5.jar mixin PLUGINSERVICE 
+		loader-2.0.17.jar slf4jfixer PLUGINSERVICE 
+		loader-2.0.17.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-10.0.1.jar accesstransformer PLUGINSERVICE 
+		loader-2.0.17.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-10.0.9.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-10.0.9.jar mixin-synthetic-package TRANSFORMATIONSERVICE 
+		modlauncher-10.0.9.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@2.0
+		lowcodefml@2.0
+		minecraft@2.0
+	Mod List: 
+		neoforge-20.4.237.jar                             |Minecraft                     |minecraft                     |1.20.4              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		main                                              |Reactive                      |reactive                      |1.20.4-dev          |DONE      |Manifest: NOSIGNATURE
+		                                                  |NeoForge                      |neoforge                      |20.4.237            |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: 95e18429-8811-41f4-bc7f-5b9f0c523f6d
+	FML: 20.4
+	NeoForge: net.neoforged:20.4.237

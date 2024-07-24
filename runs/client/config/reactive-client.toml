@@ -1,0 +1,10 @@
+
+#Client Side Options:
+[config]
+	#Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.
+	showPowerSources = false
+	#Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.
+	doNotChangeWaterTexture = false
+	#Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.
+	colorizeLitmusOutput = true
+

@@ -1,8 +1,10 @@
 package com.hyperlynx.reactive;
 
+import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -13,14 +15,12 @@ public class ReactiveMod
 {
     public static final String MODID = "reactive";
     public static final ReactionMan REACTION_MAN = new ReactionMan();
-    public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
-    public ReactiveMod() {
-        Registration.init();
+    public ReactiveMod(IEventBus reactive_bus) {
+        Registration.init(reactive_bus);
         if(Dist.CLIENT.isClient())
-            ClientRegistration.init();
-        NeoForge.EVENT_BUS.register(this);
+            ClientRegistration.init(reactive_bus);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
-        NeoForge.EVENT_BUS.register(WORLD_SPECIFIC_VALUE);
+        NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);

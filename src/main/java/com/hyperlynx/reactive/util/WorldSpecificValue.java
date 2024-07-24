@@ -67,8 +67,7 @@ public class WorldSpecificValue {
     }
 
     // Sets the seed in the config to your world seed if that option is selected.
-    @SubscribeEvent
-    public void worldLoad(LevelEvent.Load event){
+    public static void worldLoad(LevelEvent.Load event){
         if(event.getLevel().isClientSide())
             return;
         long world_seed = event.getLevel().getServer().getLevel(Level.OVERWORLD).getSeed();

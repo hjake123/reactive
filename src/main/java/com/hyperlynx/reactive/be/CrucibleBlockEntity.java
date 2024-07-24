@@ -242,7 +242,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             level.addFreshEntity(dropped_shell);
         }
         if(level instanceof ServerLevel slevel)
-            FlagTrigger.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER, pos, 24);
+            FlagTrigger.triggerForNearbyPlayers(slevel, SEE_CRUCIBLE_FAIL_TRIGGER.get(), pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
             level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
         else
@@ -291,7 +291,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -299,7 +299,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER, crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -512,7 +512,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         sacrificeCount++;
-        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER, getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();

@@ -53,7 +53,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public static boolean displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
         // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
         if(!level.isClientSide)
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER, pos, 16);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER.get(), pos, 16);
         return displaceWithChain(state_to_be_displaced, pos, level, duration, 0, null);
     }
 

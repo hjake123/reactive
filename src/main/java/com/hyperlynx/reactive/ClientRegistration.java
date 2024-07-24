@@ -16,8 +16,8 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 public class ClientRegistration {
-    public static void init() {
-        NeoForge.EVENT_BUS.register(ClientRegistration.class);
+    public static void init(IEventBus bus) {
+        bus.register(ClientRegistration.class);
     }
 
     @SubscribeEvent
