@@ -80,7 +80,7 @@ public class DivineSymbolBlock extends SymbolBlock{
                 }
             }
         }else if(Powers.MIND_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(Registration.FAR_REACH.get(), 2800, 0, true, false));
+            player.addEffect(new MobEffectInstance(Registration.FAR_REACH, 2800, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
             accepted = true;
         }else if(Powers.BLAZE_POWER.get().matchesBottle(stack)){
@@ -88,7 +88,7 @@ public class DivineSymbolBlock extends SymbolBlock{
                 player.setTicksFrozen(0);
             else {
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, true, false));
-                player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD.get(), 1900, 0, true, false));
+                player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD, 1900, 0, true, false));
                 player.setRemainingFireTicks(100);
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);

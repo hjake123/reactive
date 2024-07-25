@@ -4,21 +4,22 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.blocks.OccultSymbolBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SimpleFoiledItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
-public class AlchemyScrollItem extends SimpleFoiledItem {
+public class AlchemyScrollItem extends Item {
     public AlchemyScrollItem(Properties props) {
-        super(props);
+        super(props.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     }
 
     @Override

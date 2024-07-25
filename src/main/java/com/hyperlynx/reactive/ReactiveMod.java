@@ -21,9 +21,9 @@ public class ReactiveMod
             ClientRegistration.init(reactive_bus);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
         NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
+        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
     }
 
 }

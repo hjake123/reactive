@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -57,9 +58,7 @@ public class AcidBlock extends Block implements BucketPickup {
             if(stack.getMaxStackSize() > 1){
                 stack.shrink(1);
             }else{
-                boolean broke = stack.hurt(3, level.random, null);
-                if(broke)
-                    stack.setCount(0);
+                stack.hurtAndBreak(3, level.random, (ServerPlayer) null, () -> stack.setCount(0));
             }
             if(stack.getCount() < 1){
                 item.kill();
@@ -70,7 +69,7 @@ public class AcidBlock extends Block implements BucketPickup {
             return;
         }
 
-        if (!(entity instanceof LivingEntity living) || !entity.getFeetBlockState().is(this)) {
+        if (!(entity instanceof LivingEntity living)) {
             return;
         }
         living.makeStuckInBlock(state, new Vec3(0.9F, 1.5D, 0.9F));

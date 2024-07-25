@@ -35,7 +35,7 @@ public class SecretScaleItem extends Item {
             return InteractionResultHolder.pass(player.getItemInHand(hand));;
 
         Vec3 start = player.getEyePosition();
-        Vec3 end = start.add(player.getLookAngle().scale(player.getEntityReach()));
+        Vec3 end = start.add(player.getLookAngle().scale(player.entityInteractionRange()));
         EntityHitResult boatHit = ProjectileUtil.getEntityHitResult(
                 player, start, end, new AABB(start, end), e -> e instanceof Boat, Double.MAX_VALUE
         );

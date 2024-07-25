@@ -20,21 +20,21 @@ public class CrystalIronItem extends Item {
 
     // Return whether the given entity should be subjected to an effect (i.e. if there was no Crystal Iron blocking it.
     // Also damages the item if necessary.
-    public static boolean effectNotBlocked(LivingEntity e, int cost) {
-        if(e.isHolding(Registration.CRYSTAL_IRON.get())) {
+    public static boolean effectNotBlocked(LivingEntity entity, int cost) {
+        if(entity.isHolding(Registration.CRYSTAL_IRON.get())) {
             if(cost > 0) {
-                if (e.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
-                    e.getOffhandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
+                if (entity.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
+                    entity.getOffhandItem().hurtAndBreak(cost, entity, entity.getOffhandItem().getEquipmentSlot());
                 } else {
-                    e.getMainHandItem().hurtAndBreak(cost, e, (LivingEntity l) -> {});
+                    entity.getMainHandItem().hurtAndBreak(cost, entity, entity.getMainHandItem().getEquipmentSlot());
                 }
             }
             return false;
-        }else if(e instanceof Player && ((Player) e).getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
+        }else if(entity instanceof Player player && player.getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
             if(cost > 0){
-                for(ItemStack stack : ((Player) e).getInventory().items){
+                for(ItemStack stack : player.getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){
-                        stack.hurtAndBreak(cost, (Player) e, (Player s) -> {});
+                        stack.hurtAndBreak(cost, player.level().random, player, () -> {});
                         return false;
                     }
                 }

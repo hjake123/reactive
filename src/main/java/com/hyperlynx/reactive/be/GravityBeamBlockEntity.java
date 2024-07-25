@@ -41,7 +41,7 @@ public class GravityBeamBlockEntity extends BlockEntity {
                 Vec3.atCenterOf(hit.getBlockPos()).add(0.1, 0.1, 0.1));
         for(Entity target : level.getEntitiesOfClass(Entity.class, effect_region)){
             if(target instanceof LivingEntity victim){
-                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY.get(), 5));
+                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY, 5));
                 victim.resetFallDistance();
             }else if(target instanceof ItemEntity item) {
                 item.setNoGravity(true);

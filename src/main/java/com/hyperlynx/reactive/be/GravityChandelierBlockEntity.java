@@ -39,7 +39,7 @@ public class GravityChandelierBlockEntity extends BlockEntity {
             if(target instanceof ItemEntity){
                 target.setNoGravity(true);
             }else if(target instanceof LivingEntity victim){
-                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY.get(), 10));
+                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY, 10));
                 victim.resetFallDistance();
             }
         }

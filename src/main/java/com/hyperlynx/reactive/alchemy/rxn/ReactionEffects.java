@@ -23,7 +23,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
@@ -240,7 +239,7 @@ public class ReactionEffects {
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
             e.hurt(c.getLevel().damageSources().inFire(), 7);
-            e.setSecondsOnFire(7);
+            e.setRemainingFireTicks(140);
         }
         return c;
     }
@@ -253,9 +252,9 @@ public class ReactionEffects {
         List<Monster> nearby_monsters = c.getLevel().getEntitiesOfClass(Monster.class, aoe);
 
         for(Monster m : nearby_monsters){
-            if(m.getMobType().equals(MobType.UNDEAD) && m.getPosition(0).distanceTo(c.getBlockPos().getCenter()) < range){
+            if(m.getTarget().isInvertedHealAndHarm() && m.getPosition(0).distanceTo(c.getBlockPos().getCenter()) < range){
                 m.hurt(c.getLevel().damageSources().inFire(), 3);
-                m.setSecondsOnFire(5);
+                m.setRemainingFireTicks(100);
             }
         }
 
@@ -302,7 +301,7 @@ public class ReactionEffects {
                     MobEffectInstance stop = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50);
                     player.addEffect(stop);
                 }else {
-                    MobEffectInstance stop = new MobEffectInstance(Registration.IMMOBILE.get(), 50, 0, true, false, true);
+                    MobEffectInstance stop = new MobEffectInstance(Registration.IMMOBILE, 50, 0, true, false, true);
                     living.addEffect(stop);
                 }
             }
