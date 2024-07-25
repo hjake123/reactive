@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 *This class creates a FlagCriterion for each Reaction alias string it is fed.
@@ -33,10 +35,11 @@ public class ReactionCriteriaBuilder {
 
     @SubscribeEvent
     public void register(RegisterEvent event) {
-        for(String key : criteria.keySet()){
-            event.register(BuiltInRegistries.TRIGGER_TYPES.key(), new ResourceLocation(ReactiveMod.MODID, key), () -> criteria.get(key));
+        if(event.getRegistryKey().equals(BuiltInRegistries.TRIGGER_TYPES.key())) {
+            for (String key : criteria.keySet()) {
+                event.register(BuiltInRegistries.TRIGGER_TYPES.key(), new ResourceLocation(ReactiveMod.MODID, criteria.get(key).path()), () -> criteria.get(key));
+            }
         }
-
     }
 
     public List<String> getAliases(){
