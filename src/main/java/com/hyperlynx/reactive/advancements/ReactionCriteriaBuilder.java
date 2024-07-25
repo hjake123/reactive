@@ -1,8 +1,14 @@
 package com.hyperlynx.reactive.advancements;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,10 +31,12 @@ public class ReactionCriteriaBuilder {
         criteria.put(alias+"_perfect", perfect_criterion);
     }
 
-    public void register(FMLCommonSetupEvent evt){
+    @SubscribeEvent
+    public void register(RegisterEvent event) {
         for(String key : criteria.keySet()){
-            evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(key, criteria.get(key)));
+            event.register(BuiltInRegistries.TRIGGER_TYPES.key(), new ResourceLocation(ReactiveMod.MODID, key), () -> criteria.get(key));
         }
+
     }
 
     public List<String> getAliases(){

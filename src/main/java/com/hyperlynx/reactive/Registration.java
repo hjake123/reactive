@@ -2,6 +2,7 @@ package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
@@ -73,6 +74,7 @@ public class Registration {
         TILES.register(bus);
         Powers.POWERS.register(bus);
         CriteriaTriggers.TRIGGERS.register(bus);
+        bus.addListener(ReactionMan.CRITERIA_BUILDER::register);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);

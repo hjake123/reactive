@@ -20,8 +20,6 @@ import java.util.Optional;
 
 // Represents an advancement criterion that always occurs when triggered.
 public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerInstance> {
-    public static final FlagTriggerInstance INSTANCE = new FlagTriggerInstance();
-
     private final ResourceLocation crit_rl;
 
     public FlagTrigger(ResourceLocation crit_rl){
@@ -45,13 +43,17 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
     }
 
     public Criterion<FlagTriggerInstance> instance() {
-        return this.createCriterion(new FlagTriggerInstance());
+        return this.createCriterion(new FlagTriggerInstance(Optional.empty()));
     }
 
     public static class FlagTriggerInstance implements SimpleInstance {
-        public static final Codec<FlagTriggerInstance> CODEC = Codec.unit(INSTANCE);
+        public static final Codec<FlagTriggerInstance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(FlagTriggerInstance::player)
+        ).apply(instance, FlagTriggerInstance::new));
 
-        public FlagTriggerInstance(){
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        public FlagTriggerInstance(Optional<ContextAwarePredicate> player){
+
         }
 
         public boolean matches() {
