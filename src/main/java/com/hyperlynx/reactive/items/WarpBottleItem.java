@@ -3,11 +3,9 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import net.minecraft.core.BlockPos;
+import com.hyperlynx.reactive.components.ReactiveDataComponents;
+import com.hyperlynx.reactive.components.WarpBottleTarget;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -28,19 +26,13 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class WarpBottleItem extends PowerBottleItem{
-    public static final String TAG_TELEPORT_DESTINATION = "TeleportPos";
-    public static final String TAG_TELEPORT_DIMENSION = "TeleportDimension";
-
     public WarpBottleItem(Properties props, Block block) {
         super(props, block);
     }
 
     // Make a Warp Bottle into a Rift Bottle.
     public static ItemStack makeRiftBottle(CrucibleBlockEntity c, ItemStack bottle){
-        if(bottle.getTag() == null){
-            bottle.setTag(new CompoundTag());
-        }
-        addTeleportTags(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos(), bottle.getTag());
+        setTeleportTarget(bottle, GlobalPos.of(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos()));
         c.enderRiftStrength = 0;
         return bottle;
     }
@@ -77,9 +69,9 @@ public class WarpBottleItem extends PowerBottleItem{
 
     public static boolean attemptWarp(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         boolean warp_occurred = false;
-        CompoundTag tag = player.getItemInHand(hand).getTag();
-        if(tag != null && level.dimension().equals(getTeleportDimension(tag).orElse(null))){
-            GlobalPos destination = getTeleportPosition(tag);
+        var stack = player.getItemInHand(hand);
+        if(level.dimension().equals(getTeleportDimension(stack).orElse(null))){
+            GlobalPos destination = getTeleportPosition(stack);
             if(destination != null) {
                 if (CrystalIronItem.effectNotBlocked(player, 1)) {
                     player.teleportTo(destination.pos().getX() + 0.5, destination.pos().getY() + 0.85, destination.pos().getZ() + 0.5);
@@ -102,14 +94,12 @@ public class WarpBottleItem extends PowerBottleItem{
         return super.getMaxStackSize(stack);
     }
 
-    public static void addTeleportTags(ResourceKey<Level> lkey, BlockPos pos, CompoundTag tag) {
-        tag.put(TAG_TELEPORT_DESTINATION, NbtUtils.writeBlockPos(pos));
-        Level.RESOURCE_KEY_CODEC.encodeStart(NbtOps.INSTANCE, lkey).result().ifPresent((dim_key) -> tag.put(TAG_TELEPORT_DIMENSION, dim_key));
+    public static void setTeleportTarget(ItemStack stack, GlobalPos target) {
+        stack.set(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get(), new WarpBottleTarget(target));
     }
 
     public static boolean isRiftBottle(ItemStack stack){
-        CompoundTag compoundtag = stack.getTag();
-        return compoundtag != null && compoundtag.contains(TAG_TELEPORT_DESTINATION);
+        return stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.value());
     }
 
     @Override
@@ -117,21 +107,19 @@ public class WarpBottleItem extends PowerBottleItem{
         return isRiftBottle(stack) ? Component.translatable("item.reactive.linked_warp_bottle") : super.getName(stack);
     }
 
-    private static Optional<ResourceKey<Level>> getTeleportDimension(CompoundTag p_40728_) {
-        return Level.RESOURCE_KEY_CODEC.parse(NbtOps.INSTANCE, p_40728_.get(TAG_TELEPORT_DIMENSION)).result();
+    private static Optional<ResourceKey<Level>> getTeleportDimension(ItemStack stack) {
+        if (stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get())) {
+            return Optional.of(Objects.requireNonNull(stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get())).target().dimension());
+        }
+        return Optional.empty();
     }
 
-    public static GlobalPos getTeleportPosition(CompoundTag p_220022_) {
-        boolean flag = p_220022_.contains(TAG_TELEPORT_DESTINATION);
-        boolean flag1 = p_220022_.contains(TAG_TELEPORT_DIMENSION);
-        if (flag && flag1) {
-            Optional<ResourceKey<Level>> optional = getTeleportDimension(p_220022_);
-            if (optional.isPresent()) {
-                BlockPos blockpos = NbtUtils.readBlockPos(p_220022_.getCompound(TAG_TELEPORT_DESTINATION));
-                return GlobalPos.of(optional.get(), blockpos);
-            }
+    public static GlobalPos getTeleportPosition(ItemStack stack) {
+        WarpBottleTarget target = stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get());
+        if(target == null){
+            return null;
         }
-        return null;
+        return target.target();
     }
 
 }
