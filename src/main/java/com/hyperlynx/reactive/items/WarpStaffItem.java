@@ -1,19 +1,20 @@
 package com.hyperlynx.reactive.items;
 
+import com.hyperlynx.reactive.components.BoundEntity;
+import com.hyperlynx.reactive.components.ReactiveDataComponents;
+import com.hyperlynx.reactive.components.TutorialFlag;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -38,14 +40,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class WarpStaffItem extends StaffItem{
-    public static final String TAG_BOUND_ENTITY_UUID = "BoundEntityUUID";
-    public static final String TAG_CUSTOM_MODEL_DATA = "CustomModelData";
-    public static final String TAG_TUTORIAL_FINISHED = "TutorialFinished";
-    public static final String TAG_BOUND_ENTITY_NAME = "BoundEntityName";
-
-    // public static final String TAG_BOUND_ENTITY_ID = "BoundEntityId";
-    // private static final int RANGE_SQUARED = 40000;
-
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
         super(block, props, null, false, 1, repair_item);
     }
@@ -66,19 +60,19 @@ public class WarpStaffItem extends StaffItem{
     }
 
     public static boolean hasBoundEntity(ItemStack stack){
-        return stack.hasTag() && stack.getTag().contains(TAG_BOUND_ENTITY_UUID);
+        return stack.has(ReactiveDataComponents.BOUND_ENTITY);
     }
 
     public @Nullable Entity getBoundEntity(Level level, ItemStack stack){
-        if(!stack.hasTag())
+        if(!stack.has(ReactiveDataComponents.BOUND_ENTITY))
             return null;
         if(!(level instanceof ServerLevel server))
             return null;
-        return server.getEntity(stack.getTag().getUUID(TAG_BOUND_ENTITY_UUID));
+        return server.getEntity(Objects.requireNonNull(stack.get(ReactiveDataComponents.BOUND_ENTITY)).uuid());
     }
 
     public static void tryShowTutorial(Player user, ItemStack stack){
-        if(!stack.hasTag() || !stack.getTag().contains(TAG_TUTORIAL_FINISHED)){
+        if(!stack.has(ReactiveDataComponents.TUTORIAL_DONE)){
             user.displayClientMessage(Component.translatable("message.reactive.warp_staff_tutorial"), true);
         }
     }
@@ -90,11 +84,11 @@ public class WarpStaffItem extends StaffItem{
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
-        super.appendHoverText(stack, level, hover_text, tooltip_flag);
-        if(level != null && hasBoundEntity(stack)){
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
+        super.appendHoverText(stack, context, hover_text, tooltip_flag);
+        if(hasBoundEntity(stack)){
             hover_text.add(Component.translatable("tooltip.reactive.entity_bound")
-                    .append(stack.getTag().getString(TAG_BOUND_ENTITY_NAME)));
+                    .append(stack.get(ReactiveDataComponents.BOUND_ENTITY).name()));
         }else{
             hover_text.add(Component.translatable("tooltip.reactive.no_entity_bound"));
         }
@@ -109,15 +103,13 @@ public class WarpStaffItem extends StaffItem{
             // Draw the particles and update the model data or unbind invalid or too distant entities.
             if(bound != null) {
                 ParticleScribe.drawParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
-                stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(1));
-            }else {
-                stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
+                stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
+            }else{
+                stack.remove(ReactiveDataComponents.BOUND_ENTITY);
             }
 
         }else{
-            stack.getTag().put(TAG_CUSTOM_MODEL_DATA, IntTag.valueOf(0));
-            if(stack.getTag().contains(TAG_BOUND_ENTITY_NAME))
-                stack.getTag().remove(TAG_BOUND_ENTITY_NAME);
+            stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(0));
         }
     }
 
@@ -156,18 +148,15 @@ public class WarpStaffItem extends StaffItem{
                 }
                 // Select the entity.
                 if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId()) && !(entityHit.getEntity() instanceof Player)) {
-                    if(!stack.hasTag()){
-                        stack.setTag(new CompoundTag());
-                    }
-                    if(entityHit.getEntity() instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
+                    Entity entity = entityHit.getEntity();
+                    if(entity instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
                         man.hurt(user.damageSources().magic(), 1);
                         man.setBeingStaredAt();
                         user.getCooldowns().addCooldown(stack.getItem(), 100);
                     }else{
-                        stack.getTag().put(TAG_BOUND_ENTITY_UUID, NbtUtils.createUUID(entityHit.getEntity().getUUID()));
-                        stack.getTag().put(TAG_TUTORIAL_FINISHED, IntTag.valueOf(1));
-                        stack.getTag().put(TAG_BOUND_ENTITY_NAME,
-                                StringTag.valueOf(entityHit.getEntity().hasCustomName() ? entityHit.getEntity().getCustomName().getString() : entityHit.getEntity().getName().getString()));
+                        String name = entity.hasCustomName() ? entity.getCustomName().getString() : entity.getName().getString();
+                        stack.set(ReactiveDataComponents.BOUND_ENTITY, new BoundEntity(name, entityHit.getEntity().getUUID()));
+                        stack.set(ReactiveDataComponents.TUTORIAL_DONE, Unit.INSTANCE);
                     }
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
@@ -183,7 +172,7 @@ public class WarpStaffItem extends StaffItem{
                     zap(user, beam_end, ParticleTypes.REVERSE_PORTAL);
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 }
-                stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
+                stack.remove(ReactiveDataComponents.BOUND_ENTITY);
                 stack.hurtAndBreak(1, user, (unused) -> {
                 });
                 return InteractionResultHolder.success(stack);
