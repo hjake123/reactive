@@ -52,6 +52,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 
@@ -794,5 +795,4 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             integrity = main_tag.getInt("integrity");
         sculkSpreader.load(main_tag);
     }
-
 }

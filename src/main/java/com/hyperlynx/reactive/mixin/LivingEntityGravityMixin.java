@@ -13,7 +13,7 @@ public abstract class LivingEntityGravityMixin {
 
     @Inject(method = "shouldDiscardFriction", at = @At("RETURN"), cancellable = true)
     public void onShouldDiscardFriction(CallbackInfoReturnable<Boolean> cir) {
-        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY.get())){
+        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)){
             if(!(((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown())){
                 cir.setReturnValue(true);
             }
@@ -22,7 +22,7 @@ public abstract class LivingEntityGravityMixin {
 
     @Inject(method = "getFrictionInfluencedSpeed", at = @At("RETURN"), cancellable = true)
     public void onGetFrictionInfluencedSpeed(CallbackInfoReturnable<Float> cir) {
-        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY.get())){
+        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)){
             cir.setReturnValue((((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown()) ? 0.05f : 0f);
             ((LivingEntity) (Object) this).resetFallDistance();
         }

@@ -12,7 +12,7 @@ import net.neoforged.neoforge.event.entity.living.LivingEvent;
 public class EffectHandlers {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event){
-        if(event.getEntity().hasEffect(Registration.FIRE_SHIELD.get()) && event.getSource().getDirectEntity() != null && !event.getSource().getDirectEntity().fireImmune()){
+        if(event.getEntity().hasEffect(Registration.FIRE_SHIELD) && event.getSource().getDirectEntity() != null && !event.getSource().getDirectEntity().fireImmune()){
             event.getSource().getDirectEntity().hurt(event.getEntity().damageSources().inFire(), 2);
             event.getSource().getDirectEntity().setSecondsOnFire(5);
             float damage = event.getAmount();
@@ -24,7 +24,7 @@ public class EffectHandlers {
     }
     @SubscribeEvent(priority= EventPriority.LOWEST)
     public static void onJump(LivingEvent.LivingJumpEvent event) {
-        if(event.getEntity().hasEffect(Registration.IMMOBILE.get())){
+        if(event.getEntity().hasEffect(Registration.IMMOBILE)){
             event.getEntity().setJumping(false);
             event.getEntity().setDeltaMovement(0, 0, 0);
         }

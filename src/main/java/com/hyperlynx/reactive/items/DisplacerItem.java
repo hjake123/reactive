@@ -30,8 +30,8 @@ public class DisplacerItem extends Item {
         double ATTACK_DAMAGE = 3.5;
         double ATTACK_SPEED = -3;
         ImmutableMultimap.Builder<Attribute, AttributeModifier> mainhand_modifier_builder = ImmutableMultimap.builder();
-        mainhand_modifier_builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", ATTACK_DAMAGE, AttributeModifier.Operation.ADDITION));
-        mainhand_modifier_builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", ATTACK_SPEED, AttributeModifier.Operation.ADDITION));
+        mainhand_modifier_builder.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", ATTACK_DAMAGE, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        mainhand_modifier_builder.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
         return slot == EquipmentSlot.MAINHAND ? mainhand_modifier_builder.build() : super.getDefaultAttributeModifiers(slot);
     }
     @Override

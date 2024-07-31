@@ -20,9 +20,10 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -214,13 +215,13 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             if (c.getTotalPowerLevel() == 0) {
                 player.addItem(Items.POTION.getDefaultInstance());
             } else {
-                ItemStack potion = Items.POTION.getDefaultInstance();
+                ItemStack potion;
                 if (c.getPowerLevel(Powers.BODY_POWER.get()) > 10) {
-                    PotionUtils.setPotion(potion, Potions.THICK);
+                    potion = PotionContents.createItemStack(Items.POTION, Potions.THICK);
                 } else if (c.getPowerLevel(Powers.ACID_POWER.get()) > 50) {
-                    PotionUtils.setPotion(potion, Potions.AWKWARD);
+                    potion = PotionContents.createItemStack(Items.POTION, Potions.AWKWARD);
                 } else {
-                    PotionUtils.setPotion(potion, Potions.MUNDANE);
+                    potion = PotionContents.createItemStack(Items.POTION, Potions.MUNDANE);
                 }
                 player.addItem(potion);
             }

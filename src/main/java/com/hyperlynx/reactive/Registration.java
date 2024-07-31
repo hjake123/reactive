@@ -29,6 +29,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -46,8 +47,11 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraft.world.item.alchemy.PotionContents;
+
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -354,18 +358,20 @@ public class Registration {
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
-                    .addAttributeModifier(NeoForgeMod.ENTITY_GRAVITY.value(), "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
-                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                    .addAttributeModifier(Attributes.GRAVITY, "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
+                            -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
-                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL)
+                            -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
-                            -1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+                            -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
-                    .addAttributeModifier(NeoForgeMod.BLOCK_REACH.value(), "91a1b581-0e56-446d-853a-a3037f2e97c5",
-                            2, AttributeModifier.Operation.ADDITION));
+                    .addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, "91a1b581-0e56-446d-853a-a3037f2e97c5",
+                            2, AttributeModifier.Operation.ADD_VALUE)
+                    .addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, "91a1c581-0e56-446d-853a-a3037f2e97c5",
+                            2, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, HyperMobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
@@ -445,27 +451,27 @@ public class Registration {
         ((SymbolBlock) DIVINE_SYMBOL.get()).setSymbolItem(DIVINE_SYMBOL_ITEM.get());
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
-        registerPotions(evt);
 //        if(ModList.get().isLoaded("create")){
 //            ReactiveCreatePlugin.init();
 //        }
 //        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
     }
 
-    // Set up the potion items.
-    public static void registerPotions(FMLCommonSetupEvent evt) {
-        ItemStack thick_potion = Items.POTION.getDefaultInstance();
-        PotionUtils.setPotion(thick_potion, Potions.THICK);
+    @SubscribeEvent
+    public static void registerPotions(RegisterBrewingRecipesEvent event) {
+        PotionBrewing.Builder builder = event.getBuilder();
 
-        ItemStack grav_potion = Items.POTION.getDefaultInstance();
-        PotionUtils.setPotion(grav_potion, NULL_GRAVITY_POTION.get());
-        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(thick_potion),
-                Ingredient.of(SECRET_SCALE.get()), grav_potion));
+        builder.addMix(
+                Potions.THICK,
+                SECRET_SCALE.get(),
+                NULL_GRAVITY_POTION
+        );
 
-        ItemStack long_grav_potion = Items.POTION.getDefaultInstance();
-        PotionUtils.setPotion(long_grav_potion, LONG_NULL_GRAVITY_POTION.get());
-        evt.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(grav_potion),
-                Ingredient.of(Items.REDSTONE), long_grav_potion));
+        builder.addMix(
+                NULL_GRAVITY_POTION,
+                Items.REDSTONE,
+                LONG_NULL_GRAVITY_POTION
+        );
     }
 
     @SubscribeEvent
