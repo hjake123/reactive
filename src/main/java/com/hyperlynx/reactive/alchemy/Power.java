@@ -4,12 +4,16 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -26,6 +30,9 @@ public class Power {
     private final Item bottle;
     private final Item render_item;
     private final PrimedWSV percent_reactivity;
+    public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
+    public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
+
 
     public Power(String id, int color, Item bottle){
         this.id = id;
@@ -147,5 +154,10 @@ public class Power {
         if(render_item != null)
             return render_item.getDefaultInstance();
         return ItemStack.EMPTY;
+    }
+
+    static{
+        RESOURCE_KEY_CODEC = ResourceKey.codec(Powers.POWER_REGISTRY_KEY);
+        RESOURCE_KEY_STREAM_CODEC = ResourceKey.streamCodec(Powers.POWER_REGISTRY_KEY);
     }
 }

@@ -95,11 +95,11 @@ public class WarpBottleItem extends PowerBottleItem{
     }
 
     public static void setTeleportTarget(ItemStack stack, GlobalPos target) {
-        stack.set(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get(), new WarpBottleTarget(target));
+        stack.set(ReactiveDataComponents.WARP_BOTTLE_TARGET.get(), new WarpBottleTarget(target));
     }
 
     public static boolean isRiftBottle(ItemStack stack){
-        return stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.value());
+        return stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET.value());
     }
 
     @Override
@@ -108,14 +108,14 @@ public class WarpBottleItem extends PowerBottleItem{
     }
 
     private static Optional<ResourceKey<Level>> getTeleportDimension(ItemStack stack) {
-        if (stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get())) {
-            return Optional.of(Objects.requireNonNull(stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get())).target().dimension());
+        if (stack.has(ReactiveDataComponents.WARP_BOTTLE_TARGET.get())) {
+            return Optional.of(Objects.requireNonNull(stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET.get())).target().dimension());
         }
         return Optional.empty();
     }
 
     public static GlobalPos getTeleportPosition(ItemStack stack) {
-        WarpBottleTarget target = stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET_COMPONENT.get());
+        WarpBottleTarget target = stack.get(ReactiveDataComponents.WARP_BOTTLE_TARGET.get());
         if(target == null){
             return null;
         }

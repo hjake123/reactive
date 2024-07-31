@@ -10,10 +10,17 @@ public class ReactiveDataComponents {
     // Registration class for data component types.
     public static final DeferredRegister<DataComponentType<?>> COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, ReactiveMod.MODID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WarpBottleTarget>> WARP_BOTTLE_TARGET_COMPONENT = COMPONENT_TYPES.register("warp_bottle_target",
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WarpBottleTarget>> WARP_BOTTLE_TARGET = COMPONENT_TYPES.register("warp_bottle_target",
             () -> DataComponentType.<WarpBottleTarget>builder()
                     .persistent(WarpBottleTarget.CODEC)
                     .networkSynchronized(WarpBottleTarget.STREAM_CODEC)
+                    .build()
+    );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<LitmusMeasurement>> LITMUS_MEASUREMENT = COMPONENT_TYPES.register("litmus_measurement",
+            () -> DataComponentType.<LitmusMeasurement>builder()
+                    .persistent(LitmusMeasurement.CODEC)
+                    .networkSynchronized(LitmusMeasurement.STREAM_CODEC)
                     .build()
     );
 }
