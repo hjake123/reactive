@@ -94,8 +94,8 @@ public class Registration {
     // Register the Shulker Crucible
     public static final DeferredHolder<Block, ShulkerCrucibleBlock> SHULKER_CRUCIBLE = BLOCKS.register("shulker_crucible",
             () -> new ShulkerCrucibleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SHULKER_BOX)));
-    public static final DeferredHolder<Item, ShulkerCrucibleItem> SHULKER_CRUCIBLE_ITEM = ITEMS.register(SHULKER_CRUCIBLE.getId().getPath(),
-            () -> new ShulkerCrucibleItem(new Item.Properties()));
+    public static final DeferredHolder<Item, BlockItem> SHULKER_CRUCIBLE_ITEM = ITEMS.register(SHULKER_CRUCIBLE.getId().getPath(),
+            () -> new BlockItem(SHULKER_CRUCIBLE.get(), new Item.Properties()));
 
     // Register the Crucible BE.
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",

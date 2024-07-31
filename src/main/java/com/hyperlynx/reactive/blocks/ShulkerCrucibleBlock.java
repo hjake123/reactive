@@ -3,18 +3,22 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.items.ShulkerCrucibleItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 // Like a Crucible Block, but it can be picked up like a Skulker Box!
 public class ShulkerCrucibleBlock extends CrucibleBlock{
@@ -25,14 +29,14 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
     // Drop a ShulkerCrucibleBlock BlockItem with block entity data saved.
     // This negates the need for loot tables to be applied to this block.
     @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+    public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof CrucibleBlockEntity crucible) {
             if (!level.isClientSide) {
                 ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
                 if(crucible.getTotalPowerLevel() > 0) {
-                    crucible.saveToItem(drop_stack);
-                    drop_stack.getTag().put(ShulkerCrucibleItem.TAG_LABEL, StringTag.valueOf(getItemLabel(crucible)));
+                    crucible.saveToItem(drop_stack, level.registryAccess());
+                    drop_stack.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(getItemLabel(crucible)))));
                 }else if(state.getValue(FULL)){
                     level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
                 }
