@@ -259,32 +259,32 @@ public class Registration {
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_LIGHT = BLOCKS.register("light_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 15)));
     public static final DeferredHolder<Item, LightStaffItem> STAFF_OF_LIGHT_ITEM = ITEMS.register(STAFF_OF_LIGHT.getId().getPath(),
-            () -> new LightStaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().defaultDurability(1000), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
+            () -> new LightStaffItem(STAFF_OF_LIGHT.get(), new Item.Properties().durability(1000), StaffEffects::radiance, true, LIGHT_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_WARP = BLOCKS.register("warp_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, WarpStaffItem> STAFF_OF_WARP_ITEM = ITEMS.register(STAFF_OF_WARP.getId().getPath(),
-            () -> new WarpStaffItem(STAFF_OF_WARP.get(), new Item.Properties().defaultDurability(500), WARP_BOTTLE.get()));
+            () -> new WarpStaffItem(STAFF_OF_WARP.get(), new Item.Properties().durability(500), WARP_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().defaultDurability(1200).fireResistant(), StaffEffects::blazing, false, 10, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().durability(1200).fireResistant(), StaffEffects::blazing, false, 10, BLAZE_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().defaultDurability(800), StaffEffects::spectral, false, 14, SOUL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().durability(800), StaffEffects::spectral, false, 14, SOUL_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().defaultDurability(1200), StaffEffects::missile, false, 10, MIND_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().durability(1200), StaffEffects::missile, false, 10, MIND_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().defaultDurability(600), StaffEffects::living, true, 10, VITAL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().durability(600), StaffEffects::living, true, 10, VITAL_BOTTLE.get()));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -317,7 +317,7 @@ public class Registration {
     // Register items.
     public static final DeferredHolder<Item, DisplacerItem> DISPLACER = ITEMS.register("displacer",
             () -> new DisplacerItem(new Item.Properties()
-                    .defaultDurability(350)));
+                    .durability(350)));
 
     public static final DeferredHolder<Item, Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
@@ -331,11 +331,11 @@ public class Registration {
     public static final DeferredHolder<Item, QuartzBottleItem> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new QuartzBottleItem(new Item.Properties()));
     public static final DeferredHolder<Item, CrystalIronItem> CRYSTAL_IRON = ITEMS.register("crystal_iron",
-            () -> new CrystalIronItem(new Item.Properties().defaultDurability(64)));
+            () -> new CrystalIronItem(new Item.Properties().durability(64)));
     public static final DeferredHolder<Item, Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, SoupItem> SOUP = ITEMS.register("soup",
-            () -> new SoupItem(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder().nutrition(7).saturationMod(0.5F)).build())));
+            () -> new SoupItem(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder().nutrition(7).saturationModifier(0.5F)).build())));
     public static final DeferredHolder<Item, Item> SALT = ITEMS.register("salt",
             () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> MOTION_SALT = ITEMS.register("motion_salt",
@@ -347,7 +347,7 @@ public class Registration {
     public static final DeferredHolder<Item, Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
-                    .saturationMod(1.4F)
+                    .saturationModifier(1.4F)
                     .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
                     .build())));
 
@@ -371,9 +371,9 @@ public class Registration {
 
     // Register potions
     public static final DeferredHolder<Potion, Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 3000)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 3000)));
     public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
-            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 8000)));
+            () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 8000)));
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
