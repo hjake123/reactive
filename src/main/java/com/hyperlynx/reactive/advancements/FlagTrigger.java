@@ -48,7 +48,7 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
 
     public static class FlagTriggerInstance implements SimpleInstance {
         public static final Codec<FlagTriggerInstance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(FlagTriggerInstance::player)
+                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(FlagTriggerInstance::player)
         ).apply(instance, FlagTriggerInstance::new));
 
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")

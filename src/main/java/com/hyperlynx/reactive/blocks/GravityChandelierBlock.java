@@ -35,7 +35,7 @@ public class GravityChandelierBlock extends WaterloggableBlock implements Entity
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if(player.isShiftKeyDown()) {
             level.setBlock(pos, state.setValue(SHOW_RADIUS, !state.getValue(SHOW_RADIUS)), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.BLOCKS, 1.0F, 1.2F);

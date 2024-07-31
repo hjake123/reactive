@@ -17,6 +17,7 @@ import com.hyperlynx.reactive.util.HyperPortalShape;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -24,6 +25,8 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.Filterable;
+import net.minecraft.server.network.FilteredText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -41,6 +44,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -400,23 +404,30 @@ public class SpecialCaseMan {
             e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
         }
     }
+
+    private static Filterable<String> literalFilteredString(String str){
+        // Work around Mojang's text filtering system for books.
+        return Filterable.from(FilteredText.passThrough(str));
+    }
+
     private static void highWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold) {
         String CHAR_LIST = "abcdefhijklmnopqstuvwxyz, -;6'";
+        WritableBookContent book_content = e.getItem().get(DataComponents.WRITABLE_BOOK_CONTENT);
 
-        CompoundTag book_tag = e.getItem().getTag();
-        if(book_tag == null) {
-            e.getItem().addTagElement("pages", new ListTag());
-            book_tag = e.getItem().getTag();
+        if(book_content == null){
+            book_content = new WritableBookContent(new ArrayList<>());
         }
 
-        ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
+        List<Filterable<String>> pages = book_content.pages();
+
         if (pages.isEmpty() || (e.level().random.nextFloat() < 0.5F && pages.size() < 40)) {
-            pages.add(StringTag.valueOf(""));
+            pages.add(literalFilteredString(""));
         }
+
         for(int page_index = 0; page_index < pages.size(); page_index++){
             if(c.getPowerLevel(Powers.MIND_POWER.get()) < threshold)
                 break;
-            List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
+            List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
             if(words.isEmpty() || e.level().random.nextFloat() < 0.1F){
                 // Add the thrower's name sometimes.
                 if(e.getOwner() != null && page_index == WorldSpecificValue.get("player_name_index", 0, 10))
@@ -448,31 +459,35 @@ public class SpecialCaseMan {
             if(text.length() > 250){
                 text = text.substring(0, 250);
             }
-            pages.set(page_index, StringTag.valueOf(text));
+            pages.set(page_index, literalFilteredString(text));
             c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20));
         }
+
+        e.getItem().set(DataComponents.WRITABLE_BOOK_CONTENT, book_content);
         c.setDirty();
     }
 
     private static boolean lowWaterWriting(CrucibleBlockEntity c, ItemEntity e, int threshold){
-        CompoundTag book_tag = e.getItem().getTag();
-        if(book_tag == null) {
-            e.getItem().addTagElement("pages", new ListTag());
-            book_tag = e.getItem().getTag();
+        WritableBookContent book_content = e.getItem().get(DataComponents.WRITABLE_BOOK_CONTENT);
+
+        if(book_content == null){
+            book_content = new WritableBookContent(new ArrayList<>());
         }
+
         boolean did_anything = false;
-        ListTag pages = book_tag.getList("pages", CompoundTag.TAG_STRING);
+        List<Filterable<String>> pages = book_content.pages();
+
         for(int page_index = 0; page_index < pages.size(); page_index++) {
             if(c.getPowerLevel(Powers.MIND_POWER.get()) > threshold)
                 break;
             // Remove a random word from the page.
-            List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
+            List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
             if(words.size() == 0)
                 continue;
             did_anything = true;
             String victim = words.get(e.level().random.nextInt(words.size()));
             String blank = " ".repeat(victim.length());
-            pages.set(page_index, StringTag.valueOf(pages.get(page_index).getAsString().replace(victim, blank)));
+            pages.set(page_index, literalFilteredString(pages.get(page_index).raw().replace(victim, blank)));
             c.addPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);
         }
         c.setDirty();

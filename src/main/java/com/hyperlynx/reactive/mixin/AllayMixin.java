@@ -26,7 +26,7 @@ public abstract class AllayMixin {
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
     public void defineSynchedData(CallbackInfo ci) {
-        ((Allay) (Object) this).getEntityData().define(DATA_CAN_DONATE, false);
+        ((Allay) (Object) this).getEntityData().get(DATA_CAN_DONATE);
     }
 
     @Inject(method = "duplicateAllay", at = @At("RETURN"))

@@ -52,7 +52,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 
@@ -505,7 +504,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return;
         }
 
-        if(event.getEntity().getMobType().equals(MobType.UNDEAD)){
+        if(event.getEntity().isInvertedHealAndHarm()){
             if(!event.getSource().is(DamageTypes.ON_FIRE) && !event.getSource().is(DamageTypes.IN_FIRE))
                 addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
             return;

@@ -4,17 +4,18 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
-@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
 public class EffectHandlers {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event){
         if(event.getEntity().hasEffect(Registration.FIRE_SHIELD) && event.getSource().getDirectEntity() != null && !event.getSource().getDirectEntity().fireImmune()){
             event.getSource().getDirectEntity().hurt(event.getEntity().damageSources().inFire(), 2);
-            event.getSource().getDirectEntity().setSecondsOnFire(5);
+            event.getSource().getDirectEntity().setRemainingFireTicks(100);
             float damage = event.getAmount();
             if(damage < 2)
                 event.setCanceled(true);

@@ -2,7 +2,6 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.components.BoundEntity;
 import com.hyperlynx.reactive.components.ReactiveDataComponents;
-import com.hyperlynx.reactive.components.TutorialFlag;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;

@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
@@ -53,7 +52,7 @@ public class StaffEffects {
         if(user instanceof ServerPlayer){
             if(entity_hit != null){
                 if(entity_hit.getEntity() instanceof LivingEntity victim){
-                    if(victim.getMobType().equals(MobType.UNDEAD)){
+                    if(victim.isInvertedHealAndHarm()){
                         victim.setRemainingFireTicks(300);
                         victim.hurt(user.damageSources().inFire(), 7);
                     }
