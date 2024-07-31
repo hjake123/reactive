@@ -110,19 +110,10 @@ public class StaffItem extends BlockItem {
             return false;
 
         BlockEntity blockentity = level.getBlockEntity(pos);
-        if (blockentity == null)
+        if (!(blockentity instanceof StaffBlockEntity staff))
             return false;
 
-        CompoundTag data_tag = blockentity.saveWithoutMetadata();
-        CompoundTag prior_data_tag = data_tag.copy();
-        data_tag.put(StaffBlockEntity.ITEM_STACK_TAG, stack.hasTag() ? Objects.requireNonNull(stack.getTag()) : new CompoundTag());
-
-        if (!data_tag.equals(prior_data_tag)) {
-            blockentity.load(data_tag);
-            blockentity.setChanged();
-            return true;
-        }
-
-        return false;
+        staff.stack = stack;
+        return true;
     }
 }

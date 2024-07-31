@@ -26,12 +26,8 @@ public class StaffBlock extends BaseStaffBlock implements EntityBlock {
     @Override
     public void playerDestroy(Level level, Player destroyer, BlockPos pos, BlockState state, @Nullable BlockEntity staff_entity, ItemStack tool) {
         super.playerDestroy(level, destroyer, pos, state, staff_entity, tool);
-        ItemStack drop_stack = this.asItem().getDefaultInstance();
-        if(staff_entity != null) {
-            drop_stack.setDamageValue(((StaffBlockEntity) staff_entity).durability);
-            if(((StaffBlockEntity) staff_entity).item_tags != null)
-                drop_stack.setTag(((StaffBlockEntity) staff_entity).item_tags);
+        if(staff_entity instanceof StaffBlockEntity staff){
+            popResource(level, pos, staff.stack);
         }
-        popResource(level, pos, drop_stack);
     }
 }
