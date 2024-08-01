@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.be;
 import com.hyperlynx.reactive.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -36,8 +37,8 @@ public class DisplacedBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag main_tag) {
-        super.saveAdditional(main_tag);
+    protected void saveAdditional(@NotNull CompoundTag main_tag, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(main_tag, registries);
         if(getSelfState() == null)
             main_tag.put(BLOCK_STATE_TAG, unresolved_self_state);
         else
@@ -48,20 +49,20 @@ public class DisplacedBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(@NotNull CompoundTag main_tag) {
-        super.load(main_tag);
+    public void loadAdditional(@NotNull CompoundTag main_tag, HolderLookup.@NotNull Provider registries) {
+        super.loadAdditional(main_tag, registries);
         unresolved_self_state = main_tag.getCompound(BLOCK_STATE_TAG);
         if(main_tag.contains(CHAIN_TARGET_TAG))
-            chain_target = NbtUtils.readBlockPos(main_tag.getCompound(CHAIN_TARGET_TAG));
+            chain_target = NbtUtils.readBlockPos(main_tag, CHAIN_TARGET_TAG).orElse(BlockPos.ZERO);
         if(main_tag.contains(DEPTH_TAG))
             depth = main_tag.getInt(DEPTH_TAG);
     }
 
     // Sync to the client for the sake of pickblock
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, registries);
         return tag;
     }
 
@@ -71,8 +72,8 @@ public class DisplacedBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.@NotNull Provider registries) {
+        super.onDataPacket(net, pkt, registries);
     }
 
     public BlockState getSelfState() {

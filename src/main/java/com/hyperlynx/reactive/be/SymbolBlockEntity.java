@@ -45,16 +45,6 @@ public class SymbolBlockEntity extends BlockEntity {
     }
     public void setItem(Item item){ this.symbol_item = item; }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        return null;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-
-    }
-
     // If you die near an Occult Symbol, it breaks, and you come back as an undead being.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {

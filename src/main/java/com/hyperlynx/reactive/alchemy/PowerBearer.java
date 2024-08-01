@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public interface PowerBearer extends INBTSerializable<CompoundTag> {
+public interface PowerBearer {
     boolean addPower(Power p, int amount);
     int getPowerLevel(Power t);
     int getTotalPowerLevel();

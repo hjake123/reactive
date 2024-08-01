@@ -17,6 +17,7 @@ import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import com.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.*;
 import net.minecraft.network.Connection;
@@ -52,6 +53,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 
@@ -724,9 +726,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     // ----- Data management methods -----
 
     @Override
-    public @NotNull CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
+        saveAdditional(tag, registries);
         return tag;
     }
 
@@ -736,21 +738,21 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries) {
+        super.onDataPacket(net, pkt, registries);
         color_changed = true;
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag main_tag) {
-        super.saveAdditional(main_tag);
+    protected void saveAdditional(@NotNull CompoundTag main_tag, HolderLookup.Provider provider) {
+        super.saveAdditional(main_tag, provider);
         main_tag.put("electric_charge", IntTag.valueOf(electricCharge));
         main_tag.put("integrity", IntTag.valueOf(integrity));
         if(linked_crystal != null) {
             main_tag.put("LinkedCrystal", NbtUtils.createUUID(linked_crystal.getUUID()));
         }
 
-        if(powers == null || powers.isEmpty()){
+        if(powers.isEmpty()){
             return;
         }
         ListTag power_list_tag = new ListTag();
@@ -769,8 +771,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     @Override
-    public void load(@NotNull CompoundTag main_tag) {
-        super.load(main_tag);
+    public void loadAdditional(@NotNull CompoundTag main_tag, HolderLookup.Provider provider) {
+        super.loadAdditional(main_tag, provider);
         if(main_tag.contains("LinkedCrystal") && this.getLevel() instanceof ServerLevel server){
             UUID crystal_uuid = main_tag.getUUID("LinkedCrystal");
             if(server.getEntity(crystal_uuid) instanceof EndCrystal crystal)
