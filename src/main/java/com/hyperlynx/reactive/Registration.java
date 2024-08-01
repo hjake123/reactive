@@ -457,31 +457,14 @@ public class Registration {
 //        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
     }
 
-    @SubscribeEvent
-    public static void registerPotions(RegisterBrewingRecipesEvent event) {
-        PotionBrewing.Builder builder = event.getBuilder();
-
-        builder.addMix(
-                Potions.THICK,
-                SECRET_SCALE.get(),
-                NULL_GRAVITY_POTION
-        );
-
-        builder.addMix(
-                NULL_GRAVITY_POTION,
-                Items.REDSTONE,
-                LONG_NULL_GRAVITY_POTION
-        );
-    }
-
-    @SubscribeEvent
-    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == REACTIVE_TAB.getKey()) {
-            for(DeferredHolder<Item, ? extends Item> item_holder : ITEMS.getEntries()){
-                event.accept(item_holder.get());
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
+//        if (event.getTabKey() == REACTIVE_TAB.getKey()) {
+//            for(DeferredHolder<Item, ? extends Item> item_holder : ITEMS.getEntries()){
+//                event.accept(item_holder.get());
+//            }
+//        }
+//    }
 
     // Helper method for Recipe Types.
     public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {

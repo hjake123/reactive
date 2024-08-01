@@ -9,7 +9,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
-@EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
 public class EffectHandlers {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent event){
