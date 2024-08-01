@@ -17,6 +17,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -115,6 +116,7 @@ public class WarpStaffItem extends StaffItem{
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
         ItemStack stack = user.getItemInHand(hand);
+        EquipmentSlot slot = LivingEntity.getSlotForHand(hand);
         if(onLastDurability(stack))
             return InteractionResultHolder.fail(stack);
 
@@ -142,7 +144,7 @@ public class WarpStaffItem extends StaffItem{
                 // Items just get yoinked.
                 if(entityHit.getEntity() instanceof ItemEntity || entityHit.getEntity() instanceof ExperienceOrb){
                     entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
-                    stack.hurtAndBreak(1, user, (unused) -> {});
+                    stack.hurtAndBreak(1, user, slot);
                     return InteractionResultHolder.success(stack);
                 }
                 // Select the entity.
@@ -161,7 +163,7 @@ public class WarpStaffItem extends StaffItem{
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
                             0.6F, 1.0F + user.level().random.nextFloat()*0.2F);
                 }
-                stack.hurtAndBreak(1, user, (unused) -> {});
+                stack.hurtAndBreak(1, user, slot);
                 return InteractionResultHolder.success(stack);
             } else if (hasBoundEntity(stack)) {
                 // Teleport the bound entity.
@@ -172,8 +174,7 @@ public class WarpStaffItem extends StaffItem{
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 }
                 stack.remove(ReactiveDataComponents.BOUND_ENTITY);
-                stack.hurtAndBreak(1, user, (unused) -> {
-                });
+                stack.hurtAndBreak(1, user, slot);
                 return InteractionResultHolder.success(stack);
             } else {
                 tryShowTutorial(user, stack);

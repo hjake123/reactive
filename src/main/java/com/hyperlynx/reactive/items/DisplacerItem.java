@@ -19,6 +19,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -30,15 +32,7 @@ import java.util.Objects;
 
 public class DisplacerItem extends Item {
     public DisplacerItem(Properties props) {
-        super(props.component(DataComponents.ATTRIBUTE_MODIFIERS,
-                ItemAttributeModifiers.builder()
-                        .add(Attributes.ATTACK_SPEED,
-                                new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                                EquipmentSlotGroup.HAND)
-                        .add(Attributes.ATTACK_DAMAGE,
-                                new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 3.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
-                                EquipmentSlotGroup.HAND)
-                .build()));
+        super(props.attributes(SwordItem.createAttributes(Tiers.STONE, 3, -3.0F)));
     }
 
     @Override
@@ -46,6 +40,7 @@ public class DisplacerItem extends Item {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
+        EquipmentSlot slot = LivingEntity.getSlotForHand(context.getHand());
 
         if(state.getBlock() instanceof DisplacedBlock){
             // Allow the player to click on above and below blocks "though" the one they're facing if they're inside a block.
@@ -68,7 +63,7 @@ public class DisplacerItem extends Item {
                     continue;
                 displace(level, selected);
                 if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
-                    context.getItemInHand().hurtAndBreak(1, splayer, Objects.requireNonNull(context.getItemInHand().getEquipmentSlot()));
+                    context.getItemInHand().hurtAndBreak(1, splayer, slot);
                 break;
             }
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
@@ -81,7 +76,7 @@ public class DisplacerItem extends Item {
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.0F);
             if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
-                context.getItemInHand().hurtAndBreak(1, splayer, Objects.requireNonNull(context.getItemInHand().getEquipmentSlot()));
+                context.getItemInHand().hurtAndBreak(1, splayer, slot);
             return InteractionResult.SUCCESS;
         }
         level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),

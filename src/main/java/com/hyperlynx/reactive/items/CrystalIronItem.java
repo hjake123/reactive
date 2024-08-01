@@ -2,15 +2,21 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.core.Holder;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Absorbs negative Crucible effects and Potion effects.
 public class CrystalIronItem extends Item {
@@ -46,36 +52,29 @@ public class CrystalIronItem extends Item {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int tick, boolean unknown) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slot_number, boolean unknown) {
         if(entity instanceof LivingEntity holder && !level.isClientSide){
             if(holder.getActiveEffects().isEmpty()){
                 return;
             }
-            for(MobEffectInstance mei : holder.getActiveEffects()) {
-                if(mei.getEffect().equals(MobEffects.WITHER)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.POISON)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.HUNGER) && WorldSpecificValue.getBool("stone_break_hunger", 0.7F)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.BAD_OMEN)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN) && WorldSpecificValue.getBool("stone_break_slow", 0.3F)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }else if(mei.getEffect().equals(MobEffects.WEAKNESS) && WorldSpecificValue.getBool("stone_break_weakness", 0.5F)){
-                    holder.removeEffect(mei.getEffect());
-                    getHurt(stack, holder);
-                }
+
+            EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(stack);
+
+            List<Holder<MobEffect>> effects_to_remove = new ArrayList<>(List.of(MobEffects.WITHER, MobEffects.POISON));
+
+            if(WorldSpecificValue.getBool("stone_break_hunger", 0.7F))
+                effects_to_remove.add(MobEffects.HUNGER);
+
+            if(WorldSpecificValue.getBool("stone_break_slow", 0.3F))
+                effects_to_remove.add(MobEffects.MOVEMENT_SLOWDOWN);
+
+            if(WorldSpecificValue.getBool("stone_break_weakness", 0.5F))
+                effects_to_remove.add(MobEffects.WEAKNESS);
+
+            for(Holder<MobEffect> effect : effects_to_remove){
+                if(holder.removeEffect(effect))
+                    stack.hurtAndBreak(1, holder, slot);
             }
         }
-    }
-
-    private void getHurt(ItemStack stack, LivingEntity holder){
-        stack.hurtAndBreak(1, holder, (LivingEntity l) -> {});
     }
 }

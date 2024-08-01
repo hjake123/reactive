@@ -55,9 +55,9 @@ public class StaffItem extends BlockItem {
             if(!level.isClientSide) {
                 effectFunction.apply((Player) player);
                 if (player.getOffhandItem().is(stack.getItem())) {
-                    player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
+                    player.getOffhandItem().hurtAndBreak(1, level.random, player, () -> {});
                 } else {
-                    player.getMainHandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
+                    player.getMainHandItem().hurtAndBreak(1, level.random, player, () -> {});
                 }
             }
         }

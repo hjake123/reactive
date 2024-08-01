@@ -32,7 +32,7 @@ public class LightStaffItem extends StaffItem {
 
         if(!level.isClientSide) {
             effectFunction.apply((Player) player);
-            player.getItemInHand(hand).hurtAndBreak(1, player, (LivingEntity l) -> {});
+            player.getItemInHand(hand).hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
         }
         return super.use(level, player, hand);
     }
