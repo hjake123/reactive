@@ -18,8 +18,8 @@ public class BlazeBottleItem extends PowerBottleItem {
 
     // Blaze bottles are hot; holding one hurts you.
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int tick, boolean unknown) {
-        super.inventoryTick(stack, level, entity, tick, unknown);
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean unknown) {
+        super.inventoryTick(stack, level, entity, slot, unknown);
         if(!level.isClientSide){
             if(entity instanceof Player && !((Player) entity).isCreative() && ((Player) entity).isHolding(Registration.BLAZE_BOTTLE.get())){
                 tick_count++;

@@ -142,7 +142,7 @@ public class WarpStaffItem extends StaffItem{
                 // Items just get yoinked.
                 if(entityHit.getEntity() instanceof ItemEntity || entityHit.getEntity() instanceof ExperienceOrb){
                     entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
-                    stack.hurtAndBreak(1, user, (unused) -> {});
+                    stack.hurtAndBreak(1, user, Objects.requireNonNull(stack.getEquipmentSlot()));
                     return InteractionResultHolder.success(stack);
                 }
                 // Select the entity.
@@ -161,7 +161,7 @@ public class WarpStaffItem extends StaffItem{
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
                             0.6F, 1.0F + user.level().random.nextFloat()*0.2F);
                 }
-                stack.hurtAndBreak(1, user, (unused) -> {});
+                stack.hurtAndBreak(1, user, Objects.requireNonNull(stack.getEquipmentSlot()));
                 return InteractionResultHolder.success(stack);
             } else if (hasBoundEntity(stack)) {
                 // Teleport the bound entity.
@@ -172,8 +172,7 @@ public class WarpStaffItem extends StaffItem{
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 }
                 stack.remove(ReactiveDataComponents.BOUND_ENTITY);
-                stack.hurtAndBreak(1, user, (unused) -> {
-                });
+                stack.hurtAndBreak(1, user, Objects.requireNonNull(stack.getEquipmentSlot()));
                 return InteractionResultHolder.success(stack);
             } else {
                 tryShowTutorial(user, stack);
