@@ -22,12 +22,12 @@ import java.util.Optional;
 // Data is placed by StaffItem by overriding part of BlockItem::place
 // Data is read by StaffBlock by overriding playerWillBreak
 public class StaffBlockEntity extends BlockEntity {
-    public int durability = 0;
-    public ItemStack stack = ItemStack.EMPTY;
+    public ItemStack stack;
     private final String ITEM_STACK_TAG = "Stack";
 
     public StaffBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.STAFF_BE.get(), pos, state);
+        stack = state.getBlock().asItem().getDefaultInstance();
     }
 
     @Override
@@ -42,15 +42,4 @@ public class StaffBlockEntity extends BlockEntity {
         Optional<ItemStack> possible_stack = ItemStack.parse(registry_provider, main_tag.get(ITEM_STACK_TAG));
         possible_stack.ifPresent(itemStack -> stack = itemStack);
     }
-
-    protected void applyImplicitComponents(BlockEntity.@NotNull DataComponentInput input) {
-        super.applyImplicitComponents(input);
-        stack = input.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).getStackInSlot(0);
-    }
-
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(List.of(stack)));
-    }
-
 }

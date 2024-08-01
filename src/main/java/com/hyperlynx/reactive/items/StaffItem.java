@@ -113,7 +113,7 @@ public class StaffItem extends BlockItem {
         if (!(blockentity instanceof StaffBlockEntity staff))
             return false;
 
-        staff.stack = stack;
+        staff.stack = stack.copy();
         return true;
     }
 }
