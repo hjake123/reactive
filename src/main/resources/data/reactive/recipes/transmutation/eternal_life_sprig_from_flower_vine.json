@@ -4,7 +4,7 @@
     "item": "reactive:flower_vine"
   },
   "product": {
-    "item": "reactive:eternal_life_sprig"
+    "id": "reactive:eternal_life_sprig"
   },
   "reagents": ["reactive:astral"],
   "min": 800,

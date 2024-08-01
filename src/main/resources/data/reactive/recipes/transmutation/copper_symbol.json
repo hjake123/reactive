@@ -4,7 +4,7 @@
     "tag": "forge:ingots/copper"
   },
   "product": {
-    "item": "reactive:copper_symbol"
+    "id": "reactive:copper_symbol"
   },
   "reagents": ["reactive:caustic"],
   "min": 500,

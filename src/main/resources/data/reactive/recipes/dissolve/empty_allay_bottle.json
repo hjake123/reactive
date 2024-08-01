@@ -10,6 +10,6 @@
     "item": "allaybottle:allay_bottle"
   },
   "product": {
-    "item": "minecraft:glass_bottle"
+    "id": "minecraft:glass_bottle"
   }
 }

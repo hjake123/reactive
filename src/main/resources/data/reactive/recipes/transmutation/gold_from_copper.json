@@ -4,7 +4,7 @@
     "item": "minecraft:copper_ingot"
   },
   "product": {
-    "item": "minecraft:gold_ingot"
+    "id": "minecraft:gold_ingot"
   },
   "reagents": ["reactive:blaze", "reactive:esoteric_y"],
   "min": 700,

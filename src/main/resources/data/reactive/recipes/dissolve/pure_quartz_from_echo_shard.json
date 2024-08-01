@@ -4,6 +4,6 @@
     "item": "minecraft:echo_shard"
   },
   "product": {
-    "item": "reactive:quartz"
+    "id": "reactive:quartz"
   }
 }

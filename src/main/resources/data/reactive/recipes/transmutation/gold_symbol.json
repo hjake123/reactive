@@ -4,7 +4,7 @@
     "tag": "forge:ingots/gold"
   },
   "product": {
-    "item": "reactive:gold_symbol"
+    "id": "reactive:gold_symbol"
   },
   "reagents": ["reactive:caustic", "reactive:light"],
   "min": 1000,

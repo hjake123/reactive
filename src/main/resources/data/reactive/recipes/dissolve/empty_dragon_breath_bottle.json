@@ -4,6 +4,6 @@
     "item": "minecraft:dragon_breath"
   },
   "product": {
-    "item": "minecraft:glass_bottle"
+    "id": "minecraft:glass_bottle"
   }
 }

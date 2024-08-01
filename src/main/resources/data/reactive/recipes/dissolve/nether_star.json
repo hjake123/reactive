@@ -4,6 +4,6 @@
     "item": "minecraft:nether_star"
   },
   "product": {
-    "item": "minecraft:nether_star"
+    "id": "minecraft:nether_star"
   }
 }

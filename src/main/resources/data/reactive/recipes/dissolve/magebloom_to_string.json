@@ -10,7 +10,7 @@
     "item": "ars_nouveau:magebloom"
   },
   "product": {
-    "item": "minecraft:string",
+    "id": "minecraft:string",
     "count": 4
   }
 }

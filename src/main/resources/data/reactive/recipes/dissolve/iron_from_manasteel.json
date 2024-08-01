@@ -10,6 +10,6 @@
     "item": "botania:manasteel_ingot"
   },
   "product": {
-    "item": "minecraft:iron_ingot"
+    "id": "minecraft:iron_ingot"
   }
 }

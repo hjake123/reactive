@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:wet_sponge",
+    "id": "minecraft:wet_sponge",
     "count": 2
   },
   "reagents": ["reactive:esoteric_z"],

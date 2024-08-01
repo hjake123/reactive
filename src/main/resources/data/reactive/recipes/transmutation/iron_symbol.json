@@ -4,7 +4,7 @@
     "tag": "forge:ingots/iron"
   },
   "product": {
-    "item": "reactive:iron_symbol"
+    "id": "reactive:iron_symbol"
   },
   "reagents": ["reactive:caustic"],
   "min": 700,

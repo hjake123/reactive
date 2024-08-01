@@ -4,6 +4,6 @@
     "item": "minecraft:dirt"
   },
   "product": {
-    "item": "minecraft:mud"
+    "id": "minecraft:mud"
   }
 }

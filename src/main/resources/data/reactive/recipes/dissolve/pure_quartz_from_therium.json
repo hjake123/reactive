@@ -10,6 +10,6 @@
     "item": "byg:therium_shard"
   },
   "product": {
-    "item": "reactive:quartz"
+    "id": "reactive:quartz"
   }
 }

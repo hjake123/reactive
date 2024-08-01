@@ -10,6 +10,6 @@
     "item": "ars_nouveau:bucket_of_source"
   },
   "product": {
-    "item": "minecraft:bucket"
+    "id": "minecraft:bucket"
   }
 }

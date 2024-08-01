@@ -4,7 +4,7 @@
     "item": "reactive:salt"
   },
   "product": {
-    "item": "minecraft:glowstone_dust"
+    "id": "minecraft:glowstone_dust"
   },
   "reagents": ["reactive:light"],
   "min": 200,

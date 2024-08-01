@@ -10,7 +10,7 @@
     "item": "hexcasting:charged_amethyst"
   },
   "product": {
-    "item": "reactive:quartz",
+    "id": "reactive:quartz",
     "count": 2
   }
 }

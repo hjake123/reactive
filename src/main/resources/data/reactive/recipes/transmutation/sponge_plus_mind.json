@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:brain_coral_block"
+    "id": "minecraft:brain_coral_block"
   },
   "reagents": ["reactive:mind"],
   "min": 100,

@@ -4,7 +4,7 @@
     "item": "minecraft:glow_lichen"
   },
   "product": {
-    "item": "reactive:mind_lichen"
+    "id": "reactive:mind_lichen"
   },
   "reagents": ["reactive:mind"],
   "min": 50,

@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:moss_block"
+    "id": "minecraft:moss_block"
   },
   "reagents": ["reactive:verdant"],
   "min": 100,

@@ -4,7 +4,7 @@
     "item": "minecraft:vine"
   },
   "product": {
-    "item": "reactive:flower_vine"
+    "id": "reactive:flower_vine"
   },
   "reagents": ["reactive:vital", "reactive:verdant"],
   "min": 100,

@@ -4,7 +4,7 @@
     "item": "minecraft:vine"
   },
   "product": {
-    "item": "reactive:mind_lichen"
+    "id": "reactive:mind_lichen"
   },
   "reagents": ["reactive:mind", "reactive:verdant"],
   "min": 100,

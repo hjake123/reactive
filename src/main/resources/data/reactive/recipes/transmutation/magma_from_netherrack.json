@@ -4,7 +4,7 @@
     "item": "minecraft:netherrack"
   },
   "product": {
-    "item": "minecraft:magma_block"
+    "id": "minecraft:magma_block"
   },
   "reagents": ["reactive:blaze"],
   "min": 1200,

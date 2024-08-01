@@ -4,7 +4,7 @@
     "item": "minecraft:stick"
   },
   "product": {
-    "item": "minecraft:soul_torch",
+    "id": "minecraft:soul_torch",
     "count": 8
   },
   "reagents": ["reactive:soul"],

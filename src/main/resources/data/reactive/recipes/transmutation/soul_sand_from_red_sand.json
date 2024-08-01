@@ -4,7 +4,7 @@
     "item": "minecraft:red_sand"
   },
   "product": {
-    "item": "minecraft:soul_sand"
+    "id": "minecraft:soul_sand"
   },
   "reagents": ["reactive:soul", "reactive:curse"],
   "min": 500,

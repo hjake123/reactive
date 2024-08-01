@@ -1,12 +1,12 @@
 {
   "replace": false,
   "values": [
-    "#forge:crops",
+    "#c:crops",
     "minecraft:rotten_flesh",
-    "#forge:mushrooms",
-    "#forge:eggs",
-    "#forge:bones",
-    "#forge:leather",
+    "#c:mushrooms",
+    "#c:eggs",
+    "#c:bones",
+    "#c:leathers",
     "minecraft:sugar",
     "minecraft:honeycomb",
     "minecraft:frogspawn",

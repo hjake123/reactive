@@ -4,6 +4,6 @@
     "item": "minecraft:crying_obsidian"
   },
   "product": {
-    "item": "minecraft:obsidian"
+    "id": "minecraft:obsidian"
   }
 }

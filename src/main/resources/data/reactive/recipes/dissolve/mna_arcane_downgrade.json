@@ -10,6 +10,6 @@
     "item": "mna:greater_mote_arcane"
   },
   "product": {
-    "item": "mna:mote_arcane"
+    "id": "mna:mote_arcane"
   }
 }

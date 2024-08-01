@@ -4,7 +4,7 @@
     "item": "minecraft:glowstone_dust"
   },
   "product": {
-    "item": "reactive:stardust"
+    "id": "reactive:stardust"
   },
   "reagents": ["reactive:mind", "reactive:light"],
   "min": 250,

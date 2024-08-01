@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#forge:dusts/glowstone",
+    "#c:dusts/glowstone",
     "minecraft:shroomlight",
     "minecraft:pearlescent_froglight",
     "minecraft:verdant_froglight",

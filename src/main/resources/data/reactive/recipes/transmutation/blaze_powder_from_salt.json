@@ -4,7 +4,7 @@
     "item": "reactive:salt"
   },
   "product": {
-    "item": "minecraft:blaze_powder"
+    "id": "minecraft:blaze_powder"
   },
   "reagents": ["reactive:blaze"],
   "min": 800,

@@ -4,7 +4,7 @@
     "item": "minecraft:paper"
   },
   "product": {
-    "item": "reactive:litmus_paper"
+    "id": "reactive:litmus_paper"
   },
   "reagents": ["reactive:mind"],
   "min": 500,

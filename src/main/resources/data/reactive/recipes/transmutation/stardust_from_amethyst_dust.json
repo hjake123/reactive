@@ -10,7 +10,7 @@
     "item": "hexcasting:amethyst_dust"
   },
   "product": {
-    "item": "reactive:stardust"
+    "id": "reactive:stardust"
   },
   "reagents": ["reactive:light"],
   "min": 250,

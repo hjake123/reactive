@@ -4,6 +4,6 @@
     "item": "minecraft:dragon_egg"
   },
   "product": {
-    "item": "minecraft:dragon_egg"
+    "id": "minecraft:dragon_egg"
   }
 }

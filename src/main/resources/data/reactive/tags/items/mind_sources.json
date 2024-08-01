@@ -1,10 +1,10 @@
 {
   "replace": false,
   "values": [
-    "#forge:gems/amethyst",
+    "#c:gems/amethyst",
     "minecraft:phantom_membrane",
-    "#forge:dusts/redstone",
-    "#forge:enchanting_fuels",
+    "#c:dusts/redstone",
+    "#neoforge:enchanting_fuels",
     "minecraft:crying_obsidian",
     "minecraft:enchanted_book",
     "reactive:scroll",

@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:fire_coral_block"
+    "id": "minecraft:fire_coral_block"
   },
   "reagents": ["reactive:blaze"],
   "min": 100,

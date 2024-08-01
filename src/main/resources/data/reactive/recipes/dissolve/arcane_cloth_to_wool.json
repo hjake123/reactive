@@ -10,6 +10,6 @@
     "item": "irons_spellbooks:magic_cloth"
   },
   "product": {
-    "item": "minecraft:light_blue_wool"
+    "id": "minecraft:light_blue_wool"
   }
 }

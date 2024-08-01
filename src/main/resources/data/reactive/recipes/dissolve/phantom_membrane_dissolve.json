@@ -4,6 +4,6 @@
     "item": "minecraft:phantom_membrane"
   },
   "product": {
-    "item": "reactive:phantom_residue"
+    "id": "reactive:phantom_residue"
   }
 }

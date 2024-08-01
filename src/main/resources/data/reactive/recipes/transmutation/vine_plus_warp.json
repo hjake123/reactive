@@ -4,7 +4,7 @@
     "item": "minecraft:vine"
   },
   "product": {
-    "item": "minecraft:twisting_vines"
+    "id": "minecraft:twisting_vines"
   },
   "reagents": ["reactive:warp", "reactive:verdant"],
   "min": 100,

@@ -10,6 +10,6 @@
     "item": "mna:chimerite_gem"
   },
   "product": {
-    "item": "reactive:quartz"
+    "id": "reactive:quartz"
   }
 }

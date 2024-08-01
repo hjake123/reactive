@@ -4,7 +4,7 @@
     "item": "minecraft:wet_sponge"
   },
   "product": {
-    "item": "minecraft:gold_block"
+    "id": "minecraft:gold_block"
   },
   "reagents": ["reactive:esoteric_y"],
   "min": 100,

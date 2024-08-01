@@ -10,6 +10,6 @@
     "item": "botania:mana_string"
   },
   "product": {
-    "item": "minecraft:string"
+    "id": "minecraft:string"
   }
 }

@@ -4,7 +4,7 @@
     "item": "reactive:volt_cell"
   },
   "product": {
-    "item": "reactive:curse_cell"
+    "id": "reactive:curse_cell"
   },
   "reagents": ["reactive:curse"],
   "min": 1000,

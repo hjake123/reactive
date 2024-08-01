@@ -4,7 +4,7 @@
     "item": "minecraft:flint"
   },
   "product": {
-    "item": "reactive:force_rock"
+    "id": "reactive:force_rock"
   },
   "reagents": ["reactive:warp"],
   "min": 40,

@@ -4,6 +4,6 @@
     "item": "reactive:scroll"
   },
   "product": {
-    "item": "minecraft:paper"
+    "id": "minecraft:paper"
   }
 }

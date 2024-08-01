@@ -4,7 +4,7 @@
     "item": "minecraft:quartz"
   },
   "product": {
-    "item": "reactive:quartz"
+    "id": "reactive:quartz"
   },
   "reagents": ["reactive:caustic"],
   "min": 500,

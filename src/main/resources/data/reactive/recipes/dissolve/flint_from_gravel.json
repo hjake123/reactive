@@ -4,6 +4,6 @@
     "tag": "forge:gravel"
   },
   "product": {
-    "item": "minecraft:flint"
+    "id": "minecraft:flint"
   }
 }

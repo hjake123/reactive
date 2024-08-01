@@ -4,7 +4,7 @@
     "item": "minecraft:smooth_stone"
   },
   "product": {
-    "item": "minecraft:tuff"
+    "id": "minecraft:tuff"
   },
   "reagents": ["reactive:warp"],
   "min": 1000,
