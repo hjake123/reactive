@@ -5,8 +5,11 @@ import com.google.gson.JsonObject;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -23,9 +26,9 @@ import java.util.List;
 
 public class PrecipitateRecipeSerializer implements RecipeSerializer<PrecipitateRecipe> {
 
-    public static final Codec<PrecipitateRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<PrecipitateRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(PrecipitateRecipe::getGroup),
-            ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
+            ItemStack.CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
             Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(PrecipitateRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(PrecipitateRecipe::getCost),
@@ -33,14 +36,20 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
             Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(PrecipitateRecipe::isElectricityRequired)
     ).apply(instance, PrecipitateRecipe::new));
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, PrecipitateRecipe> STREAM_CODEC = StreamCodec.of(PrecipitateRecipeSerializer::toNetwork, PrecipitateRecipeSerializer::fromNetwork);
+
     @Override
-    public Codec<PrecipitateRecipe> codec() {
+    public MapCodec<PrecipitateRecipe> codec() {
         return CODEC;
     }
 
     @Override
-    public @Nullable PrecipitateRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
-        ItemStack product = buffer.readItem();
+    public StreamCodec<RegistryFriendlyByteBuf, PrecipitateRecipe> streamCodec() {
+        return STREAM_CODEC;
+    }
+
+    public static @NotNull PrecipitateRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+        ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
@@ -53,9 +62,8 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         return new PrecipitateRecipe("precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
     }
 
-    @Override
-    public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
-        buffer.writeItem(recipe.product);
+    public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
+        ItemStack.STREAM_CODEC.encode(buffer, recipe.product);
         buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);

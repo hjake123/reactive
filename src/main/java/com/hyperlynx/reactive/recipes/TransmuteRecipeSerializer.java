@@ -6,8 +6,11 @@ import com.google.gson.JsonSyntaxException;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -22,25 +25,31 @@ import java.util.List;
 
 public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteRecipe> {
 
-    public static final Codec<TransmuteRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    public static final MapCodec<TransmuteRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(TransmuteRecipe::getGroup),
             Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
-            ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
+            ItemStack.CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
             Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(TransmuteRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(TransmuteRecipe::getCost),
             Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(TransmuteRecipe::isElectricityRequired)
     ).apply(instance, TransmuteRecipe::new));
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, TransmuteRecipe> STREAM_CODEC = StreamCodec.of(TransmuteRecipeSerializer::toNetwork, TransmuteRecipeSerializer::fromNetwork);
+
     @Override
-    public Codec<TransmuteRecipe> codec() {
+    public MapCodec<TransmuteRecipe> codec() {
         return CODEC;
     }
 
     @Override
-    public @Nullable TransmuteRecipe fromNetwork(@NotNull FriendlyByteBuf buffer) {
-        Ingredient reactant = Ingredient.fromNetwork(buffer);
-        ItemStack product = buffer.readItem();
+    public StreamCodec<RegistryFriendlyByteBuf, TransmuteRecipe> streamCodec() {
+        return STREAM_CODEC;
+    }
+
+    public static @Nullable TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+        Ingredient reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
+        ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
@@ -51,10 +60,9 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         return new TransmuteRecipe("transmutation", reactant, product, reagents, min, cost, needs_electricity);
     }
 
-    @Override
-    public void toNetwork(@NotNull FriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
-        recipe.reactant.toNetwork(buffer);
-        buffer.writeItem(recipe.product);
+    public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
+        Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.reactant);
+        ItemStack.STREAM_CODEC.encode(buffer, recipe.product);
         buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
         buffer.writeVarInt(recipe.minimum);
         buffer.writeVarInt(recipe.cost);
