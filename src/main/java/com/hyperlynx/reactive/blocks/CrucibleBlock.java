@@ -110,17 +110,6 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     }
 
     @Override
-    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit){
-        // Clear the crucible with shift-right-click.
-        if(player.isShiftKeyDown()){
-            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
-            level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
-            return InteractionResult.SUCCESS;
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()){
             // Workaround to make sure that acid bucket addition instantly updates the mix color.
@@ -175,6 +164,12 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         }
 
         if(state.getValue(FULL)){
+            if(player.isShiftKeyDown()){
+                level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
+                level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
+                return ItemInteractionResult.SUCCESS;
+            }
+
             BlockEntity crucible = level.getBlockEntity(pos);
             if(!(crucible instanceof CrucibleBlockEntity c)){
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
