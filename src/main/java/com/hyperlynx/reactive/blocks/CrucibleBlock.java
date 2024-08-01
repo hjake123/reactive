@@ -103,7 +103,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         if(container == null)
             return false;
         for(int i = 0; i < container.getTanks(); i++){
-            if(container.getFluidInTank(i).containsFluid(new FluidStack(criterion, 1000)))
+            if(container.getFluidInTank(i).getFluid().isSame(criterion) && container.getFluidInTank(i).getAmount() >= 1000)
                 return true;
         }
         return false;
