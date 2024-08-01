@@ -1,2 +1,1 @@
- - Added basic Goety interaction
- - Fixed an issue where fluid-containing blocks could duplicate when used to fill the Crucible
+ - Port to 1.20.6

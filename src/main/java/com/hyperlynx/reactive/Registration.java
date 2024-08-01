@@ -29,9 +29,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -44,13 +41,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraft.world.item.alchemy.PotionContents;
 
 
 @SuppressWarnings("unused")
@@ -444,11 +436,11 @@ public class Registration {
     @SubscribeEvent
     public static void commonSetupHandler(FMLCommonSetupEvent evt){
         SpecialCaseMan.bootstrap();
-        ((SymbolBlock) COPPER_SYMBOL.get()).setSymbolItem(COPPER_SYMBOL_ITEM.get());
-        ((SymbolBlock) IRON_SYMBOL.get()).setSymbolItem(IRON_SYMBOL_ITEM.get());
-        ((SymbolBlock) GOLD_SYMBOL.get()).setSymbolItem(GOLD_SYMBOL_ITEM.get());
-        ((SymbolBlock) OCCULT_SYMBOL.get()).setSymbolItem(OCCULT_SYMBOL_ITEM.get());
-        ((SymbolBlock) DIVINE_SYMBOL.get()).setSymbolItem(DIVINE_SYMBOL_ITEM.get());
+        COPPER_SYMBOL.get().setSymbolItem(COPPER_SYMBOL_ITEM.get());
+        IRON_SYMBOL.get().setSymbolItem(IRON_SYMBOL_ITEM.get());
+        GOLD_SYMBOL.get().setSymbolItem(GOLD_SYMBOL_ITEM.get());
+        OCCULT_SYMBOL.get().setSymbolItem(OCCULT_SYMBOL_ITEM.get());
+        DIVINE_SYMBOL.get().setSymbolItem(DIVINE_SYMBOL_ITEM.get());
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
 //        if(ModList.get().isLoaded("create")){

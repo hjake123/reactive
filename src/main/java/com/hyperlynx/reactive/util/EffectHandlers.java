@@ -1,11 +1,10 @@
-package com.hyperlynx.reactive.effect;
+package com.hyperlynx.reactive.util;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
