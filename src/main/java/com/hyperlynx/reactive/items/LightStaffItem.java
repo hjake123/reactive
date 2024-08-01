@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import java.util.Objects;
 import java.util.function.Function;
 
 public class LightStaffItem extends StaffItem {
@@ -32,8 +31,8 @@ public class LightStaffItem extends StaffItem {
             return InteractionResultHolder.fail(player.getItemInHand(hand));
 
         if(!level.isClientSide) {
-            effectFunction.apply(player);
-            player.getItemInHand(hand).hurtAndBreak(1, player, Objects.requireNonNull(player.getItemInHand(hand).getEquipmentSlot()));
+            effectFunction.apply((Player) player);
+            player.getItemInHand(hand).hurtAndBreak(1, player, (LivingEntity l) -> {});
         }
         return super.use(level, player, hand);
     }

@@ -12,8 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 // Absorbs negative Crucible effects and Potion effects.
 public class CrystalIronItem extends Item {
     public CrystalIronItem(Properties props) {
@@ -48,7 +46,7 @@ public class CrystalIronItem extends Item {
     }
 
     @Override
-    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slot, boolean unknown) {
+    public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int tick, boolean unknown) {
         if(entity instanceof LivingEntity holder && !level.isClientSide){
             if(holder.getActiveEffects().isEmpty()){
                 return;
@@ -56,28 +54,28 @@ public class CrystalIronItem extends Item {
             for(MobEffectInstance mei : holder.getActiveEffects()) {
                 if(mei.getEffect().equals(MobEffects.WITHER)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.POISON)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.HUNGER) && WorldSpecificValue.getBool("stone_break_hunger", 0.7F)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.BAD_OMEN)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.MOVEMENT_SLOWDOWN) && WorldSpecificValue.getBool("stone_break_slow", 0.3F)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }else if(mei.getEffect().equals(MobEffects.WEAKNESS) && WorldSpecificValue.getBool("stone_break_weakness", 0.5F)){
                     holder.removeEffect(mei.getEffect());
-                    takeDurabilityDamage(stack, holder, slot);
+                    getHurt(stack, holder);
                 }
             }
         }
     }
 
-    private void takeDurabilityDamage(ItemStack stack, LivingEntity holder, int slot){
-        stack.hurtAndBreak(1, holder, Objects.requireNonNull(holder.getSlot(slot).get().getEquipmentSlot()));
+    private void getHurt(ItemStack stack, LivingEntity holder){
+        stack.hurtAndBreak(1, holder, (LivingEntity l) -> {});
     }
 }
