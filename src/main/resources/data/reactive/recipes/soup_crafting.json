@@ -17,7 +17,7 @@
     "uuu"
   ],
   "result": {
-    "item": "reactive:soup",
+    "id": "reactive:soup",
     "count": 7
   }
 }

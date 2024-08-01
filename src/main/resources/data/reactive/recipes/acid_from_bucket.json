@@ -15,7 +15,7 @@
     }
   ],
   "result":{
-    "item": "reactive:acid_bottle",
+    "id": "reactive:acid_bottle",
     "count": 3
   }
 }

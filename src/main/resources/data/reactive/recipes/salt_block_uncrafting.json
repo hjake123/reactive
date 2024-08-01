@@ -6,7 +6,7 @@
     }
   ],
   "result": {
-    "item": "reactive:salt",
+    "id": "reactive:salt",
     "count": 4
   }
 }

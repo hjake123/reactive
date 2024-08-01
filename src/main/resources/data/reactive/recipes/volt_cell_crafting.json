@@ -20,6 +20,6 @@
     "aia"
   ],
   "result": {
-    "item": "reactive:volt_cell"
+    "id": "reactive:volt_cell"
   }
 }

@@ -17,6 +17,6 @@
     "csc"
   ],
   "result": {
-    "item": "reactive:gravity_beam"
+    "id": "reactive:gravity_beam"
   }
 }
