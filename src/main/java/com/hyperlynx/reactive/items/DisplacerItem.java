@@ -7,33 +7,40 @@ import com.hyperlynx.reactive.blocks.ChainDisplacingBlock;
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class DisplacerItem extends Item {
     public DisplacerItem(Properties props) {
-        super(props);
+        super(props.component(DataComponents.ATTRIBUTE_MODIFIERS,
+                ItemAttributeModifiers.builder()
+                        .add(Attributes.ATTACK_SPEED,
+                                new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -3, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                                EquipmentSlotGroup.HAND)
+                        .add(Attributes.ATTACK_DAMAGE,
+                                new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", 3.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+                                EquipmentSlotGroup.HAND)
+                .build()));
     }
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
-        double ATTACK_DAMAGE = 3.5;
-        double ATTACK_SPEED = -3;
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> mainhand_modifier_builder = ImmutableMultimap.builder();
-        mainhand_modifier_builder.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", ATTACK_DAMAGE, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        mainhand_modifier_builder.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-        return slot == EquipmentSlot.MAINHAND ? mainhand_modifier_builder.build() : super.getDefaultAttributeModifiers(slot);
-    }
+
     @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
@@ -61,7 +68,7 @@ public class DisplacerItem extends Item {
                     continue;
                 displace(level, selected);
                 if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
-                    context.getItemInHand().hurtAndBreak(1, splayer, (LivingEntity) -> {});
+                    context.getItemInHand().hurtAndBreak(1, splayer, Objects.requireNonNull(context.getItemInHand().getEquipmentSlot()));
                 break;
             }
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
@@ -74,7 +81,7 @@ public class DisplacerItem extends Item {
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.0F);
             if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
-                context.getItemInHand().hurtAndBreak(1, splayer, (LivingEntity) -> {});
+                context.getItemInHand().hurtAndBreak(1, splayer, Objects.requireNonNull(context.getItemInHand().getEquipmentSlot()));
             return InteractionResult.SUCCESS;
         }
         level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
@@ -91,9 +98,7 @@ public class DisplacerItem extends Item {
     }
 
     public boolean hurtEnemy(ItemStack stack, LivingEntity victim, LivingEntity wielder) {
-        stack.hurtAndBreak(2, wielder, (living) -> {
-            living.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-        });
+        stack.hurtAndBreak(2, wielder, Objects.requireNonNull(stack.getEquipmentSlot()));
         return true;
     }
 
