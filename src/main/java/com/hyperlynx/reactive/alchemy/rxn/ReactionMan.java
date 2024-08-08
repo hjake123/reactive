@@ -6,6 +6,8 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
+import com.hyperlynx.reactive.integration.pehkui.ResizeReactionEffects;
+import com.hyperlynx.reactive.integration.pehkui.ResizeReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -56,6 +58,10 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("astral_synthesis");
         CRITERIA_BUILDER.add("astral");
         CRITERIA_BUILDER.add("astral_curse_annihilation");
+        CRITERIA_BUILDER.add("size_grow_effect");
+        CRITERIA_BUILDER.add("size_shrink_effect");
+        CRITERIA_BUILDER.add("size_revert_effect");
+        CRITERIA_BUILDER.add("size_revert_effect_2");
     }
 
     public List<Reaction> getReactions(){
@@ -151,6 +157,11 @@ public class ReactionMan {
         REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
         REACTIONS.add(new AnnihilationReaction("creation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+
+        REACTIONS.add(new FreeEffectReaction("size_shrink_effect", ResizeReactionEffects::shrink, ResizeReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+        REACTIONS.add(new FreeEffectReaction("size_grow_effect", ResizeReactionEffects::grow, ResizeReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+        REACTIONS.add(new FreeEffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new FreeEffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 

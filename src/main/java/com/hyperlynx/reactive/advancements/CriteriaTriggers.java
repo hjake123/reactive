@@ -74,5 +74,10 @@ public class CriteriaTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_BLAZE_GATHER_TRIGGER = TRIGGERS.register("see_blaze_gather_criterion",
             () -> new FlagTrigger(ReactiveMod.location("see_blaze_gather_criterion")));
 
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SIZE_REVERTED_TRIGGER = TRIGGERS.register("size_revert_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("size_revert_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SIZE_CHANGED_TRIGGER = TRIGGERS.register("size_change_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("size_change_criterion")));
 
 }
