@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrecipitateRecipe implements Recipe<Container> {
+public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final ItemStack product;
     protected final List<Power> reagents;
@@ -38,12 +38,12 @@ public class PrecipitateRecipe implements Recipe<Container> {
     }
 
     @Override
-    public String getGroup() {
+    public @NotNull String getGroup() {
         return group;
     }
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
-    public boolean powerMet(PowerBearer bearer, Level level){
+    private boolean powerMet(CrucibleRecipeInput input, Level level){
         ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(reagents.hashCode() + "-" + product.hashCode() + "_reagent_order", reagents);
 
         int power_level = 0;
@@ -52,11 +52,11 @@ public class PrecipitateRecipe implements Recipe<Container> {
         for(Power p : sorted_reagents) {
             if(iterations > reagent_count)
                 break;
-            if(bearer.getPowerLevel(p) == 0){
+            if(input.getPowerLevel(p) == 0){
                 has_all_reagents = false;
                 break;
             }
-            power_level += bearer.getPowerLevel(p);
+            power_level += input.getPowerLevel(p);
             iterations++;
         }
         return has_all_reagents && power_level > minimum;
@@ -74,17 +74,17 @@ public class PrecipitateRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, @NotNull Level level) {
-        return true; // Any container would match the recipe because there's no input ingredient!
+    public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
+        return powerMet(input, level); // Only power levels are relevant.
     }
 
     @Override
-    public ItemStack assemble(Container container, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull CrucibleRecipeInput input, HolderLookup.@NotNull Provider provider) {
         return product.copy();
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return product;
     }
 

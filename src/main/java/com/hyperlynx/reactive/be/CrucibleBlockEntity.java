@@ -12,6 +12,7 @@ import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.recipes.CrucibleRecipeInput;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import com.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -53,7 +54,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 
@@ -437,10 +437,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             DissolveRecipe recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if(recipe.matches(new FakeContainer(stack), level)){
+            if(recipe.matches(CrucibleRecipeInput.of(stack), level)){
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, recipe.assemble(new FakeContainer(reactant), level.registryAccess())));
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5,
+                        recipe.assemble(CrucibleRecipeInput.of(stack), level.registryAccess())));
                 return true;
             }
         }
@@ -454,13 +455,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if (recipe.matches(new FakeContainer(itemEntity.getItem()), level)) {
-                if (recipe.powerMet(crucible)) {
-                    ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
-                    level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
-                    crucible.setDirty(level, pos, state);
-                    return true;
-                }
+            if (recipe.matches(CrucibleRecipeInput.of(itemEntity.getItem(), crucible.getPowerMap()), level)) {
+                ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
+                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
+                crucible.setDirty(level, pos, state);
+                return true;
             }
         }
         return false;
@@ -473,7 +472,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
-            if(recipe.powerMet(crucible, level)){
+            if(recipe.matches(CrucibleRecipeInput.of(crucible.getPowerMap()), level)){
                 ItemStack result = recipe.apply(crucible, level);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
                 crucible.setDirty(level, pos, state);
@@ -663,7 +662,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // These methods calculate and return the combined color of the cauldron's mixture, based on the given water color.
-    @Override
     public Color getCombinedColor(int water_color_number) {
         Color water_color = new Color(water_color_number);
         if(powers == null || powers.isEmpty() || getTotalPowerLevel() == 0){

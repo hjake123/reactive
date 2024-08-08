@@ -13,7 +13,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class DissolveRecipe implements Recipe<Container> {
+public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
@@ -27,23 +27,23 @@ public class DissolveRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
         for(ItemStack i : reactant.getItems()) {
-            if (container.getItem(0).is(i.getItem()))
+            if (input.getItem().is(i.getItem()))
                 return true;
         }
         return false;
     }
 
     @Override
-    public @NotNull ItemStack assemble(Container container, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(CrucibleRecipeInput input, HolderLookup.@NotNull Provider provider) {
         ItemStack result = product.copy();
-        result.setCount(product.getCount() * container.getItem(1).getCount());
+        result.setCount(product.getCount() * input.getItem().getCount());
         return result;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return product;
     }
 

@@ -8,16 +8,13 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class TransmuteRecipe implements Recipe<Container> {
+public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
@@ -40,15 +37,15 @@ public class TransmuteRecipe implements Recipe<Container> {
         return group;
     }
 
-    public boolean powerMet(PowerBearer bearer){
+    private boolean powerMet(CrucibleRecipeInput input){
         int power_level = 0;
         boolean has_all_reagents = true;
         for(Power p : reagents) {
-            if(bearer.getPowerLevel(p) == 0){
+            if(input.getPowerLevel(p) == 0){
                 has_all_reagents = false;
                 break;
             }
-            power_level += bearer.getPowerLevel(p);
+            power_level += input.getPowerLevel(p);
         }
         return has_all_reagents && power_level > minimum;
     }
@@ -68,21 +65,22 @@ public class TransmuteRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container container, @NotNull Level level) {
+    public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
         for(ItemStack i : reactant.getItems()) {
-            if (container.getItem(0).is(i.getItem()))
-                return true;
+            if (input.getItem().is(i.getItem())) {
+                return powerMet(input);
+            }
         }
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container container, HolderLookup.Provider provider) {
+    public @NotNull ItemStack assemble(@NotNull CrucibleRecipeInput input, HolderLookup.@NotNull Provider provider) {
         return product.copy();
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider provider) {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return product;
     }
 
