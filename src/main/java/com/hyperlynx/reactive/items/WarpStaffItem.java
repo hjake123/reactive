@@ -55,7 +55,7 @@ public class WarpStaffItem extends StaffItem{
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity wielder) {
         return 0;
     }
 

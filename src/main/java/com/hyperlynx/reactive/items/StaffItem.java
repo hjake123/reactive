@@ -70,7 +70,8 @@ public class StaffItem extends BlockItem {
         return UseAnim.BOW;
     }
 
-    public int getUseDuration(ItemStack stack) {
+    @Override
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity wielder) {
         return 72000;
     }
 
