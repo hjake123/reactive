@@ -1,10 +1,10 @@
-package com.hyperlynx.reactive.fx.renderers;
+package com.hyperlynx.reactive.client.renderers;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 

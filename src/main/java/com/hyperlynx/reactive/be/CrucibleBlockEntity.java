@@ -11,7 +11,7 @@ import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.recipes.CrucibleRecipeInput;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;

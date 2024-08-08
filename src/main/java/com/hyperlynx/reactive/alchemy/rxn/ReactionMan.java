@@ -5,7 +5,7 @@ import com.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import com.hyperlynx.reactive.fx.renderers.ReactionRenders;
+import com.hyperlynx.reactive.client.renderers.ReactionRenders;
 import com.hyperlynx.reactive.integration.pehkui.ResizeReactionEffects;
 import com.hyperlynx.reactive.integration.pehkui.ResizeReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;

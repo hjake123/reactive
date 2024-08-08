@@ -4,7 +4,7 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.world.level.Level;
 
 public class AstralReaction extends Reaction{

@@ -1,19 +1,18 @@
-package com.hyperlynx.reactive;
+package com.hyperlynx.reactive.client;
 
-import com.hyperlynx.reactive.fx.particles.*;
-import com.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
-import com.hyperlynx.reactive.fx.renderers.SymbolRenderer;
+import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.client.particles.*;
+import com.hyperlynx.reactive.client.renderers.CrucibleRenderer;
+import com.hyperlynx.reactive.client.renderers.SymbolRenderer;
 //import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 //import com.simibubi.create.foundation.ponder.PonderRegistry;
 //import com.simibubi.create.infrastructure.ponder.AllPonderTags;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.common.NeoForge;
 
 public class ClientRegistration {
     public static void init(IEventBus bus) {

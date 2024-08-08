@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.fx.renderers;
+package com.hyperlynx.reactive.client.renderers;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
@@ -6,7 +6,7 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

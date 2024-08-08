@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.fx.particles;
+package com.hyperlynx.reactive.client.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;

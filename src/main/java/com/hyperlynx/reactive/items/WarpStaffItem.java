@@ -2,7 +2,7 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.components.BoundEntity;
 import com.hyperlynx.reactive.components.ReactiveDataComponents;
-import com.hyperlynx.reactive.fx.particles.ParticleScribe;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.component.DataComponents;

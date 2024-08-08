@@ -1,7 +1,7 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import com.hyperlynx.reactive.client.ClientRegistration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
