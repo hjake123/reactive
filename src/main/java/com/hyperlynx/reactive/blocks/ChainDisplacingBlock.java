@@ -13,8 +13,12 @@ import java.util.*;
 public interface ChainDisplacingBlock {
     boolean stateMatchesSelf(BlockState state);
 
+    default void breadthFirstDisplace(Level level, BlockPos source, boolean displace_surroundings){
+        breadthFirstDisplace(level, source, displace_surroundings, 20);
+    }
+
     // Displace connected CBDs if needed.
-    default void breadthFirstDisplace(Level level, BlockPos source, boolean displace_surroundings) {
+    default void breadthFirstDisplace(Level level, BlockPos source, boolean displace_surroundings, int source_displace_duration) {
         int max = ConfigMan.COMMON.maxDisplaceCount.get();
         Queue<BlockPos> displace_queue = new ArrayDeque<>();
         displace_queue.add(source);
@@ -53,7 +57,7 @@ public interface ChainDisplacingBlock {
             }
 
             if(target.equals(source))
-                DisplacedBlock.displace(level.getBlockState(target), target, level, 20);
+                DisplacedBlock.displace(level.getBlockState(target), target, level, source_displace_duration);
             else if(source != null)
                 DisplacedBlock.displaceWithChain(level.getBlockState(target), target, level, 2 + count, count, prior);
             else

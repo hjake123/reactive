@@ -31,6 +31,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class DisplacerItem extends Item {
+    public static final int DISPLACER_DISPLACE_TIME = 200;
+
     public DisplacerItem(Properties props) {
         super(props.attributes(SwordItem.createAttributes(Tiers.STONE, 3, -3.0F)));
     }
@@ -86,10 +88,10 @@ public class DisplacerItem extends Item {
 
     private static boolean displace(Level level, BlockPos selected) {
         if(level.getBlockState(selected).getBlock() instanceof ChainDisplacingBlock cdb) {
-            cdb.breadthFirstDisplace(level, selected, false);
+            cdb.breadthFirstDisplace(level, selected, false, DISPLACER_DISPLACE_TIME);
             return true;
         }
-        return DisplacedBlock.displace(level.getBlockState(selected), selected, level, 200);
+        return DisplacedBlock.displace(level.getBlockState(selected), selected, level, DISPLACER_DISPLACE_TIME);
     }
 
     public boolean hurtEnemy(ItemStack stack, LivingEntity victim, LivingEntity wielder) {
