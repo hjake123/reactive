@@ -24,7 +24,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public @Nullable ResourceLocation getRegistryName(TransmuteRecipe recipe) {
-        return new ResourceLocation(ReactiveMod.MODID, "transmute");
+        return ReactiveMod.location("transmute");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public IDrawable getBackground() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(new ResourceLocation(ReactiveMod.MODID, "textures/gui/tf_jei.png"), 2, 2, 76, 38);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
     }
 
     @Override

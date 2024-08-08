@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -50,24 +51,24 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(POWER_TYPE, Powers.POWER_REGISTRY.get().getValues(), POWER_HANDLER, POWER_RENDERER);
+        registration.register(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList(), POWER_HANDLER, POWER_RENDERER);
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         HELPERS = registration.getJeiHelpers();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()));
-        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()));
+        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());
         addDescriptions(registration);
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_BLAZE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_LIFE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_LIGHT_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_BLAZE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_LIFE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_LIGHT_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
-        registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.get().getValues());
+        registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList());
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
     }
@@ -76,16 +77,15 @@ public class ReactiveJEIPlugin implements IModPlugin {
     private void addPowerSourceRecipes(IRecipeRegistration registration){
         Set<Item> excluded = new HashSet<>();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        List<DissolveRecipe> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
-        for (DissolveRecipe r : purify_recipes) {
-            for(ItemStack stack: r.getReactant().getItems())
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        for (RecipeHolder<DissolveRecipe> r : purify_recipes) {
+            for(ItemStack stack: r.value().getReactant().getItems())
                 excluded.add(stack.getItem());
         }
 
         for(ItemStack i : registration.getIngredientManager().getAllIngredients(VanillaTypes.ITEM_STACK)){
-            if(Power.getSourcePower(i).size() > 0 && !excluded.contains(i.getItem())) {
+            if(!Power.getSourcePower(i).isEmpty() && !excluded.contains(i.getItem())) {
                 registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), List.of(new DissolveRecipe(
-                        null,
                         "power_source",
                         Ingredient.of(i), ItemStack.EMPTY, false)));
             }
@@ -114,7 +114,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addPowerDescriptions(IRecipeRegistration registration){
-        for(Power power : Powers.POWER_REGISTRY.get().getValues()){
+        for(Power power : Powers.POWER_REGISTRY.stream().toList()){
             registration.addIngredientInfo(power, POWER_TYPE, Component.translatable("jei.reactive.power"));
         }
     }
