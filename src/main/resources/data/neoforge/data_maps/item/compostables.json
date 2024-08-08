@@ -1,0 +1,10 @@
+{
+  "values": {
+    "reactive:verdant_bottle": {
+      "chance": 1
+    },
+    "reactive:flower_vine": {
+      "chance": 0.4
+    }
+  }
+}

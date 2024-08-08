@@ -13,6 +13,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
+import mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -24,7 +25,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 import org.jetbrains.annotations.NotNull;
+import mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe;
 
 import java.util.*;
 
@@ -69,8 +72,10 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
         registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList());
+        addComposterRecipes(registration);
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
+
     }
 
     // TODO: this is bad! and slow!
@@ -130,6 +135,13 @@ public class ReactiveJEIPlugin implements IModPlugin {
         IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(new ItemStack(staff.repair_item)),  List.of(full_durability));
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
+    }
+
+    private void addComposterRecipes(IRecipeRegistration registration){
+        registration.addRecipes(RecipeTypes.COMPOSTING, List.of(
+                new HyperComposterRecipe(Registration.VERDANT_BOTTLE),
+                new HyperComposterRecipe(Registration.FLOWER_VINES_ITEM)
+        ));
     }
 
     private void addDisplacerRepairRecipe(IRecipeRegistration registration, IVanillaRecipeFactory factory){

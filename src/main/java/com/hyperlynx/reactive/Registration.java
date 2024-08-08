@@ -441,22 +441,10 @@ public class Registration {
         GOLD_SYMBOL.get().setSymbolItem(GOLD_SYMBOL_ITEM.get());
         OCCULT_SYMBOL.get().setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         DIVINE_SYMBOL.get().setSymbolItem(DIVINE_SYMBOL_ITEM.get());
-        ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
-        ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
 //        if(ModList.get().isLoaded("create")){
 //            ReactiveCreatePlugin.init();
 //        }
-//        ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
     }
-
-//    @SubscribeEvent
-//    public static void buildContents(BuildCreativeModeTabContentsEvent event) {
-//        if (event.getTabKey() == REACTIVE_TAB.getKey()) {
-//            for(DeferredHolder<Item, ? extends Item> item_holder : ITEMS.getEntries()){
-//                event.accept(item_holder.get());
-//            }
-//        }
-//    }
 
     // Helper method for Recipe Types.
     public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {
