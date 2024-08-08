@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PowerIngredientHandler implements IIngredientHelper<Power> {
     @Override
-    public IIngredientType getIngredientType() {
+    public IIngredientType<Power> getIngredientType() {
         return ReactiveJEIPlugin.POWER_TYPE;
     }
 
