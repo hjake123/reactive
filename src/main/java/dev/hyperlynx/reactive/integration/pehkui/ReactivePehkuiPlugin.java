@@ -6,7 +6,6 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.FreeEffectReaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,8 +25,8 @@ public class ReactivePehkuiPlugin {
         ReactionMan.CRITERIA_BUILDER.add("size_revert_effect");
         ReactionMan.CRITERIA_BUILDER.add("size_revert_effect_2");
     }
-    protected static final FlagCriterion SIZE_CHANGED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_change_criterion"));
-    protected static final FlagCriterion SIZE_REVERTED = new FlagCriterion(new ResourceLocation(ReactiveMod.MODID, "size_revert_criterion"));
+    protected static final FlagCriterion SIZE_CHANGED = new FlagCriterion(ReactiveMod.location("size_change_criterion"));
+    protected static final FlagCriterion SIZE_REVERTED = new FlagCriterion(ReactiveMod.location("size_revert_criterion"));
 
     @SubscribeEvent
     public static void onReactionConstruct(ReactionMan.ReactionConstructEvent evt){

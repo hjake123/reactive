@@ -445,10 +445,10 @@ public class Registration {
 
     // Register sound events.
     public static final RegistryObject<SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:zap")));
+            () -> SoundEvent.createVariableRangeEvent(ReactiveMod.location("zap")));
 
     public static final RegistryObject<SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:rumble")));
+            () -> SoundEvent.createVariableRangeEvent(ReactiveMod.location("rumble")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final RegistryObject<Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

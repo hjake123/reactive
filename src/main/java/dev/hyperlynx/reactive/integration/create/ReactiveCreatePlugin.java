@@ -12,9 +12,9 @@ public class ReactiveCreatePlugin {
     static CrucibleIntegrityDisplaySource CRUCIBLE_INTEGRITY_DISPLAY_SOURCE = new CrucibleIntegrityDisplaySource();
 
     public static void init(){
-        AllDisplayBehaviours.register(new ResourceLocation(ReactiveMod.MODID, "crucible_powers"), CRUCIBLE_DISPLAY_SOURCE);
+        AllDisplayBehaviours.register(ReactiveMod.location("crucible_powers"), CRUCIBLE_DISPLAY_SOURCE);
         AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_DISPLAY_SOURCE, Registration.CRUCIBLE_BE_TYPE.get());
-        AllDisplayBehaviours.register(new ResourceLocation(ReactiveMod.MODID, "crucible_integrity"), CRUCIBLE_INTEGRITY_DISPLAY_SOURCE);
+        AllDisplayBehaviours.register(ReactiveMod.location("crucible_integrity"), CRUCIBLE_INTEGRITY_DISPLAY_SOURCE);
         AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_INTEGRITY_DISPLAY_SOURCE, Registration.CRUCIBLE_BE_TYPE.get());
     }
 

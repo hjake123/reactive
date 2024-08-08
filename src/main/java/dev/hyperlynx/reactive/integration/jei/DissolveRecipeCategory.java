@@ -29,7 +29,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
     public @Nullable ResourceLocation getRegistryName(DissolveRecipe recipe) {
-        return new ResourceLocation(ReactiveMod.MODID, "dissolve");
+        return ReactiveMod.location("dissolve");
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     @Override
     public IDrawable getBackground() {
         //return ReactiveJEIPlugin.HELPERS.getGuiHelper().createBlankDrawable(76, 38);
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(new ResourceLocation(ReactiveMod.MODID, "textures/gui/tf_jei.png"), 2, 2, 76, 38);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
     }
 
     @Override

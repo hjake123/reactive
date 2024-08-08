@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive;
 
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
@@ -28,6 +29,11 @@ public class ReactiveMod
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
+    }
+
+    /** Creates a ResourceLocation with the mod id as the namespace. **/
+    public static ResourceLocation location(String path){
+        return new ResourceLocation(MODID, path);
     }
 
 }

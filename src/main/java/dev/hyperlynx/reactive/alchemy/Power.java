@@ -15,7 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,42 +32,42 @@ public class Power {
     public boolean invisible = false;
 
     public Power(String id, Supplier<Block> render_water_block, int color, Item bottle){
-        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
     public Power(String id, Supplier<Block> render_water_block, Color color, Item bottle){
-        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
 
     public Power(String id, Supplier<Block> render_water_block, int color, Item bottle, Item renderItem){
-        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
     public Power(String id, Supplier<Block> render_water_block, Color color, Item bottle, Item renderItem){
-        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
@@ -98,7 +97,7 @@ public class Power {
         if(key.contains(":")){
             location = new ResourceLocation(key);
         }else{
-            location = new ResourceLocation(ReactiveMod.MODID, key);
+            location = ReactiveMod.location(key);
         }
         Power ret = Powers.POWER_SUPPLIER.get().getValue(location);
         if(ret == null) System.err.println("Failed to read power. This will break things.");

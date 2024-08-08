@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -228,7 +227,7 @@ public class LitmusPaperItem extends Item {
         if(reaction_alias.isEmpty()){
             return Component.empty();
         }
-        if(player.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(new ResourceLocation(ReactiveMod.MODID, "reactions/" + reaction_alias))).isDone())
+        if(player.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/" + reaction_alias))).isDone())
             return ReactiveMod.REACTION_MAN.get(reaction_alias).getName().append(" ");
         else
             return Component.translatable("reaction.reactive.unknown").append(" ");

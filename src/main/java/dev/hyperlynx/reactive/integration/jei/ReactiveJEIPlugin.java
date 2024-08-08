@@ -39,7 +39,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new ResourceLocation(ReactiveMod.MODID, "jei_plugin");
+        return ReactiveMod.location("jei_plugin");
     }
 
     private void setHelpers(IJeiHelpers helpers){

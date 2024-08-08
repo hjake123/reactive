@@ -2,7 +2,6 @@ package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
 // Registers the Alchemical Powers.
 public class Powers {
     // Handles registration of Powers.
-    public static final DeferredRegister<Power> POWERS = DeferredRegister.create(new ResourceLocation(ReactiveMod.MODID, "power_registry"), ReactiveMod.MODID);
+    public static final DeferredRegister<Power> POWERS = DeferredRegister.create(ReactiveMod.location("power_registry"), ReactiveMod.MODID);
     public static final Supplier<IForgeRegistry<Power>> POWER_SUPPLIER = POWERS.makeRegistry(RegistryBuilder::new);
 
     public static final RegistryObject<Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze", () -> Blocks.WATER, 0xFFA300, Registration.BLAZE_BOTTLE.get()));
