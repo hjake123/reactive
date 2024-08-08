@@ -36,7 +36,7 @@ public class Powers {
     public static final DeferredHolder<Power, Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze", 0xFFA300, Registration.BLAZE_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind", 0x7A5BB5, Registration.MIND_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> SOUL_POWER = POWERS.register("soul", () -> new Power("soul", 0x60F5FA, Registration.SOUL_BOTTLE.get()));
-    public static final DeferredHolder<Power, Power>CURSE_POWER = POWERS.register("curse", () -> new Power("curse", 0x2D231D, (Item) null, Items.BLACK_DYE));
+    public static final DeferredHolder<Power, Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse", 0x2D231D, (Item) null, Items.BLACK_DYE));
     public static final DeferredHolder<Power, Power> LIGHT_POWER = POWERS.register("light", () -> new Power("light", 0xF6DAB4, Registration.LIGHT_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> WARP_POWER = POWERS.register("warp", () -> new Power("warp", 0x118066, Registration.WARP_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital", 0xFF0606, Registration.VITAL_BOTTLE.get()));

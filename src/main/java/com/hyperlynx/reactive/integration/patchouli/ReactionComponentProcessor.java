@@ -19,7 +19,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
     String reaction_alias = "error";
     @Override
     public void setup(Level level, IVariableProvider variables) {
-        reaction_alias = variables.get("reaction").asString();
+        reaction_alias = variables.get("reaction", level.registryAccess()).asString();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
                         formula.append(Component.translatable("docs.reactive.catalyst_label").getString());
                         formula.append(catre.getCatalyst().getDescription().getString());
                     }
-                    return IVariable.wrap(formula.toString());
+                    return IVariable.wrap(formula.toString(), level.registryAccess());
                 }
             }
             return IVariable.empty();
@@ -60,7 +60,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
         if(key.equals("lock")){
             for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()) {
                 if (reaction.getAlias().equals(reaction_alias)) {
-                    return IVariable.wrap("reactive:reactions/" + reaction_alias + "_perfect");
+                    return IVariable.wrap("reactive:reactions/" + reaction_alias + "_perfect", level.registryAccess());
                 }
             }
             return IVariable.empty();

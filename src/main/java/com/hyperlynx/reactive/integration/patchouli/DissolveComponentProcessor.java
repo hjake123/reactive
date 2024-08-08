@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.integration.patchouli;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -26,7 +27,7 @@ public class DissolveComponentProcessor implements IComponentProcessor {
         List<RecipeHolder<DissolveRecipe>> recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
         for(RecipeHolder<DissolveRecipe> r : recipes){
             for(ItemStack i : r.value().getReactant().getItems()){
-                if (i.getItem().equals(CraftingHelper.getItem(reactant, false)))
+                if (i.getItem().equals(BuiltInRegistries.ITEM.get(ResourceLocation.parse(reactant))))
                     recipe = r.value();
             }
         }

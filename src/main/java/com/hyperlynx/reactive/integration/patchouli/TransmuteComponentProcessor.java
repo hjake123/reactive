@@ -6,6 +6,8 @@ import com.hyperlynx.reactive.recipes.TransmuteRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
@@ -21,36 +23,29 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
 
     @Override
     public void setup(Level level, IVariableProvider variables) {
-        String recipeId = "reactive:transmutation/" + variables.get("recipe").asString();
-        if(Minecraft.getInstance().level == null)
-            return;
-        List<TransmuteRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
-        for(TransmuteRecipe r : recipes){
-            if (r.getId().equals(new ResourceLocation(recipeId))) {
-                recipe = r;
-                break;
-            }
-        }
+        String recipe_id = "reactive:transmutation/" + variables.get("recipe", level.registryAccess()).asString();
+        RecipeManager manager = level.getRecipeManager();
+        recipe = (TransmuteRecipe) manager.byKey(ResourceLocation.parse(recipe_id)).orElseThrow().value();
     }
 
     @Override
     public IVariable process(Level level, @NotNull String key) {
         if(recipe != null && key.equals("reactant")){
-            return IVariable.from(recipe.getReactant().getItems());
+            return IVariable.from(recipe.getReactant().getItems(), level.registryAccess());
         }
         if(recipe != null && key.equals("product")){
-            return IVariable.from(recipe.getResultItem(level.registryAccess()));
+            return IVariable.from(recipe.getResultItem(level.registryAccess()), level.registryAccess());
         }
         if(key.equals("reagents")){
             if(recipe == null){
-                return IVariable.wrap(Component.translatable("docs.reactive.removed_recipe").getString());
+                return IVariable.wrap(Component.translatable("docs.reactive.removed_recipe").getString(), level.registryAccess());
             }
             List<String> reagent_list = new ArrayList<>();
             for(Power reagent : recipe.getReagents()){
                 reagent_list.add(reagent.getName());
             }
 
-            return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1));
+            return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1), level.registryAccess());
         }
         return null;
     }

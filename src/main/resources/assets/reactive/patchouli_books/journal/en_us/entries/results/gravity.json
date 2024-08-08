@@ -15,7 +15,7 @@
     },
     {
       "type": "patchouli:spotlight",
-      "item": "minecraft:potion{Potion: 'reactive:no_gravity'}",
+      "item": "minecraft:potion[potion_contents={potion:\"reactive:no_gravity\"}]",
       "text": "$(o)Brewing a scale with a $(item)Thick Potion$(0) creates a potion that confers weightlessness to the consumer for a limited time. $(p)"
     },
     {
