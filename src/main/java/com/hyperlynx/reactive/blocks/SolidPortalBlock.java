@@ -59,14 +59,10 @@ public class SolidPortalBlock extends WaterloggableBlock {
 
 
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity irrelevant, ItemStack stack) {
-        var silk_touch = level.registryAccess().registry(Registries.ENCHANTMENT).get().get(Enchantments.SILK_TOUCH);
-        assert silk_touch != null;
-        if (EnchantmentHelper.getEnchantmentLevel(Holder.direct(silk_touch), player) == 0){
-            HyperPortalShape attempted_portal = new HyperPortalShape(level, pos, state.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
-            if(attempted_portal.isValid()){
-                attempted_portal.createPortalBlocks();
-                return;
-            }
+        HyperPortalShape attempted_portal = new HyperPortalShape(level, pos, state.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
+        if(attempted_portal.isValid()){
+            attempted_portal.createPortalBlocks();
+            return;
         }
         super.playerDestroy(level, player, pos, state, irrelevant, stack);
     }
