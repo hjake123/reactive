@@ -8,7 +8,7 @@
       "item": "minecraft:ink_sac"
     },
     "r": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "g": {
       "item": "minecraft:glow_berries"

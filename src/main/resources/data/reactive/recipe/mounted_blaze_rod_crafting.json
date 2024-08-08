@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "c": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "b": {
-      "tag": "forge:rods/blaze"
+      "tag": "c:rods/blaze"
     }
   },
   "pattern": [

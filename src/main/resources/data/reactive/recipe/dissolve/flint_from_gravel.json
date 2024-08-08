@@ -1,7 +1,7 @@
 {
   "type": "reactive:dissolve",
   "reactant": {
-    "tag": "forge:gravel"
+    "tag": "c:gravel"
   },
   "product": {
     "id": "minecraft:flint"

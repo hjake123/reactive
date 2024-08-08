@@ -1,7 +1,7 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "tag": "forge:ingots/gold"
+    "tag": "c:ingots/gold"
   },
   "product": {
     "id": "reactive:gold_symbol"

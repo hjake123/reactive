@@ -8,7 +8,7 @@
       "item": "minecraft:end_rod"
     },
     "g": {
-      "tag": "forge:ingots/gold"
+      "tag": "c:ingots/gold"
     }
   },
   "pattern": [

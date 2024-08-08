@@ -8,7 +8,7 @@
       "item": "minecraft:glow_ink_sac"
     },
     "r": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     }
   },
   "pattern": [

@@ -8,10 +8,10 @@
       "item": "minecraft:ink_sac"
     },
     "r": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "g": {
-      "tag": "forge:dusts/glowstone"
+      "tag": "c:dusts/glowstone"
     }
   },
   "pattern": [

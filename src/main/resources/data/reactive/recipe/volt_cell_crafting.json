@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "i": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "c": {
-      "tag": "forge:ingots/copper"
+      "tag": "c:ingots/copper"
     },
     "a": {
       "item": "reactive:acid_bottle"
