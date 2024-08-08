@@ -22,9 +22,6 @@ Currently, it can generate:
 public class DataGenerationMan {
     @SubscribeEvent
     public static void gatherData (GatherDataEvent event){
-//        if(ModList.get().isLoaded("pehkui")){
-//            ReactivePehkuiPlugin.data_init();
-//        }
         event.getGenerator().addProvider(
                 event.includeServer(),
                 (DataProvider.Factory<AdvancementProvider>) output -> new AdvancementProvider(

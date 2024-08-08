@@ -34,12 +34,6 @@ public class BlazeBottleItem extends PowerBottleItem {
     }
 
     @Override
-    public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType)
-    {
-        return 4000;
-    }
-
-    @Override
     public boolean hasCraftingRemainingItem(ItemStack stack) {
         return false;
     }

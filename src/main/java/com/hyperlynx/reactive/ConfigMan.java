@@ -49,8 +49,10 @@ public class ConfigMan {
     public static class Server {
         public ModConfigSpec.BooleanValue useWorldSeed;
         public ModConfigSpec.LongValue seed;
-        public ModConfigSpec.DoubleValue pehkuiSmallSize;
-        public ModConfigSpec.DoubleValue pehkuiLargeSize;
+        public ModConfigSpec.DoubleValue shrinkSmallSize;
+        public ModConfigSpec.DoubleValue growLargeSize;
+        public ModConfigSpec.DoubleValue shrinkSmallStep;
+        public ModConfigSpec.DoubleValue growLargeStep;
 
 
         Server(ModConfigSpec.Builder builder){
@@ -61,12 +63,16 @@ public class ConfigMan {
             useWorldSeed = builder.comment("Whether to reset the seed to your world seed when loading.")
                     .define("resetSeed", true);
             builder.pop();
-            builder.comment("Mod Integration Options:")
-                    .push("integration");
-            pehkuiSmallSize = builder.comment(":Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]")
-                    .defineInRange("pehkuiSmallSize", 0.65, 0.05, 0.95);
-            pehkuiLargeSize = builder.comment(":Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]")
-                    .defineInRange("pehkuiLargeSize", 1.33, 1.05, 10);
+            builder.comment("Balance Options:")
+                    .push("balance");
+            shrinkSmallSize = builder.comment("The scale that the Reduction reaction sets nearby creatures to. [Default: 0.6]")
+                    .defineInRange("shrinkSmallSize", 0.6, 0.05, 0.95);
+            growLargeSize = builder.comment("The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.5]")
+                    .defineInRange("growLargeSize", 1.5, 1.05, 10);
+            shrinkSmallStep = builder.comment("The step height that the Reduction reaction sets nearby creatures to. Normal is 0.6. [Default: 0.45]")
+                    .defineInRange("shrinkSmallStep", 0.45, 0.01, 0.6);
+            growLargeStep = builder.comment("The step height that the Enlargement reaction sets nearby creatures to. Normal is 0.6. [Default: 1.0]")
+                    .defineInRange("growLargeStep", 1.0, 0.6, 5);
             builder.pop();
         }
     }
