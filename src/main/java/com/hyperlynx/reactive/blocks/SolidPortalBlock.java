@@ -1,9 +1,12 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.HyperPortalShape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -56,7 +59,9 @@ public class SolidPortalBlock extends WaterloggableBlock {
 
 
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity irrelevant, ItemStack stack) {
-        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) == 0) {
+        var silk_touch = level.registryAccess().registry(Registries.ENCHANTMENT).get().get(Enchantments.SILK_TOUCH);
+        assert silk_touch != null;
+        if (EnchantmentHelper.getEnchantmentLevel(Holder.direct(silk_touch), player) == 0){
             HyperPortalShape attempted_portal = new HyperPortalShape(level, pos, state.getValue(AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
             if(attempted_portal.isValid()){
                 attempted_portal.createPortalBlocks();
