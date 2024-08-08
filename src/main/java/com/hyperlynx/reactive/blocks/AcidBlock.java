@@ -62,7 +62,7 @@ public class AcidBlock extends Block implements BucketPickup {
             if(stack.getMaxStackSize() > 1){
                 stack.shrink(1);
             }else{
-                stack.hurtAndBreak(3, level.random, (ServerPlayer) null, () -> stack.setCount(0));
+                stack.hurtAndBreak(3, (ServerLevel) level, null, (i) -> stack.setCount(0));
             }
             if(stack.getCount() < 1){
                 item.kill();

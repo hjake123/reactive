@@ -4,15 +4,10 @@ import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.tags.TagManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -48,7 +43,7 @@ public class UnformedMatterBlock extends Block {
 
     // Taken from MagmaBlock.java.
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity victim) {
-        if (!victim.isSteppingCarefully() && victim instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)victim)) {
+        if (!victim.isSteppingCarefully() && victim instanceof LivingEntity) {
             victim.hurt(level.damageSources().hotFloor(), 1.0F);
         }
 

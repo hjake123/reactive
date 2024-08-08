@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -40,7 +41,7 @@ public class CrystalIronItem extends Item {
             if(cost > 0){
                 for(ItemStack stack : player.getInventory().items){
                     if(stack.is(Registration.CRYSTAL_IRON.get())){
-                        stack.hurtAndBreak(cost, player.level().random, player, () -> {});
+                        stack.hurtAndBreak(cost, (ServerLevel) player.level(), player, (i) -> {});
                         return false;
                     }
                 }
@@ -53,12 +54,12 @@ public class CrystalIronItem extends Item {
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slot_number, boolean unknown) {
-        if(entity instanceof LivingEntity holder && !level.isClientSide){
-            if(holder.getActiveEffects().isEmpty()){
+        if(entity instanceof LivingEntity bearer && !level.isClientSide){
+            if(bearer.getActiveEffects().isEmpty()){
                 return;
             }
 
-            EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(stack);
+            EquipmentSlot slot = bearer.getEquipmentSlotForItem(stack);
 
             List<Holder<MobEffect>> effects_to_remove = new ArrayList<>(List.of(MobEffects.WITHER, MobEffects.POISON));
 
@@ -72,8 +73,8 @@ public class CrystalIronItem extends Item {
                 effects_to_remove.add(MobEffects.WEAKNESS);
 
             for(Holder<MobEffect> effect : effects_to_remove){
-                if(holder.removeEffect(effect))
-                    stack.hurtAndBreak(1, holder, slot);
+                if(bearer.removeEffect(effect))
+                    stack.hurtAndBreak(1, bearer, slot);
             }
         }
     }

@@ -310,7 +310,7 @@ public class SpecialCaseMan {
                     1, 0, 0, 0, 0.0);
         }
 
-        level.playSound(null, candlePos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.playSound(null, candlePos, SoundEvents.SOUL_ESCAPE.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.

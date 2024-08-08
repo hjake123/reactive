@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.be.StaffBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -55,9 +56,9 @@ public class StaffItem extends BlockItem {
             if(!level.isClientSide) {
                 effectFunction.apply((Player) player);
                 if (player.getOffhandItem().is(stack.getItem())) {
-                    player.getOffhandItem().hurtAndBreak(1, level.random, player, () -> {});
+                    player.getOffhandItem().hurtAndBreak(1, (ServerLevel) level, player, (i) -> {});
                 } else {
-                    player.getMainHandItem().hurtAndBreak(1, level.random, player, () -> {});
+                    player.getMainHandItem().hurtAndBreak(1, (ServerLevel) level, player, (i) -> {});
                 }
             }
         }
