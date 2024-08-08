@@ -9,12 +9,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 public class AlchemyTags {
-    public static final TagKey<Item> highPower = ItemTags.create(new ResourceLocation(ReactiveMod.MODID, "high_potency"));
-    public static final TagKey<Block> acidImmune = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "acid_immune"));
-    public static final TagKey<Block> canBeGenerated = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "can_be_generated"));
-    public static final TagKey<Block> doNotDisplace = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "do_not_displace"));
-    public static final TagKey<Block> doNotBlockFall = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "do_not_make_fall"));
-    public static final TagKey<Block> displaceConductive = BlockTags.create(new ResourceLocation(ReactiveMod.MODID, "displacement_conductive"));
-    public static final TagKey<Block> notRelocatable = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
+    public static final TagKey<Item> highPower = ItemTags.create(ReactiveMod.location("high_potency"));
+    public static final TagKey<Block> acidImmune = BlockTags.create(ReactiveMod.location("acid_immune"));
+    public static final TagKey<Block> canBeGenerated = BlockTags.create(ReactiveMod.location("can_be_generated"));
+    public static final TagKey<Block> doNotDisplace = BlockTags.create(ReactiveMod.location("do_not_displace"));
+    public static final TagKey<Block> doNotBlockFall = BlockTags.create(ReactiveMod.location("do_not_make_fall"));
+    public static final TagKey<Block> displaceConductive = BlockTags.create(ReactiveMod.location("displacement_conductive"));
+    public static final TagKey<Block> notRelocatable = BlockTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "relocation_not_supported"));
 
 }

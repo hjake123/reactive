@@ -38,7 +38,7 @@ public class Power {
         this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
@@ -47,7 +47,7 @@ public class Power {
         this.id = id;
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
@@ -57,7 +57,7 @@ public class Power {
         this.id = id;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
@@ -66,13 +66,13 @@ public class Power {
         this.id = id;
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
+        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
     public static TagKey<Item> getSourceTag(String id){
-        return ItemTags.create(new ResourceLocation(ReactiveMod.MODID, id + "_sources"));
+        return ItemTags.create(ReactiveMod.location(id + "_sources"));
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -102,7 +102,7 @@ public class Power {
     public String getName(){
         return Component.translatable(name).getString();
     }
-    public ResourceLocation getResourceLocation() { return new ResourceLocation(ReactiveMod.MODID, id); }
+    public ResourceLocation getResourceLocation() { return ReactiveMod.location(id); }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){

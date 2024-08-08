@@ -21,10 +21,10 @@ import java.util.function.Supplier;
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
 public class Powers {
     // Handles registration of Powers.
-    public static final ResourceKey<Registry<Power>> POWER_REGISTRY_KEY = ResourceKey.createRegistryKey(new ResourceLocation(ReactiveMod.MODID, "powers"));
+    public static final ResourceKey<Registry<Power>> POWER_REGISTRY_KEY = ResourceKey.createRegistryKey(ReactiveMod.location( "powers"));
     public static final Registry<Power> POWER_REGISTRY = new RegistryBuilder<>(POWER_REGISTRY_KEY)
             .sync(true)
-            .defaultKey(new ResourceLocation(ReactiveMod.MODID, "nothing"))
+            .defaultKey(ReactiveMod.location( "nothing"))
             .create();
     public static final DeferredRegister<Power> POWERS = DeferredRegister.create(POWER_REGISTRY, ReactiveMod.MODID);
 

@@ -4,12 +4,16 @@ import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.DataProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.data.internal.NeoForgeBlockTagsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,7 +96,7 @@ public class AcidBlock extends Block implements BucketPickup {
         if(state_beneath.getBlock() instanceof SnowyDirtBlock){
             level.setBlockAndUpdate(pos.below(), Blocks.COARSE_DIRT.defaultBlockState());
         }
-        if(state_beneath.getBlock() instanceof LeavesBlock || state_beneath.getBlock() instanceof IPlantable
+        if(state_beneath.getBlock() instanceof LeavesBlock || state_beneath.getBlock() instanceof CropBlock
                 || state_beneath.getBlock() instanceof GrowingPlantBlock){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());

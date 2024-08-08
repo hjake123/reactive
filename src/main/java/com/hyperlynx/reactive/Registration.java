@@ -350,19 +350,19 @@ public class Registration {
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
-                    .addAttributeModifier(Attributes.GRAVITY, "fa350eb8-d5d3-4240-8342-dcc89c1693b9",
+                    .addAttributeModifier(Attributes.GRAVITY, ReactiveMod.location("no_gravity_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
-                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, "31861490-4050-11ee-be56-0242ac120002",
+                    .addAttributeModifier(Attributes.MOVEMENT_SPEED, ReactiveMod.location("immobility_slowness_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .addAttributeModifier(Attributes.FLYING_SPEED, "8712e51e-4050-11ee-be56-0242ac120002",
+                    .addAttributeModifier(Attributes.FLYING_SPEED, ReactiveMod.location("immobility_flying_slowness_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final DeferredHolder<MobEffect, MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
-                    .addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, "91a1b581-0e56-446d-853a-a3037f2e97c5",
+                    .addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, ReactiveMod.location("far_block_reach_effect"),
                             2, AttributeModifier.Operation.ADD_VALUE)
-                    .addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, "91a1c581-0e56-446d-853a-a3037f2e97c5",
+                    .addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, ReactiveMod.location("far_entity_reach_effect"),
                             2, AttributeModifier.Operation.ADD_VALUE));
     public static final DeferredHolder<MobEffect, HyperMobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
@@ -396,10 +396,10 @@ public class Registration {
 
     // Register sound events.
     public static final DeferredHolder<SoundEvent, SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:zap")));
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.parse("reactive:zap")));
 
     public static final DeferredHolder<SoundEvent, SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
-            () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("reactive:rumble")));
+            () -> SoundEvent.createVariableRangeEvent(ResourceLocation.parse("reactive:rumble")));
 
     // Register dummy blocks for the weird water types and the symbol eye render.
     public static final DeferredHolder<Block, Block> DUMMY_MAGIC_WATER = BLOCKS.register("magic_water",

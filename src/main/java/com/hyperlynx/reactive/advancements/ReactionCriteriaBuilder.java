@@ -27,9 +27,9 @@ public class ReactionCriteriaBuilder {
 
     public void add(String alias){
         aliases.add(alias);
-        FlagTrigger criterion = new FlagTrigger(new ResourceLocation("reactive:reaction/" + alias + "_criterion"));
+        FlagTrigger criterion = new FlagTrigger(ResourceLocation.parse("reactive:reaction/" + alias + "_criterion"));
         criteria.put(alias, criterion);
-        FlagTrigger perfect_criterion = new FlagTrigger(new ResourceLocation("reactive:reaction/" + alias + "_perfect_criterion"));
+        FlagTrigger perfect_criterion = new FlagTrigger(ResourceLocation.parse("reactive:reaction/" + alias + "_perfect_criterion"));
         criteria.put(alias+"_perfect", perfect_criterion);
     }
 
@@ -37,7 +37,7 @@ public class ReactionCriteriaBuilder {
     public void register(RegisterEvent event) {
         if(event.getRegistryKey().equals(BuiltInRegistries.TRIGGER_TYPES.key())) {
             for (String key : criteria.keySet()) {
-                event.register(BuiltInRegistries.TRIGGER_TYPES.key(), new ResourceLocation(ReactiveMod.MODID, criteria.get(key).path()), () -> criteria.get(key));
+                event.register(BuiltInRegistries.TRIGGER_TYPES.key(), ReactiveMod.location(criteria.get(key).path()), () -> criteria.get(key));
             }
         }
     }

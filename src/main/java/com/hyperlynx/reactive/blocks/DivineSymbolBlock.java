@@ -72,7 +72,7 @@ public class DivineSymbolBlock extends SymbolBlock{
                     accepted = true;
                 }
             }else if(player instanceof ServerPlayer splayer){
-                ResourceLocation warp_research = new ResourceLocation(ReactiveMod.MODID, "be_teleported");
+                ResourceLocation warp_research = ReactiveMod.location("be_teleported");
                 if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(warp_research)).isDone()){
                     player.displayClientMessage(Component.translatable("message.reactive.reject_warp_knowledgeable"), true);
                 }else{
