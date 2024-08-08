@@ -7,11 +7,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
 public class EffectHandlers {
     @SubscribeEvent
-    public static void onLivingDamage(LivingDamageEvent event){
+    public static void onLivingDamage(LivingIncomingDamageEvent event){
         if(event.getEntity().hasEffect(Registration.FIRE_SHIELD) && event.getSource().getDirectEntity() != null && !event.getSource().getDirectEntity().fireImmune()){
             event.getSource().getDirectEntity().hurt(event.getEntity().damageSources().inFire(), 2);
             event.getSource().getDirectEntity().setRemainingFireTicks(100);
