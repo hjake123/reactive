@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -122,62 +123,9 @@ public class PowerBottleItem extends BlockItem {
             return InteractionResult.PASS;
         }
 
-        emptyIntoCrucible(crucible, context);
+        CrucibleBlockEntity.insertPowerBottle(crucible, new PowerBottleInsertContext(context));
 
         return InteractionResult.SUCCESS;
-    }
-
-    public static void emptyIntoCrucible(CrucibleBlockEntity crucible, UseOnContext context){
-        boolean changed = false;
-        for(Power p : Powers.POWERS.getRegistry().get()){
-            if(p.matchesBottle(context.getItemInHand())){
-                if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                    if(context.getItemInHand().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getItemInHand())) {
-                        crucible.enderRiftStrength = 2000;
-                    }
-                    if (context.getItemInHand().getCount() == 1) {
-                        Objects.requireNonNull(context.getPlayer()).setItemInHand(context.getHand(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                    }
-                    else {
-                        Objects.requireNonNull(context.getPlayer()).getItemInHand(context.getHand()).shrink(1);
-                        context.getPlayer().addItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                    }
-                    changed = true;
-                }
-            }
-        }
-
-        if(changed){
-            crucible.setDirty();
-            crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
-        }
-    }
-
-    public static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){
-        boolean changed = false;
-        for(Power p : Powers.POWERS.getRegistry().get()){
-            if(p.matchesBottle(e.getItem())){
-                if(c.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                    if(e.getItem().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(e.getItem())){
-                        c.enderRiftStrength = 2000;
-                    }
-                    if (e.getItem().getCount() == 1) {
-                        e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                    }
-                    else {
-                        e.getItem().shrink(1);
-                        ItemEntity empty_bottle = new ItemEntity(c.getLevel(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                        e.level().addFreshEntity(empty_bottle);
-                    }
-                    changed = true;
-                }
-            }
-        }
-
-        if(changed){
-            c.setDirty();
-            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(c.getLevel().getRandom().nextFloat()/5));
-        }
     }
 
 }

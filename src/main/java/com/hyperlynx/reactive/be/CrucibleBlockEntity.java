@@ -12,6 +12,7 @@ import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
+import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.hyperlynx.reactive.recipes.CrucibleRecipeInput;
 import com.hyperlynx.reactive.recipes.DissolveRecipe;
 import com.hyperlynx.reactive.recipes.PrecipitateRecipe;
@@ -93,7 +94,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public Reaction.Status reaction_status = Reaction.Status.STABLE; // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
-    public boolean already_rendered_omen_burst = false; // True if and only if the ominous burst from the omen conversion reaction has been drawn yet.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
@@ -390,8 +390,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         boolean changed = false;
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
             if(entity_inside instanceof ItemEntity item_entity){
-                SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
-                PowerBottleItem.tryEmptyPowerBottle((ItemEntity) entity_inside, crucible);
+                SpecialCaseMan.checkDissolveSpecialCases(crucible, item_entity);
+                insertPowerBottle(crucible, new PowerBottleInsertContext(item_entity));
                 // The special case may have removed the item entity; continue to the next if it has died.
                 if(!item_entity.isAlive()) continue;
 
@@ -559,6 +559,26 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     @Override
     public @NotNull Map<Power, Integer> getPowerMap() {
         return powers;
+    }
+
+    public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
+        boolean changed = false;
+        for(Power p : Powers.POWERS.getRegistry().get()){
+            if(p.matchesBottle(context.getBottle())){
+                if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
+                    if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
+                        crucible.enderRiftStrength = 2000;
+                    }
+                    context.reduceByOne();
+                    changed = true;
+                }
+            }
+        }
+
+        if(changed){
+            crucible.setDirty();
+            crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
+        }
     }
 
     // Causes a block update, which should force the client to synchronize the block entity data with the server.

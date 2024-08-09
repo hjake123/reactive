@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
@@ -134,7 +135,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         if(stack.is(Items.OMINOUS_BOTTLE)){
             if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible))
                 return ItemInteractionResult.FAIL;
-            PowerBottleItem.emptyIntoCrucible(crucible, new UseOnContext(level, player, hand, stack, hit));
+            CrucibleBlockEntity.insertPowerBottle(crucible, new PowerBottleInsertContext(new UseOnContext(level, player, hand, stack, hit)));
             return ItemInteractionResult.SUCCESS;
         }
 
