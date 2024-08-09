@@ -8,6 +8,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -16,6 +20,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -43,6 +48,30 @@ public class MnemonicBlock extends Block implements EntityBlock {
     }
 
     @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        if(context.getLevel().getBlockState(context.getClickedPos().below()).is(Registration.VOLT_CELL.get())){
+            return defaultBlockState().setValue(CHARGED, true);
+        }
+        return defaultBlockState();
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof MnemonicBlockEntity m) {
+            if (!level.isClientSide && !(player.isCreative() && !m.hasMemory())) {
+                ItemStack stack = Registration.MNEMONIC_BULB_ITEM.get().getDefaultInstance();
+                m.saveToItem(stack, level.registryAccess());
+                ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, stack);
+                drop.setDefaultPickUpDelay();
+                level.addFreshEntity(drop);
+            }
+        }
+        return super.playerWillDestroy(level, pos, state, player);
+    }
+
+        @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new MnemonicBlockEntity(pos, state);
