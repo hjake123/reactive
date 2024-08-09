@@ -23,12 +23,13 @@ public class SynthesisReaction extends Reaction{
     @Override
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
+        int expended = 0;
         for(Power p : reagents.keySet()){
+            expended += crucible.getPowerLevel(p);
             crucible.expendPower(p, rate);
         }
-        crucible.addPower(resultPower, rate);
-        if(!Objects.requireNonNull(crucible.getLevel()).isClientSide)
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) crucible.getLevel(), CriteriaTriggers.SEE_SYNTHESIS_TRIGGER.get(), crucible.getBlockPos(), 8);
+        int effective_rate = Math.min(rate, expended);
+        crucible.addPower(resultPower, effective_rate);
     }
 
     @Override

@@ -1,9 +1,13 @@
 package com.hyperlynx.reactive.client.particles;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.trialspawner.TrialSpawner;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -132,20 +136,19 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
-        if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
-                double x = level.random.nextGaussian();
-                double y = level.random.nextGaussian();
-                double z = level.random.nextGaussian();
-                double normalizer = 1 / Math.sqrt(x * x + y * y + z * z);
+        for(int i = 0; i < frequency; i++){
+            double x = level.random.nextGaussian();
+            double y = level.random.nextGaussian();
+            double z = level.random.nextGaussian();
+            double normalizer = 1 / Math.sqrt(x * x + y * y + z * z);
 
-                x = x * normalizer * radius;
-                y = y * normalizer * radius;
-                z = z * normalizer * radius;
+            x = x * normalizer * radius;
+            y = y * normalizer * radius;
+            z = z * normalizer * radius;
 
-                level.addParticle(opt, center_x + x, pos.getY() + height + y, center_z + z, 0, 0, 0);
-            }
+            drawParticle(level, opt, center_x + x, pos.getY() + height + y, center_z + z);
         }
+
     }
 
     public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos){

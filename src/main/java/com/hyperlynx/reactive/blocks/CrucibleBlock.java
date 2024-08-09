@@ -12,6 +12,7 @@ import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -48,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, WorldlyContainerHolder {
     public static final BooleanProperty FULL = BooleanProperty.create("full");
@@ -112,7 +115,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()){
             // Workaround to make sure that acid bucket addition instantly updates the mix color.
-            if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
+            if (stack.is(Registration.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if(!(crucible instanceof CrucibleBlockEntity c)){
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -124,11 +127,18 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             return ItemInteractionResult.SUCCESS;
         }
 
-        if(player.getItemInHand(hand).is(Registration.LITMUS_PAPER.get()))
+        if(stack.is(Registration.LITMUS_PAPER.get())) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        if(stack.is(Items.OMINOUS_BOTTLE)){
+            if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible))
+                return ItemInteractionResult.FAIL;
+            PowerBottleItem.emptyIntoCrucible(crucible, new UseOnContext(level, player, hand, stack, hit));
+            return ItemInteractionResult.SUCCESS;
+        }
 
         if (!state.getValue(FULL)) {
-            // New code to allow for non-vanilla fluid input.
             IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(player.getItemInHand(hand).copy()).orElse(null);
 
             if (checkFluidInStack(fluidHandler, Fluids.WATER)) {

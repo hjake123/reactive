@@ -27,6 +27,7 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
@@ -313,7 +315,7 @@ public class ReactionEffects {
         Level level = Objects.requireNonNull(crucible.getLevel());
         if(level.random.nextFloat() < 0.2){
             crucible.expendPower(Powers.CURSE_POWER.get(), 3);
-            for(BlockPos creation_point : get_creation_points(crucible.getBlockPos())){
+            for(BlockPos creation_point : getCreationPoints(crucible.getBlockPos())){
                 if(level.getBlockState(creation_point).isAir() && level.isLoaded(creation_point)){
                     level.setBlock(creation_point, Registration.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                     level.updateNeighborsAt(creation_point, Registration.UNFORMED_MATTER.get());
@@ -325,7 +327,7 @@ public class ReactionEffects {
         return crucible;
     }
 
-    public static Set<BlockPos> get_creation_points(BlockPos origin){
+    public static Set<BlockPos> getCreationPoints(BlockPos origin){
         Set<BlockPos> points = new HashSet<>();
         Random wsv_source = WorldSpecificValue.getSource("creation_points");
         while(points.size() < 3){
@@ -335,5 +337,43 @@ public class ReactionEffects {
                     wsv_source.nextInt(0, 3) * 2 - 3));
         }
         return points;
+    }
+
+    public static CrucibleBlockEntity windBomb(CrucibleBlockEntity crucible){
+        crucible.expendPower(Powers.FLOW_POWER.get(), WorldSpecificValue.get("wind_bomb_cost", 50, 300));
+        SpecialCaseMan.windBomb(crucible);
+        return crucible;
+    }
+
+    public static CrucibleBlockEntity omenSettling(CrucibleBlockEntity crucible){
+        if(crucible.getLevel() != null && crucible.getLevel().random.nextDouble() < 0.05){
+            crucible.addPower(Powers.CURSE_POWER.get(), 1);
+        }
+        if(crucible.getLevel() != null && crucible.getLevel().random.nextDouble() < 0.2){
+            crucible.addPower(Powers.SOUL_POWER.get(), 1);
+        }
+        return crucible;
+    }
+
+    public static CrucibleBlockEntity chomp(CrucibleBlockEntity crucible) {
+        var level = crucible.getLevel();
+        assert level != null;
+        for(Entity entity : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), level)){
+            if(entity instanceof ItemEntity item && item.getItem().is(Items.IRON_INGOT)){
+                item.kill();
+            }
+        }
+        var pos = Vec3.atCenterOf(crucible.getBlockPos());
+        EvokerFangs fangs = new EvokerFangs(level, pos.x, pos.y + 0.48, pos.z, 0F, 10, null);
+        crucible.getLevel().addFreshEntity(fangs);
+
+        AABB aoe = new AABB(crucible.getBlockPos());
+        aoe = aoe.inflate(4);
+        List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
+        for(LivingEntity living : nearby){
+            EvokerFangs targeted_fangs = new EvokerFangs(level, living.position().x, living.position().y, living.position().z, 0F, 10, null);
+            crucible.getLevel().addFreshEntity(targeted_fangs);
+        }
+        return crucible;
     }
 }

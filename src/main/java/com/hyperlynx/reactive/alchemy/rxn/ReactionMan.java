@@ -12,6 +12,8 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -62,6 +64,11 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("size_shrink_effect");
         CRITERIA_BUILDER.add("size_revert_effect");
         CRITERIA_BUILDER.add("size_revert_effect_2");
+        CRITERIA_BUILDER.add("ominous_transformation");
+        CRITERIA_BUILDER.add("omen_settling");
+        CRITERIA_BUILDER.add("wind_bomb");
+        CRITERIA_BUILDER.add("flow_from_soul");
+        CRITERIA_BUILDER.add("chomp");
     }
 
     public List<Reaction> getReactions(){
@@ -107,11 +114,11 @@ public class ReactionMan {
         REACTIONS.add(new AnnihilationReaction("salt_annihilation", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::salt, null));
 
         // Add synthesis reactions for the three esoteric powers.
-        REACTIONS.add(new SynthesisReaction("x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
+        REACTIONS.add(new BasePowerSynthesisReaction("x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new SynthesisReaction("y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+        REACTIONS.add(new BasePowerSynthesisReaction("y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new SynthesisReaction("z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
+        REACTIONS.add(new BasePowerSynthesisReaction("z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
         // Add effect reactions to do crazy things.
@@ -162,6 +169,13 @@ public class ReactionMan {
         REACTIONS.add(new FreeEffectReaction("size_grow_effect", ResizeReactionEffects::grow, ResizeReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
         REACTIONS.add(new FreeEffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
         REACTIONS.add(new FreeEffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
+
+        REACTIONS.add(new OmenConversionReaction("ominous_transformation"));
+        REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()));
+        REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
+
+        REACTIONS.add(new FreeEffectReaction("wind_bomb", ReactionEffects::windBomb, null, Powers.FLOW_POWER.get()));
+        REACTIONS.add(new AssimilationReaction("flow_from_soul", Powers.FLOW_POWER.get(), Powers.SOUL_POWER.get()));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 

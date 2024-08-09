@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -121,11 +122,17 @@ public class PowerBottleItem extends BlockItem {
             return InteractionResult.PASS;
         }
 
+        emptyIntoCrucible(crucible, context);
+
+        return InteractionResult.SUCCESS;
+    }
+
+    public static void emptyIntoCrucible(CrucibleBlockEntity crucible, UseOnContext context){
         boolean changed = false;
         for(Power p : Powers.POWERS.getRegistry().get()){
             if(p.matchesBottle(context.getItemInHand())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                    if(context.getItemInHand().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getItemInHand())){
+                    if(context.getItemInHand().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getItemInHand())) {
                         crucible.enderRiftStrength = 2000;
                     }
                     if (context.getItemInHand().getCount() == 1) {
@@ -144,8 +151,6 @@ public class PowerBottleItem extends BlockItem {
             crucible.setDirty();
             crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
         }
-
-        return InteractionResult.SUCCESS;
     }
 
     public static void tryEmptyPowerBottle(ItemEntity e, CrucibleBlockEntity c){

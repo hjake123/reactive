@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "minecraft:ominous_trial_key"
+  },
+  "product": {
+    "id": "minecraft:trial_key"
+  }
+}

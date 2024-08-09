@@ -36,7 +36,7 @@ public class Powers {
     public static final DeferredHolder<Power, Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze", 0xFFA300, Registration.BLAZE_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind", 0x7A5BB5, Registration.MIND_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> SOUL_POWER = POWERS.register("soul", () -> new Power("soul", 0x60F5FA, Registration.SOUL_BOTTLE.get()));
-    public static final DeferredHolder<Power, Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse", 0x2D231D, (Item) null, Items.BLACK_DYE));
+    public static final DeferredHolder<Power, Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse", 0x2D231D, null, Items.BLACK_DYE));
     public static final DeferredHolder<Power, Power> LIGHT_POWER = POWERS.register("light", () -> new Power("light", 0xF6DAB4, Registration.LIGHT_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> WARP_POWER = POWERS.register("warp", () -> new Power("warp", 0x118066, Registration.WARP_BOTTLE.get()));
     public static final DeferredHolder<Power, Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital", 0xFF0606, Registration.VITAL_BOTTLE.get()));
@@ -46,6 +46,8 @@ public class Powers {
     public static final DeferredHolder<Power, Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", 0x9800FF, null, Items.MAGENTA_DYE));
     public static final DeferredHolder<Power, Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", 0xADEA12,null, Items.LIME_DYE));
     public static final DeferredHolder<Power, Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", 0xDACCE8, null, Items.GRAY_DYE));
+    public static final DeferredHolder<Power, Power> FLOW_POWER = POWERS.register("flow", () -> new Power("flow", 0x7A82C4,null, Items.FLOW_POTTERY_SHERD));
+    public static final DeferredHolder<Power, Power> OMEN_POWER = POWERS.register("omen", () -> new Power("omen", 0x2A4455, Items.OMINOUS_BOTTLE));
     public static final DeferredHolder<Power, Power> ASTRAL_POWER = POWERS.register("astral", () -> new Power("astral", 0xE9D7FA, null, Items.WHITE_DYE));
 
 }

@@ -28,6 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.StructureTags;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -38,6 +39,7 @@ import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EyeOfEnder;
+import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WritableBookContent;
@@ -54,7 +56,7 @@ import java.util.*;
 public class SpecialCaseMan {
     public static List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
     public static List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
-    public static List<BottleSpecialCase> BOTTLE_SPECIAL_CASES = new ArrayList<>();
+    public static List<BottleSpecialCase> EXTRACT_BOTTLE_SPECIAL_CASES = new ArrayList<>();
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         for(DissolveSpecialCase dissolve_case : DISSOLVE_SPECIAL_CASES){
@@ -73,7 +75,7 @@ public class SpecialCaseMan {
 
     public static ItemStack checkBottleSpecialCases(CrucibleBlockEntity c, ItemStack b){
         ItemStack bottle = b.copy();
-        for(BottleSpecialCase bottle_case : BOTTLE_SPECIAL_CASES){
+        for(BottleSpecialCase bottle_case : EXTRACT_BOTTLE_SPECIAL_CASES){
             bottle = bottle_case.attempt(c, bottle);
         }
         return bottle;
@@ -181,13 +183,21 @@ public class SpecialCaseMan {
                 lightEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.FLOW_POWER.get()) > 0)
+                windBomb(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
+            if(c.getPowerLevel(Powers.OMEN_POWER.get()) > 121)
+                badOmen(c);
+        });
+        EMPTY_SPECIAL_CASES.add(c -> {
             if(c.areaMemory.exists(c.getLevel(), Registration.INCOMPLETE_STAFF.get()))
                 IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), Registration.INCOMPLETE_STAFF.get()));
         });
     }
 
     public static void register_bottle_cases() {
-        BOTTLE_SPECIAL_CASES.add((c, bottle) -> {
+        EXTRACT_BOTTLE_SPECIAL_CASES.add((c, bottle) -> {
             if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
                 return WarpBottleItem.makeRiftBottle(c, bottle);
             return bottle;
@@ -592,6 +602,31 @@ public class SpecialCaseMan {
         if(c.getLevel() == null || c.getLevel().isClientSide || !c.getLevel().getBlockState(c.getBlockPos().above()).isAir())
             return;
         c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+    }
+
+    public static void windBomb(CrucibleBlockEntity crucible){
+        Level level = crucible.getLevel();
+        if(level == null)
+            return;
+        var position = Vec3.atCenterOf(crucible.getBlockPos());
+        // From WindCharge.java
+        level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), 1.6F, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
+    }
+
+    private static void badOmen(CrucibleBlockEntity c){
+        if(c.getLevel() == null) return;
+        AABB aoe = new AABB(c.getBlockPos());
+        aoe = aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
+        if(!c.getLevel().isClientSide()){
+            List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            for(LivingEntity e : nearby_ents){
+                if(e.isInvertedHealAndHarm())
+                    continue;
+                e.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, 0));
+                e.hurt(e.level().damageSources().magic(), 2);
+            }
+            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.APPLY_EFFECT_BAD_OMEN, SoundSource.BLOCKS, 1, 1);
+        }
     }
 
     public static void solidifyPortal(Level l, BlockPos p, Direction.Axis axis){

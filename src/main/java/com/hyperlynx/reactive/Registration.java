@@ -408,6 +408,8 @@ public class Registration {
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
     public static final DeferredHolder<Block, Block> DUMMY_FAST_WATER = BLOCKS.register("fast_water",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
+    public static final DeferredHolder<Block, Block> DUMMY_SLOW_WATER = BLOCKS.register("slow_water",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)));
 
     // Register the recipe types and serializers.
     public static final DeferredHolder<RecipeType<?>, RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));

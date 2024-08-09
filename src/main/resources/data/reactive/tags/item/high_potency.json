@@ -10,6 +10,7 @@
     "reactive:flower_vine",
     "minecraft:nether_star",
     "minecraft:dragon_breath",
+    "minecraft:ominous_trial_key",
     {
       "id": "hexcasting:charged_amethyst",
       "required": false

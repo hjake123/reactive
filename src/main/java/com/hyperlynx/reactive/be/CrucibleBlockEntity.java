@@ -93,6 +93,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public Reaction.Status reaction_status = Reaction.Status.STABLE; // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
+    public boolean already_rendered_omen_burst = false; // True if and only if the ominous burst from the omen conversion reaction has been drawn yet.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);

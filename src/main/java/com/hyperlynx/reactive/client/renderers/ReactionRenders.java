@@ -38,11 +38,16 @@ public class ReactionRenders {
     }
 
     public static CrucibleBlockEntity creation(CrucibleBlockEntity c){
-        Set<BlockPos> points = ReactionEffects.get_creation_points(c.getBlockPos());
+        Set<BlockPos> points = ReactionEffects.getCreationPoints(c.getBlockPos());
         for(BlockPos pos : points){
             if(c.getLevel().getBlockState(pos).isAir())
                 ParticleScribe.drawParticleSphere(Objects.requireNonNull(c.getLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
         }
+        return c;
+    }
+
+    public static CrucibleBlockEntity ominous(CrucibleBlockEntity c) {
+        ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.OMINOUS_SPAWNING, c.getBlockPos(), 0.005F);
         return c;
     }
 }
