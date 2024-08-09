@@ -188,6 +188,15 @@ public class Registration {
 
     public static final DeferredHolder<Item, BlockItem> MIND_LICHEN_ITEM = ITEMS.registerSimpleBlockItem(MIND_LICHEN);
 
+    public static final DeferredHolder<Block, MnemonicBlock> MNEMONIC_BULB = BLOCKS.register("mnemonic_bulb",
+            () -> new MnemonicBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MUD)));
+
+    public static final DeferredHolder<Item, BlockItem> MNEMONIC_BULB_ITEM = ITEMS.registerSimpleBlockItem(MNEMONIC_BULB);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MnemonicBlockEntity>> MNEMONIC_BULB_BE_TYPE =
+            TILES.register("mnemonic_bulb_be",
+                    () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, MNEMONIC_BULB.get()).build(null));
+
     public static final DeferredHolder<Block, GravityChandelierBlock> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
             () -> new GravityChandelierBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TORCH)));
 
