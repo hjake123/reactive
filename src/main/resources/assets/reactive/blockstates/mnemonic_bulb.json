@@ -1,7 +1,16 @@
 {
-  "variants": {
-    "": {
-      "model": "reactive:block/mnemonic"
+  "multipart": [
+    {
+      "when": { "charged":  "true"},
+      "apply": {
+        "model": "reactive:block/mnemonic_on"
+      }
+    },
+    {
+      "when": { "charged":  "false"},
+      "apply": {
+        "model": "reactive:block/mnemonic_off"
+      }
     }
-  }
+  ]
 }
