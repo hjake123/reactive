@@ -341,19 +341,20 @@ public class ReactionEffects {
         return points;
     }
 
-    public static CrucibleBlockEntity windBomb(CrucibleBlockEntity crucible){
-        crucible.expendPower(Powers.FLOW_POWER.get(), WorldSpecificValue.get("wind_bomb_cost", 50, 300));
+    public static CrucibleBlockEntity flowTooStrong(CrucibleBlockEntity crucible){
+        int flow = crucible.getPowerLevel(Powers.FLOW_POWER.get());
+        crucible.expendPower(Powers.FLOW_POWER.get(), flow);
+        crucible.addPower(Powers.LIGHT_POWER.get(), flow / 3);
+        crucible.electricCharge += 20;
         SpecialCaseMan.windBomb(crucible);
         return crucible;
     }
 
     public static CrucibleBlockEntity omenSettling(CrucibleBlockEntity crucible){
-        if(crucible.getLevel() != null && crucible.getLevel().random.nextDouble() < 0.05){
+        if(crucible.getLevel().random.nextFloat() < 0.1F){
             crucible.addPower(Powers.CURSE_POWER.get(), 1);
         }
-        if(crucible.getLevel() != null && crucible.getLevel().random.nextDouble() < 0.2){
-            crucible.addPower(Powers.SOUL_POWER.get(), 1);
-        }
+        crucible.addPower(Powers.SOUL_POWER.get(), 2);
         return crucible;
     }
 

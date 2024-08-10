@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:snowball"
+  },
+  "product": {
+    "id": "minecraft:wind_charge"
+  },
+  "reagents": ["reactive:flow"],
+  "min": 250,
+  "cost": 102
+}

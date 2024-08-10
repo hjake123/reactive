@@ -26,10 +26,10 @@ public class OmenConversionReaction extends Reaction {
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
 
-        int converted = crucible.getPowerLevel(Powers.BLAZE_POWER.get());
-        crucible.expendPower(Powers.BLAZE_POWER.get(), converted);
-        crucible.expendPower(Powers.OMEN_POWER.get(), WorldSpecificValue.get("omen_conversion_cost", 20, 40));
-        crucible.addPower(Powers.SOUL_POWER.get(), converted / 2);
+        crucible.expendPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("omen_conversion_cost", 20, 40));
+        int omen = crucible.getPowerLevel(Powers.OMEN_POWER.get());
+        crucible.expendPower(Powers.OMEN_POWER.get(), omen);
+        crucible.addPower(Powers.SOUL_POWER.get(), omen / 2);
 
         Level level = Objects.requireNonNull(crucible.getLevel());
         level.playSound(null, crucible.getBlockPos(), SoundEvents.TRIAL_SPAWNER_OMINOUS_ACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);

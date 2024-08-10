@@ -169,10 +169,10 @@ public class ReactionMan {
         REACTIONS.add(new FreeEffectReaction("size_revert_effect_2", ReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         REACTIONS.add(new OmenConversionReaction("ominous_transformation"));
-        REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()));
+        REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
 
-        REACTIONS.add(new FreeEffectReaction("wind_bomb", ReactionEffects::windBomb, null, Powers.FLOW_POWER.get()));
+        REACTIONS.add(new FreeEffectReaction("wind_bomb", ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get()));
         REACTIONS.add(new AssimilationReaction("flow_from_soul", Powers.FLOW_POWER.get(), Powers.SOUL_POWER.get()));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
