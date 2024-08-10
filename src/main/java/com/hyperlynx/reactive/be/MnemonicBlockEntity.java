@@ -5,6 +5,8 @@ import com.hyperlynx.reactive.blocks.MnemonicBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,6 +37,7 @@ public class MnemonicBlockEntity extends BlockEntity {
                     return;
                 }
                 index = 0;
+                level.setBlock(pos, state.setValue(MnemonicBlock.ACTIVE, true), Block.UPDATE_ALL);
                 status = Status.RECORDING;
             }
             case RECORDING -> {
@@ -49,11 +52,13 @@ public class MnemonicBlockEntity extends BlockEntity {
                 }
                 if(state.getValue(MnemonicBlock.CHARGED)){
                     index = 0;
+                    level.setBlock(pos, state.setValue(MnemonicBlock.ACTIVE, false), Block.UPDATE_ALL);
                     status = Status.REPLAYING;
                 }
                 if(memory.getLast().duration > MAX_SIGNAL_DURATION){
                     if(input == 0) {
                         status = Status.DISABLED;
+                        level.setBlock(pos, state.setValue(MnemonicBlock.ACTIVE, false), Block.UPDATE_ALL);
                     } else {
                         memory.add(new OutputStep(input));
                     }
@@ -70,13 +75,17 @@ public class MnemonicBlockEntity extends BlockEntity {
             }
             case REPLAYING -> {
                 if(!state.getValue(MnemonicBlock.CHARGED)){
-                    level.setBlock(pos, state.setValue(MnemonicBlock.POWER, 0), Block.UPDATE_ALL);
+                    level.setBlock(pos, state.setValue(MnemonicBlock.POWER, 0).setValue(MnemonicBlock.ACTIVE, false), Block.UPDATE_ALL);
                     status = Status.DISABLED;
                 }
                 index %= memory.size();
                 OutputStep output = memory.get(index);
                 if(counter < 1){
-                    level.setBlock(pos, state.setValue(MnemonicBlock.POWER, output.signal), Block.UPDATE_ALL);
+                    level.setBlock(pos, state.setValue(MnemonicBlock.POWER, output.signal).setValue(MnemonicBlock.ACTIVE, output.signal > 0), Block.UPDATE_ALL);
+                    level.playSound(null, pos,
+                            output.signal > 0 ? SoundEvents.COPPER_BULB_TURN_ON : SoundEvents.COPPER_BULB_TURN_OFF,
+                            SoundSource.BLOCKS, 1.3F, 0.5F + ((output.signal + 1) / 54.0F));
+                    level.playSound(null, pos, SoundEvents.MUD_HIT, SoundSource.BLOCKS, 0.1F, 0.7F + ((output.signal + 1) / 54.0F));
                     counter = output.duration;
                     index++;
                 }
@@ -91,6 +100,12 @@ public class MnemonicBlockEntity extends BlockEntity {
 
     public boolean hasMemory(){
         return !memory.isEmpty();
+    }
+
+    public void stopRecording(){
+        if(status.equals(Status.RECORDING)){
+            status = Status.DISABLED;
+        }
     }
 
     public static final String MEMORY_TAG = "Memory";

@@ -34,16 +34,18 @@ import org.jetbrains.annotations.Nullable;
 public class MnemonicBlock extends Block implements EntityBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty CHARGED = BooleanProperty.create("charged");
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
     public MnemonicBlock(Properties props) {
         super(props);
-        registerDefaultState(this.defaultBlockState().setValue(POWER, 0).setValue(CHARGED, false));
+        registerDefaultState(this.defaultBlockState().setValue(POWER, 0).setValue(CHARGED, false).setValue(ACTIVE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWER);
         builder.add(CHARGED);
+        builder.add(ACTIVE);
         super.createBlockStateDefinition(builder);
     }
 
@@ -61,6 +63,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof MnemonicBlockEntity m) {
             if (!level.isClientSide && !(player.isCreative() && !m.hasMemory())) {
+                m.stopRecording();
                 ItemStack stack = Registration.MNEMONIC_BULB_ITEM.get().getDefaultInstance();
                 m.saveToItem(stack, level.registryAccess());
                 ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, stack);
@@ -96,7 +99,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource source) {
         super.animateTick(state, level, pos, source);
         if(state.getValue(CHARGED)){
-            ParticleScribe.drawParticleBox(level, ParticleTypes.ELECTRIC_SPARK, AABB.ofSize(Vec3.atCenterOf(pos), 1.2, 1.2, 1.2), 1);
+            ParticleScribe.drawParticleBox(level, ParticleTypes.ELECTRIC_SPARK, AABB.ofSize(Vec3.atBottomCenterOf(pos).add(0, 1, 0), 1.2, 0.4, 1.2), 1);
         }
     }
 
