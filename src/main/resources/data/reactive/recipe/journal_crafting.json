@@ -1,5 +1,5 @@
 {
-  "type": "patchouli:shapeless_book_recipe",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:book"
@@ -11,5 +11,11 @@
       "item": "minecraft:glass_bottle"
     }
   ],
-  "book": "reactive:journal"
+  "result": {
+    "components": {
+      "patchouli:book": "reactive:journal"
+    },
+    "count": 1,
+    "id": "patchouli:guide_book"
+  }
 }
