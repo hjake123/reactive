@@ -1,13 +1,45 @@
 {
   "multipart": [
     {
-      "when": { "charged":  "true"},
+      "when": {
+        "AND": [
+          {"charged": "true"},
+          {"active": "true"}
+        ]
+      },
+      "apply": {
+        "model": "reactive:block/mnemonic_on_active"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {"charged": "true"},
+          {"active": "false"}
+        ]
+      },
       "apply": {
         "model": "reactive:block/mnemonic_on"
       }
     },
     {
-      "when": { "charged":  "false"},
+      "when": {
+        "AND": [
+          {"charged": "false"},
+          {"active": "true"}
+        ]
+      },
+      "apply": {
+        "model": "reactive:block/mnemonic_off_active"
+      }
+    },
+    {
+      "when": {
+        "AND": [
+          {"charged": "false"},
+          {"active": "false"}
+        ]
+      },
       "apply": {
         "model": "reactive:block/mnemonic_off"
       }

@@ -175,19 +175,6 @@ public class Registration {
 
     public static final DeferredHolder<Item, BlockItem> GRAVITY_BEAM_ITEM = ITEMS.registerSimpleBlockItem(GRAVITY_BEAM);
 
-    public static final DeferredHolder<Block, FlowerVineBlock> FLOWER_VINES = BLOCKS.register("flower_vine",
-            () -> new FlowerVineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.VINE)));
-
-    public static final DeferredHolder<Block, FlowerVinePlantBlock> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
-            () -> new FlowerVinePlantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.VINE)));
-
-    public static final DeferredHolder<Item, BlockItem> FLOWER_VINES_ITEM = ITEMS.registerSimpleBlockItem(FLOWER_VINES);
-
-    public static final DeferredHolder<Block, MindLichenBlock> MIND_LICHEN = BLOCKS.register("mind_lichen",
-            () -> new MindLichenBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLOW_LICHEN)));
-
-    public static final DeferredHolder<Item, BlockItem> MIND_LICHEN_ITEM = ITEMS.registerSimpleBlockItem(MIND_LICHEN);
-
     public static final DeferredHolder<Block, MnemonicBlock> MNEMONIC_BULB = BLOCKS.register("mnemonic_bulb",
             () -> new MnemonicBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MUD)));
 
@@ -196,6 +183,19 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MnemonicBlockEntity>> MNEMONIC_BULB_BE_TYPE =
             TILES.register("mnemonic_bulb_be",
                     () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, MNEMONIC_BULB.get()).build(null));
+
+    public static final DeferredHolder<Block, MindLichenBlock> MIND_LICHEN = BLOCKS.register("mind_lichen",
+            () -> new MindLichenBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GLOW_LICHEN)));
+
+    public static final DeferredHolder<Item, BlockItem> MIND_LICHEN_ITEM = ITEMS.registerSimpleBlockItem(MIND_LICHEN);
+
+    public static final DeferredHolder<Block, FlowerVineBlock> FLOWER_VINES = BLOCKS.register("flower_vine",
+            () -> new FlowerVineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.VINE)));
+
+    public static final DeferredHolder<Block, FlowerVinePlantBlock> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
+            () -> new FlowerVinePlantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.VINE)));
+
+    public static final DeferredHolder<Item, BlockItem> FLOWER_VINES_ITEM = ITEMS.registerSimpleBlockItem(FLOWER_VINES);
 
     public static final DeferredHolder<Block, GravityChandelierBlock> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
             () -> new GravityChandelierBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TORCH)));
