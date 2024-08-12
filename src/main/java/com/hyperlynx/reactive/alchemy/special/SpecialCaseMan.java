@@ -622,7 +622,7 @@ public class SpecialCaseMan {
             for(LivingEntity e : nearby_ents){
                 if(e.isInvertedHealAndHarm())
                     continue;
-                e.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, 0));
+                e.addEffect(new MobEffectInstance(MobEffects.BAD_OMEN, 120000, 0, true, true));
                 e.hurt(e.level().damageSources().magic(), 2);
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.APPLY_EFFECT_BAD_OMEN, SoundSource.BLOCKS, 1, 1);

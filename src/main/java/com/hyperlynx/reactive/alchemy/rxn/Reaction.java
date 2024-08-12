@@ -114,8 +114,13 @@ public abstract class Reaction {
             case ELECTRIC -> crucible.electricCharge > 0;
             case NO_ELECTRIC -> crucible.electricCharge == 0;
             case SACRIFICE -> crucible.sacrificeCount >= 10;
+            case NOT_ENOUGH_BREEZE_RODS -> checkBreezeRods(crucible);
             default -> true;
         };
+    }
+
+    private boolean checkBreezeRods(CrucibleBlockEntity crucible) {
+        return true; // STUB
     }
 
     private boolean checkEndCrystal(CrucibleBlockEntity crucible){
@@ -172,10 +177,10 @@ public abstract class Reaction {
         NO_ELECTRIC,
         SACRIFICE,
         END_CRYSTAL,
-        NO_END_CRYSTAL
+        NO_END_CRYSTAL,
+        NOT_ENOUGH_BREEZE_RODS
     }
 
-    // The order of this enum declaration determines priority; lower on the list are more important.
     public enum Status {
         STABLE,
         VOLATILE,

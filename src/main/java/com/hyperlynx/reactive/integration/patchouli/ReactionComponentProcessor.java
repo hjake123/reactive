@@ -47,6 +47,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
                         case END_CRYSTAL -> formula.append(Component.translatable("item.minecraft.end_crystal").getString());
                         case NO_ELECTRIC -> formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("text.reactive.electric_charge").getString());
                         case NO_END_CRYSTAL -> formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("item.minecraft.end_crystal").getString());
+                        case NOT_ENOUGH_BREEZE_RODS -> formula.append(Component.translatable("text.reactive.too_few_breeze_rods").getString());
                     }
                     if(reaction instanceof CatalystEffectReaction catre){
                         formula.append(Component.translatable("docs.reactive.catalyst_label").getString());

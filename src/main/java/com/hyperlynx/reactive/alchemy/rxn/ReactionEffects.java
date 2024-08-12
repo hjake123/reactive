@@ -256,7 +256,7 @@ public class ReactionEffects {
         List<Monster> nearby_monsters = c.getLevel().getEntitiesOfClass(Monster.class, aoe);
 
         for(Monster m : nearby_monsters){
-            if(m.getTarget().isInvertedHealAndHarm() && m.getPosition(0).distanceTo(c.getBlockPos().getCenter()) < range){
+            if(m.isInvertedHealAndHarm() && m.getPosition(0).distanceTo(c.getBlockPos().getCenter()) < range){
                 m.hurt(c.getLevel().damageSources().inFire(), 3);
                 m.setRemainingFireTicks(100);
             }

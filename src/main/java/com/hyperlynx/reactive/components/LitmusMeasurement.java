@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.components;
 
 import com.hyperlynx.reactive.alchemy.Power;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -10,18 +11,18 @@ import net.minecraft.resources.ResourceKey;
 
 import java.util.List;
 
-public record LitmusMeasurement(List<Line> measurements, String status, boolean integrity_violated) {
+public record LitmusMeasurement(List<Line> measurements, List<ReactionStatusEntry> statuses, boolean integrity_violated) {
     public static final Codec<LitmusMeasurement> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
                     Line.CODEC.listOf().fieldOf("measurements").forGetter(LitmusMeasurement::measurements),
-                    Codec.STRING.fieldOf("status").forGetter(LitmusMeasurement::status),
+                    ReactionStatusEntry.CODEC.listOf().fieldOf("status").forGetter(LitmusMeasurement::statuses),
                     Codec.BOOL.fieldOf("integrity_violation").forGetter(LitmusMeasurement::integrity_violated)
             ).apply(instance, LitmusMeasurement::new)
     );
 
     public static final StreamCodec<ByteBuf, LitmusMeasurement> STREAM_CODEC = StreamCodec.composite(
             Line.STREAM_CODEC.apply(ByteBufCodecs.list()), LitmusMeasurement::measurements,
-            ByteBufCodecs.STRING_UTF8, LitmusMeasurement::status,
+            ReactionStatusEntry.STREAM_CODEC.apply(ByteBufCodecs.list()), LitmusMeasurement::statuses,
             ByteBufCodecs.BOOL, LitmusMeasurement::integrity_violated,
             LitmusMeasurement::new
     );
