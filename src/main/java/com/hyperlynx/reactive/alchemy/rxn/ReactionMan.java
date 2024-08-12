@@ -65,7 +65,6 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("ominous_transformation");
         CRITERIA_BUILDER.add("omen_settling");
         CRITERIA_BUILDER.add("wind_bomb");
-        CRITERIA_BUILDER.add("flow_from_soul");
         CRITERIA_BUILDER.add("chomp");
     }
 
@@ -173,7 +172,6 @@ public class ReactionMan {
         REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
 
         REACTIONS.add(new FreeEffectReaction("wind_bomb", ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get()));
-        REACTIONS.add(new AssimilationReaction("flow_from_soul", Powers.FLOW_POWER.get(), Powers.SOUL_POWER.get()));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 
