@@ -80,4 +80,7 @@ public class CriteriaTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SIZE_CHANGED_TRIGGER = TRIGGERS.register("size_change_criterion",
             () -> new FlagTrigger(ReactiveMod.location("size_change_criterion")));
 
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> ISOLATE_OMEN_TRIGGER = TRIGGERS.register("isolate_omen_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("isolate_omen_criterion")));
+
 }

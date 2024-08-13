@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hyperlynx.reactive.advancements.CriteriaTriggers.ISOLATE_OMEN_TRIGGER;
+
 public class LitmusPaperItem extends Item {
     public LitmusPaperItem(Properties props) {
         super(props.stacksTo(1));
@@ -55,6 +57,9 @@ public class LitmusPaperItem extends Item {
                 Power power = Powers.POWER_REGISTRY.get(line.power());
                 if(power != null) {
                     color = power.getTextColor();
+                }
+                if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
+                    ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
                 }
             }
             text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));

@@ -1,0 +1,35 @@
+{
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "inflict_bad_omen": {
+      "trigger": "minecraft:effects_changed",
+      "conditions": {
+        "effects": {
+          "minecraft:bad_omen": {}
+        }
+      }
+    },
+    "get_omen_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:ominous_bottle"
+            ]
+          }
+        ]
+      }
+    },
+    "measure_omen": {
+      "trigger": "reactive:isolate_omen_criterion"
+    }
+  },
+  "requirements": [
+    [
+      "inflict_bad_omen",
+      "get_omen_bottle",
+      "measure_omen"
+    ]
+  ]
+}
