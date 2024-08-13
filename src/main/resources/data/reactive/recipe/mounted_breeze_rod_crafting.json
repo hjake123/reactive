@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "tag": "c:ingots/iron"
+    },
+    "b": {
+      "tag": "c:rods/breeze"
+    }
+  },
+  "pattern": [
+    "   ",
+    "ibi",
+    "   "
+  ],
+  "result": {
+    "id": "reactive:breeze_rod"
+  }
+}
