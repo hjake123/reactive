@@ -346,7 +346,7 @@ public class ReactionEffects {
         crucible.expendPower(Powers.FLOW_POWER.get(), flow);
         crucible.addPower(Powers.LIGHT_POWER.get(), flow / 3);
         crucible.electricCharge += 20;
-        SpecialCaseMan.windBomb(crucible);
+        SpecialCaseMan.windBomb(crucible.getLevel(), Vec3.atCenterOf(crucible.getBlockPos()));
         return crucible;
     }
 

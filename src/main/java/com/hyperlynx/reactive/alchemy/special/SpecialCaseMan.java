@@ -184,7 +184,7 @@ public class SpecialCaseMan {
         });
         EMPTY_SPECIAL_CASES.add(c -> {
             if(c.getPowerLevel(Powers.FLOW_POWER.get()) > 0)
-                windBomb(c);
+                windBomb(c.getLevel(), Vec3.atCenterOf(c.getBlockPos()));
         });
         EMPTY_SPECIAL_CASES.add(c -> {
             if(c.getPowerLevel(Powers.OMEN_POWER.get()) > 121)
@@ -604,11 +604,9 @@ public class SpecialCaseMan {
         c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
-    public static void windBomb(CrucibleBlockEntity crucible){
-        Level level = crucible.getLevel();
+    public static void windBomb(Level level, Vec3 position){
         if(level == null)
             return;
-        var position = Vec3.atCenterOf(crucible.getBlockPos());
         // From WindCharge.java
         level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), 1.6F, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
     }

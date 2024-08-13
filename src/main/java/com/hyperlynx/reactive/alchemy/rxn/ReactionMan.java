@@ -171,7 +171,7 @@ public class ReactionMan {
         REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
 
-        REACTIONS.add(new FreeEffectReaction("wind_bomb", ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get()));
+        REACTIONS.add(new WindBombReaction("wind_bomb"));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 

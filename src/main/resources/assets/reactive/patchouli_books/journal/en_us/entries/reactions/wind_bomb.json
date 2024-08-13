@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(bold)Visual:$()$(br)None.$(p)$(bold)Effect:$()$(br)An enlarged Wind Charge explosion occurs at the mouth of the Crucible."
+      "text": "$(bold)Visual:$()$(br)None.$(p)$(bold)Effect:$()$(br)An enlarged Wind Charge explosion occurs at the mouth of the Crucible. There must be some way to prevent this from happening..."
     },
     {
       "type": "reactive:reaction",

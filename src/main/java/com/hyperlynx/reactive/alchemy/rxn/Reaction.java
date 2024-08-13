@@ -4,17 +4,23 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.ConfigMan;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public abstract class Reaction {
 
@@ -72,6 +78,11 @@ public abstract class Reaction {
         return reagents;
     }
 
+    public Reaction setReagentCost(Power reagent, int cost){
+        reagents.put(reagent, cost);
+        return this;
+    }
+
     public Reaction markAlwaysPerfect(){
         this.always_perfect = true;
         return this;
@@ -114,13 +125,8 @@ public abstract class Reaction {
             case ELECTRIC -> crucible.electricCharge > 0;
             case NO_ELECTRIC -> crucible.electricCharge == 0;
             case SACRIFICE -> crucible.sacrificeCount >= 10;
-            case NOT_ENOUGH_BREEZE_RODS -> checkBreezeRods(crucible);
             default -> true;
         };
-    }
-
-    private boolean checkBreezeRods(CrucibleBlockEntity crucible) {
-        return true; // STUB
     }
 
     private boolean checkEndCrystal(CrucibleBlockEntity crucible){
@@ -177,8 +183,7 @@ public abstract class Reaction {
         NO_ELECTRIC,
         SACRIFICE,
         END_CRYSTAL,
-        NO_END_CRYSTAL,
-        NOT_ENOUGH_BREEZE_RODS
+        NO_END_CRYSTAL
     }
 
     public enum Status {
