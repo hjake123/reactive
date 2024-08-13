@@ -133,8 +133,8 @@ public class Registration {
             () -> new BlazeRodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)));
     public static final DeferredHolder<Item, BlockItem> BLAZE_ROD_ITEM = ITEMS.registerSimpleBlockItem(BLAZE_ROD);
 
-    public static final DeferredHolder<Block, BlazeRodBlock> BREEZE_ROD = BLOCKS.register("breeze_rod",
-            () -> new BlazeRodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)));
+    public static final DeferredHolder<Block, BreezeRodBlock> BREEZE_ROD = BLOCKS.register("breeze_rod",
+            () -> new BreezeRodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)));
     public static final DeferredHolder<Item, BlockItem> BREEZE_ROD_ITEM = ITEMS.registerSimpleBlockItem(BREEZE_ROD);
 
     public static final DeferredHolder<Block, StardustBlock> STARDUST = BLOCKS.register("stardust",

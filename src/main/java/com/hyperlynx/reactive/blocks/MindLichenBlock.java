@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.items.CrystalIronItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,6 +34,9 @@ public class MindLichenBlock extends GlowLichenBlock {
                     if(to_pos.isPresent()){
                         player.giveExperiencePoints(-1);
                         level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.02F, 0.7F+level.random.nextFloat()*0.1F);
+                        if(level.random.nextFloat() < 0.1){
+                            level.setBlock(to_pos.get().pos(), Registration.MNEMONIC_BULB.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                        }
                     }
                 }
             }

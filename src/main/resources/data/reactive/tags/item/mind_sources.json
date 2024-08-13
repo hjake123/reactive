@@ -12,6 +12,7 @@
     "reactive:solid_portal",
     "minecraft:dragon_egg",
     "reactive:mind_lichen",
+    "reactive:mnemonic_bulb",
     {
       "id": "hexcasting:amethyst_dust",
       "required": false
