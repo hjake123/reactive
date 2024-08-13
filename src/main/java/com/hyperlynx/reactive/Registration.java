@@ -12,6 +12,7 @@ import com.hyperlynx.reactive.components.ReactiveDataComponents;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -41,9 +42,15 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handlers.ClientPayloadHandler;
+import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -125,6 +132,10 @@ public class Registration {
     public static final DeferredHolder<Block, BlazeRodBlock> BLAZE_ROD = BLOCKS.register("blaze_rod",
             () -> new BlazeRodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)));
     public static final DeferredHolder<Item, BlockItem> BLAZE_ROD_ITEM = ITEMS.registerSimpleBlockItem(BLAZE_ROD);
+
+    public static final DeferredHolder<Block, BlazeRodBlock> BREEZE_ROD = BLOCKS.register("breeze_rod",
+            () -> new BlazeRodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD)));
+    public static final DeferredHolder<Item, BlockItem> BREEZE_ROD_ITEM = ITEMS.registerSimpleBlockItem(BREEZE_ROD);
 
     public static final DeferredHolder<Block, StardustBlock> STARDUST = BLOCKS.register("stardust",
             () -> new StardustBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TORCH).lightLevel((BlockState s) -> 15).sound(SoundType.WOOL)));
@@ -211,7 +222,7 @@ public class Registration {
     // Register the Gravity related BEs
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
             TILES.register("gravity_chandelier_be",
-            () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
+                    () -> BlockEntityType.Builder.of(GravityChandelierBlockEntity::new, GRAVITY_CHANDELIER.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GravityBeamBlockEntity>> GRAVITY_BEAM_BE_TYPE =
             TILES.register("gravity_beam_be",
@@ -437,7 +448,7 @@ public class Registration {
                     .title(Component.translatable("reactive.tab"))
                     .displayItems((params, output) -> {
                         for(DeferredHolder<Item, ? extends Item> item_reg : ITEMS.getEntries()){
-                                output.accept(item_reg.get());
+                            output.accept(item_reg.get());
                         }
                     })
                     .build());
@@ -457,6 +468,7 @@ public class Registration {
 //        }
     }
 
+
     // Helper method for Recipe Types.
     public static <T extends Recipe<?>> RecipeType<T> getRecipeType(final String id) {
         return new RecipeType<>()
@@ -466,4 +478,23 @@ public class Registration {
             }
         };
     }
+    // Register networking stuff for WSV.
+
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        // Sets the current network version
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.configurationToClient(
+                WorldSpecificValue.AlchemySeedData.TYPE,
+                WorldSpecificValue.AlchemySeedData.STREAM_CODEC,
+                new WorldSpecificValue.AlchemySeedPayloadHandler()
+        );
+    }
+
+    @SubscribeEvent
+    public static void register(final RegisterConfigurationTasksEvent event) {
+        event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
+    }
 }
+
+

@@ -47,7 +47,7 @@ public class ConfigMan {
     public static final Common COMMON;
 
     public static class Server {
-        public ModConfigSpec.BooleanValue useWorldSeed;
+        public ModConfigSpec.BooleanValue useCustomSeed;
         public ModConfigSpec.LongValue seed;
         public ModConfigSpec.DoubleValue shrinkSmallSize;
         public ModConfigSpec.DoubleValue growLargeSize;
@@ -58,10 +58,10 @@ public class ConfigMan {
         Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
                     .push("wsv");
-            seed = builder.comment("The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!")
+            seed = builder.comment("The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, some alchemy rules will change!")
                     .defineInRange("seed", 42, Long.MIN_VALUE, Long.MAX_VALUE);
-            useWorldSeed = builder.comment("Whether to reset the seed to your world seed when loading.")
-                    .define("resetSeed", true);
+            useCustomSeed = builder.comment("Whether to use the above customized alchemy seed instead of the automatically generated one.")
+                    .define("useCustomSeed", false);
             builder.pop();
             builder.comment("Balance Options:")
                     .push("balance");
