@@ -67,7 +67,7 @@ public class BlazeRodBlock extends RotatedPillarBlock implements SimpleWaterlogg
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState().setValue(WATERLOGGED, fluidstate.is(Fluids.WATER));
+        return super.getStateForPlacement(context).setValue(WATERLOGGED, fluidstate.is(Fluids.WATER));
     }
     @Override
     public FluidState getFluidState(BlockState state) {
