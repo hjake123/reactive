@@ -22,7 +22,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
 
     private static void trySpread(Level level, BlockPos target, BlockPos spreader, int spreads_left){
         if(level.getBlockState(target).isAir() || level.getBlockState(target).is(Registration.GOLD_FOAM.get())){
-            if(level.getBlockEntity(target) == null){
+            if(level.getBlockEntity(spreader) == null){
                 return;
             }
             level.setBlock(target, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
