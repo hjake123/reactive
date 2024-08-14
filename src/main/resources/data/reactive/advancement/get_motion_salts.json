@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:motion_salt"
+      "id": "reactive:motion_salt"
     },
     "title": {
       "translate": "advancement.reactive.title.motion_salt"

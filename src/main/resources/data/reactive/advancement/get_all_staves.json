@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:mind_staff"
+      "id": "reactive:mind_staff"
     },
     "title": {
       "translate": "advancement.reactive.title.all_staves"

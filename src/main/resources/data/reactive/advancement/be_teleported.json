@@ -1,8 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:warp_bottle",
-      "nbt": "{TeleportPos:'example'}"
+      "id": "reactive:warp_bottle",
+      "components": "reactive:warp_bottle_target={}"
     },
     "title": {
       "translate": "advancement.reactive.title.teleport"

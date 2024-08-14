@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:divine_symbol"
+      "id": "reactive:divine_symbol"
     },
     "title": {
       "translate": "advancement.reactive.title.astral"

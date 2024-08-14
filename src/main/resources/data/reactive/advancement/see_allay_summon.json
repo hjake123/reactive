@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:soul_bottle"
+      "id": "reactive:soul_bottle"
     },
     "title": {
       "translate": "advancement.reactive.title.allay"

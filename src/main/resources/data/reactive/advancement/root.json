@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:scroll"
+      "id": "reactive:scroll"
     },
     "title": {
       "translate": "advancement.reactive.title.root"

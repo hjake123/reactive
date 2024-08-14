@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:secret_scale"
+      "id": "reactive:secret_scale"
     },
     "title": {
       "translate": "advancement.reactive.title.gravity"

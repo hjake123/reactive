@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:solid_portal"
+      "id": "reactive:solid_portal"
     },
     "title": {
       "translate": "advancement.reactive.title.freeze_portal"

@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "reactive:occult_symbol"
+      "id": "reactive:occult_symbol"
     },
     "title": {
       "translate": "advancement.reactive.title.eye"

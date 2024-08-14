@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "minecraft:ender_eye"
+      "id": "minecraft:ender_eye"
     },
     "title": {
       "translate": "advancement.reactive.title.put_eye"

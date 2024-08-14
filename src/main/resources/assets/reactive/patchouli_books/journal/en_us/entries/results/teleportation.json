@@ -1,6 +1,6 @@
 {
   "name": "Teleportation",
-  "icon": "reactive:warp_bottle{TeleportPos:'example'}",
+  "icon": "reactive:warp_bottle",
   "category": "reactive:results",
   "advancement": "reactive:be_teleported",
   "pages": [
