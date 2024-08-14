@@ -1,16 +1,7 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "reactive:block/breeze_rod",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "": {
       "model": "reactive:block/breeze_rod"
-    },
-    "axis=z": {
-      "model": "reactive:block/breeze_rod",
-      "x": 90
     }
   }
 }

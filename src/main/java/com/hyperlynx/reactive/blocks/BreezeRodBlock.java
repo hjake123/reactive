@@ -10,7 +10,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -19,15 +18,20 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BreezeRodBlock extends RotatedPillarBlock implements SimpleWaterloggedBlock {
-    protected static final VoxelShape X_SHAPE = Block.box(2, 4, 4, 14, 8, 8);
-    protected static final VoxelShape Y_SHAPE = Block.box(4, 2, 4, 8, 14, 8);
-    protected static final VoxelShape Z_SHAPE = Block.box(4, 4, 2, 8, 8, 14);
+public class BreezeRodBlock extends Block implements SimpleWaterloggedBlock {
+    protected static final VoxelShape SHAPE = Shapes.or(
+            Block.box(7, 1, 7, 9, 15, 9),
+            Shapes.join(
+                    Block.box(5, 7, 5, 11, 8, 11),
+                    Block.box(6, 7, 6, 10, 8, 10),
+                    BooleanOp.ONLY_FIRST));
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public BreezeRodBlock(Properties props) {
@@ -37,13 +41,7 @@ public class BreezeRodBlock extends RotatedPillarBlock implements SimpleWaterlog
 
     @Override
     public @NotNull VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        if(state.getValue(AXIS).isVertical()){
-            return Y_SHAPE;
-        }
-        if(state.getValue(AXIS).equals(Direction.Axis.X)){
-            return X_SHAPE;
-        }
-        return Z_SHAPE;
+        return SHAPE;
     }
 
     @Override
