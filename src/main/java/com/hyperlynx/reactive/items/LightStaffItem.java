@@ -16,12 +16,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class LightStaffItem extends StaffItem {
     private final static int LIGHT_BREAK_RANGE = 24;
 
-    public LightStaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Item repair_item) {
+    public LightStaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, Item repair_item) {
         super(block, props, effect, beam, 7, repair_item);
     }
 
@@ -31,7 +32,7 @@ public class LightStaffItem extends StaffItem {
             return InteractionResultHolder.fail(player.getItemInHand(hand));
 
         if(!level.isClientSide) {
-            effectFunction.apply((Player) player);
+            effectFunction.accept(player, player.getItemInHand(hand));
             player.getItemInHand(hand).hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
         }
         return super.use(level, player, hand);

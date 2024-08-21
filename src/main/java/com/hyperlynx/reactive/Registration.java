@@ -7,8 +7,8 @@ import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 //import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
-//import com.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import com.hyperlynx.reactive.components.ReactiveDataComponents;
+import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
@@ -33,6 +33,8 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -44,10 +46,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handlers.ClientPayloadHandler;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -68,6 +66,7 @@ public class Registration {
 
     public static void init(IEventBus bus) {
         ReactiveDataComponents.COMPONENT_TYPES.register(bus);
+        ReactiveEnchantmentComponents.COMPONENT_TYPES.register(bus);
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
@@ -392,6 +391,8 @@ public class Registration {
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 3000)));
     public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 8000)));
+
+    // Register enchantment components
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);

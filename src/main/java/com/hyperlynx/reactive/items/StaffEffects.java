@@ -18,6 +18,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -39,7 +40,7 @@ public class StaffEffects {
 
     Beam casting code is taken from Eclectic, as contributed by petrak@
      */
-    public static Player radiance(Player user){
+    public static void radiance(Player user, ItemStack stack){
         int range = 64;
         var block_hit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, range);
         var block_hit_pos = block_hit.getBlockPos();
@@ -49,12 +50,12 @@ public class StaffEffects {
                 user, start, end, new AABB(start, end), e -> e instanceof LivingEntity, Double.MAX_VALUE
         );
 
-        if(user instanceof ServerPlayer){
+        if(user instanceof ServerPlayer serveruser){
             if(entity_hit != null){
                 if(entity_hit.getEntity() instanceof LivingEntity victim){
                     if(victim.isInvertedHealAndHarm()){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(user.damageSources().inFire(), 7);
+                        StaffItem.hurtVictim(serveruser, stack, victim, user.damageSources().inFire(), 7);
                     }
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
@@ -79,10 +80,9 @@ public class StaffEffects {
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                     block_hit.getLocation().x, block_hit.getLocation().y, block_hit.getLocation().z, 2, 0.1);
         }
-        return user;
     }
 
-    public static Player blazing(Player user){
+    public static void blazing(Player user, ItemStack stack){
         int range = 24;
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
@@ -105,21 +105,20 @@ public class StaffEffects {
             user.level().addFreshEntity(fireball);
             user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
         }
-        return user;
     }
 
-    public static Player spectral(Player user){
+    public static void spectral(Player user, ItemStack stack){
         var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
         aoe = aoe.inflate(1.5);
 
-        if(user instanceof ServerPlayer) {
+        if(user instanceof ServerPlayer serveruser) {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer && !(victim.equals(user)) && !CrystalIronItem.effectNotBlocked(victim, 1))
                     continue; // This staff cannot hurt players other than the user.
-                victim.hurt(user.damageSources().magic(), 3);
+                StaffItem.hurtVictim(serveruser, stack, victim, user.damageSources().magic(), 3);
                 victim.knockback(0.3, user.level().random.nextDouble()*0.2 - 0.1, user.level().random.nextDouble()*0.2 - 0.1);
             }
             user.level().playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
@@ -128,11 +127,10 @@ public class StaffEffects {
             ParticleScribe.drawParticleBox(user.level(), ParticleTypes.SOUL, aoe, 10);
             user.level().addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
         }
-        return user;
     }
 
-    public static Player missile(Player user){
-        if (user instanceof ServerPlayer) {
+    public static void missile(Player user, ItemStack stack){
+        if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
             aoe = aoe.inflate(6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
@@ -148,17 +146,16 @@ public class StaffEffects {
                         continue;
                     }
                 }
-                victim.hurt(user.damageSources().magic(), 2);
+                StaffItem.hurtVictim(serveruser, stack, victim, user.damageSources().magic(), 2);
                 ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                 user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
                         user.level().random.nextFloat()*0.1f + 0.8f);
             }
         }
-        return user;
     }
 
-    public static Player living(Player user){
+    public static void living(Player user, ItemStack stack){
         if (user.level().random.nextFloat() < 0.4) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
             aoe = aoe.inflate(5);
@@ -188,7 +185,6 @@ public class StaffEffects {
         }
         user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
 
-        return user;
     }
 
 }
