@@ -1,0 +1,23 @@
+{
+  "anvil_cost": 1,
+  "description": {
+    "translate": "enchantment.reactive.super_missile"
+  },
+  "effects": {
+    "reactive:super_missile": {}
+  },
+  "max_cost": {
+    "base": 20,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 12,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "reactive:mind_staff",
+  "weight": 4
+}

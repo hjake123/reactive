@@ -2,7 +2,6 @@
   "replace": false,
   "values": [
     "reactive:light_staff",
-    "reactive:mind_staff",
     "reactive:soul_staff",
     "reactive:blaze_staff",
     "reactive:vital_staff"

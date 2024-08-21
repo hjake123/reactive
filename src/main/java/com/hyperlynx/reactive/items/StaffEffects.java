@@ -3,9 +3,11 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.blocks.AirLightBlock;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
+import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,6 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
+import java.util.Objects;
 
 // A container class for the various effects that the staff items can have when right-clicked.
 // Similar in concept to ReactionEffects
@@ -135,7 +138,13 @@ public class StaffEffects {
             aoe = aoe.inflate(6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
-            for(int i = 0; i < 3; i++) {
+            boolean super_missile = false;
+            if(stack.has(DataComponents.ENCHANTMENTS)){
+                for(var enchant : Objects.requireNonNull(stack.get(DataComponents.ENCHANTMENTS)).keySet()){
+                    super_missile = super_missile || enchant.value().effects().has(ReactiveEnchantmentComponents.SUPER_MISSILE.value());
+                }
+            }
+            for(int i = 0; i < (super_missile ? 7 : 3); i++) {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
