@@ -20,4 +20,10 @@ public class ReactiveEnchantmentComponents {
                     () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
                             .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
                             .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> STAFF_RATE =
+            COMPONENT_TYPES.register("staff_rate",
+                    () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
+                            .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
+                            .build());
 }

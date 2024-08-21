@@ -53,6 +53,11 @@ public class CrystalIronItem extends Item {
     }
 
     @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 12;
+    }
+
+    @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slot_number, boolean unknown) {
         if(entity instanceof LivingEntity bearer && !level.isClientSide){
             if(bearer.getActiveEffects().isEmpty()){

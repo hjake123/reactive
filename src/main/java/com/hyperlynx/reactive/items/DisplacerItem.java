@@ -38,6 +38,11 @@ public class DisplacerItem extends Item {
     }
 
     @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 10;
+    }
+
+    @Override
     public @NotNull InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
