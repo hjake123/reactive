@@ -7,7 +7,6 @@ import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -28,7 +27,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
-import java.util.Objects;
 
 // A container class for the various effects that the staff items can have when right-clicked.
 // Similar in concept to ReactionEffects
@@ -115,7 +113,8 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        aoe = aoe.inflate(1.5);
+        boolean wide = ReactiveEnchantmentComponents.checkHasEnchant(stack, ReactiveEnchantmentComponents.WIDE_RANGE);
+        aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer serveruser) {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
@@ -127,7 +126,7 @@ public class StaffEffects {
             user.level().playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
                     user.level().random.nextFloat()*0.1f + 0.95f);
         }else{
-            ParticleScribe.drawParticleBox(user.level(), ParticleTypes.SOUL, aoe, 10);
+            ParticleScribe.drawParticleBox(user.level(), ParticleTypes.SOUL, aoe, wide ? 20 : 10);
             user.level().addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
         }
     }
@@ -135,15 +134,10 @@ public class StaffEffects {
     public static void missile(Player user, ItemStack stack){
         if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(6);
+            boolean super_missile = ReactiveEnchantmentComponents.checkHasEnchant(stack, ReactiveEnchantmentComponents.WIDE_RANGE);
+            aoe = aoe.inflate(super_missile ? 10 : 6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
-            boolean super_missile = false;
-            if(stack.has(DataComponents.ENCHANTMENTS)){
-                for(var enchant : Objects.requireNonNull(stack.get(DataComponents.ENCHANTMENTS)).keySet()){
-                    super_missile = super_missile || enchant.value().effects().has(ReactiveEnchantmentComponents.SUPER_MISSILE.value());
-                }
-            }
             for(int i = 0; i < (super_missile ? 7 : 3); i++) {
                 if(nearby_ents.isEmpty())
                     break;

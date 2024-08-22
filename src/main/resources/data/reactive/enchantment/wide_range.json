@@ -4,7 +4,7 @@
     "translate": "enchantment.reactive.super_missile"
   },
   "effects": {
-    "reactive:super_missile": {}
+    "reactive:wide_range": {}
   },
   "max_cost": {
     "base": 20,
@@ -18,6 +18,6 @@
   "slots": [
     "mainhand"
   ],
-  "supported_items": "reactive:mind_staff",
+  "supported_items": "#reactive:enchantable/staff_aoe",
   "weight": 4
 }
