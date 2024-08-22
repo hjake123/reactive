@@ -38,6 +38,12 @@ public class ReactiveEnchantmentComponents {
                             .persistent(Unit.CODEC)
                             .build());
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WORLD_PIERCER =
+            COMPONENT_TYPES.register("world_piercer",
+                    () -> DataComponentType.<Unit>builder()
+                            .persistent(Unit.CODEC)
+                            .build());
+
     public static boolean checkHasEnchant(ItemStack stack, Holder<DataComponentType<?>> enchantment_component){
         if(stack.has(DataComponents.ENCHANTMENTS)){
             for(var enchant : Objects.requireNonNull(stack.get(DataComponents.ENCHANTMENTS)).keySet()){

@@ -1,5 +1,5 @@
 {
-  "anvil_cost": 1,
+  "anvil_cost": 5,
   "description": {
     "translate": "enchantment.reactive.super_missile"
   },

@@ -1,0 +1,23 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.reactive.world_piercer"
+  },
+  "effects": {
+    "reactive:world_piercer": {}
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 16,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "reactive:displacer",
+  "weight": 8
+}
