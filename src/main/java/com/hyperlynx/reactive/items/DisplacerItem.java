@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DisplacerItem extends Item {
     public static final int DISPLACER_BASE_DISPLACE_TIME = 200;
@@ -47,38 +48,32 @@ public class DisplacerItem extends Item {
 
         boolean hyper_mode = ReactiveEnchantmentComponents.checkHasEnchant(context.getItemInHand(), ReactiveEnchantmentComponents.WORLD_PIERCER);
         if (hyper_mode) {
-            var result = perform(context, level, pos, state, slot, 32, DISPLACER_BASE_DISPLACE_TIME * 2);
-            if(result == InteractionResult.SUCCESS){
+            var displaced_center = perform(context, level, pos, state, slot, 32, DISPLACER_BASE_DISPLACE_TIME * 2);
+            if(displaced_center.isPresent()){
                 Direction.Axis perpendicular_axis = switch(context.getClickedFace().getAxis()){
                     case X, Z -> Direction.Axis.Y;
                     case Y -> Direction.Axis.X;
                 };
                 Direction initial_direction = context.getClickedFace().getClockWise(perpendicular_axis);
                 int extra_delay = 0;
-                for(BlockPos pos_within_square : BlockPos.spiralAround(pos, 1, context.getClickedFace().getClockWise(initial_direction.getAxis()), initial_direction)){
-                    if(pos_within_square != pos) {
+                for(BlockPos pos_within_square : BlockPos.spiralAround(displaced_center.get(), 1, context.getClickedFace().getClockWise(initial_direction.getAxis()), initial_direction)){
+                    if(pos_within_square != displaced_center.get()) {
                         DisplacedBlock.displaceWithChain(level.getBlockState(pos_within_square), pos_within_square, level, 2 + extra_delay, 1, pos);
                         extra_delay++;
                     }
                 }
+                return InteractionResult.SUCCESS;
             }
-            return result;
+            return InteractionResult.PASS;
         } else {
-            return perform(context, level, pos, state, slot, 8, DISPLACER_BASE_DISPLACE_TIME);
+            if(perform(context, level, pos, state, slot, 8, DISPLACER_BASE_DISPLACE_TIME).isPresent()){
+                return InteractionResult.SUCCESS;
+            }
+            return InteractionResult.PASS;
         }
     }
 
-    private static Iterable<BlockPos> threeByThreeSquare(BlockPos center, Direction.Axis axis){
-        AABB aabb = switch(axis){
-            case X -> AABB.ofSize(center.getCenter(), 1, 2.99, 2.99);
-            case Y -> AABB.ofSize(center.getCenter(), 2.99, 1, 2.99);
-            case Z -> AABB.ofSize(center.getCenter(), 2.99, 2.99, 1);
-        };
-
-        return BlockPos.betweenClosed(new BlockPos((int) aabb.minX, (int) aabb.minY, (int) aabb.minZ), new BlockPos((int) aabb.maxX, (int) aabb.maxY, (int) aabb.maxZ));
-    }
-
-    private InteractionResult perform(UseOnContext context, Level level, BlockPos pos, BlockState state, EquipmentSlot slot, int max_depth, int displace_time){
+    private Optional<BlockPos> perform(UseOnContext context, Level level, BlockPos pos, BlockState state, EquipmentSlot slot, int max_depth, int displace_time){
         if(state.getBlock() instanceof DisplacedBlock){
             // Allow the player to click on above and below blocks "though" the one they're facing if they're inside a block.
             if(context.isInside()) {
@@ -104,7 +99,7 @@ public class DisplacerItem extends Item {
             }
             level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.1F);
-            return InteractionResult.SUCCESS;
+            return Optional.of(selected);
         }
 
         boolean displace_worked = displace(level, pos, displace_time);
@@ -113,11 +108,11 @@ public class DisplacerItem extends Item {
                     SoundSource.PLAYERS, 1.0F, 1.0F);
             if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
                 context.getItemInHand().hurtAndBreak(1, splayer, slot);
-            return InteractionResult.SUCCESS;
+            return Optional.of(pos);
         }
         level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
                 SoundSource.PLAYERS, 1.0F, 0.7F);
-        return InteractionResult.FAIL;
+        return Optional.empty();
     }
 
     private static boolean displace(Level level, BlockPos selected, int displace_time) {
