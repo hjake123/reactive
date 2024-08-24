@@ -3,7 +3,6 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.blocks.AirLightBlock;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
-import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import com.hyperlynx.reactive.util.BeamHelper;
 import com.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
@@ -113,7 +112,7 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        boolean wide = ReactiveEnchantmentComponents.checkHasEnchant(stack, ReactiveEnchantmentComponents.WIDE_RANGE);
+        boolean wide = Registration.checkHasEnchant(stack, Registration.WIDE_RANGE);
         aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer serveruser) {
@@ -134,7 +133,7 @@ public class StaffEffects {
     public static void missile(Player user, ItemStack stack){
         if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            boolean super_missile = ReactiveEnchantmentComponents.checkHasEnchant(stack, ReactiveEnchantmentComponents.WIDE_RANGE);
+            boolean super_missile = Registration.checkHasEnchant(stack, Registration.WIDE_RANGE);
             aoe = aoe.inflate(super_missile ? 10 : 6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);

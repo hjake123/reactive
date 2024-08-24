@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.alchemy.special;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
@@ -292,7 +291,7 @@ public class SpecialCaseMan {
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
                 EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner() instanceof ServerPlayer player)
-                    CriteriaTriggers.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
+                    Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
             }
             else
                 EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
@@ -302,7 +301,7 @@ public class SpecialCaseMan {
             else {
                 EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner()  instanceof ServerPlayer player)
-                    CriteriaTriggers.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
+                    Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
             }
         }
         e.kill();
@@ -336,14 +335,14 @@ public class SpecialCaseMan {
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower.getUUID());
             if(!l.isClientSide)
-                CriteriaTriggers.ENDER_PEARL_DISSOLVE_TRIGGER.get().trigger((ServerPlayer) player);
+                Registration.ENDER_PEARL_DISSOLVE_TRIGGER.get().trigger((ServerPlayer) player);
             if(player != null && e.level().dimension().equals(player.level().dimension())){
                 player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
                 foundTarget = true;
             }
         }
         if(!foundTarget){
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.MAKE_RIFT_TRIGGER.get(), p, 20);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER.get(), p, 20);
             c.enderRiftStrength = 2000;
         }
         e.kill();
@@ -564,7 +563,7 @@ public class SpecialCaseMan {
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 0));
                 e.hurt(e.level().damageSources().magic(), 10);
                 if(e instanceof Player){
-                    CriteriaTriggers.BE_CURSED_TRIGGER.get().trigger((ServerPlayer) e);
+                    Registration.BE_CURSED_TRIGGER.get().trigger((ServerPlayer) e);
                 }
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.value(), SoundSource.BLOCKS, 1, 1);
@@ -632,7 +631,7 @@ public class SpecialCaseMan {
         if(portal.isComplete()){
             portal.createSolidPortalBlocks();
             if(!l.isClientSide)
-                FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.PORTAL_FREEZE_TRIGGER.get(), p, 9);
+                FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.PORTAL_FREEZE_TRIGGER.get(), p, 9);
         }
     }
 

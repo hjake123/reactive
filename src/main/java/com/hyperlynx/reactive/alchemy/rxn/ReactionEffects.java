@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -165,7 +164,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    CriteriaTriggers.BE_LEVITATED_TRIGGER.get().trigger(player);
+                    Registration.BE_LEVITATED_TRIGGER.get().trigger(player);
                 }
             }
             ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.END_ROD,
@@ -188,7 +187,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    CriteriaTriggers.BE_SLOWFALLED_TRIGGER.get().trigger(player);
+                    Registration.BE_SLOWFALLED_TRIGGER.get().trigger(player);
                 }
             }
             ParticleScribe.drawParticleRing(crucible.getLevel(), ParticleTypes.END_ROD, crucible.getBlockPos(), 0.5, 0.6, 1);
@@ -420,9 +419,9 @@ public class ReactionEffects {
                         victim.hurt(crucible.getLevel().damageSources().magic(), 1);
                         if(victim instanceof ServerPlayer splayer){
                             if (new_scale == 1.0) {
-                                CriteriaTriggers.SIZE_REVERTED_TRIGGER.get().trigger(splayer);
+                                Registration.SIZE_REVERTED_TRIGGER.get().trigger(splayer);
                             } else {
-                                CriteriaTriggers.SIZE_CHANGED_TRIGGER.get().trigger(splayer);
+                                Registration.SIZE_CHANGED_TRIGGER.get().trigger(splayer);
                             }
                         }
                     }

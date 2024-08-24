@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
 import com.hyperlynx.reactive.alchemy.Powers;
@@ -13,7 +12,6 @@ import com.hyperlynx.reactive.items.PowerBottleItem;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -51,7 +49,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, WorldlyContainerHolder {
     public static final BooleanProperty FULL = BooleanProperty.create("full");
@@ -250,14 +247,14 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
         ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 7);
         level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
-        CriteriaTriggers.TRY_LAVA_CRUCIBLE_TRIGGER.get().trigger(player);
+        Registration.TRY_LAVA_CRUCIBLE_TRIGGER.get().trigger(player);
     }
 
     private static void netherCrucibleFill(Level level, BlockPos pos, ServerPlayer player) {
         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
-        CriteriaTriggers.TRY_NETHER_CRUCIBLE_TRIGGER.get().trigger(player);
+        Registration.TRY_NETHER_CRUCIBLE_TRIGGER.get().trigger(player);
     }
 
     @Override

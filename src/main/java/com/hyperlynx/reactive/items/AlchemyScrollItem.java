@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.blocks.OccultSymbolBlock;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.component.DataComponents;
@@ -32,7 +31,7 @@ public class AlchemyScrollItem extends Item {
                 level.setBlock(context.getClickedPos(), Registration.CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.8F);
-                CriteriaTriggers.MAKE_CRUCIBLE_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
+                Registration.MAKE_CRUCIBLE_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())
@@ -52,7 +51,7 @@ public class AlchemyScrollItem extends Item {
                 level.setBlock(context.getClickedPos(), level.getBlockState(context.getClickedPos()).setValue(OccultSymbolBlock.ACTIVE, true), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.74F);
-                CriteriaTriggers.OCCULT_AWAKENING_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
+                Registration.OCCULT_AWAKENING_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())

@@ -1,10 +1,8 @@
 package com.hyperlynx.reactive.items;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.be.StaffBlockEntity;
-import com.hyperlynx.reactive.components.ReactiveDataComponents;
-import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,15 +22,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 public class StaffItem extends BlockItem {
     BiConsumer<Player, ItemStack> effectFunction;
@@ -96,7 +91,7 @@ public class StaffItem extends BlockItem {
         MutableInt frequency = new MutableInt(this.frequency);
 
         EnchantmentHelper.runIterationOnItem(stack, (enchant, enchant_level) -> {
-            for(var effect : enchant.value().getEffects(ReactiveEnchantmentComponents.STAFF_RATE.value())){
+            for(var effect : enchant.value().getEffects(Registration.STAFF_RATE.value())){
                 frequency.setValue(effect.effect().process(enchant_level, RandomSource.create(), frequency.getValue()));
             }
         });
@@ -115,7 +110,7 @@ public class StaffItem extends BlockItem {
     private static float getModifiedDamageOutput(ServerLevel server, @NotNull ItemStack stack, Entity target, DamageSource damage_source, float unmodified_damage){
         MutableFloat strength = new MutableFloat(unmodified_damage);
         EnchantmentHelper.runIterationOnItem(stack, (enchant, enchant_level) -> Enchantment.applyEffects(
-            enchant.value().getEffects(ReactiveEnchantmentComponents.STAFF_DAMAGE.value()),
+            enchant.value().getEffects(Registration.STAFF_DAMAGE.value()),
             Enchantment.damageContext(server, enchant_level, target, damage_source),
             (effect) -> strength.setValue(effect.process(enchant_level, server.random, strength.getValue()))
         ));

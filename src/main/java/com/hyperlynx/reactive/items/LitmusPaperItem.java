@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive.items;
 
 import com.hyperlynx.reactive.ReactiveMod;
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
@@ -8,7 +9,6 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
 import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.components.LitmusMeasurement;
-import com.hyperlynx.reactive.components.ReactiveDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.renderer.BiomeColors;
@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hyperlynx.reactive.advancements.CriteriaTriggers.ISOLATE_OMEN_TRIGGER;
+import static com.hyperlynx.reactive.Registration.ISOLATE_OMEN_TRIGGER;
 
 public class LitmusPaperItem extends Item {
     public LitmusPaperItem(Properties props) {
@@ -42,7 +41,7 @@ public class LitmusPaperItem extends Item {
     // Create a list of lines that is the measurement.
     private List<Component> buildMeasurementText(ItemStack stack, Player player, int water_color){
         List<Component> text = new ArrayList<>();
-        LitmusMeasurement measurement = stack.get(ReactiveDataComponents.LITMUS_MEASUREMENT.get());
+        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
         if(measurement == null){
             return text;
         }
@@ -106,7 +105,7 @@ public class LitmusPaperItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
-        if(stack.has(ReactiveDataComponents.LITMUS_MEASUREMENT)) {
+        if(stack.has(Registration.LITMUS_MEASUREMENT)) {
             hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
         }
     }
@@ -115,7 +114,7 @@ public class LitmusPaperItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if(!level.isClientSide){
-            if(!player.getItemInHand(hand).has(ReactiveDataComponents.LITMUS_MEASUREMENT))
+            if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
             player.sendSystemMessage(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
@@ -155,7 +154,7 @@ public class LitmusPaperItem extends Item {
             ));
         }
 
-        paper.set(ReactiveDataComponents.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
+        paper.set(Registration.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
                 lines,
                 crucible.reaction_status,
                 crucible.integrity < 85

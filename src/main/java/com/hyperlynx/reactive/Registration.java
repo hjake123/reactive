@@ -1,26 +1,35 @@
 package com.hyperlynx.reactive;
 
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
+import com.hyperlynx.reactive.advancements.StagedFlagTrigger;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 //import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
-import com.hyperlynx.reactive.components.ReactiveDataComponents;
-import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
+import com.hyperlynx.reactive.components.BoundEntity;
+import com.hyperlynx.reactive.components.LitmusMeasurement;
+import com.hyperlynx.reactive.components.WarpBottleTarget;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import com.mojang.serialization.Codec;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -33,13 +42,14 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -49,6 +59,9 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -63,10 +76,13 @@ public class Registration {
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, ReactiveMod.MODID);
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ReactiveMod.MODID);
+    public static final DeferredRegister<DataComponentType<?>> COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, ReactiveMod.MODID);
+    public static final DeferredRegister<DataComponentType<?>> ENCHANTMENT_COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, ReactiveMod.MODID);
+    public static final DeferredRegister<CriterionTrigger<?>> CRITERIA_TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, ReactiveMod.MODID);
 
     public static void init(IEventBus bus) {
-        ReactiveDataComponents.COMPONENT_TYPES.register(bus);
-        ReactiveEnchantmentComponents.COMPONENT_TYPES.register(bus);
+        COMPONENT_TYPES.register(bus);
+        ENCHANTMENT_COMPONENT_TYPES.register(bus);
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
@@ -75,7 +91,7 @@ public class Registration {
         PARTICLES.register(bus);
         TILES.register(bus);
         Powers.POWERS.register(bus);
-        CriteriaTriggers.TRIGGERS.register(bus);
+        CRITERIA_TRIGGERS.register(bus);
         bus.addListener(ReactionMan.CRITERIA_BUILDER::register);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
@@ -442,6 +458,126 @@ public class Registration {
     public static final DeferredHolder<RecipeType<?>, RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
 
+    // Register the data components.
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> TUTORIAL_DONE =
+            COMPONENT_TYPES.register("tutorial",
+                    () -> DataComponentType.<Unit>builder()
+                            .persistent(Codec.unit(Unit.INSTANCE))
+                            .networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<BoundEntity>> BOUND_ENTITY =
+            COMPONENT_TYPES.register("bound_entity",
+                    () -> DataComponentType.<BoundEntity>builder()
+                            .persistent(BoundEntity.CODEC)
+                            .networkSynchronized(BoundEntity.STREAM_CODEC)
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<LitmusMeasurement>> LITMUS_MEASUREMENT =
+            COMPONENT_TYPES.register("litmus_measurement",
+                    () -> DataComponentType.<LitmusMeasurement>builder()
+                            .persistent(LitmusMeasurement.CODEC)
+                            .networkSynchronized(LitmusMeasurement.STREAM_CODEC)
+                            .build()
+            );
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<WarpBottleTarget>> WARP_BOTTLE_TARGET =
+            COMPONENT_TYPES.register("warp_bottle_target",
+                    () -> DataComponentType.<WarpBottleTarget>builder()
+                            .persistent(WarpBottleTarget.CODEC)
+                            .networkSynchronized(WarpBottleTarget.STREAM_CODEC)
+                            .build()
+            );
+
+    // Register the enchantment components.
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> STAFF_DAMAGE =
+            ENCHANTMENT_COMPONENT_TYPES.register("staff_damage",
+                    () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
+                            .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> STAFF_RATE =
+            ENCHANTMENT_COMPONENT_TYPES.register("staff_rate",
+                    () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
+                            .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WIDE_RANGE =
+            ENCHANTMENT_COMPONENT_TYPES.register("wide_range",
+                    () -> DataComponentType.<Unit>builder()
+                            .persistent(Unit.CODEC)
+                            .build());
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WORLD_PIERCER =
+            ENCHANTMENT_COMPONENT_TYPES.register("world_piercer",
+                    () -> DataComponentType.<Unit>builder()
+                            .persistent(Unit.CODEC)
+                            .build());
+
+    //Register advancement criteria for the book
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> MAKE_CRUCIBLE_TRIGGER = CRITERIA_TRIGGERS.register("make_crucible_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("make_crucible_criterion")));
+    
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> ISOLATE_OMEN_TRIGGER = CRITERIA_TRIGGERS.register("isolate_omen_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("isolate_omen_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SIZE_CHANGED_TRIGGER = CRITERIA_TRIGGERS.register("size_change_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("size_change_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SIZE_REVERTED_TRIGGER = CRITERIA_TRIGGERS.register("size_revert_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("size_revert_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_BLAZE_GATHER_TRIGGER = CRITERIA_TRIGGERS.register("see_blaze_gather_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_blaze_gather_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> BE_TELEPORTED_TRIGGER = CRITERIA_TRIGGERS.register("be_teleported_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("be_teleported_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_CRUCIBLE_FAIL_TRIGGER = CRITERIA_TRIGGERS.register("see_crucible_fail_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_crucible_fail_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_ALLAY_SUMMON_TRIGGER = CRITERIA_TRIGGERS.register("see_allay_summon_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_allay_summon_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> BE_LEVITATED_TRIGGER = CRITERIA_TRIGGERS.register("be_levitated_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("be_levitated_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> BE_SLOWFALLED_TRIGGER = CRITERIA_TRIGGERS.register("be_slowfalled_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("be_slowfalled_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_DISPLACEMENT_TRIGGER = CRITERIA_TRIGGERS.register("see_displacement_criterion",
+            () -> new StagedFlagTrigger(ReactiveMod.location("see_displacement_criterion"), ReactiveMod.location("get_motion_salts")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> HARVEST_TRIGGER = CRITERIA_TRIGGERS.register("harvest_criterion",
+            () -> new StagedFlagTrigger(ReactiveMod.location("harvest_criterion"), ReactiveMod.location("see_synthesis")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> OCCULT_AWAKENING_TRIGGER = CRITERIA_TRIGGERS.register("activate_eye_criterion",
+            () -> new StagedFlagTrigger(ReactiveMod.location("activate_eye_criterion"), ReactiveMod.location("place_eye")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> PLACE_OCCULT_TRIGGER = CRITERIA_TRIGGERS.register("place_eye_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("place_eye_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> PORTAL_FREEZE_TRIGGER = CRITERIA_TRIGGERS.register("portal_freeze_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("portal_freeze_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> PORTAL_TRADE_TRIGGER = CRITERIA_TRIGGERS.register("portal_trade_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("portal_trade_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> MAKE_RIFT_TRIGGER = CRITERIA_TRIGGERS.register("make_rift_criterion",
+            () -> new StagedFlagTrigger(ReactiveMod.location("make_rift_criterion"), ReactiveMod.location("dissolve_tp")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_SACRIFICE_TRIGGER = CRITERIA_TRIGGERS.register("see_sacrifice_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_sacrifice_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> TRY_LAVA_CRUCIBLE_TRIGGER = CRITERIA_TRIGGERS.register("try_lava_crucible_criterion",
+            () -> new StagedFlagTrigger(ReactiveMod.location("try_lava_crucible_criterion"), ReactiveMod.location("try_nether_crucible")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> TRY_NETHER_CRUCIBLE_TRIGGER = CRITERIA_TRIGGERS.register("try_nether_crucible_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("try_nether_crucible_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> BE_CURSED_TRIGGER = CRITERIA_TRIGGERS.register("be_cursed_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("be_cursed_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_SYNTHESIS_TRIGGER = CRITERIA_TRIGGERS.register("see_synthesis_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_synthesis_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> ENDER_PEARL_DISSOLVE_TRIGGER = CRITERIA_TRIGGERS.register("dissolve_tp_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("dissolve_tp_criterion")));
+
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
@@ -495,6 +631,17 @@ public class Registration {
     @SubscribeEvent
     public static void register(final RegisterConfigurationTasksEvent event) {
         event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
+    }
+
+    public static boolean checkHasEnchant(ItemStack stack, Holder<DataComponentType<?>> enchantment_component){
+        if(stack.has(DataComponents.ENCHANTMENTS)){
+            for(var enchant : Objects.requireNonNull(stack.get(DataComponents.ENCHANTMENTS)).keySet()){
+                if(enchant.value().effects().has(enchantment_component.value())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
