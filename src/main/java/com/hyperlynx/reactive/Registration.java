@@ -81,9 +81,8 @@ public class Registration {
     public static final DeferredRegister<CriterionTrigger<?>> CRITERIA_TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, ReactiveMod.MODID);
 
     public static void init(IEventBus bus) {
-        COMPONENT_TYPES.register(bus);
-        ENCHANTMENT_COMPONENT_TYPES.register(bus);
         BLOCKS.register(bus);
+        COMPONENT_TYPES.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
         MOB_EFFECTS.register(bus);
@@ -92,6 +91,7 @@ public class Registration {
         TILES.register(bus);
         Powers.POWERS.register(bus);
         CRITERIA_TRIGGERS.register(bus);
+        ENCHANTMENT_COMPONENT_TYPES.register(bus);
         bus.addListener(ReactionMan.CRITERIA_BUILDER::register);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
