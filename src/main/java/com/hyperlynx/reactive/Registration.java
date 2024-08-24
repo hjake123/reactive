@@ -484,12 +484,14 @@ public class Registration {
                             .persistent(Codec.unit(Unit.INSTANCE))
                             .networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
                             .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<BoundEntity>> BOUND_ENTITY =
             COMPONENT_TYPES.register("bound_entity",
                     () -> DataComponentType.<BoundEntity>builder()
                             .persistent(BoundEntity.CODEC)
                             .networkSynchronized(BoundEntity.STREAM_CODEC)
                             .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<LitmusMeasurement>> LITMUS_MEASUREMENT =
             COMPONENT_TYPES.register("litmus_measurement",
                     () -> DataComponentType.<LitmusMeasurement>builder()
@@ -497,6 +499,7 @@ public class Registration {
                             .networkSynchronized(LitmusMeasurement.STREAM_CODEC)
                             .build()
             );
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<WarpBottleTarget>> WARP_BOTTLE_TARGET =
             COMPONENT_TYPES.register("warp_bottle_target",
                     () -> DataComponentType.<WarpBottleTarget>builder()
@@ -511,16 +514,19 @@ public class Registration {
                     () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
                             .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
                             .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> STAFF_RATE =
             ENCHANTMENT_COMPONENT_TYPES.register("staff_rate",
                     () -> DataComponentType.<List<ConditionalEffect<EnchantmentValueEffect>>>builder()
                             .persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf())
                             .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WIDE_RANGE =
             ENCHANTMENT_COMPONENT_TYPES.register("wide_range",
                     () -> DataComponentType.<Unit>builder()
                             .persistent(Unit.CODEC)
                             .build());
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WORLD_PIERCER =
             ENCHANTMENT_COMPONENT_TYPES.register("world_piercer",
                     () -> DataComponentType.<Unit>builder()
@@ -663,5 +669,3 @@ public class Registration {
         return false;
     }
 }
-
-
