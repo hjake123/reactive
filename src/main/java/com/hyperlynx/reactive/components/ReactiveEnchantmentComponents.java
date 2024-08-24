@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ReactiveEnchantmentComponents {
+    // Registration class for Enchantment Effect Components.
     public static final DeferredRegister<DataComponentType<?>> COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, ReactiveMod.MODID);
-
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>>> STAFF_DAMAGE =
             COMPONENT_TYPES.register("staff_damage",

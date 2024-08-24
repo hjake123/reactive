@@ -232,34 +232,42 @@ public class Registration {
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, PowerBottleItem> ACID_BOTTLE = ITEMS.register("acid_bottle",
             () -> new PowerBottleItem(new Item.Properties(), ACID_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> BLAZE_BOTTLE_BLOCK = BLOCKS.register("blaze_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 7)));
     public static final DeferredHolder<Item, BlazeBottleItem> BLAZE_BOTTLE = ITEMS.register("blaze_bottle",
             () -> new BlazeBottleItem(new Item.Properties(), BLAZE_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> MIND_BOTTLE_BLOCK = BLOCKS.register("mind_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, PowerBottleItem> MIND_BOTTLE = ITEMS.register("mind_bottle",
             () -> new PowerBottleItem(new Item.Properties(), MIND_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> SOUL_BOTTLE_BLOCK = BLOCKS.register("soul_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, PowerBottleItem> SOUL_BOTTLE = ITEMS.register("soul_bottle",
             () -> new PowerBottleItem(new Item.Properties(), SOUL_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> WARP_BOTTLE_BLOCK = BLOCKS.register("warp_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, WarpBottleItem> WARP_BOTTLE = ITEMS.register("warp_bottle",
             () -> new WarpBottleItem(new Item.Properties(), WARP_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> VERDANT_BOTTLE_BLOCK = BLOCKS.register("verdant_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, PowerBottleItem> VERDANT_BOTTLE = ITEMS.register("verdant_bottle",
             () -> new PowerBottleItem(new Item.Properties(), VERDANT_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> BODY_BOTTLE_BLOCK = BLOCKS.register("body_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));
     public static final DeferredHolder<Item, PowerBottleItem> BODY_BOTTLE = ITEMS.register("body_bottle",
             () -> new PowerBottleItem(new Item.Properties(), BODY_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> LIGHT_BOTTLE_BLOCK = BLOCKS.register("light_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 15)));
     public static final DeferredHolder<Item, PowerBottleItem> LIGHT_BOTTLE = ITEMS.register("light_bottle",
             () -> new PowerBottleItem(new Item.Properties(), LIGHT_BOTTLE_BLOCK.get()));
+
     public static final DeferredHolder<Block, PowerBottleBlock> VITAL_BOTTLE_BLOCK = BLOCKS.register("vital_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN).lightLevel((BlockState bs) -> 2)));
     public static final DeferredHolder<Item, PowerBottleItem> VITAL_BOTTLE = ITEMS.register("vital_bottle",
@@ -304,7 +312,6 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StaffBlockEntity>> STAFF_BE = TILES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
 
-
     // Register technical blocks.
     public static final DeferredHolder<Block, ActiveGoldFoamBlock> ACTIVE_GOLD_FOAM = BLOCKS.register("active_gold_foam",
             () -> new ActiveGoldFoamBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).jumpFactor(0.9F).sound(SoundType.WOOL)));
@@ -336,29 +343,39 @@ public class Registration {
 
     public static final DeferredHolder<Item, Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
+
     public static final DeferredHolder<Item, StardustItem> STARDUST_ITEM = ITEMS.register("stardust",
             () -> new StardustItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, AlchemyScrollItem> SCROLL = ITEMS.register("scroll",
             () -> new AlchemyScrollItem(new Item.Properties()
                     .stacksTo(1).rarity(Rarity.RARE)));
+
     public static final DeferredHolder<Item, LitmusPaperItem> LITMUS_PAPER = ITEMS.register("litmus_paper",
             () -> new LitmusPaperItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, QuartzBottleItem> QUARTZ_BOTTLE = ITEMS.register("quartz_bottle",
             () -> new QuartzBottleItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, CrystalIronItem> CRYSTAL_IRON = ITEMS.register("crystal_iron",
             () -> new CrystalIronItem(new Item.Properties().durability(64)));
     public static final DeferredHolder<Item, Item> PHANTOM_RESIDUE = ITEMS.register("phantom_residue",
             () -> new Item(new Item.Properties()));
+
     public static final DeferredHolder<Item, SoupItem> SOUP = ITEMS.register("soup",
             () -> new SoupItem(new Item.Properties().stacksTo(64).food((new FoodProperties.Builder().nutrition(7).saturationModifier(0.5F)).build())));
     public static final DeferredHolder<Item, Item> SALT = ITEMS.register("salt",
             () -> new Item(new Item.Properties()));
+
     public static final DeferredHolder<Item, Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties()));
+
     public static final DeferredHolder<Item, ForceRockItem> FORCE_ROCK = ITEMS.register("force_rock",
             () -> new ForceRockItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, SecretScaleItem> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, Item> ETERNAL_SPRIG = ITEMS.register("eternal_life_sprig",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
@@ -371,28 +388,30 @@ public class Registration {
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
                     .addAttributeModifier(Attributes.GRAVITY, ReactiveMod.location("no_gravity_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
     public static final DeferredHolder<MobEffect, MobEffect> IMMOBILE = MOB_EFFECTS.register("immobility",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0x118066)
                     .addAttributeModifier(Attributes.MOVEMENT_SPEED, ReactiveMod.location("immobility_slowness_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .addAttributeModifier(Attributes.FLYING_SPEED, ReactiveMod.location("immobility_flying_slowness_effect"),
                             -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+
     public static final DeferredHolder<MobEffect, MobEffect> FAR_REACH = MOB_EFFECTS.register("far_reach",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x7A5BB5)
                     .addAttributeModifier(Attributes.BLOCK_INTERACTION_RANGE, ReactiveMod.location("far_block_reach_effect"),
                             2, AttributeModifier.Operation.ADD_VALUE)
                     .addAttributeModifier(Attributes.ENTITY_INTERACTION_RANGE, ReactiveMod.location("far_entity_reach_effect"),
                             2, AttributeModifier.Operation.ADD_VALUE));
+
     public static final DeferredHolder<MobEffect, HyperMobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
     // Register potions
     public static final DeferredHolder<Potion, Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 3000)));
+
     public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 8000)));
-
-    // Register enchantment components
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);
@@ -479,8 +498,8 @@ public class Registration {
             }
         };
     }
-    // Register networking stuff for WSV.
 
+    // Register networking stuff for WSV.
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sets the current network version
