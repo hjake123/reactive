@@ -3,10 +3,8 @@ package com.hyperlynx.reactive.items;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.blocks.ChainDisplacingBlock;
 import com.hyperlynx.reactive.blocks.DisplacedBlock;
-import com.hyperlynx.reactive.components.ReactiveEnchantmentComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -19,11 +17,8 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,7 +41,7 @@ public class DisplacerItem extends Item {
         BlockState state = level.getBlockState(pos);
         EquipmentSlot slot = LivingEntity.getSlotForHand(context.getHand());
 
-        boolean hyper_mode = ReactiveEnchantmentComponents.checkHasEnchant(context.getItemInHand(), ReactiveEnchantmentComponents.WORLD_PIERCER);
+        boolean hyper_mode = Registration.checkHasEnchant(context.getItemInHand(), Registration.WORLD_PIERCER);
         if (hyper_mode) {
             var displaced_center = perform(context, level, pos, state, slot, 32, DISPLACER_BASE_DISPLACE_TIME * 2);
             if(displaced_center.isPresent()){

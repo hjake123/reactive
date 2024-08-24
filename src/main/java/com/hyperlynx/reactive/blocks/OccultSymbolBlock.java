@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-import static com.hyperlynx.reactive.advancements.CriteriaTriggers.HARVEST_TRIGGER;
+import static com.hyperlynx.reactive.Registration.HARVEST_TRIGGER;
 
 public class OccultSymbolBlock extends SymbolBlock{
     public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
@@ -44,7 +43,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if(entity instanceof ServerPlayer){
-            CriteriaTriggers.PLACE_OCCULT_TRIGGER.get().trigger((ServerPlayer) entity);
+            Registration.PLACE_OCCULT_TRIGGER.get().trigger((ServerPlayer) entity);
         }
     }
 

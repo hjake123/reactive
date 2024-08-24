@@ -1,14 +1,9 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
-import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-
-import java.util.Objects;
 
 public class SynthesisReaction extends Reaction{
     Power resultPower;

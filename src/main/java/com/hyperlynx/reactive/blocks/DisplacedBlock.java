@@ -1,7 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.be.DisplacedBlockEntity;
 import com.hyperlynx.reactive.util.BlockMoveChecker;
@@ -53,7 +52,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public static boolean displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
         // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
         if(!level.isClientSide)
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_DISPLACEMENT_TRIGGER.get(), pos, 16);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.SEE_DISPLACEMENT_TRIGGER.get(), pos, 16);
         return displaceWithChain(state_to_be_displaced, pos, level, duration, 0, null);
     }
 

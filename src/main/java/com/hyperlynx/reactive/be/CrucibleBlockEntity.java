@@ -7,7 +7,6 @@ import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.advancements.CriteriaTriggers;
 import com.hyperlynx.reactive.alchemy.*;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -58,7 +57,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.hyperlynx.reactive.advancements.CriteriaTriggers.SEE_CRUCIBLE_FAIL_TRIGGER;
+import static com.hyperlynx.reactive.Registration.SEE_CRUCIBLE_FAIL_TRIGGER;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
@@ -293,7 +292,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -301,7 +300,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, CriteriaTriggers.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -513,7 +512,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
 
         sacrificeCount++;
-        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), CriteriaTriggers.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), Registration.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();
