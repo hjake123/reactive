@@ -1,4 +1,4 @@
-package com.hyperlynx.reactive.util;
+package com.hyperlynx.reactive.recipes;
 
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 
 @EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
-public class PotionRegistrar {
+public class PotionRecipeRegistrar {
     @SubscribeEvent
     public static void registerPotions(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();
