@@ -2,6 +2,7 @@ package com.hyperlynx.reactive.mixin;
 
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.ConfigMan;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,8 +26,8 @@ public abstract class AllayMixin {
     boolean unredeemed_duplication = false;
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
-    public void defineSynchedData(CallbackInfo ci) {
-        ((Allay) (Object) this).getEntityData().get(DATA_CAN_DONATE);
+    public void defineSynchedData(CallbackInfo ci, @Local SynchedEntityData.Builder builder) {
+        builder.define(DATA_CAN_DONATE, true);
     }
 
     @Inject(method = "duplicateAllay", at = @At("RETURN"))
