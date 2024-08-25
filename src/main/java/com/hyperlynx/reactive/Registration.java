@@ -82,7 +82,6 @@ public class Registration {
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
-        COMPONENT_TYPES.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
         MOB_EFFECTS.register(bus);
@@ -90,8 +89,9 @@ public class Registration {
         PARTICLES.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
         Powers.POWERS.register(bus);
-        CRITERIA_TRIGGERS.register(bus);
+        COMPONENT_TYPES.register(bus);
         ENCHANTMENT_COMPONENT_TYPES.register(bus);
+        CRITERIA_TRIGGERS.register(bus);
         bus.addListener(ReactionMan.CRITERIA_BUILDER::register);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);

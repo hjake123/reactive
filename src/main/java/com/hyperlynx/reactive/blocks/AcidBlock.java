@@ -148,11 +148,13 @@ public class AcidBlock extends Block implements BucketPickup {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
-        for(int i = 0; i < 1; i++){
-            double x = pos.getX() + rng.nextFloat();
-            double y = pos.getY() + 1.0F;
-            double z = pos.getZ() + rng.nextFloat();
-            level.addParticle(Registration.ACID_BUBBLE_PARTICLE, x, y, z, 0, 0, 0);
+        if(!level.getBlockState(pos.above()).isSolidRender(level, pos)) {
+            for (int i = 0; i < 1; i++) {
+                double x = pos.getX() + rng.nextFloat();
+                double y = pos.getY() + 1.0F;
+                double z = pos.getZ() + rng.nextFloat();
+                level.addParticle(Registration.ACID_BUBBLE_PARTICLE, x, y, z, 0, 0, 0);
+            }
         }
     }
 }
