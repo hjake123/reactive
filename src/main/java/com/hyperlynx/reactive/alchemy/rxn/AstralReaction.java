@@ -21,13 +21,13 @@ public class AstralReaction extends Reaction{
     public void run(CrucibleBlockEntity crucible) {
         super.run(crucible);
         crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
-        crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get());
+        crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get() + 4);
     }
 
     @Override
     public void render(final Level level, final CrucibleBlockEntity crucible) {
         if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) < crucible.getTotalPowerLevel())
-            ParticleScribe.drawParticleCrucibleTop(level, Registration.STARDUST_PARTICLE.getType(), crucible.getBlockPos(), 0.3F);
+            ParticleScribe.drawParticleRing(level, Registration.STARDUST_PARTICLE.getType(), crucible.getBlockPos(), 0.45, 0.7, 1);
     }
 
     @Override

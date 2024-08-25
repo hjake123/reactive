@@ -18,7 +18,14 @@
     "minecraft:amethyst_block",
     "minecraft:sculk",
     "minecraft:honeycomb_block",
-    "minecraft:bone_block"
+    "minecraft:bone_block",
+    "minecraft:redstone_block",
+    "minecraft:glowstone",
+    "minecraft:iron_block",
+    "minecraft:gold_block",
+    "minecraft:emerald_block",
+    "minecraft:diamond_block",
+    "minecraft:packed_ice"
   ],
   "remove": [
     "#minecraft:terracotta"

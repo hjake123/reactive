@@ -46,43 +46,48 @@ public class LitmusPaperItem extends Item {
             return text;
         }
 
+        boolean mode = !player.isCrouching();
+
         if(measurement.integrity_violated()){
             text.add(Component.translatable("text.reactive.litmus_integrity_failure"));
         }
 
-        for(LitmusMeasurement.Line line : measurement.measurements()){
-            TextColor color = TextColor.fromRgb(0xFFFFFF);
-            if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                Power power = Powers.POWER_REGISTRY.get(line.power());
-                if(power != null) {
-                    color = power.getTextColor();
+        if(mode){
+            for(LitmusMeasurement.Line line : measurement.measurements()){
+                TextColor color = TextColor.fromRgb(0xFFFFFF);
+                if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
+                    Power power = Powers.POWER_REGISTRY.get(line.power());
+                    if(power != null) {
+                        color = power.getTextColor();
+                    }
+                    if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
+                        ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                    }
                 }
-                if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-                    ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
-                }
+                text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
             }
-            text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
-        }
 
-        if(measurement.measurements().isEmpty()){
-            text.add(Component.translatable("text.reactive.measurement_empty")
-                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
-        }
-        for(ReactionStatusEntry entry : measurement.statuses()){
-            switch(entry.status()){
-                case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
-                case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
-                case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
-                case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
-                case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.reacting")));
+            if(measurement.measurements().isEmpty()){
+                text.add(Component.translatable("text.reactive.measurement_empty")
+                        .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
+            }
+        }else{
+            for(ReactionStatusEntry entry : measurement.statuses()){
+                switch(entry.status()){
+                    case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
+                    case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                    case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
+                    case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                    case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
+                    case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
+                    case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
+                            .append(Component.translatable("text.reactive.reacting")));
+                }
             }
         }
         return text;
@@ -107,6 +112,7 @@ public class LitmusPaperItem extends Item {
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
         if(stack.has(Registration.LITMUS_MEASUREMENT)) {
             hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+            hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
         }
     }
 

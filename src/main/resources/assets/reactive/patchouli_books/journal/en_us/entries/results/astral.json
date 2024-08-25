@@ -3,7 +3,7 @@
   "icon": "reactive:divine_symbol",
   "category": "reactive:results",
   "advancement": "reactive:see_astral_synthesis",
-  "sortnum": 99,
+  "turnin": "reactive:reactions/astral_curse_annihilation",
   "secret": true,
   "pages": [
     {

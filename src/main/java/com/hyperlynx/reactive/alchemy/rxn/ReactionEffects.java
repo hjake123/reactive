@@ -315,7 +315,6 @@ public class ReactionEffects {
     public static CrucibleBlockEntity creation(CrucibleBlockEntity crucible){
         Level level = Objects.requireNonNull(crucible.getLevel());
         if(level.random.nextFloat() < 0.2){
-            crucible.expendPower(Powers.CURSE_POWER.get(), 3);
             for(BlockPos creation_point : getCreationPoints(crucible.getBlockPos())){
                 if(level.getBlockState(creation_point).isAir() && level.isLoaded(creation_point)){
                     level.setBlock(creation_point, Registration.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);

@@ -124,18 +124,18 @@ public class OccultSymbolBlock extends SymbolBlock{
             }
             case 5 -> {
                 // A Bottle of Mind was extracted.
-                if(player.experienceLevel > 4){
-                    if(player instanceof ServerPlayer splayer){
-                        HARVEST_TRIGGER.get().trigger(splayer);
-                    }
-                    player.giveExperienceLevels(-4);
-                    player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 150, 2));
-                    player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
-                    player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);
-                }else{
-                    // If they can't afford the Mind bottle, break the bottle.
-                    bottle_broke = true;
+                if(player instanceof ServerPlayer splayer){
+                    HARVEST_TRIGGER.get().trigger(splayer);
                 }
+                if(player.experienceLevel > 1) {
+                    player.giveExperienceLevels(-1);
+                    player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 150, 2));
+                }else{
+                    player.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 300, 2));
+                }
+                player.displayClientMessage(Component.translatable("message.reactive.extract_mind"), true);
+                player.playSound(SoundEvents.BELL_RESONATE, 0.8F, 0.8F);
+
             }
             default -> bottle_broke = true;
         }
