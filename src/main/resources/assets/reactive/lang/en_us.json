@@ -212,7 +212,7 @@
   "reaction.reactive.size_grow_effect": "Enlargement",
   "reaction.reactive.size_shrink_effect": "Reduction",
   "reaction.reactive.size_revert_effect": "Reduction Reversal",
-  "reaction.reactive.size_evert_effect_2": "Enlargement Reversal",
+  "reaction.reactive.size_revert_effect_2": "Enlargement Reversal",
   "reaction.reactive.slowfall": "Slow Falling",
   "reaction.reactive.smoke_annihilation": "Noxious Fumes",
   "reaction.reactive.soul_to_warp": "Soul to Warp Corruption",

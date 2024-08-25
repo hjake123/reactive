@@ -1,7 +1,7 @@
 {
   "name": "Runestone",
   "icon": "reactive:runestone",
-  "category": "reactive:results",
+  "category": "reactive:items",
   "advancement": "reactive:make_crucible",
   "pages": [
     {
