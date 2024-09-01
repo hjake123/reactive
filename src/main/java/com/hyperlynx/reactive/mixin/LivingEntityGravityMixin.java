@@ -23,7 +23,7 @@ public abstract class LivingEntityGravityMixin {
     @Inject(method = "getFrictionInfluencedSpeed", at = @At("RETURN"), cancellable = true)
     public void onGetFrictionInfluencedSpeed(CallbackInfoReturnable<Float> cir) {
         if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)){
-            cir.setReturnValue((((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown()) ? 0.05f : 0f);
+            cir.setReturnValue((((LivingEntity) (Object) this) instanceof Player player && (player.getDeltaMovement().length() > 10 || player.isShiftKeyDown())) ? 0.05f : 0f);
             ((LivingEntity) (Object) this).resetFallDistance();
         }
     }

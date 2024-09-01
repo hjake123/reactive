@@ -604,10 +604,14 @@ public class SpecialCaseMan {
     }
 
     public static void windBomb(Level level, Vec3 position){
+        windBomb(level, position, 1.6F);
+    }
+
+    public static void windBomb(Level level, Vec3 position, float radius){
         if(level == null)
             return;
         // From WindCharge.java
-        level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), 1.6F, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
+        level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), radius, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
     }
 
     private static void badOmen(CrucibleBlockEntity c){

@@ -357,6 +357,10 @@ public class Registration {
             () -> new DisplacerItem(new Item.Properties()
                     .durability(350)));
 
+    public static final DeferredHolder<Item, VortexStoneItem> VORTEX_STONE = ITEMS.register("vortex_stone",
+            () -> new VortexStoneItem(new Item.Properties()
+                    .durability(640)));
+
     public static final DeferredHolder<Item, Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));
 
