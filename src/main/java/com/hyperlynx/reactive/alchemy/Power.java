@@ -17,6 +17,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -28,13 +30,15 @@ public class Power {
     private final String name;
     private final Item bottle;
     private final Item render_item;
+    private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
 
 
-    public Power(String id, int color, Item bottle){
+    public Power(String id, int color, Block render_water_block, Item bottle){
         this.location = ReactiveMod.location(id);
+        this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
@@ -42,8 +46,9 @@ public class Power {
         render_item = null;
     }
 
-    public Power(String id, Color color, Item bottle){
+    public Power(String id, Color color, Block render_water_block, Item bottle){
         this.location = ReactiveMod.location(id);
+        this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
@@ -52,36 +57,40 @@ public class Power {
     }
 
 
-    public Power(String id, int color, Item bottle, Item renderItem){
+    public Power(String id, int color, Block render_water_block,Item bottle, Item renderItem){
         this.location = ReactiveMod.location(id);
         this.color = new Color(color);
+        this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
-    public Power(ResourceLocation location, int color, Item bottle, Item renderItem){
+    public Power(ResourceLocation location, int color, Block render_water_block, Item bottle, Item renderItem){
         this.location = location;
         this.color = new Color(color);
+        this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
-    public Power(String id, Color color, Item bottle, Item renderItem){
+    public Power(String id, Color color, Block render_water_block, Item bottle, Item renderItem){
         this.location = ReactiveMod.location(id);
         this.color = color;
+        this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
-    public Power(ResourceLocation location, Color color, Item bottle, Item renderItem){
+    public Power(ResourceLocation location, Color color, Block render_water_block, Item bottle, Item renderItem){
         this.location = location;
         this.color = color;
+        this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
@@ -114,6 +123,9 @@ public class Power {
         return Component.translatable(name).getString();
     }
     public ResourceLocation getResourceLocation() { return location; }
+    public Block getWaterRenderBlock(){
+        return render_water_block;
+    }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){
