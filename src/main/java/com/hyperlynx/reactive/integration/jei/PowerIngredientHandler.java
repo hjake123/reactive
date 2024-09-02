@@ -27,12 +27,12 @@ public class PowerIngredientHandler implements IIngredientHelper<Power> {
 
     @Override
     public ResourceLocation getResourceLocation(Power ingredient) {
-        return ReactiveMod.location(ingredient.getId());
+        return ingredient.getResourceLocation();
     }
 
     @Override
     public Power copyIngredient(Power ingredient) {
-        return new Power(ingredient.getId(), ingredient.getColor(), ingredient.getBottle().getItem(), ingredient.getRenderStack().getItem());
+        return new Power(ingredient.getResourceLocation(), ingredient.getColor(), ingredient.getBottle().getItem(), ingredient.getRenderStack().getItem());
     }
 
     @Override

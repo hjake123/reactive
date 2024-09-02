@@ -7,10 +7,8 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -21,11 +19,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
     private final Color color;
-    private final String id;
+    private final ResourceLocation location;
     private final String name;
     private final Item bottle;
     private final Item render_item;
@@ -35,44 +34,62 @@ public class Power {
 
 
     public Power(String id, int color, Item bottle){
-        this.id = id;
+        this.location = ReactiveMod.location(id);
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
+        this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
     public Power(String id, Color color, Item bottle){
-        this.id = id;
+        this.location = ReactiveMod.location(id);
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
+        this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = null;
     }
 
 
     public Power(String id, int color, Item bottle, Item renderItem){
-        this.id = id;
+        this.location = ReactiveMod.location(id);
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
+        this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
+        render_item = renderItem;
+    }
+
+    public Power(ResourceLocation location, int color, Item bottle, Item renderItem){
+        this.location = location;
+        this.color = new Color(color);
+        this.bottle = bottle;
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
     public Power(String id, Color color, Item bottle, Item renderItem){
-        this.id = id;
+        this.location = ReactiveMod.location(id);
         this.color = color;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
+        this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
-    public static TagKey<Item> getSourceTag(String id){
-        return ItemTags.create(ReactiveMod.location(id + "_sources"));
+    public Power(ResourceLocation location, Color color, Item bottle, Item renderItem){
+        this.location = location;
+        this.color = color;
+        this.bottle = bottle;
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+        render_item = renderItem;
+    }
+
+    public static TagKey<Item> getSourceTag(ResourceLocation location){
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -81,15 +98,9 @@ public class Power {
     }
 
     public static Power readPower(CompoundTag tag, String power_key){
-        Power ret = null;
-        for(Holder<Power> reg : Powers.POWERS.getEntries()){
-            if(reg.value().getId().equals(tag.getString(power_key))){
-                ret = reg.value();
-                break;
-            }
-        }
-        if(ret == null) System.err.println("Failed to read power. This will break things.");
-        return ret;
+        String rl = tag.getString(power_key);
+        var location = ResourceLocation.parse(rl);
+        return Powers.POWER_REGISTRY.get(location);
     }
 
     public Color getColor(){
@@ -98,11 +109,11 @@ public class Power {
     public TextColor getTextColor(){
         return TextColor.fromRgb(color.hex);
     }
-    public String getId() { return id; }
+    public String getId() { return location.getPath(); }
     public String getName(){
         return Component.translatable(name).getString();
     }
-    public ResourceLocation getResourceLocation() { return ReactiveMod.location(id); }
+    public ResourceLocation getResourceLocation() { return location; }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){
@@ -114,9 +125,10 @@ public class Power {
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        for(Holder<Power> reg : Powers.POWERS.getEntries()){
-            if (i.is(Power.getSourceTag(reg.value().id))) stack_powers.add(reg.value());
-        }
+        Powers.POWER_REGISTRY.stream().forEach((power) -> {
+            if (i.is(Power.getSourceTag(power.location)))
+                stack_powers.add(power);
+        });
         return stack_powers;
     }
 

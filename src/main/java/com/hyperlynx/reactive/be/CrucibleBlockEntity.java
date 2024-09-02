@@ -780,7 +780,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 continue; // Purge bad nulls.
             }
             CompoundTag tag = new CompoundTag();
-            tag.put("name", StringTag.valueOf(p.getId()));
+            tag.put("name", StringTag.valueOf(p.getResourceLocation().toString()));
             tag.put("level", IntTag.valueOf(getPowerLevel(p)));
             power_list_tag.add(tag);
         }
