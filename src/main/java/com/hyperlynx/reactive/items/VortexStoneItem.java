@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.items;
 
+import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class VortexStoneItem extends Item {
-    private static final double STRENGTH = 0.45;
+    private static final double STRENGTH = 0.8;
 
     public VortexStoneItem(Properties props) {
         super(props);
@@ -33,13 +34,14 @@ public class VortexStoneItem extends Item {
         } else {
             Vec3 impulse = player.getLookAngle().scale(STRENGTH);
             var new_movement = player.getDeltaMovement().add(impulse);
-            if(new_movement.length() > 2){
+            if(new_movement.length() > 1.6){
                 return InteractionResultHolder.fail(player.getItemInHand(hand));
             }
             player.setDeltaMovement(new_movement);
             player.resetFallDistance();
             level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS);
             ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
+            player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), 10);
         }
         if(!player.hasInfiniteMaterials()){
             var stack = player.getItemInHand(hand);

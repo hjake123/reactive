@@ -390,9 +390,6 @@ public class Registration {
     public static final DeferredHolder<Item, Item> MOTION_SALT = ITEMS.register("motion_salt",
             () -> new Item(new Item.Properties()));
 
-    public static final DeferredHolder<Item, ForceRockItem> FORCE_ROCK = ITEMS.register("force_rock",
-            () -> new ForceRockItem(new Item.Properties()));
-
     public static final DeferredHolder<Item, SecretScaleItem> SECRET_SCALE = ITEMS.register("secret_scale",
             () -> new SecretScaleItem(new Item.Properties()));
 

@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:packed_ice"
+  },
+  "product": {
+    "id": "reactive:vortex_stone"
+  },
+  "reagents": ["reactive:flow"],
+  "min": 1000,
+  "cost": 1000
+}
