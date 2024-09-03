@@ -155,18 +155,27 @@ reactive:astral
 ```
 
 ### Specifying Reactants
-Reactants are the input items for these recipes. They can be specified either as an item or a tag, like so:
+Reactants are the input ingredients for these recipes. They can be specified as an item or tag, like so:
 ```
 "reactant": {
     "item": "namespace:input_item"
-  }
+ }
 ```
 ```
 "reactant": {
     "tag": "namespace:tag"
- }
+}
 ```
 Note that you don't need to use the '#' character when specifying a tag.
+
+### Specifying Products
+Products are the output items for these recipes. They are specified in standard item stack notation, like so:
+```
+"product": {
+    "id": "namespace:output_item"
+}
+``` 
+Note that you can add a count or components to this output.
 
 ### DISSOLVE (Power Release) RECIPES
 ```json
@@ -176,7 +185,7 @@ Note that you don't need to use the '#' character when specifying a tag.
     "item": "namespace:input_item"
   },
   "product": {
-    "item": "namespace:output_item"
+    "id": "namespace:output_item"
   },
   "needs_electricity": false
 }
@@ -194,7 +203,7 @@ Note that if "needs_electricity" is true and an item is a power source, non-elec
     "item": "namespace:input_item"
   },
   "product": {
-    "item": "namespace:output_item"
+    "id": "namespace:output_item"
   },
   "reagents": ["reactive:power1", "reactive:power2", ...],
   "min": 1300,
@@ -216,7 +225,7 @@ Though the mod doesn't describe them in JEI, there are also Precipitation Recipe
 {
   "type": "reactive:precipitation",
   "product": {
-    "item": "namespace:output_item"
+    "id": "namespace:output_item"
   },
   "reagents": ["reactive:power1", "reactive:power2", ...],
   "min": 750,
