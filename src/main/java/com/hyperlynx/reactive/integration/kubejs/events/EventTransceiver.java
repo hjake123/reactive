@@ -13,6 +13,7 @@ public class EventTransceiver {
     public static EventHandler CRUCIBLE_DISSOLVE_EVENT = EVENTS.common("dissolveItem", () -> KubeDissolveEvent.class);
     public static EventHandler CRUCIBLE_EMPTY_EVENT = EVENTS.common("emptyCrucible", () -> KubeEmptyEvent.class);
     public static EventHandler REACTION_BUILD_EVENT = EVENTS.common("constructReactions", () -> KubeReactionConstructEvent.class);
+    public static EventHandler CUSTOM_REACTION_TEST_CONDITIONS_EVENT = EVENTS.common("checkReaction", () -> CustomReactionTickEvent.class).hasResult();
     public static EventHandler CUSTOM_REACTION_RUN_EVENT = EVENTS.server("runReaction", () -> CustomReactionTickEvent.class);
     public static EventHandler CUSTOM_REACTION_RENDER_EVENT = EVENTS.client("renderReaction", () -> CustomReactionTickEvent.class);
 

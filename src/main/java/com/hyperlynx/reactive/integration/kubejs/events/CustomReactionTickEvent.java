@@ -19,25 +19,10 @@ public class CustomReactionTickEvent implements KubeEvent, CrucibleKubeEvent {
 
     @Override
     public KubeCrucible getCrucible() {
-        return null;
+        return crucible;
     }
 
     public String getAlias(){
         return rxn.getAlias();
-    }
-
-    public Level getLevel(){
-        return crucible.crucible.getLevel();
-    }
-
-    public BlockPos getBlockPos(){
-        return crucible.crucible.getBlockPos();
-    }
-
-    public void expendPower(int cost){
-        for(Power p : rxn.getReagents().keySet()){
-            crucible.crucible.expendPower(p, (int) ((double) cost/rxn.getReagents().size()) + 1);
-            crucible.crucible.setDirty();
-        }
     }
 }
