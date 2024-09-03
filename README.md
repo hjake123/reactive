@@ -235,6 +235,6 @@ All recipes support item stack definitions with "count" greater than 1.
 # KubeJS Integration
 This mod has integration with KubeJS, allowing you to add new kinds of Power and new Reactions through KubeJS scripting.
 
-For a full rundown of these features, please see KUBEJS.md.
+For a full rundown of these features, please see [KUBEJS.md](KUBEJS.md).
 
 I think that's everything! If you have questions or suggestions you can contact me at `hyperlynx` on Discord, or use the Issues section here.
