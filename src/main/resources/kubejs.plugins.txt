@@ -1,0 +1,1 @@
+com.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin

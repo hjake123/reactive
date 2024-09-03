@@ -26,7 +26,7 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
         List<Component> ret = new ArrayList<>();
         ret.add(Component.literal(ingredient.getName() + " Power"));
         if(tooltipFlag.isAdvanced()){
-            ret.add(Component.literal("reactive:" + ingredient.getId()).withStyle(ChatFormatting.GRAY));
+            ret.add(Component.literal(ingredient.getResourceLocation().toString()).withStyle(ChatFormatting.GRAY));
         }
         return ret;
     }

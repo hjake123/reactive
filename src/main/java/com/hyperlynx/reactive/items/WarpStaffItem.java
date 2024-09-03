@@ -102,7 +102,7 @@ public class WarpStaffItem extends StaffItem{
             Entity bound = getBoundEntity(level, stack);
             // Draw the particles and update the model data or unbind invalid or too distant entities.
             if(bound != null) {
-                ParticleScribe.drawParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
+                ParticleScribe.drawExactParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
                 stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
             }else{
                 stack.remove(Registration.BOUND_ENTITY);

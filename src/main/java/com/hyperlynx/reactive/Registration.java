@@ -11,6 +11,7 @@ import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.components.BoundEntity;
 import com.hyperlynx.reactive.components.LitmusMeasurement;
 import com.hyperlynx.reactive.components.WarpBottleTarget;
+import com.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
@@ -52,8 +53,10 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -629,6 +632,9 @@ public class Registration {
 //        if(ModList.get().isLoaded("create")){
 //            ReactiveCreatePlugin.init();
 //        }
+        if(ModList.get().isLoaded("kubejs")){
+            NeoForge.EVENT_BUS.register(EventTransceiver.class);
+        }
     }
 
 
