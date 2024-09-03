@@ -1,13 +1,9 @@
 package com.hyperlynx.reactive.client.particles;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.trialspawner.TrialSpawner;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -116,10 +112,10 @@ public class ParticleScribe {
     }
 
     public static void drawParticleRing(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
-        drawParticleRing(level, opt, Vec3.atBottomCenterOf(pos), height, radius, frequency);
+        drawExactParticleRing(level, opt, Vec3.atBottomCenterOf(pos), height, radius, frequency);
     }
 
-    public static void drawParticleRing(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency){
+    public static void drawExactParticleRing(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency){
         for(int i = 0; i < frequency; i++){
             int deflection_angle = level.random.nextInt(1, 360);
             drawDeflectedParticle(level, opt, pos, height, radius, deflection_angle);
