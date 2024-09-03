@@ -79,7 +79,7 @@ This automatically creates advancement criteria `reactive:reaction/(alias)_crite
 Once you've registered the alias of the reaction with the Criteria Builder, you're ready to add the Reaction itself. Reactions are made in the server scripts file, and use the `ReactiveEvents` event group. Take the following example:
 ```js
 ReactiveEvents.constructReactions(event => {
-    event.builder("example_reaction", "reactive:light", "kubejs:test_power").needsGoldSymbol().setCost(2).build()
+    event.builder("example_reaction", "reactive:light", "kubejs:custom_power").needsGoldSymbol().setCost(2).build()
 })
 ```
 
