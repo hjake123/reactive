@@ -3,6 +3,7 @@ package com.hyperlynx.reactive.integration.kubejs;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
@@ -35,5 +36,6 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
     public void registerBindings(BindingRegistry bindings) {
         bindings.add("WorldSpecificValue", WorldSpecificValue.class);
         bindings.add("ParticleScribe", ParticleScribe.class);
+        bindings.add("ReactionMan", ReactionMan.class);
     }
 }
