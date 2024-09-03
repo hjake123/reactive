@@ -13,8 +13,8 @@ public abstract class LivingEntityGravityMixin {
 
     @Inject(method = "shouldDiscardFriction", at = @At("RETURN"), cancellable = true)
     public void onShouldDiscardFriction(CallbackInfoReturnable<Boolean> cir) {
-        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)){
-            if(!(((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown())){
+        if (((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)) {
+            if (!(((LivingEntity) (Object) this) instanceof Player player && player.isShiftKeyDown())) {
                 cir.setReturnValue(true);
             }
         }
@@ -22,9 +22,16 @@ public abstract class LivingEntityGravityMixin {
 
     @Inject(method = "getFrictionInfluencedSpeed", at = @At("RETURN"), cancellable = true)
     public void onGetFrictionInfluencedSpeed(CallbackInfoReturnable<Float> cir) {
-        if(((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)){
+        if (((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)) {
             cir.setReturnValue((((LivingEntity) (Object) this) instanceof Player player && (player.getDeltaMovement().length() > 10 || player.isShiftKeyDown())) ? 0.05f : 0f);
             ((LivingEntity) (Object) this).resetFallDistance();
+        }
+    }
+
+    @Inject(method = "isVisuallySwimming", at = @At("RETURN"), cancellable = true)
+    public void isVisuallySwimming(CallbackInfoReturnable<Boolean> cir) {
+        if (((LivingEntity) (Object) this).hasEffect(Registration.NULL_GRAVITY)) {
+            cir.setReturnValue(true);
         }
     }
 }
