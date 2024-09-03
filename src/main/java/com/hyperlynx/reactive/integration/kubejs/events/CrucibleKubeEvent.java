@@ -1,6 +1,7 @@
-package com.hyperlynx.reactive.integration.kubejs;
+package com.hyperlynx.reactive.integration.kubejs.events;
 
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.integration.kubejs.KubeCrucible;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;

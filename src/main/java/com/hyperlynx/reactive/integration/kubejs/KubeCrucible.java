@@ -8,7 +8,7 @@ import dev.latvian.mods.rhino.type.TypeInfo;
 import dev.latvian.mods.rhino.util.CustomJavaToJsWrapper;
 
 public class KubeCrucible implements CustomJavaToJsWrapper {
-    CrucibleBlockEntity crucible;
+    public CrucibleBlockEntity crucible;
 
     public KubeCrucible(CrucibleBlockEntity crucible){
         this.crucible = crucible;
@@ -23,7 +23,5 @@ public class KubeCrucible implements CustomJavaToJsWrapper {
         public NativeJavaCrucible(Scriptable scope, CrucibleBlockEntity crucible, TypeInfo typeInfo, Context cx) {
             super(scope, crucible, typeInfo, cx);
         }
-
-
     }
 }

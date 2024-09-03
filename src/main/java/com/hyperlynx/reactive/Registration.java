@@ -11,7 +11,7 @@ import com.hyperlynx.reactive.blocks.*;
 import com.hyperlynx.reactive.components.BoundEntity;
 import com.hyperlynx.reactive.components.LitmusMeasurement;
 import com.hyperlynx.reactive.components.WarpBottleTarget;
-import com.hyperlynx.reactive.integration.kubejs.KubeEventTransceiver;
+import com.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import com.hyperlynx.reactive.items.*;
 import com.hyperlynx.reactive.recipes.*;
 import com.hyperlynx.reactive.util.HyperMobEffect;
@@ -636,7 +636,7 @@ public class Registration {
 //            ReactiveCreatePlugin.init();
 //        }
         if(ModList.get().isLoaded("kubejs")){
-            NeoForge.EVENT_BUS.register(KubeEventTransceiver.class);
+            NeoForge.EVENT_BUS.register(EventTransceiver.class);
         }
     }
 

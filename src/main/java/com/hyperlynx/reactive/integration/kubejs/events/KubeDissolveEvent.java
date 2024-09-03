@@ -1,6 +1,7 @@
-package com.hyperlynx.reactive.integration.kubejs;
+package com.hyperlynx.reactive.integration.kubejs.events;
 
 import com.hyperlynx.reactive.alchemy.special.DissolveEvent;
+import com.hyperlynx.reactive.integration.kubejs.KubeCrucible;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
