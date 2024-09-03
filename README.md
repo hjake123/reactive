@@ -58,24 +58,28 @@ There are three config files; two in the config folder, and one in each world's 
 ```
 #World Specific Value Options:
 [wsv]
-	#The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, alchemy rules might change!
+	#The seed value used to generate world-specific values. By default, it is set to your world seed on world load. If you change this, some alchemy rules will change!
 	#Range: -9223372036854775808 ~ 9223372036854775807
-	seed = 0
+	seed = 42
+	#Whether to use the above customized alchemy seed instead of the automatically generated one.
+	useCustomSeed = false
+(You can set a customized seed for your instance/modpack if you prefer the rules not to change in each new world.)
 
- #Whether to reset the seed to your world seed when loading.
-	resetSeed = true 
- (is true by default and set to false after the world seed is written to this file)
- (if you want deterministic behavior, set this to false in a defaultconfigs copy of the file and choose your own seed)
-
-#Mod Integration Options:
-[integration]
-	#:Requires Pehkui: The scale that the Reduction reaction sets nearby creatures to. [Default: 0.65]
+#Balance Options:
+[balance]
+	#The scale that the Reduction reaction sets nearby creatures to. [Default: 0.6]
 	#Range: 0.05 ~ 0.95
-	pehkuiSmallSize = 0.65
-	#:Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]
+	shrinkSmallSize = 0.6
+	#The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.5]
 	#Range: 1.05 ~ 10.0
-	pehkuiLargeSize = 1.33
-(Defines the sizes that the Pehkui interaction reactions make things. Keep in mind that there is research to be done to undo these effects, so the player needs to be able to operate at either altered size.)
+	growLargeSize = 1.5
+	#The step height that the Reduction reaction sets nearby creatures to. Normal is 0.6. [Default: 0.45]
+	#Range: 0.01 ~ 0.6
+	shrinkSmallStep = 0.45
+	#The step height that the Enlargement reaction sets nearby creatures to. Normal is 0.6. [Default: 1.0]
+	#Range: 0.6 ~ 5.0
+	growLargeStep = 1.05
+(As each entry says, this controls the balancing of a few things in the mod.)
 
 ```
 ### CLIENT CONFIG
@@ -84,17 +88,20 @@ There are three config files; two in the config folder, and one in each world's 
 [config]
 	#Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.
 	showPowerSources = false
-	(This shows the players every item that is a power source. It doesn't match my original design philosophy, but if your pack adds unintuitive Power sources,
+(This shows the players every item that is a power source. It doesn't match my original design philosophy, but if your pack adds unintuitive Power sources,
 	this will make things a lot easier. Also, players could circumvent the secrecy using JEI tag searches anyway so it was time for this feature to exist.)
 	
 	#Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.
 	doNotChangeWaterTexture = false
-	(This is a Rubidium compat feature, since with Rubidium installed Crucible water will not render correctly.)
+(This is a Rubidium compat feature, since with Rubidium installed Crucible water will not render correctly.)
 
 	#Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.
 	colorizeLitmusOutput = true
-	(As of version 8, Litmus Paper will attempt to color the lines of its measurements to match the powers they're discussing. This setting disables that system, in case it causes eyestrain or readability issues.)
+(As of version 8, Litmus Paper will attempt to color the lines of its measurements to match the powers they're discussing. This setting disables that system, in case it causes eyestrain or readability issues.)
 
+    #Whether to hide the icons of Powers in JEI. This is on by default because otherwise the menu looks redundant due to how Power icons work.
+    hidePowersFromJEI = true
+(Powers are JEI ingredients, but they share the images of items from the mod, so I recommend not having them visible unless you're debugging custom Powers.)
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
@@ -228,123 +235,6 @@ All recipes support item stack definitions with "count" greater than 1.
 # KubeJS Integration
 This mod has integration with KubeJS, allowing you to add new kinds of Power and new Reactions through KubeJS scripting.
 
-# Adding Powers
-Custom Powers are added at startup using `StartupEvents.registry`, like so:
-```js
-StartupEvents.registry('reactive:powers', event => {
-    event.create('custom_power')
-        .color(0xFF00FF)
-        .icon('kubejs:custom_power_bottle')
-        .setMagicWater()
-})
-```
+For a full rundown of these features, please see KUBEJS.md.
 
-The resulting power will be `kubejs:custom_power`. In this scenario, the power is bright purple in color, uses the "Magic" water render, and is represented by a custom item in JEI.
-
-There are a few other possible method calls:
-- `.bottle(Item)` chooses an item to be this power's "Bottle". This allows the item to be made by clicking the Crucible with a Quartz Bottle if there's enough of this Power, and causes the item to release this Power and revert to a Quartz Bottle if put inside.
-- `.setNormalWater()` causes the power to use the normal water texture in the Crucible.
-- `.setNoiseWater()` causes the power to use a noisy water texture in the Crucible.
-- `.setFastWater()` causes the power to use a more quickly moving water texture in the Crucible.
-- `.setSlowWater()` causes the power to use a less quickly moving water texture in the Crucible.
-- `.setCustomWater(Block)` causes the power to use any given block as its water texture. If the block is not animated, this will look bad!
-
-Once a Power is made, it may be used as a valid entry for recipes (which can of course be made using KubeJS or a data pack). You can also add a language entry for it similarly to KubeJS custom items or blocks.
-
-Sources for the Power will automatically be searched for in the item tag `reactive:(power_name)_sources`; `reactive:custom_power_sources` for the above. This follows the normal logic for the power source tags.
-
-# Adding Special Cases
-Some of the effects in the mod are represented as 'Special Cases' that occur when you do certain actions involving the Crucible. You can implement two kinds of these in KubeJS by handling different events in your server script file.
-
-## EMPTYING EVENTS
-When you empty the Crucible, sometimes an effect occurs depending on the Powers inside the Crucible. This also fires the `ReactiveEvents.emptyCrucible` event, so you can add new effects!
-```js
-ReactiveEvents.emptyCrucible(event => {
-    if(event.hasPower("kubejs:custom_power")){
-        if(event.getPowerLevel("kubejs:custom_power") > WorldSpecificValue.get("test_empty_threshold", 400, 600)){
-            console.log("Do something dramatic!")
-        }else{
-            console.log("Do something subtle!")
-        }
-    }
-})
-```
-The above handler checks to see if the Custom Power was present when the Crucible was emptied, and if so, tests the amount of that power against a world-specific threshold. 
-
-Here's a summary of the methods available through the event handler:
-- `hasPower(ResourceLocation)` checks if the given Power is in the Crucible at all (there is more than 0 of it).
-- `getPowerLevel(ResourceLocation)` provides an integer from 0 to 1600, which is how much of the given Power is inside the Crucible.
-- `getCruciblePos()` returns the `BlockPos` that the Crucible occupies
-- `getCrucible()` returns the `CrucibleBlockEntity` itself. Check the source code if you want to use this.
-
-As an aside, the `WorldSpecificValue` class generates a random value between two numbers that is the same every time it is called in the same world, and different in other worlds. Here, it randomizes the threshold beyond which the effect changes.
-## DISSOLVE EVENT
-When an item is dissolved in the Crucible, it fires a `ReactiveEvents.dissolveItem` event in KubeJS. You can handle it like this:
-```js
-ReactiveEvents.dissolveItem(event => {
-    if(event.getItem().is("kubejs:simple_item")){
-        console.log("We're dissolving a custom item. Do something!")
-    }
-})
-```
-The event object all the same methods as the previous one, and these two as well:
-- `.getItem()` returns the item being dissolved. Since this event fires after ever dissolution, you need to test that this is the item you want.
-- `.getItemEntity()` returns the item entity that is being dissolved. If you want to prevent it from being processed further, you could kill this entity.
-
-# Adding Reactions
-To add a reaction, you will need to set up a few different event handlers.
-
-## REACTION CRITERIA
-First, you'll need to, in startup, set up a criteria trigger for the reaction. All reactions cause advancement criteria to complete when running, so this is mandatory.
-```js
-StartupEvents.init(event => {
-    ReactionMan.CRITERIA_BUILDER.add("example_reaction")
-})
-```
-
-This automatically creates advancement criteria `reactive:reaction/(alias)_criterion` and `reactive:reaction/(alias)_perfect_criterion`. You can make advancements using these reactions and even add them to the journal if you'd like. I'd recommend checking the journal files if you want to try this.
-
-## REACTION REGISTRATION
-Once you've registered the alias of the reaction with the Criteria Builder, you're ready to add the Reaction itself. Reactions are made in the server scripts file, and use the `ReactiveEvents` event group. Take the following example:
-```js
-ReactiveEvents.constructReactions(event => {
-    event.builder("example_reaction", "reactive:light", "kubejs:custom_power").setStimulus("ELECTRIC").build()
-})
-```
-
-This defines a new reaction called `example_reaction`. This reaction requires Light and our Custom Power from before to occur, and additionally requires the 'ELECTRIC' stimulus. Setting a stimulus is not mandatory, but if you do you'll need to choose from these terms:
-```
-GOLD_SYMBOL
-ELECTRIC
-NO_ELECTRIC
-SACRIFICE
-END_CRYSTAL
-NO_END_CRYSTAL
-```
-
-## REACTION EFFECTS
-To make the reaction do anything, you'll need to handle another event. `ReactiveEvents.runReaction` is a KubeJS event that will fire every time that a custom reaction performs its server tick, which should happen a few times a second. Since the same event is fired for all custom reactions, you'll need to check for the alias before you implement it:
-```js
-ReactiveEvents.runReaction(event => {
-    if(event.getAlias() == "example_reaction"){
-        console.log("Do something!")
-    }
-})
-```
-To aid you in making a useful handler, the event also includes these methods:
-- `getLevel()` returns the Level that the reaction is being performed in.
-- `getBlockPos()` returns the BlockPos of the crucible performing the reaction.
-- `getCrucible()` returns the CrucibleBlockEntity itself. If you want to use this, you should check the source code.
-- `expendPower(int)` spends the given amount of energy from the Crucible. This allows you to make reactions that do not run forever.
-
-## REACTION RENDERS
-Reactions can also run on the client side -- in fact, they do this every frame. Custom reactions use this time to send out another KubeJS event, which you can handle to add visual effects to your reaction. These handlers must be in a client-side script.
-```js 
-ReactiveEvents.renderReaction(event => {
-    if(event.getAlias() == "example_reaction"){
-        ParticleScribe.drawParticleRing(event.getLevel(), "minecraft:electric_spark", event.getBlockPos(), 2, 3, 10)
-    }
-})
-```
-
-This event has all the same fields as the `runReaction` event does. Also, as you can see, you have access to my `ParticleScribe` class if you want to use it. Check the source code  in `reactive.client.particle`.
+I think that's everything! If you have questions or suggestions you can contact me at `hyperlynx` on Discord, or use the Issues section here.
