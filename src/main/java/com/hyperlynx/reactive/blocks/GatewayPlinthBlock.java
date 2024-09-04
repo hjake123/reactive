@@ -66,7 +66,7 @@ public class GatewayPlinthBlock extends Block {
             if (WarpBottleItem.isRiftBottle(stack)) {
                 GlobalPos warp_target = WarpBottleItem.getTeleportPosition(stack);
                 if(warp_target == null){
-                    player.displayClientMessage(Component.translatable("message.reactive.donate_warp_failed"), true);
+                    player.displayClientMessage(Component.translatable("message.reactive.activate_plinth_failed"), true);
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
                 if(level.dimension().equals(warp_target.dimension())){

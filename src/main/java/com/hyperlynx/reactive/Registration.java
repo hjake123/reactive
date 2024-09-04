@@ -431,6 +431,11 @@ public class Registration {
     public static final DeferredHolder<MobEffect, HyperMobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
 
+    public static final DeferredHolder<MobEffect, MobEffect> HIGH_STEP = MOB_EFFECTS.register("high_step",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x18AD88)
+                    .addAttributeModifier(Attributes.STEP_HEIGHT, ReactiveMod.location("high_step_effect"),
+                            1, AttributeModifier.Operation.ADD_VALUE));
+
     // Register potions
     public static final DeferredHolder<Potion, Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY, 3000)));

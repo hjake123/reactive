@@ -58,26 +58,14 @@ public class DivineSymbolBlock extends SymbolBlock{
             if(player.getActiveEffects().stream().anyMatch(mei -> mei.getEffect().equals(MobEffects.INVISIBILITY))){
                 player.removeEffect(MobEffects.INVISIBILITY);
             }else{
-                player.addEffect(new MobEffectInstance(MobEffects.GLOWING, 1200, 0, true, false));
+                player.addEffect(new MobEffectInstance(MobEffects.GLOWING, 2400, 0, true, false));
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_light"), true);
             accepted = true;
         }else if(Powers.WARP_POWER.get().matchesBottle(stack)){
-            if(WarpBottleItem.isRiftBottle(stack)){
-                boolean warp_failed = !WarpBottleItem.attemptWarp(level, player, hand);
-                if(warp_failed) {
-                    player.displayClientMessage(Component.translatable("message.reactive.donate_warp_failed"), true);
-                }else{
-                    accepted = true;
-                }
-            }else if(player instanceof ServerPlayer splayer){
-                ResourceLocation warp_research = ReactiveMod.location("be_teleported");
-                if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(warp_research)).isDone()){
-                    player.displayClientMessage(Component.translatable("message.reactive.reject_warp_knowledgeable"), true);
-                }else{
-                    player.displayClientMessage(Component.translatable("message.reactive.reject_warp_naive"), true);
-                }
-            }
+            player.addEffect(new MobEffectInstance(Registration.HIGH_STEP, 12000, 0, true, false));
+            player.displayClientMessage(Component.translatable("message.reactive.donate_warp"), true);
+            accepted = true;
         }else if(Powers.MIND_POWER.get().matchesBottle(stack)){
             player.addEffect(new MobEffectInstance(Registration.FAR_REACH, 2800, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
@@ -98,7 +86,7 @@ public class DivineSymbolBlock extends SymbolBlock{
             player.displayClientMessage(Component.translatable("message.reactive.donate_reject_generic"), true);
         }
 
-        if(!player.isCreative() && accepted && !Powers.WARP_POWER.get().matchesBottle(stack)) {
+        if(!player.isCreative() && accepted) {
             player.getItemInHand(hand).shrink(1);
             player.addItem(new ItemStack(Registration.QUARTZ_BOTTLE.get()));
         }
