@@ -231,6 +231,11 @@ public class Registration {
 
     public static final DeferredHolder<Item, BlockItem> GRAVITY_CHANDELIER_ITEM = ITEMS.registerSimpleBlockItem(GRAVITY_CHANDELIER);
 
+    public static final DeferredHolder<Block, GatewayPlinthBlock> GATEWAY_PLINTH = BLOCKS.register("rending_plinth",
+            () -> new GatewayPlinthBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LODESTONE)));
+
+    public static final DeferredHolder<Item, BlockItem> GATEWAY_PLINTH_ITEM = ITEMS.registerSimpleBlockItem(GATEWAY_PLINTH);
+
     public static final DeferredHolder<Block, AcidBlock> ACID_BLOCK = BLOCKS.register("acid_block",
             () -> new AcidBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SLIME_BLOCK).speedFactor(0.65F).strength(1.4F)));
 
@@ -356,13 +361,13 @@ public class Registration {
                     .pushReaction(PushReaction.DESTROY)));
 
     // Register items.
-    public static final DeferredHolder<Item, DisplacerItem> DISPLACER = ITEMS.register("displacer",
-            () -> new DisplacerItem(new Item.Properties()
-                    .durability(350)));
-
     public static final DeferredHolder<Item, VortexStoneItem> VORTEX_STONE = ITEMS.register("vortex_stone",
             () -> new VortexStoneItem(new Item.Properties()
                     .durability(640)));
+
+    public static final DeferredHolder<Item, DisplacerItem> DISPLACER = ITEMS.register("displacer",
+            () -> new DisplacerItem(new Item.Properties()
+                    .durability(350)));
 
     public static final DeferredHolder<Item, Item> PURE_QUARTZ = ITEMS.register("quartz",
             () -> new Item(new Item.Properties()));

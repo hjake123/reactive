@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:lodestone"
+  },
+  "product": {
+    "id": "reactive:rending_plinth"
+  },
+  "reagents": ["reactive:astral"],
+  "min": 600,
+  "cost": 500
+}
