@@ -65,6 +65,7 @@ public class ReactionMan {
         CRITERIA_BUILDER.add("ominous_transformation");
         CRITERIA_BUILDER.add("omen_settling");
         CRITERIA_BUILDER.add("wind_bomb");
+        CRITERIA_BUILDER.add("lightning");
         CRITERIA_BUILDER.add("chomp");
     }
 
@@ -172,6 +173,7 @@ public class ReactionMan {
         REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
 
         REACTIONS.add(new WindBombReaction("wind_bomb"));
+        REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, null, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
 

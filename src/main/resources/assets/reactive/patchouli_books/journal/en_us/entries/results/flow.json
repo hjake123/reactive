@@ -1,5 +1,5 @@
 {
-  "name": "The Power of Wind",
+  "name": "Power of Wind",
   "icon": "reactive:vortex_stone",
   "category": "reactive:results",
   "advancement": "reactive:see_flow_containment",
@@ -11,7 +11,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "wind_charge_from_snowball",
-      "text": "$(1)I've already determined that Wind Charges can be replicated from this Power, using $(thing)Snow$(1) as the base. $(p)It doesn't seem like a net positive of Flow, however it got me thinking about how it might react to $(thing)Ice$(0)."
+      "text": "$(1)I've already determined that Wind Charges can be replicated from this Power, using $(thing)Snow$(1) as the base. $(p)It doesn't seem like a net positive of Flow, however it makes me wonder if it would bind to $(thing)Ice$(0)."
     },
     {
       "type": "reactive:transmute",

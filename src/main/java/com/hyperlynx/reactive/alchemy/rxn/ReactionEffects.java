@@ -22,11 +22,14 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.item.ItemStack;
@@ -433,4 +436,20 @@ public class ReactionEffects {
         ENLARGE,
         REDUCE
     }
+
+    public static CrucibleBlockEntity lightning(CrucibleBlockEntity crucible) {
+        Level level = crucible.getLevel();
+        assert level != null;
+        LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
+        if(crucible.areaMemory.exists(level, Blocks.LIGHTNING_ROD)){
+            bolt.setPos(Vec3.atCenterOf(crucible.areaMemory.fetch(level, Blocks.LIGHTNING_ROD)));
+        } else {
+            bolt.setPos(Vec3.atCenterOf(crucible.getBlockPos()));
+        }
+        level.addFreshEntity(bolt);
+        crucible.expendPower(Powers.LIGHT_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
+        crucible.setDirty();
+        return crucible;
+    }
+
 }
