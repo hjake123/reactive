@@ -90,7 +90,7 @@ public class GatewayPlinthBlock extends Block {
                     player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
                     return ItemInteractionResult.SUCCESS;
                 }
-                player.displayClientMessage(Component.translatable("message.reactive.donate_warp_failed"), true);
+                player.displayClientMessage(Component.translatable("message.reactive.activate_plinth_failed"), true);
                 return ItemInteractionResult.FAIL;
             }
 

@@ -128,7 +128,7 @@
   "message.reactive.donate_blaze": "Burning heat surges through your body.",
   "message.reactive.donate_reject_soul": "You couldn't hold any more soul.",
   "message.reactive.donate_reject_generic": "You can't offer that kind of power.",
-  "message.reactive.activate_plinth_failed": "Something is preventing this teleportation.",
+  "message.reactive.activate_plinth_failed": "Something is preventing this rift from opening.",
   "message.reactive.reject_warp_knowledgeable": "Try using a Linked Bottle of Warp.",
   "message.reactive.reject_warp_naive": "Strangely, nothing happened...",
   "text.reactive.litmus_instructions": "Right click to read Powers",
