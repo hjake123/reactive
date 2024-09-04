@@ -3,20 +3,28 @@ package com.hyperlynx.reactive.blocks;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
+import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.items.WarpBottleItem;
+import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.TheEndGatewayBlockEntity;
@@ -24,12 +32,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class GatewayPlinthBlock extends Block {
+    ExplosionDamageCalculator COLLAPSE_DAMAGE_CALCULATOR = new SimpleExplosionDamageCalculator(false, false, Optional.of(1.8F), Optional.empty());
+
     private final VoxelShape SHAPE = Shapes.or(
             Block.box(1, 0, 1, 15, 2, 15),
             Block.box(0, 7, 0, 16, 9, 16),
@@ -71,6 +84,9 @@ public class GatewayPlinthBlock extends Block {
                 }
                 if(level.dimension().equals(warp_target.dimension())){
                     setGateway(level, pos.above(), warp_target.pos(), state);
+                    level.playSound((Player) null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                    level.playSound((Player) null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
+                    level.playSound((Player) null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
                     player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
                     return ItemInteractionResult.SUCCESS;
                 }
@@ -105,6 +121,11 @@ public class GatewayPlinthBlock extends Block {
         if(state.getValue(ACTIVE)){
             if(level.getBlockState(pos.above()).is(Blocks.END_GATEWAY)){
                 level.removeBlock(pos.above(), false);
+                Vec3 rift_pos  = Vec3.atCenterOf(pos.above());
+                for(BlockPos point : ReactionEffects.getCreationPoints(pos)){
+                    ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos.above(), point, 10, 7, 0.8);
+                }
+                level.explode(null, (DamageSource)null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, Registration.STARDUST_PARTICLE, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
             }
         }
         super.onRemove(state, level, pos, new_state, moved_by_piston);

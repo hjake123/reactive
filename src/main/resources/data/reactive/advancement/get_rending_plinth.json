@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "reactive:rending_plinth"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.rending_plinth"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.rending_plinth"
+    }
+  },
+  "criteria": {
+    "get_plinth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:rending_plinth"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "reactive:see_astral_synthesis"
+}

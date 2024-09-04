@@ -17,6 +17,11 @@
     },
     {
       "type": "reactive:transmute",
+      "recipe": "rending_plinth",
+      "text": "$(o)Such a foundational Power might be able to tear apart space itself."
+    },
+    {
+      "type": "reactive:transmute",
       "recipe": "eternal_life_sprig_from_flower_vine",
       "text": "$(o)Maybe it would be the key to eternal life? $(p)...No, that seems a bit farfetched."
     },

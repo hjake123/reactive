@@ -11,6 +11,7 @@
     "reactive:motion_salt_block",
     "reactive:framed_motion_salt_block",
     "reactive:curse_cell",
-    "reactive:gravity_beam"
+    "reactive:gravity_beam",
+    "reactive:rending_plinth"
   ]
 }
