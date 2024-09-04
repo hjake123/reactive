@@ -1,12 +1,15 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
 import com.hyperlynx.reactive.Registration;
+import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -49,6 +52,9 @@ public class WindBombReaction extends FreeEffectReaction{
             ParticleScribe.drawParticleSphere(level, ParticleTypes.SMALL_GUST, rod_1_pos, 0.5, 0.1, 5);
             return true;
         }
+        if(crucible.getLevel() instanceof ServerLevel slevel){
+            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_FAILED_FLOW_CONTAINMENT.value(), crucible_pos, 10);
+        }
 
         BlockPos rod_2_pos = rod_1_pos.offset(wsv.nextInt(-3, 4), 0, wsv.nextInt(-3, 4));
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMALL_GUST, Vec3.atCenterOf(rod_1_pos).add(0, 0.5, 0), Vec3.atCenterOf(rod_2_pos).add(0, -0.5, 0), 5, 0);
@@ -64,6 +70,9 @@ public class WindBombReaction extends FreeEffectReaction{
             return true;
         }
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMALL_GUST, Vec3.atCenterOf(rod_3_pos).add(0, 0.5, 0), Vec3.atCenterOf(rod_1_pos).add(0, -0.5, 0), 5, 0);
+        if(crucible.getLevel() instanceof ServerLevel slevel){
+            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_FLOW_CONTAINMENT.value(), crucible_pos, 10);
+        }
         return false;
     }
 }

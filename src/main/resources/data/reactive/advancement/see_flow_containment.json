@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "id": "reactive:breeze_rod"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.flow"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.flow"
+    },
+    "announce_to_chat": true,
+    "show_toast": true,
+    "hidden": true
+  },
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "get_dissolve_teleported": {
+      "trigger": "reactive:see_flow_containment_criterion"
+    }
+  }
+}

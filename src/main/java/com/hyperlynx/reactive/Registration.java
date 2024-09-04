@@ -617,6 +617,12 @@ public class Registration {
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> ENDER_PEARL_DISSOLVE_TRIGGER = CRITERIA_TRIGGERS.register("dissolve_tp_criterion",
             () -> new FlagTrigger(ReactiveMod.location("dissolve_tp_criterion")));
 
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_FAILED_FLOW_CONTAINMENT = CRITERIA_TRIGGERS.register("fail_flow_containment_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("fail_flow_containment_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_FLOW_CONTAINMENT = CRITERIA_TRIGGERS.register("see_flow_containment_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("see_flow_containment_criterion")));
+
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()

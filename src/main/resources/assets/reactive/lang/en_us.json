@@ -194,6 +194,8 @@
   "advancement.reactive.text.astral": "Discover the fundamental form of Power",
   "advancement.reactive.title.rending_plinth": "Dimension Door",
   "advancement.reactive.text.rending_plinth": "Possess the means to tear reality",
+  "advancement.reactive.title.flow": "Weaving Wind",
+  "advancement.reactive.text.flow": "Successfully contain Flow",
   "reactive.display_source.crucible_powers": "Power Amounts",
   "reactive.display_source.crucible_integrity": "Integrity",
   "tooltip.reactive.entity_bound": "Bound to ",
@@ -236,5 +238,6 @@
   "reaction.reactive.x_synthesis": "Esoteric I Synthesis",
   "reaction.reactive.y_synthesis": "Esoteric II Synthesis",
   "reaction.reactive.z_synthesis": "Esoteric III Synthesis",
+  "reaction.reactive.lightning": "Lightning",
   "text.reactive.devoid": "I vanquish my mind to you falling turning spinning eternal cycles I dissolve to nothing but my love waking seeing hearing eating fading mixing changing learning yearning hoping crying the stars are dark between but there's no fear anymore"
 }

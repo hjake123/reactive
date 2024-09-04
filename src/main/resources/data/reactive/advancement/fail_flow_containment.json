@@ -1,0 +1,8 @@
+{
+  "criteria": {
+    "see_synthesis": {
+      "trigger": "reactive:fail_flow_containment_criterion"
+    }
+  },
+  "parent": "reactive:make_crucible"
+}
