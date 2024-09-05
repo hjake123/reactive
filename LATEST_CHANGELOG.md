@@ -1,1 +1,3 @@
- - Improved the wording of a few guide book sections
+ - Improved the wording of the Staff of Power creation instructions
+ - Fixed an issue where particles would stack up while the game is paused
+ - Fixed the Astral-Curse Annihilation not having a journal entry
