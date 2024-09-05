@@ -30,7 +30,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)Clicking a $(item)Gravity Chandelier$(0) will offset its area of effect, while shift-clicking will disable the visual effect.$(br2)$(o)You might find it hard to navigate without gravity -- if so, I'd suggest checking the $(l:reactive:results/power_uses)Applied Power$(/l) entry for something that could help."
+      "text": "$(o)Clicking a $(item)Gravity Chandelier$(0) will offset its area of effect, while shift-clicking will disable the visual effect.$(br2)$(o)You might find it hard to navigate without gravity -- if so, I'd suggest seeking the $(l:reactive:results/flow)power of wind$(/l)."
     },
     {
       "type": "reactive:transmute",

@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "I admit I am no Redstone Engineer, but I am sure that with use of $(thing)Serial Encoders and Decoders$(0), the Storage Capability of this Block could be Utilized.$(p)It also makes a handy $(thing)Custom Clock$(0)"
+      "text": "I admit I am no Redstone Engineer, but I am sure that with use of $(thing)Serial Encoders and Decoders$(0), the Storage Capability of this Block could be Utilized.$(p)It also makes a handy $(thing)Custom Clock$(0)."
     }
   ],
   "extra_recipe_mappings": {
