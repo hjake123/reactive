@@ -151,7 +151,7 @@ public class ReactionMan {
 
         REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
-        REACTIONS.add(new AnnihilationReaction("creation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
         MinecraftForge.EVENT_BUS.post(new ReactionConstructEvent());
 
