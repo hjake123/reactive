@@ -1,19 +1,2 @@
-- Ported to 1.21.1
-  - There were many changes under the hood, so moving a world from a past version to this one is not supported! At minimum, all Powers inside of a Crucible, bound Warp Bottles, and Litmus Paper readings would be lost.
-- Added Flow Power
-  - Added Vortex Stone
-  - Added Mounted Blaze Rods
-- Added Omen Power
-- Improved Litmus Paper
-  - Litmus Paper now reports on many reactions at once
-  - Litmus Paper now reports the names of possible reactions if you've discovered them
-  - Litmus Paper now shows either only Power or only Reactions depending on whether the Player is sneaking
-- Added Rending Plinth
-- Added Mnemonic Bulb
-- Added Enchantments for the Staves of Power
-- Added Enchantments for the Displacer
-- Replaced Pekhui compatibility with new vanilla mechanics
-- Added the Uncanny Step effect and a way to get it
-- Added documentation for all new features
-- Added KubeJS Integration
-  - Script writers can add custom Powers, Reactions, and Special Cases.
+- Improved the wording of the Staff of Power creation instructions
+- Fix various documentation issues that made it not line up with the current state of the mod
