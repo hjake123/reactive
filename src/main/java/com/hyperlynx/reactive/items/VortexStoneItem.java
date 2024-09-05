@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.items;
 
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.client.particles.ParticleScribe;
@@ -18,6 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class VortexStoneItem extends Item {
     private static final double STRENGTH = 0.8;
+    private static final double TOP_SPEED = 1.6;
 
     public VortexStoneItem(Properties props) {
         super(props);
@@ -25,27 +27,20 @@ public class VortexStoneItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        int cost = 1;
-        if(player.isCrouching() && player.onGround()){
-            if(player.onGround()){
-                SpecialCaseMan.windBomb(level, player.position(), 0.8F);
-                cost = 4;
-            }
-        } else {
-            Vec3 impulse = player.getLookAngle().scale(STRENGTH);
-            var new_movement = player.getDeltaMovement().add(impulse);
-            if(new_movement.length() > 1.6){
-                return InteractionResultHolder.fail(player.getItemInHand(hand));
-            }
-            player.setDeltaMovement(new_movement);
-            player.resetFallDistance();
-            level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS);
-            ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
-            player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), 10);
+        Vec3 impulse = player.getLookAngle().scale(STRENGTH);
+        var new_movement = player.getDeltaMovement().add(impulse);
+        if(player.hasEffect(Registration.NULL_GRAVITY) && new_movement.length() > TOP_SPEED){
+            return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
+        player.setDeltaMovement(new_movement);
+        player.resetFallDistance();
+        level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS, 1.0F, 0.95F + (level.random.nextFloat()*0.1F));
+        ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
+        player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), ConfigMan.SERVER.vortexStoneCooldown.get());
+
         if(!player.hasInfiniteMaterials()){
             var stack = player.getItemInHand(hand);
-            stack.hurtAndBreak(cost, player, LivingEntity.getSlotForHand(hand));
+            stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             if(stack.getDamageValue() == stack.getMaxDamage() - 1){
                 player.setItemInHand(hand, Items.PACKED_ICE.getDefaultInstance());
             }

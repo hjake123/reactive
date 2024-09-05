@@ -53,6 +53,7 @@ public class ConfigMan {
         public ModConfigSpec.DoubleValue growLargeSize;
         public ModConfigSpec.DoubleValue shrinkSmallStep;
         public ModConfigSpec.DoubleValue growLargeStep;
+        public ModConfigSpec.IntValue vortexStoneCooldown;
 
 
         Server(ModConfigSpec.Builder builder){
@@ -73,6 +74,8 @@ public class ConfigMan {
                     .defineInRange("shrinkSmallStep", 0.45, 0.01, 0.6);
             growLargeStep = builder.comment("The step height that the Enlargement reaction sets nearby creatures to. Normal is 0.6. [Default: 1.0]")
                     .defineInRange("growLargeStep", 1.0, 0.6, 5);
+            vortexStoneCooldown = builder.comment("The number of ticks between Vortex Stone activations. Values 8 or below allow for infinite upward flight. [Default: 9]")
+                    .defineInRange("vortexStoneCooldown", 9, 0, 64);
             builder.pop();
         }
     }

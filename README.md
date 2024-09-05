@@ -79,6 +79,9 @@ There are three config files; two in the config folder, and one in each world's 
 	#The step height that the Enlargement reaction sets nearby creatures to. Normal is 0.6. [Default: 1.0]
 	#Range: 0.6 ~ 5.0
 	growLargeStep = 1.05
+	#The number of ticks between Vortex Stone activations. Values 8 or below allow for infinite upward flight. [Default: 9]
+	#Range: 0 ~ 64
+	vortexStoneCooldown = 9
 (As each entry says, this controls the balancing of a few things in the mod.)
 
 ```
