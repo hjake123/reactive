@@ -245,7 +245,7 @@ Though the mod doesn't describe them in JEI, there are also Precipitation Recipe
 
 All recipes support item stack definitions with "count" greater than 1.
 # KubeJS Integration
-This mod has integration with KubeJS, allowing you to add new kinds of Power and new Reactions through KubeJS scripting.
+This mod has integration with KubeJS as of version `1.21.1-9`, allowing you to add new kinds of Power and new Reactions through KubeJS scripting.
 
 For a full rundown of these features, please see [KUBEJS.md](KUBEJS.md).
 
