@@ -4,7 +4,7 @@ Reactive is an alchemy-themed magic mod based on in-world experimentation.
 If you're here, you're either curious about the source code, or want to know the format for recipes.
 Either way, this is a passion project but I tried to put in work to make it understandable at least. 
 
-See the [Wiki](https://github.com/hjake123/reactive/wiki) for more information.
+See the [Wiki](https://github.com/hjake123/reactive/wiki) for player-facing information.
 
 # Config Options
 There are three config files; two in the config folder, and one in each world's serverconfigs. For reference, these are the options each contain:
@@ -129,6 +129,8 @@ reactive:soul_sources
 reactive:verdant_sources
 reactive:vital_sources
 reactive:warp_sources
+reactive:omen_sources
+reactive:flow_sources
 ```
 Note that blaze sources cannot be added.
 To specify that an item is "high potency", i.e. that it should return substantially more power than normal, assign it to the tag ```reactive:high_potency```.
@@ -154,6 +156,8 @@ reactive:warp
 reactive:esoteric_x
 reactive:esoteric_y
 reactive:esoteric_z
+reactive:omen
+reactive:flow
 reactive:astral
 ```
 
@@ -247,6 +251,6 @@ All recipes support item stack definitions with "count" greater than 1.
 # KubeJS Integration
 This mod has integration with KubeJS as of version `1.21.1-9`, allowing you to add new kinds of Power and new Reactions through KubeJS scripting.
 
-For a full rundown of these features, please see [KUBEJS.md](KUBEJS.md).
+For documentation of these features, please see [KUBEJS.md](KUBEJS.md).
 
 I think that's everything! If you have questions or suggestions you can contact me at `hyperlynx` on Discord, or use the Issues section here.
