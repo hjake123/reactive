@@ -11,6 +11,7 @@ import com.hyperlynx.reactive.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -113,6 +114,10 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             }
         }
         pose_stack.popPose();
+
+        if(Minecraft.getInstance().isPaused()){
+            return;
+        }
 
         // Every 30 frames, check which reactions to render.
         crucible.render_tick_counter++;
