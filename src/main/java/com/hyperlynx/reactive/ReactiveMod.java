@@ -6,6 +6,7 @@ import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -16,15 +17,14 @@ public class ReactiveMod
 {
     public static final String MODID = "reactive";
     public static final ReactionMan REACTION_MAN = new ReactionMan();
-    public ReactiveMod(IEventBus reactive_bus) {
+    public ReactiveMod(ModContainer container) {
+        IEventBus reactive_bus = container.getEventBus();
         Registration.init(reactive_bus);
-        if(Dist.CLIENT.isClient())
-            ClientRegistration.init(reactive_bus);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
         NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
-        ModLoadingContext.get().getActiveContainer().registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
+        container.registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
+        container.registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
+        container.registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
     }
 
     /** Creates a ResourceLocation with the mod id as the namespace. **/

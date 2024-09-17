@@ -88,7 +88,6 @@ public class WorldSpecificValue {
         if(!event.getLevel().isClientSide()){
             alchemy_seed = event.getLevel().getServer().getLevel(Level.OVERWORLD).getSeed();
             ReactiveMod.REACTION_MAN.reset();
-
         }
     }
 

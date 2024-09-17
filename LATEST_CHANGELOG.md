@@ -1,2 +1,2 @@
-- Improved the wording of the Staff of Power creation instructions
-- Fix various documentation issues that made it not line up with the current state of the mod
+- Added a NeoForge config screen for the mod
+- Fixed the mod description not being visible in the `Mods` menu.

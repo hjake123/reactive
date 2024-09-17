@@ -26,7 +26,7 @@ public class ConfigMan {
             crucibleRange = builder.comment("The crucible affect entities with an area of this radius. [Default: 12]")
                     .defineInRange("crucibleRange", 12, 2, 64);
             areaMemoryRange = builder.comment("The crucible checks an area this many blocks in radius up to a few times a second. Do not set this too high. [Default: 6]")
-                    .defineInRange("areaMemoryRange", 6, 2, 64);
+                    .defineInRange("areaMemoryRange", 6, 2, 16);
             doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\", \"minecraft:warden\"]")
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
@@ -100,8 +100,6 @@ public class ConfigMan {
                     .define("doNotChangeWaterTexture", false);
             colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")
                     .define("colorizeLitmusOutput", true);
-
-
             builder.pop();
         }
     }
