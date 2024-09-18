@@ -18,9 +18,7 @@ import com.hyperlynx.reactive.util.HyperMobEffect;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.Codec;
 import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -64,7 +62,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -679,16 +676,5 @@ public class Registration {
     @SubscribeEvent
     public static void register(final RegisterConfigurationTasksEvent event) {
         event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
-    }
-
-    public static boolean checkHasEnchant(ItemStack stack, Holder<DataComponentType<?>> enchantment_component){
-        if(stack.has(DataComponents.ENCHANTMENTS)){
-            for(var enchant : Objects.requireNonNull(stack.get(DataComponents.ENCHANTMENTS)).keySet()){
-                if(enchant.value().effects().has(enchantment_component.value())){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

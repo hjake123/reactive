@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -112,7 +113,7 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        boolean wide = Registration.checkHasEnchant(stack, Registration.WIDE_RANGE);
+        boolean wide = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
         aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer serveruser) {
@@ -133,7 +134,7 @@ public class StaffEffects {
     public static void missile(Player user, ItemStack stack){
         if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            boolean super_missile = Registration.checkHasEnchant(stack, Registration.WIDE_RANGE);
+            boolean super_missile = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
             aoe = aoe.inflate(super_missile ? 10 : 6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);

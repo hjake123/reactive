@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,8 @@ public class DisplacerItem extends Item {
         BlockState state = level.getBlockState(pos);
         EquipmentSlot slot = LivingEntity.getSlotForHand(context.getHand());
 
-        boolean hyper_mode = Registration.checkHasEnchant(context.getItemInHand(), Registration.WORLD_PIERCER);
+        ItemStack stack = context.getItemInHand();
+        boolean hyper_mode = EnchantmentHelper.has(stack, Registration.WORLD_PIERCER.value());
         if (hyper_mode) {
             var displaced_center = perform(context, level, pos, state, slot, 32, DISPLACER_BASE_DISPLACE_TIME * 2);
             if(displaced_center.isPresent()){
