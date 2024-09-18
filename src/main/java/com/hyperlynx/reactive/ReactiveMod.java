@@ -1,13 +1,10 @@
 package com.hyperlynx.reactive;
 
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import com.hyperlynx.reactive.client.ClientRegistration;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.NeoForge;
