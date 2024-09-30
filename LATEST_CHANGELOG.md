@@ -1,2 +1,3 @@
+- Fixed a crash when reading an empty Litmus Paper on a dedicated server
 - Added a NeoForge config screen for the mod
 - Fixed the mod description not being visible in the `Mods` menu.
