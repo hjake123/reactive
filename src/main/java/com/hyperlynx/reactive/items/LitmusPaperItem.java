@@ -39,7 +39,7 @@ public class LitmusPaperItem extends Item {
     }
 
     // Create a list of lines that is the measurement.
-    private List<Component> buildMeasurementText(ItemStack stack, Player player, int water_color){
+    private List<Component> buildMeasurementText(ItemStack stack, Player player){
         List<Component> text = new ArrayList<>();
         LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
         if(measurement == null){
@@ -53,40 +53,48 @@ public class LitmusPaperItem extends Item {
         }
 
         if(mode){
-            for(LitmusMeasurement.Line line : measurement.measurements()){
-                TextColor color = TextColor.fromRgb(0xFFFFFF);
-                if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                    Power power = Powers.POWER_REGISTRY.get(line.power());
-                    if(power != null) {
-                        color = power.getTextColor();
+            if(player.level().isClientSide){
+                // This must be done on the client to allow for querying the water color.
+                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+                for(LitmusMeasurement.Line line : measurement.measurements()){
+                    TextColor color = TextColor.fromRgb(0xFFFFFF);
+                    if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
+                        Power power = Powers.POWER_REGISTRY.get(line.power());
+                        if(power != null) {
+                            color = power.getTextColor();
+                        }
+                        if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
+                            ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                        }
                     }
-                    if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-                        ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
-                    }
+                    text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
                 }
-                text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
-            }
 
-            if(measurement.measurements().isEmpty()){
-                text.add(Component.translatable("text.reactive.measurement_empty")
-                        .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
+                if(measurement.measurements().isEmpty()){
+                    text.add(Component.translatable("text.reactive.measurement_empty")
+                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
+                }
             }
         }else{
-            for(ReactionStatusEntry entry : measurement.statuses()){
-                switch(entry.status()){
-                    case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
-                    case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                    case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
-                    case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                    case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
-                    case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
-                    case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
-                            .append(Component.translatable("text.reactive.reacting")));
+            if(!player.level().isClientSide){
+                // This must be done on the server to allow for querying the player's advancements.
+                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+                for(ReactionStatusEntry entry : measurement.statuses()){
+                    switch(entry.status()){
+                        case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
+                        case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                        case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
+                        case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                        case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
+                        case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
+                        case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
+                                .append(Component.translatable("text.reactive.reacting")));
+                    }
                 }
             }
         }
@@ -119,14 +127,11 @@ public class LitmusPaperItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if(!level.isClientSide){
-            if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
-                return InteractionResultHolder.pass(player.getItemInHand(hand));
+        if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-            player.sendSystemMessage(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
-            for(Component line : buildMeasurementText(player.getItemInHand(hand), player, BiomeColors.getAverageWaterColor(level, player.getOnPos()))){
-                player.sendSystemMessage(line);
-            }
+        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
+            player.sendSystemMessage(line);
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
