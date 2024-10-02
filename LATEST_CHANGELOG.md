@@ -1,3 +1,4 @@
-- Fixed a crash when reading an empty Litmus Paper on a dedicated server
-- Added a NeoForge config screen for the mod
-- Fixed the mod description not being visible in the `Mods` menu.
+- Fixed a crash when performing Water Writing
+- Added `/reactive` command. 
+  - Added `/reactive give_warp_bottle` command clause.
+  - Added `/reactive power (add/remove)` command clause.

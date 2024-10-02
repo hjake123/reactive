@@ -1,6 +1,7 @@
 package com.hyperlynx.reactive;
 
 import com.google.common.collect.Lists;
+import net.neoforged.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class ConfigMan {
         public ModConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ModConfigSpec.BooleanValue acidMeltBlockEntities;
         public ModConfigSpec.BooleanValue lightStaffLightsPermanent;
+        public ModConfigSpec.BooleanValue registerCommand;
 
         Common(ModConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -39,6 +41,8 @@ public class ConfigMan {
                     .defineInRange("copperDisplaceConductRange", 8, 1, 4096);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
+            registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
+                    .define("registerCommand", true);
             builder.pop();
         }
     }
@@ -54,7 +58,6 @@ public class ConfigMan {
         public ModConfigSpec.DoubleValue shrinkSmallStep;
         public ModConfigSpec.DoubleValue growLargeStep;
         public ModConfigSpec.IntValue vortexStoneCooldown;
-
 
         Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")

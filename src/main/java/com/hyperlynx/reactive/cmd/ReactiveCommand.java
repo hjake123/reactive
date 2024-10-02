@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.cmd;
 
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
@@ -26,6 +27,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+
+import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
 @EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
 public class ReactiveCommand {
@@ -68,6 +71,10 @@ public class ReactiveCommand {
         BlockPos pos = crucible_location.getBlockPos(source);
         ServerLevel level = source.getLevel();
 
+        if(!(level.isLoaded(pos))){
+            throw ERROR_NOT_LOADED.create();
+        }
+
         if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible)){
             throw ERROR_NO_CRUCIBLE.create();
         }
@@ -100,7 +107,9 @@ public class ReactiveCommand {
 
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event){
-        ArgumentTypeInfos.registerByClass(PowerArgumentType.class, Registration.POWER_ARGUMENT.value());
-        ReactiveCommand.register(event.getDispatcher());
+        if(ConfigMan.COMMON.registerCommand.get()){
+            ArgumentTypeInfos.registerByClass(PowerArgumentType.class, Registration.POWER_ARGUMENT.value());
+            ReactiveCommand.register(event.getDispatcher());
+        }
     }
 }
