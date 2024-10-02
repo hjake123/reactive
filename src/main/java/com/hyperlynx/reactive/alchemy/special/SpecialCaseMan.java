@@ -426,7 +426,7 @@ public class SpecialCaseMan {
             book_content = new WritableBookContent(new ArrayList<>());
         }
 
-        List<Filterable<String>> pages = book_content.pages();
+        List<Filterable<String>> pages = new ArrayList<>(book_content.pages());
 
         if (pages.isEmpty() || (e.level().random.nextFloat() < 0.5F && pages.size() < 40)) {
             pages.add(literalFilteredString(""));
@@ -471,7 +471,8 @@ public class SpecialCaseMan {
             c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20));
         }
 
-        e.getItem().set(DataComponents.WRITABLE_BOOK_CONTENT, book_content);
+        WritableBookContent new_book_content = book_content.withReplacedPages(pages);
+        e.getItem().set(DataComponents.WRITABLE_BOOK_CONTENT, new_book_content);
         c.setDirty();
     }
 
@@ -483,7 +484,7 @@ public class SpecialCaseMan {
         }
 
         boolean did_anything = false;
-        List<Filterable<String>> pages = book_content.pages();
+        List<Filterable<String>> pages = new ArrayList<>(book_content.pages());
 
         for(int page_index = 0; page_index < pages.size(); page_index++) {
             if(c.getPowerLevel(Powers.MIND_POWER.get()) > threshold)
@@ -499,6 +500,10 @@ public class SpecialCaseMan {
             c.addPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);
         }
         c.setDirty();
+        if(did_anything){
+            WritableBookContent new_book_content = book_content.withReplacedPages(pages);
+            e.getItem().set(DataComponents.WRITABLE_BOOK_CONTENT, new_book_content);
+        }
         return did_anything;
     }
 
