@@ -8,6 +8,8 @@ import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.*;
 import com.hyperlynx.reactive.blocks.*;
 //import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+import com.hyperlynx.reactive.cmd.PowerArgumentInfo;
+import com.hyperlynx.reactive.cmd.PowerArgumentType;
 import com.hyperlynx.reactive.components.BoundEntity;
 import com.hyperlynx.reactive.components.LitmusMeasurement;
 import com.hyperlynx.reactive.components.WarpBottleTarget;
@@ -18,6 +20,7 @@ import com.hyperlynx.reactive.util.HyperMobEffect;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.Codec;
 import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -79,6 +82,7 @@ public class Registration {
     public static final DeferredRegister<DataComponentType<?>> COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, ReactiveMod.MODID);
     public static final DeferredRegister<DataComponentType<?>> ENCHANTMENT_COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, ReactiveMod.MODID);
     public static final DeferredRegister<CriterionTrigger<?>> CRITERIA_TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, ReactiveMod.MODID);
+    public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, ReactiveMod.MODID);
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
@@ -96,6 +100,7 @@ public class Registration {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
+        COMMAND_ARGUMENTS.register(bus);
         bus.register(Registration.class);
     }
 
@@ -619,6 +624,9 @@ public class Registration {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_FLOW_CONTAINMENT = CRITERIA_TRIGGERS.register("see_flow_containment_criterion",
             () -> new FlagTrigger(ReactiveMod.location("see_flow_containment_criterion")));
+
+    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
+            COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
