@@ -2,3 +2,4 @@
 - Added `/reactive` command. 
   - Added `/reactive give_warp_bottle` command clause.
   - Added `/reactive power (add/remove)` command clause.
+  - Existence of the command can be toggled in the config.
