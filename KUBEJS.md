@@ -63,7 +63,7 @@ The event object all the same methods as the previous one, and these two as well
 - `.getItemEntity()` returns the item entity that is being dissolved. If you want to prevent it from being processed further, you could kill this entity.
 
 # Adding Reactions
-To add a reaction, you will need to set up a few different event handlers.
+To add a reaction, you will need to set up a few different event handlers and an advancement file.
 
 ## REACTION CRITERION TRIGGER
 First, you'll need to, in startup, set up a criteria trigger for the reaction. All reactions cause advancement criteria to complete when running, so this is mandatory.
@@ -73,7 +73,7 @@ StartupEvents.init(event => {
 })
 ```
 
-This automatically creates advancement criteria `reactive:reaction/(alias)_criterion` and `reactive:reaction/(alias)_perfect_criterion`. You can make advancements using these reactions and even add them to the journal if you'd like. I'd recommend checking the journal files if you want to try this.
+This automatically creates advancement criteria `reactive:reaction/(alias)_criterion` and `reactive:reaction/(alias)_perfect_criterion`. 
 
 ## REACTION REGISTRATION
 Once you've registered the alias of the reaction with the Criteria Builder, you're ready to add the Reaction itself. Reactions are made in the server scripts file, and use the `ReactiveEvents` event group. Take the following example:
@@ -142,3 +142,68 @@ This check uses the getLevel() method to determine if it is raining. If so, the 
 Note that this check occurs after the system checks for the reaction's power balance and stimulus, so if you do not cancel the event, the reaction is guaranteed to occur.
 
 This event has all the same fields as the `runReaction` event does.
+
+## REACTION DOCUMENTATION
+As it stands, your reaction will appear as "Unknown Reaction" when measured by Litmus Paper. Let's fix that!
+
+First, you must create an advancement for your reaction, using the criterion registered above. The advancement should be located within `data/reactive/advancement/reactions`, and its name must match the reaction alias.
+
+The advancement can be in any valid format, but most of them will look like this:
+```json
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:reaction/example_reaction_criterion"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ]
+}
+```
+Here, the alias is again `example_reaction`.
+
+Next, you need to add a translation key for the reaction's name. The mod will look for the key called `reaction.reactive.(reaction alias)` to find the translation for a given reaction. You can add this key in a file `assets/reactive/lang/(your_lang)`.
+
+With these two files in place, Litmus Paper should read your reaction correctly for players that have discovered it. Next, you could add an entry to the Journal about your custom reaction.
+
+First, we need another advancement, this one for "perfectly" performing the reaction -- that is, performing the reaction without any extra Powers. This prevents players from learning the formula of reactions they didn't really discover. It follows a format like this:
+```json
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:reaction/example_reaction_perfect_criterion"
+    }
+  },
+  "requirements": [
+    [
+      "criterion"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
+```
+The only difference from the normal advancement is the criterion checked. This advancement must have a name of the form `(reaction alias)+perfect`.
+
+Next, please refer to the Patchouli docs about creating an addon book and adding a page to it. All built-in reactions use a page similar to this one:
+```json
+{
+  "name": "Luminous Ring",
+  "icon": "minecraft:paper",
+  "category": "reactive:reactions",
+  "advancement": "reactive:reactions/sunlight",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Visual:$(br)$()A ring of light appears with a 12 block radius around the Crucible.$(p)$(bold)Effect:$(br)$()Undead within the ring catch on fire as if burning in daylight."
+    },
+    {
+      "type": "reactive:reaction",
+      "reaction": "sunlight"
+    }
+  ]
+}
+```
+The important notes here are the `advancement` field, which prevents this entry from unlocking if the player hasn't ever seen the reaction, and the `reactive:reaction` page template, which shows the formula if the player has the "perfect" advancement for the reaction.
