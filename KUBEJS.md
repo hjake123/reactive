@@ -79,11 +79,11 @@ This automatically creates advancement criteria `reactive:reaction/(alias)_crite
 Once you've registered the alias of the reaction with the Criteria Builder, you're ready to add the Reaction itself. Reactions are made in the server scripts file, and use the `ReactiveEvents` event group. Take the following example:
 ```js
 ReactiveEvents.constructReactions(event => {
-    event.builder("example_reaction", "reactive:light", "kubejs:custom_power").needsGoldSymbol().setCost(2).build()
+    event.builder("example_reaction", Component.literal("Example Reaction"),"reactive:light", "kubejs:custom_power").needsGoldSymbol().setCost(2).build()
 })
 ```
 
-This defines a new reaction called `example_reaction`. This reaction requires Light and our Custom Power from before to occur, and additionally requires the presence of a Gold Symbol as its stimulus. Every server-side reaction tick, it consumes 2 units of power.
+This defines a new reaction called `example_reaction`. The in-game name of the reaction will be "Example Reaction". This reaction requires Light and our Custom Power from before to occur, and additionally requires the presence of a Gold Symbol as its stimulus. Every server-side reaction tick, it consumes 2 units of power.
 
 This reaction is relatively simple, but the builder has a few more methods you can use:
 - `.needsGoldSymbol()` makes the reaction require a Gold Symbol as its stimulus
@@ -143,12 +143,12 @@ Note that this check occurs after the system checks for the reaction's power bal
 
 This event has all the same fields as the `runReaction` event does.
 
-## REACTION DOCUMENTATION
-As it stands, your reaction will appear as "Unknown Reaction" when measured by Litmus Paper. Let's fix that!
+## REACTION ADVANCEMENTS
+As it stands, your reaction will appear as "Unknown Reaction" when measured by Litmus Paper. That is because Litmus Paper checks if the player has achieved a specific advancement for each reaction before presenting its name. Since yours doesn't yet have an associated advancement, it will never appear. Let's fix that!
 
-First, you must create an advancement for your reaction, using the criterion registered above. The advancement should be located within `data/reactive/advancement/reactions`, and its name must match the reaction alias.
+The advancement should be located within `data/reactive/advancement/reactions`, and its name must match the reaction alias. For example, the prior reaction will look for the advancement `reactive:reactions/example_reaction`.
 
-The advancement can be in any valid format, but most of them will look like this:
+The advancement can be in any valid format, but something like this is sufficient:
 ```json
 {
   "criteria": {
@@ -163,13 +163,10 @@ The advancement can be in any valid format, but most of them will look like this
   ]
 }
 ```
-Here, the alias is again `example_reaction`.
+Here, the alias is again `example_reaction`. Make sure that the proper auto-generated reaction criterion is being used, or the advancement will not unlock when you observe the reaction.
 
-Next, you need to add a translation key for the reaction's name. The mod will look for the key called `reaction.reactive.(reaction alias)` to find the translation for a given reaction. You can add this key in a file `assets/reactive/lang/(your_lang)`.
-
-With these two files in place, Litmus Paper should read your reaction correctly for players that have discovered it. Next, you could add an entry to the Journal about your custom reaction.
-
-First, we need another advancement, this one for "perfectly" performing the reaction -- that is, performing the reaction without any extra Powers. This prevents players from learning the formula of reactions they didn't really discover. It follows a format like this:
+### Reaction Perfection Advancement
+If you want to add a Journal of Alchemy entry for your reaction, we'll need another advancement, this one for "perfectly" performing the reaction -- that is, performing the reaction without any extra Powers. This prevents players from learning the formula of reactions they didn't really discover. It follows a format like this:
 ```json
 {
   "criteria": {
@@ -185,9 +182,10 @@ First, we need another advancement, this one for "perfectly" performing the reac
   "sends_telemetry_event": true
 }
 ```
-The only difference from the normal advancement is the criterion checked. This advancement must have a name of the form `(reaction alias)+perfect`.
+The only difference from the normal advancement is the criterion checked. This advancement must have a name of the form `(reaction alias)+perfect`, and needs to be located in the same directory as the normal reaction advancement.
 
-Next, please refer to the Patchouli docs about creating an addon book and adding a page to it. All built-in reactions use a page similar to this one:
+## REACTION PATCHOULI PAGE
+Please refer to the [Patchouli docs](https://vazkiimods.github.io/Patchouli/docs/reference/book-json#extension-keys) about creating an addon book and adding a page to it. All built-in reactions use a page similar to this one:
 ```json
 {
   "name": "Luminous Ring",
@@ -206,4 +204,4 @@ Next, please refer to the Patchouli docs about creating an addon book and adding
   ]
 }
 ```
-The important notes here are the `advancement` field, which prevents this entry from unlocking if the player hasn't ever seen the reaction, and the `reactive:reaction` page template, which shows the formula if the player has the "perfect" advancement for the reaction.
+The important bits here are the `advancement` field, which prevents this entry from unlocking if the player hasn't ever seen the reaction, and the `reactive:reaction` page template, which shows the formula if the player has the "perfect" advancement for the reaction.

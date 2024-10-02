@@ -1,5 +1,3 @@
-- Fixed a crash when performing Water Writing
-- Added `/reactive` command. 
-  - Added `/reactive give_warp_bottle` command clause.
-  - Added `/reactive power (add/remove)` command clause.
-  - Existence of the command can be toggled in the config.
+- Changed the syntax of the KubeJS reaction builder to ask for a Component to name the reaction with
+- Added `alwaysPerfect()` method for the KubeJS reaction builder
+- Fixed reactions not being correctly gated by their perfection criteria
