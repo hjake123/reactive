@@ -38,7 +38,7 @@ public class ReactiveAdvancementGenerator implements AdvancementProvider.Advance
                 continue;
             }
             Advancement.Builder perfect_builder = Advancement.Builder.advancement();
-            perfect_builder.addCriterion("criterion", ReactionMan.CRITERIA_BUILDER.get(alias).instance());
+            perfect_builder.addCriterion("criterion", ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect").instance());
             perfect_builder.requirements(AdvancementRequirements.Strategy.AND);
             perfect_builder.rewards(AdvancementRewards.EMPTY);
             perfect_builder.save(consumer, ReactiveMod.MODID +REACTION_ADVANCEMENT_PREFIX + alias +"_perfect");
