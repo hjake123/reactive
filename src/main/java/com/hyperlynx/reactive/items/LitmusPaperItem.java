@@ -216,7 +216,6 @@ public class LitmusPaperItem extends Item {
                     String alias = reaction_data.get("reaction").getAsString();
                     String status = reaction_data.get("status").getAsString();
                     MutableComponent full_output_line = getReactionOrUnknownComponent(alias, player);
-                    full_output_line.append(" ");
                     full_output_line.append(statusComponent(status));
                     multi_status.add(StringTag.valueOf(full_output_line.getString()));
                 }
@@ -227,10 +226,13 @@ public class LitmusPaperItem extends Item {
     }
 
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, ServerPlayer player){
+        if(reaction_alias.isEmpty()){
+            return Component.empty();
+        }
         if(player.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(new ResourceLocation(ReactiveMod.MODID, "reactions/" + reaction_alias))).isDone())
-            return Component.translatable("reaction.reactive." + reaction_alias);
+            return Component.translatable("reaction.reactive." + reaction_alias).append(" ");
         else
-            return Component.translatable("reaction.reactive.unknown");
+            return Component.translatable("reaction.reactive.unknown").append(" ");
     }
 
     @NotNull

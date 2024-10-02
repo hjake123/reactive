@@ -1,3 +1,5 @@
- - Improved the wording of the Staff of Power creation instructions
- - Fixed an issue where particles would stack up while the game is paused
- - Fixed the Astral-Curse Annihilation not having a journal entry
+ - **Improved Litmus Paper**
+   - Litmus Paper now reports on many reactions at once
+   - Litmus Paper now reports the names of possible reactions if you've discovered them
+   - Litmus Paper now shows either only Power or only Reactions depending on whether the Player is sneaking
+   - Already existing Litmus Paper works as it used to -- take a new measurement to update it.
