@@ -34,6 +34,11 @@ There are three config files; two in the config folder, and one in each world's 
  	#Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]
 	acidMeltBlockEntities = false
  (Self explanatory.)
+
+	#Blocks with a base break time beyond this cannot be displaced or made to fall. For finer control, use the relevant block tags. [Default: 35.0]
+	#Range: 0.0 ~ 10000.0
+	maxMoveBlockBreakTime = 35.0
+(This controls how tough blocks can be before they are not able to be displaced or made to fall by Motion Salts. For reference, an Iron Block passes the default threshold, but Deepslate does not. Higher values are more permissive. Blocks with negative hardness (e.g. Bedrock) are always unmovable by this system, and an additional deny list exists in the block tags.)
  
  	#The maximum number of blocks that can be displaced at once by a certain effect. [Default: 128]
 	#Range: 4 ~ 4096
@@ -49,10 +54,9 @@ There are three config files; two in the config folder, and one in each world's 
 	lightStaffLightsPermanent = true
 (If this is turned off, invisible lights left by the Radiant Staff of Power will decay on random ticks.)
 
-	#Blocks with a base break time beyond this cannot be displaced or made to fall. For finer control, use the relevant block tags. [Default: 35.0]
-	#Range: 0.0 ~ 10000.0
-	maxMoveBlockBreakTime = 35.0
-(This controls how tough blocks can be before they are not able to be displaced or made to fall by Motion Salts. For reference, an Iron Block passes the default threshold, but Deepslate does not. Higher values are more permissive. Blocks with negative hardness (e.g. Bedrock) are always unmovable by this system, and an additional deny list exists in the block tags.)
+	#Whether to register the /reactive command on startup. [Default: true]
+	registerCommand = true
+(If true, when the server launches, you will have access to the /reactive command. Only people with at least level 2 permissions may use the command. It allows operators to generate Warp Bottles to any position and manually edit the Power content of a Crucible. Could be useful when working with custom Powers.)
 ```
 ### SERVER CONFIG
 ```
