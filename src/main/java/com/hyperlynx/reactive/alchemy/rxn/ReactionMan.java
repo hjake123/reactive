@@ -7,10 +7,10 @@ import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import com.hyperlynx.reactive.client.renderers.ReactionRenders;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
+import java.util.*;
+
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -29,6 +29,8 @@ public class ReactionMan {
     private static final LinkedList<Reaction> REACTIONS = new LinkedList<>();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
     public static ReactionCriteriaBuilder CRITERIA_BUILDER = new ReactionCriteriaBuilder();
+    public static Map<String, MutableComponent> REACTION_NAMES = new HashMap<>();
+
     public ReactionMan(){
         CRITERIA_BUILDER.add("curse_assimilation");
         CRITERIA_BUILDER.add("vital_kill");

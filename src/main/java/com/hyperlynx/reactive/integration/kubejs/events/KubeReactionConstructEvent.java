@@ -3,9 +3,9 @@ package com.hyperlynx.reactive.integration.kubejs.events;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import com.hyperlynx.reactive.integration.kubejs.CustomReaction;
 import com.hyperlynx.reactive.integration.kubejs.ReactionFactory;
 import dev.latvian.mods.kubejs.event.KubeEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Arrays;
@@ -18,9 +18,9 @@ public class KubeReactionConstructEvent implements KubeEvent {
         this.event = event;
     }
 
-    public ReactionFactory builder(String alias, String... reagent_locations){
+    public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){
         Stream<Power> reagents = Arrays.stream(reagent_locations).map((location) -> Powers.POWER_REGISTRY.get(ResourceLocation.parse(location)));
-        return new ReactionFactory(alias, reagents.toList());
+        return new ReactionFactory(alias, custom_name, reagents.toList());
     }
 
 }

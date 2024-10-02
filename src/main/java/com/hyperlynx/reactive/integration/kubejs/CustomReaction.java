@@ -2,12 +2,14 @@ package com.hyperlynx.reactive.integration.kubejs;
 
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEvent;
 import com.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -18,10 +20,11 @@ public class CustomReaction extends Reaction {
     protected int yield = 0;
     protected Optional<Power> output_power = Optional.empty();
 
-    public CustomReaction(String alias, List<Power> required_powers){
+    public CustomReaction(String alias, List<Power> required_powers, MutableComponent name_override){
         super(alias, 0);
         for(Power required_power : required_powers)
             reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
+        ReactionMan.REACTION_NAMES.put(alias, name_override);
     }
 
     @Override

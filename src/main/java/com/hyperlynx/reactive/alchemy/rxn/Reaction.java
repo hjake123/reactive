@@ -4,23 +4,18 @@ import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.FlagTrigger;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
-import com.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.ConfigMan;
-import com.hyperlynx.reactive.client.particles.ParticleScribe;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public abstract class Reaction {
 
@@ -53,6 +48,8 @@ public abstract class Reaction {
             reagents.put(chosen_power, min);
             i++;
         }
+        ReactionMan.REACTION_NAMES.put(alias, Component.translatable("reaction.reactive." + alias));
+
     }
 
     // Creates the reaction with preset powers, but random minimum requirements.

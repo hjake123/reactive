@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.blocks.CrucibleBlock;
@@ -104,7 +105,7 @@ public class LitmusPaperItem extends Item {
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
         if(player instanceof ServerPlayer splayer){
             if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
-                return Component.translatable("reaction.reactive." + reaction_alias);
+                return ReactionMan.REACTION_NAMES.get(reaction_alias).copy();
             else
                 return Component.translatable("reaction.reactive.unknown");
         }

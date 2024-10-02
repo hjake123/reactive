@@ -4,6 +4,7 @@ import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
 import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -12,8 +13,8 @@ import java.util.Optional;
 public class ReactionFactory {
     CustomReaction rxn;
 
-    public ReactionFactory(String alias, List<Power> reagent_locations) {
-        rxn = new CustomReaction(alias, reagent_locations);
+    public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations){
+        rxn = new CustomReaction(alias, reagent_locations, custom_name);
     }
 
     private void warnOverwrites(){
@@ -63,6 +64,11 @@ public class ReactionFactory {
             rxn.yield = yield;
             rxn.output_power = Optional.of(p);
         }
+        return this;
+    }
+
+    public ReactionFactory alwaysPerfect(){
+        rxn.markAlwaysPerfect();
         return this;
     }
 
