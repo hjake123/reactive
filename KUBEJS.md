@@ -184,8 +184,8 @@ If you want to add a Journal of Alchemy entry for your reaction, we'll need anot
 ```
 The only difference from the normal advancement is the criterion checked. This advancement must have a name of the form `(reaction alias)+perfect`, and needs to be located in the same directory as the normal reaction advancement.
 
-## REACTION PATCHOULI PAGE
-Please refer to the [Patchouli docs](https://vazkiimods.github.io/Patchouli/docs/reference/book-json#extension-keys) about creating an addon book and adding a page to it. All built-in reactions use a page similar to this one:
+## REACTION PATCHOULI ENTRY
+You can add entries to the Journal of Alchemy by placing page JSON files in the proper resource pack path, `assets/reactive/patchouli_books/journal/entries`. All built-in reactions use an entry similar to this one:
 ```json
 {
   "name": "Luminous Ring",
