@@ -13,7 +13,6 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
-import mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
@@ -25,9 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.registries.datamaps.builtin.NeoForgeDataMaps;
 import org.jetbrains.annotations.NotNull;
-import mezz.jei.api.recipe.vanilla.IJeiCompostingRecipe;
 
 import java.util.*;
 
@@ -46,8 +43,15 @@ public class ReactiveJEIPlugin implements IModPlugin {
         return ReactiveMod.location("jei_plugin");
     }
 
+    private void setHelpers(IJeiHelpers helpers){
+        if(HELPERS == null){
+            HELPERS = helpers;
+        }
+    }
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
+        setHelpers(registration.getJeiHelpers());
         registration.addRecipeCategories(DISSOLVE_CATEGORY);
         registration.addRecipeCategories(TRANSMUTE_CATEGORY);
     }
@@ -59,7 +63,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        HELPERS = registration.getJeiHelpers();
+        setHelpers(registration.getJeiHelpers());
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
         registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());
         registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());

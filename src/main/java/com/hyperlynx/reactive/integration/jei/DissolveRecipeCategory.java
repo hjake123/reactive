@@ -9,6 +9,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -26,7 +27,6 @@ import java.util.List;
 import static com.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.POWER_TYPE;
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
-
     @Override
     public @Nullable ResourceLocation getRegistryName(DissolveRecipe recipe) {
         return ReactiveMod.location("dissolve");
