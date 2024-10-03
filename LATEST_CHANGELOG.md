@@ -1,2 +1,3 @@
-- Added a Simplified Chinese Translation
-  - Translation by ChuijkYahus. Thank you!
+- Fixed Litmus Paper reporting 'CRUCIBLE INTEGRITY VIOLATION' on both client and server
+- Restored JEI Integration for JEI versions 19.16+
+- Added a Simplified Chinese Translation by ChuijkYahus. Thank you!
