@@ -1,1 +1,2 @@
+- Updated the Litmus Paper documentation to match its new behavior.
 - Added a Simplified Chinese Translation by ChuijkYahus. Thank you!
