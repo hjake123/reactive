@@ -1,3 +1,2 @@
-- Changed the syntax of the KubeJS reaction builder to ask for a Component to name the reaction with
-- Added `alwaysPerfect()` method for the KubeJS reaction builder
-- Fixed reactions not being correctly gated by their perfection criteria
+- Added a Simplified Chinese Translation
+  - Translation by ChuijkYahus. Thank you!
