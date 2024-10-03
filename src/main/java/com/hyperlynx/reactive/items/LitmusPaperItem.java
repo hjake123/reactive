@@ -49,10 +49,6 @@ public class LitmusPaperItem extends Item {
 
         boolean mode = !player.isCrouching();
 
-        if(measurement.integrity_violated()){
-            text.add(Component.translatable("text.reactive.litmus_integrity_failure"));
-        }
-
         if(mode){
             if(player.level().isClientSide){
                 // This must be done on the client to allow for querying the water color.
@@ -74,6 +70,9 @@ public class LitmusPaperItem extends Item {
                 if(measurement.measurements().isEmpty()){
                     text.add(Component.translatable("text.reactive.measurement_empty")
                             .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
+                }
+                if(measurement.integrity_violated()){
+                    text.add(Component.translatable("text.reactive.litmus_integrity_failure").withStyle(ChatFormatting.DARK_RED));
                 }
             }
         }else{
