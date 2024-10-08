@@ -1,3 +1,2 @@
-- Fixed Litmus Paper reporting 'CRUCIBLE INTEGRITY VIOLATION' on both client and server
-- Restored JEI Integration for JEI versions 19.16+
-- Added a Simplified Chinese Translation by ChuijkYahus. Thank you!
+- Fixed some issues in the Simplified Chinese translation (by ChuijkYahus)
+- Fixed some Litmus Paper text not obeying the colorization config entry
