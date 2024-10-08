@@ -134,6 +134,7 @@
   "commands.reactive.no_player": "无法将折跃之瓶给予玩家之外的事物",
   "commands.reactive.no_crucible": "该位置不存在坩埚",
   "commands.reactive.fake_power": "无效能量",
+  "text.reactive.power": "能量",
   "text.reactive.litmus_instructions": "右击以阅读能量组分",
   "text.reactive.litmus_instructions_2": "Shift右击以阅读反应状态",
   "text.reactive.measurement_header": "-- 测量结果 --",

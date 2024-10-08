@@ -24,7 +24,7 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     @Override
     public List<Component> getTooltip(Power ingredient, TooltipFlag tooltipFlag) {
         List<Component> ret = new ArrayList<>();
-        ret.add(Component.literal(ingredient.getName() + " Power"));
+        ret.add(Component.literal(ingredient.getName()).append(Component.translatable("text.reactive.power")));
         if(tooltipFlag.isAdvanced()){
             ret.add(Component.literal(ingredient.getResourceLocation().toString()).withStyle(ChatFormatting.GRAY));
         }
