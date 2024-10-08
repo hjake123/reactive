@@ -72,7 +72,8 @@ public class LitmusPaperItem extends Item {
                             .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
                 }
                 if(measurement.integrity_violated()){
-                    text.add(Component.translatable("text.reactive.litmus_integrity_failure").withStyle(ChatFormatting.DARK_RED));
+                    text.add(Component.translatable("text.reactive.litmus_integrity_failure")
+                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.DARK_RED : ChatFormatting.WHITE));
                 }
             }
         }else{
