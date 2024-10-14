@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.alchemy.Powers;
+import com.hyperlynx.reactive.alchemy.rxn.Reaction;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.items.WarpBottleItem;
 import com.mojang.brigadier.CommandDispatcher;
@@ -20,6 +21,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,6 +44,9 @@ public class ReactiveCommand {
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal("give_warp_bottle").then(Commands.argument("target", BlockPosArgument.blockPos())
                         .executes((context) -> giveWarpBottle(context.getSource(), context.getArgument("target", WorldCoordinates.class)))))
+
+                .then(Commands.literal("list_reactions")
+                        .executes((context) -> listReactions(context.getSource())))
 
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
@@ -102,6 +107,16 @@ public class ReactiveCommand {
         ItemStack bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
         WarpBottleItem.setTeleportTarget(bottle, GlobalPos.of(commander.level().dimension(), target.getBlockPos(source)));
         commander.addItem(bottle);
+        return 1;
+    }
+
+    private static int listReactions(CommandSourceStack source) throws CommandSyntaxException {
+        if(!source.isPlayer()){
+            throw ERROR_NO_PLAYER.create();
+        }
+        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()){
+            source.sendSuccess(() -> Component.literal(reaction.getAlias() + " : " + reaction.getName().getString()), true);
+        }
         return 1;
     }
 
