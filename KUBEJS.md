@@ -1,3 +1,12 @@
+# KubeJS Integration Versions
+KubeJS scripts made on a specific Integration Version should be compatible with those on the same IV. 
+Changes to this number are marked in the changelog for a given version if they happen (which should be rare!)
+
+| Reactive Version Introduced | KJS IV Number |
+|-----------------------------|---------------|
+| 9a                          | 1             |
+| 9d                          | 2             |
+
 # Adding Powers
 Custom Powers are added at startup using `StartupEvents.registry`, like so:
 ```js
