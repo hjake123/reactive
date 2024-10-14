@@ -24,7 +24,7 @@ public class CustomReaction extends Reaction {
         super(alias, 0);
         for(Power required_power : required_powers)
             reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
-        ReactionMan.REACTION_NAMES.put(alias, name_override);
+        this.name = name_override;
     }
 
     @Override

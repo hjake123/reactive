@@ -8,6 +8,8 @@ import com.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.dedicated.Settings;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
@@ -23,6 +25,7 @@ public abstract class Reaction {
     protected Stimulus stimulus = Stimulus.NONE;
     public FlagTrigger observe_trigger;
     public FlagTrigger perfect_trigger;
+    protected MutableComponent name = Component.literal("Error!");
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
@@ -31,6 +34,8 @@ public abstract class Reaction {
     // Creates the reaction with a random set of reagents.
     public Reaction(String alias, int max_reagent_count){
         this.alias = alias;
+        this.name = Component.translatable("reaction.reactive." + alias);
+
         observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
         perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
 
@@ -48,18 +53,22 @@ public abstract class Reaction {
             reagents.put(chosen_power, min);
             i++;
         }
-        ReactionMan.REACTION_NAMES.put(alias, Component.translatable("reaction.reactive." + alias));
-
     }
 
     // Creates the reaction with preset powers, but random minimum requirements.
     public Reaction(String alias, Power... powers){
         this.alias = alias;
+        this.name = Component.translatable("reaction.reactive." + alias);
+
         observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
         perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         for(Power p : powers){
             reagents.put(p, WorldSpecificValue.get(alias+p.getId(), 1, 400));
         }
+    }
+
+    public MutableComponent getName(){
+        return name;
     }
 
     public Reaction setStimulus(Stimulus rxs){

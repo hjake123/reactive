@@ -105,7 +105,7 @@ public class LitmusPaperItem extends Item {
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
         if(player instanceof ServerPlayer splayer){
             if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
-                return ReactionMan.REACTION_NAMES.get(reaction_alias).copy();
+                return ReactiveMod.REACTION_MAN.get(reaction_alias).getName();
             else
                 return Component.translatable("reaction.reactive.unknown");
         }

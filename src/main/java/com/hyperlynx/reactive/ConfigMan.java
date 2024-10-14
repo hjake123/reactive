@@ -58,6 +58,7 @@ public class ConfigMan {
         public ModConfigSpec.DoubleValue shrinkSmallStep;
         public ModConfigSpec.DoubleValue growLargeStep;
         public ModConfigSpec.IntValue vortexStoneCooldown;
+        public ModConfigSpec.ConfigValue<List<String>> disabledReactions;
 
         Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
@@ -79,6 +80,8 @@ public class ConfigMan {
                     .defineInRange("growLargeStep", 1.0, 0.6, 5);
             vortexStoneCooldown = builder.comment("The number of ticks between Vortex Stone activations. Values 8 or below allow for infinite upward flight. [Default: 9]")
                     .defineInRange("vortexStoneCooldown", 9, 0, 64);
+            disabledReactions = builder.comment("A list of reaction aliases to disable. To see the alias for a specific reaction, use Litmus Paper with debug toolbars enabled. [Default: []]")
+                            .define("disabledReactions", List.of());
             builder.pop();
         }
     }

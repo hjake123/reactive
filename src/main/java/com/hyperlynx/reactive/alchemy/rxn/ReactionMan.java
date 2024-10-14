@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.alchemy.rxn;
 
+import com.hyperlynx.reactive.ConfigMan;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
 import com.hyperlynx.reactive.alchemy.Power;
@@ -26,10 +27,10 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 public class ReactionMan {
     static boolean initialized = false;
     static boolean initializer_lock = false; // Prevent multiple things trying to initialize reactions at once.
-    private static final LinkedList<Reaction> REACTIONS = new LinkedList<>();
+    private static final ReactionMap REACTIONS = new ReactionMap();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
     public static ReactionCriteriaBuilder CRITERIA_BUILDER = new ReactionCriteriaBuilder();
-    public static Map<String, MutableComponent> REACTION_NAMES = new HashMap<>();
+    public static Map<String, MutableComponent> REACTION_NAME = new HashMap<>();
 
     public ReactionMan(){
         CRITERIA_BUILDER.add("curse_assimilation");
@@ -72,13 +73,23 @@ public class ReactionMan {
     }
 
     public List<Reaction> getReactions(){
-        return initialized ? REACTIONS : constructReactions();
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.values().stream().toList();
+    }
+
+    public Reaction get(String alias){
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.get(alias);
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    private LinkedList<Reaction> constructReactions(){
+    private void constructReactions(){
         if(initializer_lock)
-            return new LinkedList<>();
+            return;
         initializer_lock = true;
 
         // Set up the Base Power List.
@@ -181,11 +192,10 @@ public class ReactionMan {
 
         initialized = true;
         initializer_lock = false;
-        return REACTIONS;
     }
 
-    public static void addReactions(Reaction... reactions){
-        REACTIONS.addAll(List.of(reactions));
+    public static void addReactions(Reaction... additions){
+        REACTIONS.addAll(additions);
     }
 
     @SubscribeEvent
@@ -207,5 +217,21 @@ public class ReactionMan {
      */
     public static class ReactionConstructEvent extends Event {
 
+    }
+
+    protected static class ReactionMap extends HashMap<String, Reaction> {
+        public Reaction add(Reaction reaction) {
+            String alias = reaction.alias;
+            if(ConfigMan.SERVER.disabledReactions.get().contains(alias)){
+                return null;
+            }
+            return super.put(reaction.alias, reaction);
+        }
+
+        public void addAll(Reaction... reactions){
+            for(Reaction reaction : reactions){
+                add(reaction);
+            }
+        }
     }
 }
