@@ -1,2 +1,6 @@
-- Fixed some issues in the Simplified Chinese translation (by ChuijkYahus)
-- Fixed some Litmus Paper text not obeying the colorization config entry
+- Added a config option to disable any chosen reaction
+- Added `/reactive reaction list` command 
+- Added `/reactive reaction reload` command 
+- Made Shulker Crucibles drop themselves in all situations
+- Fixed dissolve recipes creating too much output for power source items
+- Fixed Crucible not detecting some perfect reaction formulas
