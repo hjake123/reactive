@@ -216,6 +216,7 @@ curseforge {
         addGameVersion "NeoForge"
         addGameVersion "${minecraft_version}"
         addGameVersion "1.21" // Temporary extra game version
+        addGameVersion "Java 21"
         mainArtifact(jar)
         relations{
             requiredDependency "patchouli"
