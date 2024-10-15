@@ -30,6 +30,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
 @EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
@@ -45,8 +48,11 @@ public class ReactiveCommand {
                 .then(Commands.literal("give_warp_bottle").then(Commands.argument("target", BlockPosArgument.blockPos())
                         .executes((context) -> giveWarpBottle(context.getSource(), context.getArgument("target", WorldCoordinates.class)))))
 
-                .then(Commands.literal("list_reactions")
-                        .executes((context) -> listReactions(context.getSource())))
+                .then(Commands.literal("reaction")
+                        .then(Commands.literal("list")
+                            .executes((context) -> listReactions(context.getSource())))
+                        .then(Commands.literal("reload")
+                            .executes((context) -> reloadReactions())))
 
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
@@ -70,6 +76,11 @@ public class ReactiveCommand {
                 );
 
         dispatcher.register(command_builder);
+    }
+
+    private static int reloadReactions() {
+        ReactiveMod.REACTION_MAN.reset();
+        return 1;
     }
 
     private static int modifyPower(CommandSourceStack source, WorldCoordinates crucible_location, ResourceLocation power_location, Integer amount, boolean remove) throws CommandSyntaxException {
@@ -114,9 +125,11 @@ public class ReactiveCommand {
         if(!source.isPlayer()){
             throw ERROR_NO_PLAYER.create();
         }
-        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()){
-            source.sendSuccess(() -> Component.literal(reaction.getAlias() + " : " + reaction.getName().getString()), true);
-        }
+        List<String> aliases = ReactiveMod.REACTION_MAN.getReactionAliases();
+        aliases.stream().sorted().forEach((alias) -> {
+            Reaction reaction = ReactiveMod.REACTION_MAN.get(alias);
+            source.sendSuccess(() -> Component.literal(alias + " : " + reaction.getName().getString()), true);
+        });
         return 1;
     }
 

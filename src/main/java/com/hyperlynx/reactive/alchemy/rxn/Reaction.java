@@ -68,7 +68,7 @@ public abstract class Reaction {
     }
 
     public MutableComponent getName(){
-        return name;
+        return name.copy();
     }
 
     public Reaction setStimulus(Stimulus rxs){

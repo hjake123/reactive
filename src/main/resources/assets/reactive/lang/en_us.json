@@ -228,7 +228,7 @@
   "reaction.reactive.size_shrink_effect": "Reduction",
   "reaction.reactive.size_revert_effect": "Reduction Reversal",
   "reaction.reactive.size_revert_effect_2": "Enlargement Reversal",
-  "reaction.reactive.slowfall": "Slow Falling",
+  "reaction.reactive.slowfall_effect": "Slow Falling",
   "reaction.reactive.smoke_annihilation": "Noxious Fumes",
   "reaction.reactive.soul_to_warp": "Soul to Warp Corruption",
   "reaction.reactive.verdant_consume": "Verdant-Vital Reaction",

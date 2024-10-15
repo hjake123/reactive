@@ -30,7 +30,6 @@ public class ReactionMan {
     private static final ReactionMap REACTIONS = new ReactionMap();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
     public static ReactionCriteriaBuilder CRITERIA_BUILDER = new ReactionCriteriaBuilder();
-    public static Map<String, MutableComponent> REACTION_NAME = new HashMap<>();
 
     public ReactionMan(){
         CRITERIA_BUILDER.add("curse_assimilation");
@@ -77,6 +76,13 @@ public class ReactionMan {
             constructReactions();
         }
         return REACTIONS.values().stream().toList();
+    }
+
+    public List<String> getReactionAliases(){
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.keySet().stream().toList();
     }
 
     public Reaction get(String alias){
