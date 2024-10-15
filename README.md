@@ -88,7 +88,7 @@ There are three config files; two in the config folder, and one in each world's 
 	vortexStoneCooldown = 9
 (As each entry says, this controls the balancing of a few things in the mod.)
 
-    #A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]
+    	#A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]
 	disabledReactions = []
 (Enter a list of reaction aliases (in quotes) here to prevent them from being added to the world when reactions are loaded. This happens each world load, or if you run /reactive reaction reload)
 
