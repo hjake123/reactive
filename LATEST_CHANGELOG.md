@@ -1,1 +1,3 @@
 - Updated the Simplified Chinese translation (by ChuijkYahus)
+- Fixed Motion Salt Blocks causing air to fall
+- Improved the wording of the disabledReactions config key comment
