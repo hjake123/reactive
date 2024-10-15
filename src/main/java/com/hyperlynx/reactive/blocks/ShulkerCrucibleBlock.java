@@ -1,5 +1,6 @@
 package com.hyperlynx.reactive.blocks;
 
+import com.hyperlynx.reactive.ReactiveMod;
 import com.hyperlynx.reactive.Registration;
 import com.hyperlynx.reactive.alchemy.Power;
 import com.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -16,6 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -26,28 +29,15 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
         super(p);
     }
 
-    // Drop a ShulkerCrucibleBlock BlockItem with block entity data saved.
-    // This negates the need for loot tables to be applied to this block.
-    @Override
-    public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof CrucibleBlockEntity crucible) {
-            if (!level.isClientSide) {
-                ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
-                if(crucible.getTotalPowerLevel() > 0) {
-                    crucible.saveToItem(drop_stack, level.registryAccess());
-                    drop_stack.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(getItemLabel(crucible)))));
-                }else if(state.getValue(FULL)){
-                    level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
-                }
-                ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, drop_stack);
-                drop.setDefaultPickUpDelay();
-                level.addFreshEntity(drop);
-            }
+    private static @NotNull ItemStack getDropStack(Level level, @NotNull BlockPos pos, @NotNull BlockState state, CrucibleBlockEntity crucible) {
+        ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
+        if(crucible.getTotalPowerLevel() > 0) {
+            crucible.saveToItem(drop_stack, level.registryAccess());
+            drop_stack.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(getItemLabel(crucible)))));
+        }else if(state.getValue(FULL)){
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
         }
-
-        super.playerWillDestroy(level, pos, state, player);
-        return state;
+        return drop_stack;
     }
 
     private static String getItemLabel(CrucibleBlockEntity crucible){
@@ -62,6 +52,16 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if(!new_state.is(Registration.SHULKER_CRUCIBLE)){
+            if (be instanceof CrucibleBlockEntity crucible) {
+                if (!level.isClientSide) {
+                    ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, getDropStack(level, pos, state, crucible));
+                    drop.setDefaultPickUpDelay();
+                    level.addFreshEntity(drop);
+                }
+            }
+        }
         super.onRemoveWithoutEmpty(state, level, pos, new_state, p_60519_);
     }
 
