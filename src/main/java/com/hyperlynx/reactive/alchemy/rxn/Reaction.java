@@ -94,6 +94,10 @@ public abstract class Reaction {
         return this;
     }
 
+    public void cloneReagentsOf(Reaction other){
+        this.reagents = other.reagents;
+    }
+
     public String getAlias(){
         return alias;
     }
@@ -177,7 +181,7 @@ public abstract class Reaction {
     public boolean isPerfect(CrucibleBlockEntity crucible){
         // If crucible only has the same number of powers as the reagents, and the reaction could run, then it would be running with nothing extra.
         // Therefore, it is running 'perfectly'.
-        return crucible.getPowerMap().keySet().size() == reagents.size();
+        return crucible.getPowerCount() == reagents.size();
     }
 
     public abstract void render(final Level l, final CrucibleBlockEntity crucible);

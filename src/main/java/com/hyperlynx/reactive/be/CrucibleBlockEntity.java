@@ -638,12 +638,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return true;
         }
         if (level == amount) {
-            powers.put(t, 0);
+            powers.remove(t);
             return true;
         }
 
         // This implies that all power t wasn't enough to meet amount.
-        powers.put(t, 0);
+        powers.remove(t);
         return false;
     }
 
@@ -668,11 +668,14 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     public int getTotalPowerLevel(){
         int totalpp = 0;
-        if(powers == null) return 0;
         for (Power p : powers.keySet()) {
             totalpp += powers.get(p);
         }
         return totalpp;
+    }
+
+    public int getPowerCount(){
+        return powers.keySet().size();
     }
 
     // Manually decides the initial color of the mixture to prevent fading from water.

@@ -182,10 +182,14 @@ public class ReactionMan {
         REACTIONS.add(new AstralReaction("astral"));
         REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation));
 
-        REACTIONS.add(new FreeEffectReaction("size_shrink_effect", ReactionEffects::shrink, ReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-        REACTIONS.add(new FreeEffectReaction("size_grow_effect", ReactionEffects::grow, ReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-        REACTIONS.add(new FreeEffectReaction("size_revert_effect", ReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new FreeEffectReaction("size_revert_effect_2", ReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
+        Reaction size_shrink_effect = new FreeEffectReaction("size_shrink_effect", ReactionEffects::shrink, ReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
+        Reaction size_grow_effect = new FreeEffectReaction("size_grow_effect", ReactionEffects::grow, ReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
+        Reaction size_revert_effect = new FreeEffectReaction("size_revert_effect", ReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC);
+        size_revert_effect.cloneReagentsOf(size_shrink_effect);
+        Reaction size_revert_effect_2 = new FreeEffectReaction("size_revert_effect_2", ReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC);
+        size_revert_effect_2.cloneReagentsOf(size_grow_effect);
+
+        REACTIONS.addAll(size_shrink_effect, size_grow_effect, size_revert_effect, size_revert_effect_2);
 
         REACTIONS.add(new OmenConversionReaction("ominous_transformation"));
         REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
