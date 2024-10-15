@@ -441,7 +441,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 ItemStack reactant = stack.copy();
                 reactant.setCount(count);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5,
-                        recipe.assemble(CrucibleRecipeInput.of(stack), level.registryAccess())));
+                        recipe.assemble(CrucibleRecipeInput.of(reactant), level.registryAccess())));
                 return true;
             }
         }
