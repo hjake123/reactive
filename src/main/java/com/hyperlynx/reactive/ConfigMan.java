@@ -81,7 +81,7 @@ public class ConfigMan {
             vortexStoneCooldown = builder.comment("The number of ticks between Vortex Stone activations. Values 8 or below allow for infinite upward flight. [Default: 9]")
                     .defineInRange("vortexStoneCooldown", 9, 0, 64);
             disabledReactions = builder.comment("A list of reaction aliases to disable. To see the alias for a specific reaction, use Litmus Paper with debug toolbars enabled. [Default: []]")
-                            .define("disabledReactions", List.of());
+                            .define("disabledReactions", Lists.newArrayList());
             builder.pop();
         }
     }

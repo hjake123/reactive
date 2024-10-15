@@ -263,6 +263,7 @@
   "reactive.configuration.growLargeStep": "Enlargement Target Step Height",
   "reactive.configuration.vortexStoneCooldown": "Vortex Stone Cooldown",
   "reactive.configuration.shrinkSmallSize": "Reduction Target Size",
+  "reactive.configuration.disabledReactions": "Disabled Reactions",
   "reactive.configuration.seed": "Alchemy Seed",
   "reactive.configuration.balance": "Balance Options",
   "reactive.configuration.wsv": "World Specific Value Options",
