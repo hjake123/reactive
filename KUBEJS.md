@@ -1,11 +1,11 @@
 # KubeJS Integration Versions
-KubeJS scripts made on a specific Integration Version should be compatible with those on the same IV. 
+KubeJS scripts made on a specific Integration Version should be compatible with those on the same major version. Changes to the minor component are backwards-compatible changes.
 Changes to this number are marked in the changelog for a given version if they happen (which should be rare!)
 
 | Reactive Version Introduced | KubeJS Integration Version |
 |-----------------------------|----------------------------|
-| 9a                          | 1                          |
-| 9d                          | 2                          |
+| 9a                          | 1.0                        |
+| 9d                          | 2.0                        |
 
 # Adding Powers
 Custom Powers are added at startup using `StartupEvents.registry`, like so:
