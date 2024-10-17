@@ -7,43 +7,49 @@ import mezz.jei.api.ingredients.IIngredientHelper;
 import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PowerIngredientHandler implements IIngredientHelper<Power> {
     @Override
-    public IIngredientType<Power> getIngredientType() {
+    public @NotNull IIngredientType<Power> getIngredientType() {
         return ReactiveJEIPlugin.POWER_TYPE;
     }
 
     @Override
-    public String getDisplayName(Power ingredient) {
+    public @NotNull String getDisplayName(Power ingredient) {
         return ingredient.getName();
     }
 
-    @Override
-    public String getUniqueId(Power ingredient, UidContext context) {
+    @SuppressWarnings("removal") // This method is necessary to implement the interface, so there's nothing to be done yet.
+    public @NotNull String getUniqueId(Power ingredient, @NotNull UidContext context) {
         return ingredient.getId();
     }
 
     @Override
-    public ResourceLocation getResourceLocation(Power ingredient) {
+    public @NotNull Object getUid(@NotNull Power ingredient, @NotNull UidContext context) {
+        return this.getUniqueId(ingredient, context);
+    }
+
+    @Override
+    public @NotNull ResourceLocation getResourceLocation(Power ingredient) {
         return ingredient.getResourceLocation();
     }
 
     @Override
-    public Power copyIngredient(Power ingredient) {
+    public @NotNull Power copyIngredient(Power ingredient) {
         return new Power(ingredient.getResourceLocation(), ingredient.getColor(), ingredient.getWaterRenderBlock(), ingredient.getBottle().getItem(), ingredient.getRenderStack().getItem());
     }
 
     @Override
-    public String getErrorInfo(@Nullable Power ingredient) {
+    public @NotNull String getErrorInfo(@Nullable Power ingredient) {
         if(ingredient == null)
             return "null Power";
         return ingredient.getId();
     }
 
     @Override
-    public boolean isValidIngredient(Power ingredient) {
+    public boolean isValidIngredient(@NotNull Power ingredient) {
         return IIngredientHelper.super.isValidIngredient(ingredient);
     }
 }

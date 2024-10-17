@@ -9,7 +9,6 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
-import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -19,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.hyperlynx.reactive.ConfigMan;
 
@@ -28,24 +28,32 @@ import static com.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.POWER_TYP
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     @Override
-    public @Nullable ResourceLocation getRegistryName(DissolveRecipe recipe) {
+    public @Nullable ResourceLocation getRegistryName(@Nullable DissolveRecipe recipe) {
         return ReactiveMod.location("dissolve");
     }
 
     @Override
-    public RecipeType<DissolveRecipe> getRecipeType() {
+    public @NotNull RecipeType<DissolveRecipe> getRecipeType() {
         return RecipeType.create(ReactiveMod.MODID, "dissolve", DissolveRecipe.class);
     }
 
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.translatable("title.reactive.dissolve");
     }
 
-    @Override
-    public IDrawable getBackground() {
-        //return ReactiveJEIPlugin.HELPERS.getGuiHelper().createBlankDrawable(76, 38);
+    public IDrawable background() {
         return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
+    }
+
+    @Override
+    public int getHeight() {
+        return background().getHeight();
+    }
+
+    @Override
+    public int getWidth() {
+        return background().getWidth();
     }
 
     @Override
@@ -54,7 +62,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, @NotNull IFocusGroup focuses) {
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         input_slot.setSlotName("reactant");
@@ -72,7 +80,8 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     }
 
     @Override
-    public void draw(DissolveRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(DissolveRecipe recipe, @Nullable IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+        background().draw(gui);
         if(recipe.needs_electricity){
             drawElectricLabel(gui);
         }
@@ -81,7 +90,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     private void drawElectricLabel(GuiGraphics gui) {
         Minecraft minecraft = Minecraft.getInstance();
         int width = minecraft.font.width("Charge");
-        int center = getBackground().getWidth() / 2;
+        int center = getWidth() / 2;
         int x = center - (width / 2);
         int y = 11;
         gui.drawString(minecraft.font, "Charge",  x, y,0x0DA8A8);

@@ -5,6 +5,7 @@ import com.hyperlynx.reactive.util.Color;
 import com.hyperlynx.reactive.util.PrimedWSV;
 import com.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -35,6 +36,7 @@ public class Power {
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
 
+    public static final Codec<Power> CODEC;
 
     public Power(String id, int color, Block render_water_block, Item bottle){
         this.location = ReactiveMod.location(id);
@@ -183,5 +185,6 @@ public class Power {
     static{
         RESOURCE_KEY_CODEC = ResourceKey.codec(Powers.POWER_REGISTRY_KEY);
         RESOURCE_KEY_STREAM_CODEC = ResourceKey.streamCodec(Powers.POWER_REGISTRY_KEY);
+        CODEC = RESOURCE_KEY_CODEC.xmap(Powers.POWER_REGISTRY::get, (power) -> Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow());
     }
 }

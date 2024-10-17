@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -23,23 +24,32 @@ import java.util.List;
 public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe> {
 
     @Override
-    public @Nullable ResourceLocation getRegistryName(TransmuteRecipe recipe) {
+    public @Nullable ResourceLocation getRegistryName(@Nullable TransmuteRecipe recipe) {
         return ReactiveMod.location("transmute");
     }
 
     @Override
-    public RecipeType<TransmuteRecipe> getRecipeType() {
+    public @NotNull RecipeType<TransmuteRecipe> getRecipeType() {
         return RecipeType.create(ReactiveMod.MODID, "transmute", TransmuteRecipe.class);
     }
 
     @Override
-    public Component getTitle() {
+    public @NotNull Component getTitle() {
         return Component.translatable("title.reactive.transmute");
     }
 
-    @Override
-    public IDrawable getBackground() {
+    public IDrawable background() {
         return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
+    }
+
+    @Override
+    public int getWidth() {
+        return background().getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return background().getHeight();
     }
 
     @Override
@@ -48,25 +58,26 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, TransmuteRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, TransmuteRecipe recipe, @Nullable IFocusGroup focuses) {
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
 
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         output_slot.setSlotName("product");
+        assert Minecraft.getInstance().level != null;
         output_slot.addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
 
         switch (recipe.getReagents().size()) {
             case 1 -> {
                 IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
                 power_slot.setSlotName("reagent_middle");
-                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
             }
             case 2 -> {
                 IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 20, 24);
                 power_slotl.setSlotName("reagent_left");
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
 
                 IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 36, 24);
                 power_slotr.setSlotName("reagent_right");
@@ -75,7 +86,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
             case 3 -> {
                 IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 12, 24);
                 power_slotl.setSlotName("reagent_left");
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
 
                 IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
                 power_slot.setSlotName("reagent_middle");
@@ -94,7 +105,8 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     @Override
-    public void draw(TransmuteRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(TransmuteRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+        background().draw(gui);
         if(recipe.needs_electricity){
             drawElectricLabel(gui);
         }
@@ -103,7 +115,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     private void drawElectricLabel(GuiGraphics gui) {
         Minecraft minecraft = Minecraft.getInstance();
         int width = minecraft.font.width("Charge");
-        int center = getBackground().getWidth() / 2;
+        int center = getWidth() / 2;
         int x = center - (width / 2);
         int y = 11;
         gui.drawString(minecraft.font, "Charge",  x, y,0x0DA8A8);
