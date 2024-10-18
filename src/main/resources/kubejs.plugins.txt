@@ -1,1 +1,1 @@
-com.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin
+kubejs.integration.dev.hyperlynx.reactive.ReactiveKubeJSPlugin
