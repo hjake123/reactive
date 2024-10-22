@@ -16,7 +16,7 @@ public class PureQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public VoxelShape getOcclusionShape(BlockState p_60578_, BlockGetter p_60579_, BlockPos p_60580_) {
+    public @NotNull VoxelShape getOcclusionShape(BlockState p_60578_) {
         return Shapes.empty();
     }
 

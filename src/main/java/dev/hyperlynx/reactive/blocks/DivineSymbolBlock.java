@@ -88,7 +88,7 @@ public class DivineSymbolBlock extends SymbolBlock{
 
         if(accepted){
             ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos, player_start_pos, 4, 5, 0.4);
-            player.getCooldowns().addCooldown(stack.getItem(), 100);
+            player.getCooldowns().addCooldown(stack, 100);
         }
 
         return InteractionResult.SUCCESS;

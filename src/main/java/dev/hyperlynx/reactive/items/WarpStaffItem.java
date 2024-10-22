@@ -153,7 +153,7 @@ public class WarpStaffItem extends StaffItem{
                     if(entity instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
                         man.hurt(user.damageSources().magic(), 1);
                         man.setBeingStaredAt();
-                        user.getCooldowns().addCooldown(stack.getItem(), 100);
+                        user.getCooldowns().addCooldown(stack, 100);
                     }else{
                         String name = entity.hasCustomName() ? entity.getCustomName().getString() : entity.getName().getString();
                         stack.set(Registration.BOUND_ENTITY, new BoundEntity(name, entityHit.getEntity().getUUID()));

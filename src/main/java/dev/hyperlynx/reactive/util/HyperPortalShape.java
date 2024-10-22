@@ -64,7 +64,7 @@ public class HyperPortalShape {
 
     @Nullable
     private BlockPos calculateBottomLeft(BlockPos p_77734_) {
-        for(int i = Math.max(this.level.getMinBuildHeight(), p_77734_.getY() - 21); p_77734_.getY() > i && isEmpty(this.level.getBlockState(p_77734_.below())); p_77734_ = p_77734_.below()) {
+        for(int i = Math.max(this.level.getMinY(), p_77734_.getY() - 21); p_77734_.getY() > i && isEmpty(this.level.getBlockState(p_77734_.below())); p_77734_ = p_77734_.below()) {
         }
 
         Direction direction = this.rightDir.getOpposite();

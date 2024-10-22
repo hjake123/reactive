@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class PowerBottleItem extends BlockItem {
     public final static int BOTTLE_COST = 600;
@@ -35,13 +36,9 @@ public class PowerBottleItem extends BlockItem {
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 
-    @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return true;
-    }
 
     @Override
-    public ItemStack getCraftingRemainingItem(ItemStack stack) {
+    public @NotNull ItemStack getCraftingRemainder(@NotNull ItemStack stack) {
         return Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
     }
 

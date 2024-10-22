@@ -110,7 +110,7 @@ public class AcidBlock extends Block implements BucketPickup {
                 || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.PLANKS)
                 || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL)
                 || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL_CARPETS)
-                || state_beneath.getBlock() instanceof MossBlock || state_beneath.is(Blocks.DRIPSTONE_BLOCK)){
+                || state_beneath.getBlock() instanceof BonemealableFeaturePlacerBlock || state_beneath.is(Blocks.DRIPSTONE_BLOCK)){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }
@@ -142,7 +142,7 @@ public class AcidBlock extends Block implements BucketPickup {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
-        if(!level.getBlockState(pos.above()).isSolidRender(level, pos)) {
+        if(!level.getBlockState(pos.above()).isSolidRender()) {
             for (int i = 0; i < 1; i++) {
                 double x = pos.getX() + rng.nextFloat();
                 double y = pos.getY() + 1.0F;

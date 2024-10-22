@@ -32,13 +32,11 @@ public class StaffItem extends BlockItem {
     BiConsumer<Player, ItemStack> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
     private final int frequency; // Beam abilities activate once in this many ticks.
-    public Item repair_item;
 
     public StaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, int frequency, Item repair_item) {
-        super(block, props);
+        super(block, props.enchantable(20).repairable(repair_item));
         effectFunction = effect;
         this.beam = beam;
-        this.repair_item = repair_item;
         this.frequency = frequency;
     }
 
@@ -79,11 +77,6 @@ public class StaffItem extends BlockItem {
     @Override
     public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity wielder) {
         return 72000;
-    }
-
-    @Override
-    public int getEnchantmentValue(ItemStack stack) {
-        return 20;
     }
 
     private int getFrequency(@NotNull ItemStack stack){
@@ -132,17 +125,6 @@ public class StaffItem extends BlockItem {
         if(context.getPlayer().isCrouching())
             return super.useOn(context);
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack stack) {
-        return true;
-    }
-
-    // Check if the item being used to repair is the assigned repair bottle for this staff.
-    @Override
-    public boolean isValidRepairItem(ItemStack self, ItemStack repair_item_candidate) {
-        return repair_item != null && repair_item_candidate.is(repair_item);
     }
 
     // Called when the item is placed to store item stack data into the block entity.

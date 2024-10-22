@@ -36,7 +36,7 @@ public class UnformedMatterBlock extends Block {
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.randomTick(state, level, pos, random);
-        Block result = BuiltInRegistries.BLOCK.getTag(AlchemyTags.canBeGenerated).flatMap(tag -> tag.getRandomElement(random)).orElse(Holder.direct(Blocks.AIR)).value(); // THANK YOU FORGE !
+        Block result = BuiltInRegistries.BLOCK.get(AlchemyTags.canBeGenerated).flatMap(tag -> tag.getRandomElement(random)).orElse(Holder.direct(Blocks.AIR)).value(); // THANK YOU FORGE !
         level.setBlock(pos, result.defaultBlockState(), Block.UPDATE_CLIENTS);
         level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
     }

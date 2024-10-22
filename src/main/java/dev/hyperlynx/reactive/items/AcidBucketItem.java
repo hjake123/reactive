@@ -12,12 +12,7 @@ public class AcidBucketItem extends SolidBucketItem {
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack stack) {
+    public ItemStack getCraftingRemainder(ItemStack stack) {
         return Items.BUCKET.getDefaultInstance();
     }
 }

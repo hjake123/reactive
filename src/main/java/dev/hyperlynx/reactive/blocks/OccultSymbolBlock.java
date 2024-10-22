@@ -78,7 +78,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         if(!player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get()))
             return InteractionResult.TRY_WITH_EMPTY_HAND;
 
-        if(player.getCooldowns().isOnCooldown(Registration.QUARTZ_BOTTLE.get()))
+        if(player.getCooldowns().isOnCooldown(Registration.QUARTZ_BOTTLE.get().getDefaultInstance()))
             return InteractionResult.TRY_WITH_EMPTY_HAND;
 
         List<Item> bottle_list = List.of(Registration.ACID_BOTTLE.get(), Registration.BODY_BOTTLE.get(), Registration.BLAZE_BOTTLE.get(),
@@ -155,7 +155,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         }
 
         if(!player.getAbilities().instabuild)
-            player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 80);
+            player.getCooldowns().addCooldown(stack, 80);
 
         return InteractionResult.SUCCESS;
     }

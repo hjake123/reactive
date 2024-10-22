@@ -35,10 +35,10 @@ public class VortexStoneItem extends Item {
         player.resetFallDistance();
         level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS, 1.0F, 0.95F + (level.random.nextFloat()*0.1F));
         ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
-        player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), ConfigMan.SERVER.vortexStoneCooldown.get());
+        var stack = player.getItemInHand(hand); // TODO: Test for working and what happens with more then one of the same item
+        player.getCooldowns().addCooldown(stack, ConfigMan.SERVER.vortexStoneCooldown.get());
 
         if(!player.hasInfiniteMaterials()){
-            var stack = player.getItemInHand(hand);
             stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             if(stack.getDamageValue() == stack.getMaxDamage() - 1){
                 player.setItemInHand(hand, Items.PACKED_ICE.getDefaultInstance());

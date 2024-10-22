@@ -2,8 +2,11 @@ package dev.hyperlynx.reactive.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -41,11 +44,11 @@ public class WaterloggableBlock extends Block implements SimpleWaterloggedBlock 
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor level_access, BlockPos pos, BlockPos pos2) {
+    protected BlockState updateShape(BlockState state, LevelReader reader, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos pos2, BlockState state2, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
-            level_access.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level_access));
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(reader));
         }
-        return super.updateShape(state, direction, state2, level_access, pos, pos2);
+        return super.updateShape(state, reader, ticks, pos, direction, pos2, state2, random);
     }
 }
 

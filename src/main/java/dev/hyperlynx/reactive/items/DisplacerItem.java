@@ -27,12 +27,7 @@ public class DisplacerItem extends Item {
     public static final int DISPLACER_BASE_DISPLACE_TIME = 200;
 
     public DisplacerItem(Properties props) {
-        super(props.attributes(SwordItem.createAttributes(Tiers.STONE, 3, -3.0F)));
-    }
-
-    @Override
-    public int getEnchantmentValue(ItemStack stack) {
-        return 10;
+        super(props.attributes(SwordItem.createAttributes(Tiers.STONE, 3, -3.0F)).enchantable(10).repairable(Registration.MOTION_SALT.get()));
     }
 
     @Override
@@ -86,7 +81,7 @@ public class DisplacerItem extends Item {
             // Since this may be called repeatedly it can be used to make a pathway.
             BlockPos selected = pos;
             for(int i = 0; i < max_depth; i++){
-                selected = selected.offset(context.getClickedFace().getOpposite().getNormal());
+                selected = selected.offset(context.getClickedFace().getOpposite().getUnitVec3i());
                 if(level.getBlockState(selected).getBlock() instanceof DisplacedBlock)
                     continue;
                 displace(level, selected, displace_time);

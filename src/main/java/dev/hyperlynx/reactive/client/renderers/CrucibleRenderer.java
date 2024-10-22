@@ -114,7 +114,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = getSprite(crucible);
             Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
-            VertexConsumer consumer = buffer_source.getBuffer(Sheets.translucentCullBlockSheet());
+            VertexConsumer consumer = buffer_source.getBuffer(RenderType.TRANSLUCENT);
             renderIcon(pose_stack, consumer, sprite, color, crucible.getOpacity(), overlay, light);
 
             if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0){

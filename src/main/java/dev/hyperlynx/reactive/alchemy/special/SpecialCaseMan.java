@@ -602,7 +602,7 @@ public class SpecialCaseMan {
     private static void verdantEscape(CrucibleBlockEntity c) {
         if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool("no_moss", 0.5F))
             return;
-        ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
+        ((BonemealableFeaturePlacerBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 
     private static void lightEscape(CrucibleBlockEntity c) {

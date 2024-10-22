@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 public class BlazeBottleItem extends PowerBottleItem {
     public BlazeBottleItem(Properties props, Block block) {
@@ -32,7 +33,7 @@ public class BlazeBottleItem extends PowerBottleItem {
     }
 
     @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return false;
+    public @NotNull ItemStack getCraftingRemainder(ItemStack stack) {
+        return ItemStack.EMPTY;
     }
 }

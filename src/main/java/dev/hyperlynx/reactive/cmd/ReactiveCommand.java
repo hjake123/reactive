@@ -93,7 +93,7 @@ public class ReactiveCommand {
             throw ERROR_NO_CRUCIBLE.create();
         }
 
-        Power power = Powers.POWER_REGISTRY.get(power_location);
+        Power power = Powers.POWER_REGISTRY.getValue(power_location);
         if(power == null){
             throw ERROR_FAKE_POWER.create();
         }

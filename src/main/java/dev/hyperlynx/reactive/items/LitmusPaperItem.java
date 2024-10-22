@@ -128,7 +128,11 @@ public class LitmusPaperItem extends Item {
             return InteractionResult.PASS;
 
         for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
-            player.sendSystemMessage(line);
+            if(player instanceof ServerPlayer splayer){
+                splayer.sendSystemMessage(line);
+            }else{
+                player.displayClientMessage(line, false);
+            }
         }
         return InteractionResult.PASS;
     }

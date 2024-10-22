@@ -6,9 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -75,10 +73,10 @@ public class BlazeRodBlock extends RotatedPillarBlock implements SimpleWaterlogg
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor level_access, BlockPos pos, BlockPos pos2) {
+    protected BlockState updateShape(BlockState state, LevelReader reader, ScheduledTickAccess ticks, BlockPos pos, Direction direction, BlockPos pos2, BlockState state2, RandomSource random) {
         if (state.getValue(WATERLOGGED)) {
-            level_access.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level_access));
+            ticks.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(reader));
         }
-        return super.updateShape(state, direction, state2, level_access, pos, pos2);
+        return super.updateShape(state, reader, ticks, pos, direction, pos2, state2, random);
     }
 }
