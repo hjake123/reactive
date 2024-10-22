@@ -42,6 +42,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -465,8 +467,11 @@ public class Registration {
             (props) -> new Item(props.food(new FoodProperties.Builder()
                     .nutrition(4)
                     .saturationModifier(1.4F)
-                    .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
-                    .build())));
+                    .build(),
+                    Consumable.builder().onConsume(
+                            new ApplyStatusEffectsConsumeEffect(new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F))
+                            .build()
+            )));
 
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
