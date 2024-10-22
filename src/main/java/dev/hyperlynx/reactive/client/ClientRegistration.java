@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.client;
 
 import dev.hyperlynx.reactive.Registration;
-import com.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
 //import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
