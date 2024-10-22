@@ -1,2 +1,3 @@
 - Fixed a crash when the Crucible expends Powers
 - Adjusted 'Remote Getaway' vanilla advancement to not be misleading if achieved using the Rending Plinth
+- (Internal) Moved java packages to .dev top level domain
