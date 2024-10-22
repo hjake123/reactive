@@ -19,7 +19,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +52,7 @@ public class LitmusPaperItem extends Item {
                 for(LitmusMeasurement.Line line : measurement.measurements()){
                     TextColor color = TextColor.fromRgb(0xFFFFFF);
                     if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                        Power power = Powers.POWER_REGISTRY.get(line.power());
+                        Power power = Powers.POWER_REGISTRY.getValue(line.power());
                         if(power != null) {
                             color = power.getTextColor();
                         }
@@ -124,14 +123,14 @@ public class LitmusPaperItem extends Item {
 
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
+            return InteractionResult.PASS;
 
         for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
             player.sendSystemMessage(line);
         }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return InteractionResult.PASS;
     }
 
     @Override

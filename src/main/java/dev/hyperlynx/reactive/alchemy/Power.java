@@ -7,6 +7,7 @@ import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -18,9 +19,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -102,14 +105,14 @@ public class Power {
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
-    public static Power readPower(CompoundTag tag){
+    public static @Nullable Power readPower(CompoundTag tag){
         return readPower(tag, "name");
     }
 
-    public static Power readPower(CompoundTag tag, String power_key){
+    public static @Nullable Power readPower(CompoundTag tag, String power_key){
         String rl = tag.getString(power_key);
         var location = ResourceLocation.parse(rl);
-        return Powers.POWER_REGISTRY.get(location);
+        return Powers.POWER_REGISTRY.getValue(location);
     }
 
     public Color getColor(){
