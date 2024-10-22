@@ -192,6 +192,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     // Deal with integrity violations.
                     checkIntegrity(level, pos, state, crucible);
 
+                    // Clean 0 level powers.
+                    clearEmptyPowers(crucible);
+
                     // Synchronize the client and server.
                     crucible.setDirty();
                     crucible.process_stage = -1;
@@ -200,6 +203,15 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 default -> System.err.println("Crucible ran out of steps! This can't be!");
             }
             crucible.process_stage++;
+        }
+    }
+
+    private static void clearEmptyPowers(CrucibleBlockEntity crucible) {
+        Iterable<Power> powers = Set.copyOf(crucible.powers.keySet());
+        for(Power p : powers){
+            if(crucible.powers.get(p) == 0){
+                crucible.powers.remove(p);
+            }
         }
     }
 
@@ -639,12 +651,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             return true;
         }
         if (level == amount) {
-            powers.remove(t);
+            powers.put(t, 0);
             return true;
         }
 
         // This implies that all power t wasn't enough to meet amount.
-        powers.remove(t);
+        powers.put(t, 0);
         return false;
     }
 
