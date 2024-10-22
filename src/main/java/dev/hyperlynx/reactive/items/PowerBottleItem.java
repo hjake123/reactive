@@ -31,7 +31,7 @@ public class PowerBottleItem extends BlockItem {
     public final static int BOTTLE_COST = 600;
 
     public PowerBottleItem(Properties props, Block block) {
-        super(block, props);
+        super(block, props.useBlockDescriptionPrefix());
         DispenserBlock.registerBehavior(this, DISPENSE_ITEM_BEHAVIOR);
     }
 

@@ -27,15 +27,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class DisplacedBlock extends Block implements EntityBlock {
-    public DisplacedBlock() {
-        super(Properties.ofFullCopy(Blocks.GLASS)
-                .isViewBlocking((BlockState state, BlockGetter getter, BlockPos pos) -> false)
-                .noOcclusion()
-                .noLootTable()
-                .strength(1F)
-                .explosionResistance(-1F)
-                .sound(SoundType.CHAIN)
-                .pushReaction(PushReaction.IGNORE));
+    public DisplacedBlock(Properties props) {
+        super(props);
     }
 
     @Override
