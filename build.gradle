@@ -114,16 +114,16 @@ dependencies {
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}-${patchouli_version_kind}:api"
-    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}-${patchouli_version_kind}"
-
-    // compile against the JEI API but do not include it at runtime
-    compileOnly("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
-    // at runtime, use the full JEI jar for Forge
-    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
-
-    implementation("dev.latvian.mods:kubejs-neoforge:${kubejs_version}")
+//    compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}-${patchouli_version_kind}:api"
+//    runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}-${patchouli_version_kind}"
+//
+//    // compile against the JEI API but do not include it at runtime
+//    compileOnly("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+//    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
+//    // at runtime, use the full JEI jar for Forge
+//    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
+//
+//    implementation("dev.latvian.mods:kubejs-neoforge:${kubejs_version}")
 //
 //    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
 //    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
