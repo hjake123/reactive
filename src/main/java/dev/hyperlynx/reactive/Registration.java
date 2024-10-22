@@ -653,9 +653,9 @@ public class Registration {
 //        if(ModList.get().isLoaded("create")){
 //            ReactiveCreatePlugin.init();
 //        }
-        if(ModList.get().isLoaded("kubejs")){
-            NeoForge.EVENT_BUS.register(EventTransceiver.class);
-        }
+//        if(ModList.get().isLoaded("kubejs")){
+//            NeoForge.EVENT_BUS.register(EventTransceiver.class);
+//        }
     }
 
 
