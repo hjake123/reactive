@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive;
 
-import dev.hyperlynx.reactive.advancements.EnterBlockInEndTrigger;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -625,9 +624,6 @@ public class Registration {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_FLOW_CONTAINMENT = CRITERIA_TRIGGERS.register("see_flow_containment_criterion",
             () -> new FlagTrigger(ReactiveMod.location("see_flow_containment_criterion")));
-
-    public static final DeferredHolder<CriterionTrigger<?>, EnterBlockInEndTrigger> TRAVERSE_END_GATEWAY_IN_END = CRITERIA_TRIGGERS.register("enter_block_in_end",
-            EnterBlockInEndTrigger::new);
 
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
