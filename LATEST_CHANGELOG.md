@@ -1,3 +1,2 @@
-- Updated the Simplified Chinese translation (by ChuijkYahus)
-- Fixed Motion Salt Blocks causing air to fall
-- Improved the wording of the disabledReactions config key comment
+- Fixed a crash when the Crucible expends Powers
+- Adjusted 'Remote Getaway' vanilla advancement to not be misleading if achieved using the Rending Plinth
