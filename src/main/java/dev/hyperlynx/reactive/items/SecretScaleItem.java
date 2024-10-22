@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.items;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -29,10 +29,10 @@ public class SecretScaleItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         // When the player shift-clicks on a boat, it becomes antigravity and the item is used up.
         if(!player.isCrouching())
-            return InteractionResultHolder.pass(player.getItemInHand(hand));;
+            return InteractionResult.PASS;
 
         Vec3 start = player.getEyePosition();
         Vec3 end = start.add(player.getLookAngle().scale(player.entityInteractionRange()));
@@ -40,15 +40,15 @@ public class SecretScaleItem extends Item {
                 player, start, end, new AABB(start, end), e -> e instanceof Boat, Double.MAX_VALUE
         );
         if(boatHit == null)
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
+            return InteractionResult.PASS;
 
         if(boatHit.getEntity().isNoGravity())
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
+            return InteractionResult.PASS;
 
         boatHit.getEntity().setNoGravity(true);
         if(!player.isCreative())
             player.getItemInHand(hand).shrink(1);
         ParticleScribe.drawParticleRing(level, ParticleTypes.END_ROD, boatHit.getEntity().getOnPos(), 1.3, 1.4, 10);
-        return InteractionResultHolder.success(player.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 }

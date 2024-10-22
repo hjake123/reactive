@@ -110,30 +110,30 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected @NotNull InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()){
             // Workaround to make sure that acid bucket addition instantly updates the mix color.
             if (stack.is(Registration.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if(!(crucible instanceof CrucibleBlockEntity c)){
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                    return InteractionResult.TRY_WITH_EMPTY_HAND;
                 }
                 c.setStartingColor(Powers.ACID_POWER.get().getColor());
             }
 
             // If it wasn't an acid bucket, just pass on the client side.
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if(stack.is(Registration.LITMUS_PAPER.get())) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         if(stack.is(Items.OMINOUS_BOTTLE)){
             if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible))
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             CrucibleBlockEntity.insertPowerBottle(crucible, new PowerBottleInsertContext(new UseOnContext(level, player, hand, stack, hit)));
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (!state.getValue(FULL)) {
@@ -145,7 +145,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                     fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
                     player.setItemInHand(hand, fluidHandler.getContainer());
                 }
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
             if (checkFluidInStack(fluidHandler, Fluids.LAVA)) {
                 lavaCrucibleFill(level, pos, (ServerPlayer) player);
@@ -153,12 +153,12 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                     fluidHandler.drain(new FluidStack(Fluids.LAVA, 1000), IFluidHandler.FluidAction.EXECUTE);
                     player.setItemInHand(hand, fluidHandler.getContainer());
                 }
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
             if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if (!(crucible instanceof CrucibleBlockEntity c)) {
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                    return InteractionResult.TRY_WITH_EMPTY_HAND;
                 }
                 becomeFull(state, level, pos, (ServerPlayer) player);
                 c.addPower(Powers.ACID_POWER.get(), WorldSpecificValues.BOTTLE_RETURN.get()*3);
@@ -166,7 +166,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 if (((ServerPlayer) player).gameMode.isSurvival()) {
                     player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
                 }
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
@@ -174,12 +174,12 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             if(player.isShiftKeyDown()){
                 level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
                 level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
             BlockEntity crucible = level.getBlockEntity(pos);
             if(!(crucible instanceof CrucibleBlockEntity c)){
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
 
             if(player.getItemInHand(hand).is(Items.GLASS_BOTTLE)){
@@ -189,9 +189,9 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
                 extractQuartzBottle(level, pos, player, hand, c);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private static void becomeFull(BlockState state, Level level, BlockPos pos, ServerPlayer player) {

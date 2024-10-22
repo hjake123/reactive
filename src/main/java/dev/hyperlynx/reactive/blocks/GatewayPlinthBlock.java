@@ -17,7 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -71,13 +71,13 @@ public class GatewayPlinthBlock extends Block {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (Powers.WARP_POWER.get().matchesBottle(stack)) {
             if (WarpBottleItem.isRiftBottle(stack)) {
                 GlobalPos warp_target = WarpBottleItem.getTeleportPosition(stack);
                 if(warp_target == null){
                     player.displayClientMessage(Component.translatable("message.reactive.activate_plinth_failed"), true);
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                    return InteractionResult.TRY_WITH_EMPTY_HAND;
                 }
                 if(level.dimension().equals(warp_target.dimension())){
                     setGateway(level, pos.above(), warp_target.pos(), state);
@@ -85,10 +85,10 @@ public class GatewayPlinthBlock extends Block {
                     level.playSound((Player) null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
                     level.playSound((Player) null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
                     player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
                 player.displayClientMessage(Component.translatable("message.reactive.activate_plinth_failed"), true);
-                return ItemInteractionResult.FAIL;
+                return InteractionResult.FAIL;
             }
 
             if (player instanceof ServerPlayer splayer) {
@@ -100,7 +100,7 @@ public class GatewayPlinthBlock extends Block {
                 }
             }
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     private static void setGateway(Level level, BlockPos source, BlockPos destination, BlockState self_state){

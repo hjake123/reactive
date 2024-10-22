@@ -15,7 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -114,11 +114,11 @@ public class WarpStaffItem extends StaffItem{
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+    public InteractionResult use(Level level, Player user, InteractionHand hand) {
         ItemStack stack = user.getItemInHand(hand);
         EquipmentSlot slot = LivingEntity.getSlotForHand(hand);
         if(onLastDurability(stack))
-            return InteractionResultHolder.fail(stack);
+            return InteractionResult.FAIL;
 
         int range = 12;
         var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
@@ -145,7 +145,7 @@ public class WarpStaffItem extends StaffItem{
                 if(entityHit.getEntity() instanceof ItemEntity || entityHit.getEntity() instanceof ExperienceOrb){
                     entityHit.getEntity().teleportTo(user.position().x, user.position().y, user.position().z);
                     stack.hurtAndBreak(1, user, slot);
-                    return InteractionResultHolder.success(stack);
+                    return InteractionResult.SUCCESS;
                 }
                 // Select the entity.
                 if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId()) && !(entityHit.getEntity() instanceof Player)) {
@@ -164,7 +164,7 @@ public class WarpStaffItem extends StaffItem{
                             0.6F, 1.0F + user.level().random.nextFloat()*0.2F);
                 }
                 stack.hurtAndBreak(1, user, slot);
-                return InteractionResultHolder.success(stack);
+                return InteractionResult.SUCCESS;
             } else if (hasBoundEntity(stack)) {
                 // Teleport the bound entity.
                 Entity bound = getBoundEntity(level, stack);
@@ -175,11 +175,11 @@ public class WarpStaffItem extends StaffItem{
                 }
                 stack.remove(Registration.BOUND_ENTITY);
                 stack.hurtAndBreak(1, user, slot);
-                return InteractionResultHolder.success(stack);
+                return InteractionResult.SUCCESS;
             } else {
                 tryShowTutorial(user, stack);
             }
         }
-        return InteractionResultHolder.fail(stack);
+        return InteractionResult.FAIL;
     }
 }

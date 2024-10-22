@@ -7,7 +7,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -25,11 +25,11 @@ public class VortexStoneItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         Vec3 impulse = player.getLookAngle().scale(STRENGTH);
         var new_movement = player.getDeltaMovement().add(impulse);
         if(player.hasEffect(Registration.NULL_GRAVITY) && new_movement.length() > TOP_SPEED){
-            return InteractionResultHolder.fail(player.getItemInHand(hand));
+            return InteractionResult.FAIL;
         }
         player.setDeltaMovement(new_movement);
         player.resetFallDistance();
@@ -44,6 +44,6 @@ public class VortexStoneItem extends Item {
                 player.setItemInHand(hand, Items.PACKED_ICE.getDefaultInstance());
             }
         }
-        return InteractionResultHolder.success(player.getItemInHand(hand));
+        return InteractionResult.SUCCESS;
     }
 }
