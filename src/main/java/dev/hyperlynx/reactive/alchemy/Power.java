@@ -80,8 +80,8 @@ public class Power {
         render_item = renderItem;
     }
 
-    public static TagKey<Item> getSourceTag(String id){
-        return ItemTags.create(new ResourceLocation(ReactiveMod.MODID, id + "_sources"));
+    public static TagKey<Item> getSourceTag(ResourceLocation location){
+        return ItemTags.create(new ResourceLocation(location.getNamespace(), location.getPath() + "_sources"));
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -90,13 +90,14 @@ public class Power {
     }
 
     public static Power readPower(CompoundTag tag, String power_key){
-        Power ret = null;
-        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if(reg.get().getId().equals(tag.getString(power_key))){
-                ret = reg.get();
-                break;
-            }
+        String key = tag.getString(power_key);
+        ResourceLocation location;
+        if(key.contains(":")){
+            location = new ResourceLocation(key);
+        }else{
+            location = new ResourceLocation(ReactiveMod.MODID, key);
         }
+        Power ret = Powers.POWER_SUPPLIER.get().getValue(location);
         if(ret == null) System.err.println("Failed to read power. This will break things.");
         return ret;
     }
@@ -124,8 +125,11 @@ public class Power {
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if (i.is(Power.getSourceTag(reg.get().getId()))) stack_powers.add(reg.get());
+        for(Power power : Powers.POWER_SUPPLIER.get().getValues()){
+            if (i.is(Power.getSourceTag(power.getResourceLocation()))) {
+                stack_powers.add(power);
+                break;
+            }
         }
         return stack_powers;
     }

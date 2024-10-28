@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 
 import java.util.*;
@@ -57,6 +58,7 @@ public class SpecialCaseMan {
     public static List<BottleSpecialCase> BOTTLE_SPECIAL_CASES = new ArrayList<>();
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
+        MinecraftForge.EVENT_BUS.post(new DissolveEvent(e, c));
         for(DissolveSpecialCase dissolve_case : DISSOLVE_SPECIAL_CASES){
             if(dissolve_case.attempt(c, e)){
                 break;
@@ -65,6 +67,7 @@ public class SpecialCaseMan {
     }
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
+        MinecraftForge.EVENT_BUS.post(new EmptyEvent(c));
         if(c.getLevel() == null) return;
         for(EmptySpecialCase empty_case : EMPTY_SPECIAL_CASES){
             empty_case.attempt(c);

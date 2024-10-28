@@ -177,7 +177,7 @@ public class LitmusPaperItem extends Item {
             String measurement = p.getName().toUpperCase() + " - " + getPercent(pow);
 
             CompoundTag mt = new CompoundTag();
-            mt.putString("power", p.getId());
+            mt.putString("power", p.getResourceLocation().toString());
             mt.putString("value", measurement);
             measurements.add(mt);
         }
