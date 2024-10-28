@@ -1,7 +1,7 @@
 {
   "name": "Ferrous Crystal",
   "icon": "reactive:crystal_iron",
-  "category": "reactive:results",
+  "category": "reactive:items",
   "advancement": "reactive:make_crucible",
   "pages": [
     {
