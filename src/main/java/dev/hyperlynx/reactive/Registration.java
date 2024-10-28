@@ -391,6 +391,10 @@ public class Registration {
                             2, AttributeModifier.Operation.ADDITION));
     public static final RegistryObject<MobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
+    public static final RegistryObject<MobEffect> HIGH_STEP = MOB_EFFECTS.register("high_step",
+            () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x18AD88)
+                    .addAttributeModifier(ForgeMod.STEP_HEIGHT.get(), "2223dd0a-cb7d-4592-8020-76272224191d",
+                            1, AttributeModifier.Operation.ADDITION));
 
     // Register potions
     public static final RegistryObject<Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
