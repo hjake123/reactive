@@ -6,10 +6,10 @@ import dev.latvian.mods.kubejs.event.EventJS;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
-public class DissoleEventJS extends EventJS implements KubeCrucibleEvent {
+public class DissolveEventJS extends EventJS implements KubeCrucibleEvent {
     DissolveEvent event;
 
-    public DissoleEventJS(DissolveEvent event){
+    public DissolveEventJS(DissolveEvent event){
         this.event = event;
     }
 

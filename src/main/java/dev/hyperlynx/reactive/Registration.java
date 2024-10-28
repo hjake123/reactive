@@ -7,6 +7,7 @@ import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.blocks.*;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -460,6 +462,9 @@ public class Registration {
             ReactiveCreatePlugin.init();
         }
         ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
+        if(ModList.get().isLoaded("kubejs")){
+            MinecraftForge.EVENT_BUS.register(EventTransceiver.class);
+        }
         CriteriaTriggers.enqueue(evt);
     }
 

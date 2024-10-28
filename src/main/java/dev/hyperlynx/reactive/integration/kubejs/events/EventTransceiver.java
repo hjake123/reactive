@@ -7,10 +7,11 @@ import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 public class EventTransceiver {
     public static EventGroup EVENTS = EventGroup.of("ReactiveEvents");
-    public static EventHandler CRUCIBLE_DISSOLVE_EVENT = EVENTS.common("dissolveItem", () -> DissoleEventJS.class);
+    public static EventHandler CRUCIBLE_DISSOLVE_EVENT = EVENTS.common("dissolveItem", () -> DissolveEventJS.class);
     public static EventHandler CRUCIBLE_EMPTY_EVENT = EVENTS.common("emptyCrucible", () -> EmptyEventJS.class);
     public static EventHandler REACTION_BUILD_EVENT = EVENTS.common("constructReactions", () -> ReactionConstructEventJS.class);
     public static EventHandler CUSTOM_REACTION_TEST_CONDITIONS_EVENT = EVENTS.common("checkReaction", () -> CustomReactionTickEventJS.class).hasResult();
@@ -19,7 +20,7 @@ public class EventTransceiver {
 
     @SubscribeEvent
     public static void translateDissolveEvent(DissolveEvent event){
-        CRUCIBLE_DISSOLVE_EVENT.post(ScriptType.SERVER, new DissoleEventJS(event));
+        CRUCIBLE_DISSOLVE_EVENT.post(ScriptType.SERVER, new DissolveEventJS(event));
     }
 
     @SubscribeEvent
