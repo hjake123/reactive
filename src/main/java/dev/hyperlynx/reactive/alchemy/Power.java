@@ -13,6 +13,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
@@ -21,14 +22,16 @@ import java.util.List;
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
     private final Color color;
-    private final String id;
+    private final ResourceLocation location;
     private final String name;
     private final Item bottle;
     private final Item render_item;
+    private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
 
-    public Power(String id, int color, Item bottle){
-        this.id = id;
+    public Power(String id, Block render_water_block, int color, Item bottle){
+        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
@@ -36,8 +39,9 @@ public class Power {
         render_item = null;
     }
 
-    public Power(String id, Color color, Item bottle){
-        this.id = id;
+    public Power(String id, Block render_water_block, Color color, Item bottle){
+        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
@@ -46,8 +50,9 @@ public class Power {
     }
 
 
-    public Power(String id, int color, Item bottle, Item renderItem){
-        this.id = id;
+    public Power(String id, Block render_water_block, int color, Item bottle, Item renderItem){
+        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
@@ -55,12 +60,23 @@ public class Power {
         render_item = renderItem;
     }
 
-    public Power(String id, Color color, Item bottle, Item renderItem){
-        this.id = id;
+    public Power(String id, Block render_water_block, Color color, Item bottle, Item renderItem){
+        this.location = new ResourceLocation(ReactiveMod.MODID, id);
+        this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", new ResourceLocation(ReactiveMod.MODID, id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
+        render_item = renderItem;
+    }
+
+    public Power(ResourceLocation location, int color, Block render_water_block, Item bottle, Item renderItem){
+        this.location = location;
+        this.color = new Color(color);
+        this.render_water_block = render_water_block;
+        this.bottle = bottle;
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
         render_item = renderItem;
     }
 
@@ -85,16 +101,18 @@ public class Power {
         return ret;
     }
 
+    public Block getRenderBlock(){ return render_water_block; }
     public Color getColor(){
         return color;
     }
     public TextColor getTextColor(){
         return TextColor.fromRgb(color.hex);
     }
-    public String getId() { return id; }
+    public String getId() { return location.getPath(); }
     public String getName(){
         return Component.translatable(name).getString();
     }
+    public ResourceLocation getResourceLocation(){ return location; }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){
@@ -107,7 +125,7 @@ public class Power {
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
         for(RegistryObject<Power> reg : Powers.POWERS.getEntries()){
-            if (i.is(Power.getSourceTag(reg.get().id))) stack_powers.add(reg.get());
+            if (i.is(Power.getSourceTag(reg.get().getId()))) stack_powers.add(reg.get());
         }
         return stack_powers;
     }

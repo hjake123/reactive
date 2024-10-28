@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.fx.renderers;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -41,18 +42,27 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         if(ConfigMan.CLIENT.doNotChangeWaterTexture.get())
             return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
 
-        int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
-
-        if(crucible.integrity < 20 && crucible.integrity > 8 || crucible.getPowerLevel(Powers.CURSE_POWER.get()) + crucible.getPowerLevel(Powers.WARP_POWER.get()) + crucible.getPowerLevel(Powers.Z_POWER.get()) > threshold){
+        if(crucible.integrity < 20 && crucible.integrity > 8){
             return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
-        else if(crucible.getPowerLevel(Powers.MIND_POWER.get()) + crucible.getPowerLevel(Powers.LIGHT_POWER.get()) + crucible.getPowerLevel(Powers.Y_POWER.get()) + crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > threshold){
-            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_MAGIC_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
-        }
-        else if(crucible.getPowerLevel(Powers.SOUL_POWER.get()) + crucible.getPowerLevel(Powers.X_POWER.get()) > threshold){
-            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_FAST_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
-        }
 
+        int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;
+
+        if(crucible.getTotalPowerLevel() > threshold){
+            Power max_power = null;
+            int max_level = 0;
+
+            for(Power power: crucible.getPowerMap().keySet()){
+                if(crucible.getPowerLevel(power) > max_level){
+                    max_power = power;
+                    max_level = crucible.getPowerLevel(power);
+                }
+            }
+
+            if(max_level > threshold){
+                return this.blockRenderDispatcher.getBlockModel(max_power.getRenderBlock().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+            }
+        }
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 

@@ -7,6 +7,8 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
@@ -15,6 +17,7 @@ import net.minecraft.world.phys.AABB;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public abstract class Reaction {
 
@@ -22,6 +25,7 @@ public abstract class Reaction {
     protected Stimulus stimulus = Stimulus.NONE;
     public FlagCriterion criterion;
     public FlagCriterion perfect_criterion;
+    protected MutableComponent name;
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
@@ -32,6 +36,7 @@ public abstract class Reaction {
         this.alias = alias;
         criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
         perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
+        this.name = Component.translatable("reaction.reactive." + alias);
 
         int reagent_count;
         if(max_reagent_count < 3){
@@ -52,6 +57,7 @@ public abstract class Reaction {
     // Creates the reaction with preset powers, but random minimum requirements.
     public Reaction(String alias, Power... powers){
         this.alias = alias;
+        this.name = Component.translatable("reaction.reactive." + alias);
         criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
         perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         for(Power p : powers){
@@ -164,6 +170,10 @@ public abstract class Reaction {
     }
 
     public abstract void render(final Level l, final CrucibleBlockEntity crucible);
+
+    public MutableComponent getName() {
+        return name.copy();
+    }
 
     public enum Stimulus {
         NONE,

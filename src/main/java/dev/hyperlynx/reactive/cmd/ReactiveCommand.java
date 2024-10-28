@@ -25,15 +25,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
+@Mod.EventBusSubscriber(modid= ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.FORGE)
 public class ReactiveCommand {
     private static final SimpleCommandExceptionType ERROR_NO_PLAYER = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_player"));
     private static final SimpleCommandExceptionType ERROR_NO_CRUCIBLE = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_crucible"));
@@ -93,7 +93,7 @@ public class ReactiveCommand {
             throw ERROR_NO_CRUCIBLE.create();
         }
 
-        Power power = Powers.POWER_SUPPLIER.get(power_location);
+        Power power = Powers.POWER_SUPPLIER.get().getValue(power_location);
         if(power == null){
             throw ERROR_FAKE_POWER.create();
         }
@@ -114,7 +114,7 @@ public class ReactiveCommand {
             throw ERROR_NO_PLAYER.create();
         }
         ItemStack bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
-        WarpBottleItem.setTeleportTarget(bottle, GlobalPos.of(commander.level().dimension(), target.getBlockPos(source)));
+        WarpBottleItem.makeRiftBottle(bottle, commander.level().dimension(), target.getBlockPos(source));
         commander.addItem(bottle);
         return 1;
     }

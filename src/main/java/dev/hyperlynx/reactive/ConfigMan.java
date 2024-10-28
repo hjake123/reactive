@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive;
 
 import com.google.common.collect.Lists;
+import dev.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,6 +19,7 @@ public class ConfigMan {
         public ForgeConfigSpec.ConfigValue<List<String>> doNotTeleport;
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
         public ForgeConfigSpec.BooleanValue lightStaffLightsPermanent;
+        public ForgeConfigSpec.BooleanValue registerCommand;
 
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -40,6 +42,8 @@ public class ConfigMan {
                     .defineInRange("copperDisplaceConductRange", 8, 1, 4096);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
+            registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
+                    .define("registerCommand", true);
             builder.pop();
         }
     }
@@ -52,6 +56,7 @@ public class ConfigMan {
         public ForgeConfigSpec.LongValue seed;
         public ForgeConfigSpec.DoubleValue pehkuiSmallSize;
         public ForgeConfigSpec.DoubleValue pehkuiLargeSize;
+        public ForgeConfigSpec.ConfigValue<List<String>> disabledReactions;
 
 
         Server(ForgeConfigSpec.Builder builder){
@@ -68,6 +73,11 @@ public class ConfigMan {
                     .defineInRange("pehkuiSmallSize", 0.65, 0.05, 0.95);
             pehkuiLargeSize = builder.comment(":Requires Pehkui: The scale that the Enlargement reaction sets nearby creatures to. [Default: 1.33]")
                     .defineInRange("pehkuiLargeSize", 1.33, 1.05, 10);
+            builder.pop();
+            builder.comment("Other:")
+                    .push("other");
+            disabledReactions = builder.comment("A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]")
+                    .define("disabledReactions", Lists.newArrayList());
             builder.pop();
         }
     }

@@ -37,11 +37,15 @@ public class WarpBottleItem extends PowerBottleItem{
 
     // Make a Warp Bottle into a Rift Bottle.
     public static ItemStack makeRiftBottle(CrucibleBlockEntity c, ItemStack bottle){
+        c.enderRiftStrength = 0;
+        return makeRiftBottle(bottle, Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos());
+    }
+
+    public static ItemStack makeRiftBottle(ItemStack bottle, ResourceKey<Level> dimension, BlockPos destination){
         if(bottle.getTag() == null){
             bottle.setTag(new CompoundTag());
         }
-        addTeleportTags(Objects.requireNonNull(c.getLevel()).dimension(), c.getBlockPos(), bottle.getTag());
-        c.enderRiftStrength = 0;
+        addTeleportTags(dimension, destination, bottle.getTag());
         return bottle;
     }
 

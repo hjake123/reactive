@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -12,9 +13,7 @@ import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 // Uh-oh, looks like ReactionMan's on the hunt!
 // This class manages the world's reactions.
@@ -25,7 +24,7 @@ import java.util.List;
 public class ReactionMan {
     static boolean initialized = false;
     static boolean initializer_lock = false; // Prevent multiple things trying to initialize reactions at once.
-    private static final LinkedList<Reaction> REACTIONS = new LinkedList<>();
+    private static final ReactionMap REACTIONS = new ReactionMap();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
     public static ReactionCriteriaBuilder CRITERIA_BUILDER = new ReactionCriteriaBuilder();
     public ReactionMan(){
@@ -60,13 +59,31 @@ public class ReactionMan {
     }
 
     public List<Reaction> getReactions(){
-        return initialized ? REACTIONS : constructReactions();
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.values().stream().toList();
+    }
+
+    public List<String> getReactionAliases(){
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.keySet().stream().toList();
+    }
+
+    public Reaction get(String alias){
+        if(!initialized){
+            constructReactions();
+        }
+        return REACTIONS.get(alias);
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    private LinkedList<Reaction> constructReactions(){
-        if(initializer_lock)
-            return new LinkedList<>();
+    private void constructReactions(){
+        if(initializer_lock) {
+            return;
+        }
         initializer_lock = true;
 
         // Set up the Base Power List.
@@ -157,11 +174,10 @@ public class ReactionMan {
 
         initialized = true;
         initializer_lock = false;
-        return REACTIONS;
     }
 
     public static void addReactions(Reaction... reactions){
-        REACTIONS.addAll(List.of(reactions));
+        REACTIONS.addAll(reactions);
     }
 
     @SubscribeEvent
@@ -183,5 +199,21 @@ public class ReactionMan {
      */
     public static class ReactionConstructEvent extends Event {
 
+    }
+
+    protected static class ReactionMap extends HashMap<String, Reaction> {
+        public Reaction add(Reaction reaction) {
+            String alias = reaction.alias;
+            if(ConfigMan.SERVER.disabledReactions.get().contains(alias)){
+                return null;
+            }
+            return super.put(reaction.alias, reaction);
+        }
+
+        public void addAll(Reaction... reactions){
+            for(Reaction reaction : reactions){
+                add(reaction);
+            }
+        }
     }
 }
