@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.advancements;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -22,6 +23,14 @@ public class ReactionCriteriaBuilder {
         criteria.put(alias, criterion);
         FlagCriterion perfect_criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_perfect_criterion"));
         criteria.put(alias+"_perfect", perfect_criterion);
+    }
+
+    public void lateAdd(String alias){
+        add(alias);
+        FlagCriterion added = get(alias);
+        FlagCriterion perfect_added = get(alias);
+        net.minecraft.advancements.CriteriaTriggers.register(added);
+        net.minecraft.advancements.CriteriaTriggers.register(perfect_added);
     }
 
     public void register(FMLCommonSetupEvent evt){

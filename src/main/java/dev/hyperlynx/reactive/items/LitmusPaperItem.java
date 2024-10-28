@@ -229,7 +229,7 @@ public class LitmusPaperItem extends Item {
             return Component.empty();
         }
         if(player.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(new ResourceLocation(ReactiveMod.MODID, "reactions/" + reaction_alias))).isDone())
-            return Component.translatable("reaction.reactive." + reaction_alias).append(" ");
+            return ReactiveMod.REACTION_MAN.get(reaction_alias).getName().append(" ");
         else
             return Component.translatable("reaction.reactive.unknown").append(" ");
     }

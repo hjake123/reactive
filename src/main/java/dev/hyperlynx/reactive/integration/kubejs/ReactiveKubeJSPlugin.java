@@ -26,7 +26,6 @@ public class ReactiveKubeJSPlugin extends KubeJSPlugin {
     @Override
     public void registerEvents() {
         EventTransceiver.EVENTS.register();
-
     }
 
     @Override
