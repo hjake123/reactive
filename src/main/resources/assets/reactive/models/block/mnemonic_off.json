@@ -1,0 +1,12 @@
+{
+	"parent": "minecraft:block/cube",
+	"textures": {
+		"down": "reactive:block/mnemonic_base",
+		"east": "reactive:block/mnemonic_side_off",
+		"north": "reactive:block/mnemonic_side_off",
+		"particle": "reactive:block/mnemonic_base",
+		"south": "reactive:block/mnemonic_side_off",
+		"up": "reactive:block/mnemonic_top_off",
+		"west": "reactive:block/mnemonic_side_off"
+	}
+}

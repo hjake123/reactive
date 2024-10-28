@@ -205,11 +205,26 @@ public class Registration {
 
     public static final RegistryObject<Item> GRAVITY_CHANDELIER_ITEM = fromBlock(GRAVITY_CHANDELIER);
 
+    public static final RegistryObject<Block> GATEWAY_PLINTH = BLOCKS.register("rending_plinth",
+            () -> new GatewayPlinthBlock(BlockBehaviour.Properties.copy(Blocks.LODESTONE)));
+
+    public static final RegistryObject<Item> GATEWAY_PLINTH_ITEM = fromBlock(GATEWAY_PLINTH);
+
     public static final RegistryObject<Block> ACID_BLOCK = BLOCKS.register("acid_block",
             () -> new AcidBlock(BlockBehaviour.Properties.copy(Blocks.SLIME_BLOCK).speedFactor(0.65F).strength(1.4F)));
 
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
+
+    public static final RegistryObject<Block> MNEMONIC_BULB = BLOCKS.register("mnemonic_bulb",
+            () -> new MnemonicBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
+
+    public static final RegistryObject<Item> MNEMONIC_BULB_ITEM = fromBlock(MNEMONIC_BULB);
+
+    public static final RegistryObject<BlockEntityType<?>> MNEMONIC_BULB_BE_TYPE =
+            TILES.register("mnemonic_bulb_be",
+                    () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, MNEMONIC_BULB.get()).build(null));
+
 
     // Register the Gravity related BEs
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
