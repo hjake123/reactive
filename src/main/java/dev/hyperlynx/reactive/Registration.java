@@ -200,6 +200,15 @@ public class Registration {
 
     public static final RegistryObject<Item> MIND_LICHEN_ITEM = fromBlock(MIND_LICHEN);
 
+    public static final RegistryObject<Block> MNEMONIC_BULB = BLOCKS.register("mnemonic_bulb",
+            () -> new MnemonicBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
+
+    public static final RegistryObject<Item> MNEMONIC_BULB_ITEM = fromBlock(MNEMONIC_BULB);
+
+    public static final RegistryObject<BlockEntityType<?>> MNEMONIC_BULB_BE_TYPE =
+            TILES.register("mnemonic_bulb_be",
+                    () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, MNEMONIC_BULB.get()).build(null));
+
     public static final RegistryObject<Block> GRAVITY_CHANDELIER = BLOCKS.register("gravity_chandelier",
             () -> new GravityChandelierBlock(BlockBehaviour.Properties.copy(Blocks.TORCH)));
 
@@ -215,16 +224,6 @@ public class Registration {
 
     public static final RegistryObject<Item> ACID_BUCKET = ITEMS.register("acid_bucket",
             () -> new AcidBucketItem(ACID_BLOCK.get(), SoundEvents.BUCKET_FILL, new Item.Properties()));
-
-    public static final RegistryObject<Block> MNEMONIC_BULB = BLOCKS.register("mnemonic_bulb",
-            () -> new MnemonicBlock(BlockBehaviour.Properties.copy(Blocks.MUD)));
-
-    public static final RegistryObject<Item> MNEMONIC_BULB_ITEM = fromBlock(MNEMONIC_BULB);
-
-    public static final RegistryObject<BlockEntityType<?>> MNEMONIC_BULB_BE_TYPE =
-            TILES.register("mnemonic_bulb_be",
-                    () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, MNEMONIC_BULB.get()).build(null));
-
 
     // Register the Gravity related BEs
     public static final RegistryObject<BlockEntityType<GravityChandelierBlockEntity>> GRAVITY_CHANDELIER_BE_TYPE =
@@ -391,9 +390,10 @@ public class Registration {
                             2, AttributeModifier.Operation.ADDITION));
     public static final RegistryObject<MobEffect> FIRE_SHIELD = MOB_EFFECTS.register("fire_shield",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0xFFA511));
+    @SuppressWarnings("removal") // Won't be removed until 1.20.2, which is fine. This name is LexForge compatible.
     public static final RegistryObject<MobEffect> HIGH_STEP = MOB_EFFECTS.register("high_step",
             () -> new HyperMobEffect(MobEffectCategory.BENEFICIAL, 0x18AD88)
-                    .addAttributeModifier(ForgeMod.STEP_HEIGHT.get(), "2223dd0a-cb7d-4592-8020-76272224191d",
+                    .addAttributeModifier(ForgeMod.STEP_HEIGHT_ADDITION.get(), "2223dd0a-cb7d-4592-8020-76272224191d",
                             1, AttributeModifier.Operation.ADDITION));
 
     // Register potions

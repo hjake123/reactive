@@ -10,6 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -30,6 +31,11 @@ public class MnemonicBlockEntity extends BlockEntity {
     }
 
     public void performTick(Level level, BlockPos pos, BlockState state){
+        if(status != Status.REPLAYING && state.getValue(MnemonicBlock.POWER) > 0){
+            // The block is powered when it shouldn't be!
+            level.setBlock(pos, state.setValue(MnemonicBlock.POWER, 0), Block.UPDATE_ALL);
+        }
+
         int input = level.getDirectSignalTo(pos);
         switch(status){
             case EMPTY -> {
