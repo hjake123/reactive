@@ -1,0 +1,41 @@
+package dev.hyperlynx.reactive.cmd;
+
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.concurrent.CompletableFuture;
+
+public class PowerArgumentType implements ArgumentType<ResourceLocation> {
+    public static PowerArgumentType power() {
+        return new PowerArgumentType();
+    }
+
+    @Override
+    public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
+        String input = reader.readString();
+        input = input.replace(".", ":");
+        if(!input.contains(":")){
+            input = "reactive:" + input;
+        }
+        return new ResourceLocation(input);
+    }
+
+    @Override
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
+        Powers.POWER_SUPPLIER.get().getValues().forEach((power) -> {
+            if(power.getResourceLocation().getNamespace().equals(ReactiveMod.MODID)){
+                builder.suggest(power.getId());
+            }else{
+                builder.suggest(power.getResourceLocation().getNamespace() + "." + power.getId());
+            }
+        });
+        return builder.buildFuture();
+    }
+}

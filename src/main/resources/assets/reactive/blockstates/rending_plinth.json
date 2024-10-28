@@ -1,0 +1,10 @@
+{
+  "variants":{
+    "active=false":{
+      "model": "reactive:block/rending_plinth"
+    },
+    "active=true":{
+      "model": "reactive:block/rending_plinth_on"
+    }
+  }
+}

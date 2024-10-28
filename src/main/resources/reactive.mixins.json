@@ -3,7 +3,7 @@
   "required": true,
   "compatibilityLevel": "JAVA_17",
   "refmap": "reactive.mixins.refmap.json",
-  "package": "com.hyperlynx.reactive.mixin",
+  "package": "dev.hyperlynx.reactive.mixin",
   "mixins": [
     "AbstractSkeletonMixin",
     "AllayMixin",

@@ -1,0 +1,16 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:mnemonic_bulb"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
