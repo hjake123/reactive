@@ -10,19 +10,22 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
 
 public class PowerBuilder extends BuilderBase<Power> {
     public transient int color;
     public transient Item bottle;
     public transient Item render_item;
-    public transient Block render_water_block;
+    public transient Supplier<Block> render_water_block;
 
     public PowerBuilder(ResourceLocation id) {
         super(id);
         color = 0xFFFFFF;
         render_item = Items.BARRIER;
         bottle = null;
-        render_water_block = Blocks.WATER;
+        render_water_block = () -> Blocks.WATER;
     }
 
     @Override
@@ -51,25 +54,25 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder setNormalWater(){
-        this.render_water_block = Blocks.WATER;
+        this.render_water_block = () -> Blocks.WATER;
         return this;
     }
 
     public PowerBuilder setMagicWater(){
-        this.render_water_block = Registration.DUMMY_MAGIC_WATER.get();
+        this.render_water_block = Registration.DUMMY_MAGIC_WATER;
         return this;
     }
     public PowerBuilder setFastWater(){
-        this.render_water_block = Registration.DUMMY_FAST_WATER.get();
+        this.render_water_block = Registration.DUMMY_FAST_WATER;
         return this;
     }
     public PowerBuilder setNoiseWater(){
-        this.render_water_block = Registration.DUMMY_NOISE_WATER.get();
+        this.render_water_block = Registration.DUMMY_NOISE_WATER;
         return this;
     }
 
     public PowerBuilder setCustomWater(Block water){
-        this.render_water_block = water;
+        this.render_water_block = () -> water;
         return this;
     }
 }
