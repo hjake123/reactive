@@ -77,6 +77,11 @@ There are three config files; two in the config folder, and one in each world's 
 	pehkuiLargeSize = 1.33
 (Defines the sizes that the Pehkui interaction reactions make things. Keep in mind that there is research to be done to undo these effects, so the player needs to be able to operate at either altered size.)
 
+#Other:
+[other]
+	#A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]
+	disabledReactions = []
+(If a reaction's alias is written here, including a custom reaction from KubeJS, it will not be made when reactions construct, and therefore cannot occur.)
 ```
 ### CLIENT CONFIG
 ```
