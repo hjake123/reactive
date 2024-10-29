@@ -42,8 +42,15 @@ public class ReactiveJEIPlugin implements IModPlugin {
         return new ResourceLocation(ReactiveMod.MODID, "jei_plugin");
     }
 
+    private void setHelpers(IJeiHelpers helpers){
+        if(HELPERS == null){
+            HELPERS = helpers;
+        }
+    }
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
+        setHelpers(registration.getJeiHelpers());
         registration.addRecipeCategories(DISSOLVE_CATEGORY);
         registration.addRecipeCategories(TRANSMUTE_CATEGORY);
     }
@@ -55,7 +62,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        HELPERS = registration.getJeiHelpers();
+        setHelpers(registration.getJeiHelpers());
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
         registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()));
         registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()));

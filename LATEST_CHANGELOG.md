@@ -1,12 +1,1 @@
-- **Backport of the Version 9 Update**
-- Added KubeJS Integration to enable custom Powers, Reactions, and Special Cases
-- Added Rending Plinth
-- Added Mnemonic Bulb
-- Added Enchantments for the Staves of Power and Displacer
-- Added `/reactive` command
-- Added the ability to disable chosen reactions in the config
-- Fixed Shukler Crucibles being lost when broken via Piston
-- Fixed Slow Falling being untranslated
-- Fixed Creation having an inconsistent name
-- Adjusted the vanilla Remote Getaway advancement to make more sense if acquired using a Rending Plinth
-- (Versioning) The suffix `.0` indicates the port version. Version-specific issues in the future will increment this number instead of the patch letter.
+- Fix JEI integration being broken after a certain JEI version
