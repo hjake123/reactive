@@ -30,7 +30,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(o)单击$(item)重力灯台$(0)就可偏移其影响范围，Shift 左击则能取消视觉效果。$(br2)$(o)你可能会觉得在失重情况下行动比较困难——我推荐查找一下本书的$(l:reactive:results/power_uses)能量应用$(/l)条目，里面有能帮上忙的东西。"
+      "text": "$(o)单击$(item)重力灯台$(0)就可偏移其影响范围，Shift 左击则能取消视觉效果。$(br2)$(o)你可能会觉得在失重情况下行动比较困难——我推荐尝试$(l:reactive:results/flow)风的能量$(/l)。"
     },
     {
       "type": "reactive:transmute",
