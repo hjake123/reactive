@@ -8,3 +8,4 @@
 - Fixed Slow Falling being untranslated
 - Fixed Creation having an inconsistent name
 - Adjusted the vanilla Remote Getaway advancement to make more sense if acquired using a Rending Plinth
+- (Versioning) The suffix `.0` indicates the port version. Version-specific issues in the future will increment this number instead of the patch letter.
