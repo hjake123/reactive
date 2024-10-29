@@ -6,6 +6,10 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
+import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
+import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
+import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
+import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
@@ -37,6 +41,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -65,6 +70,7 @@ public class Registration {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ReactiveMod.MODID);
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, ReactiveMod.MODID);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, ReactiveMod.MODID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, ReactiveMod.MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, ReactiveMod.MODID);
@@ -79,6 +85,7 @@ public class Registration {
         CREATIVE_TABS.register(bus);
         MOB_EFFECTS.register(bus);
         POTIONS.register(bus);
+        ENCHANTMENTS.register(bus);
         PARTICLES.register(bus);
         TILES.register(bus);
         Powers.POWERS.register(bus);
@@ -401,6 +408,19 @@ public class Registration {
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 3000)));
     public static final RegistryObject<Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
             () -> new Potion("no_gravity", new MobEffectInstance(NULL_GRAVITY.get(), 8000)));
+
+    // Register enchantments
+    public static final RegistryObject<Enchantment> FAST_STAFF = ENCHANTMENTS.register("fast_staff",
+            FastStaffEnchantment::new);
+
+    public static final RegistryObject<Enchantment> POTENCY = ENCHANTMENTS.register("potency",
+            StrongStaffEnchantment::new);
+
+    public static final RegistryObject<Enchantment> WIDE_RANGE = ENCHANTMENTS.register("wide_range",
+            AOEStaffEnchantment::new);
+
+    public static final RegistryObject<Enchantment> WORLD_PIERCER = ENCHANTMENTS.register("world_piercer",
+            WorldPiercerEnchantment::new);
 
     // Register particles
     public static final SimpleParticleType STARDUST_PARTICLE = new SimpleParticleType(false);

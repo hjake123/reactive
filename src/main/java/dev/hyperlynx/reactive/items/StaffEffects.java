@@ -19,6 +19,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.SmallFireball;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -56,7 +57,7 @@ public class StaffEffects {
                 if(entity_hit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(user.damageSources().inFire(), 7);
+                        victim.hurt(user.damageSources().inFire(), StaffItem.getDamageAmount(user, 7));
                     }
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
@@ -116,13 +117,14 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        aoe = aoe.inflate(1.5);
+        boolean wide = EnchantmentHelper.getEnchantmentLevel(Registration.WIDE_RANGE.get(), user) > 0;
+        aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer) {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer && !(victim.equals(user)) && !CrystalIronItem.effectNotBlocked(victim, 1))
                     continue; // This staff cannot hurt players other than the user.
-                victim.hurt(user.damageSources().magic(), 3);
+                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, 3.0F));
                 victim.knockback(0.3, user.level().random.nextDouble()*0.2 - 0.1, user.level().random.nextDouble()*0.2 - 0.1);
             }
             user.level().playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
@@ -137,10 +139,11 @@ public class StaffEffects {
     public static Player missile(Player user){
         if (user instanceof ServerPlayer) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(6);
+            boolean super_missile = EnchantmentHelper.getEnchantmentLevel(Registration.WIDE_RANGE.get(), user) > 0;
+            aoe = aoe.inflate(super_missile ? 10 : 6);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < (super_missile ? 7 : 3); i++) {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
@@ -151,7 +154,7 @@ public class StaffEffects {
                         continue;
                     }
                 }
-                victim.hurt(user.damageSources().magic(), 2);
+                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, 2));
                 ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                 user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,

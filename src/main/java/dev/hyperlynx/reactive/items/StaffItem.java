@@ -1,9 +1,13 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.StaffBlockEntity;
+import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
+import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -11,10 +15,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -48,7 +54,7 @@ public class StaffItem extends BlockItem {
     public void onUseTick(Level level, LivingEntity player, ItemStack stack, int ticks) {
         if(onLastDurability(stack))
             return;
-        if(ticks % frequency == 1) {
+        if(ticks % getFrequency(stack) == 1) {
             if(level.isClientSide && !beam)
                 effectFunction.apply((Player) player);
 
@@ -62,6 +68,28 @@ public class StaffItem extends BlockItem {
             }
         }
         if (level.isClientSide && beam) effectFunction.apply((Player) player);
+    }
+
+    @SuppressWarnings("deprecation") // Minecraft itself will never change on this branch.
+    private int getFrequency(@NotNull ItemStack stack){
+        int enchant_level = EnchantmentHelper.getItemEnchantmentLevel(Registration.FAST_STAFF.get(), stack);
+        if(enchant_level > 0){
+            return FastStaffEnchantment.adjustStaffTick(frequency, enchant_level);
+        }
+        return frequency;
+    }
+
+    public static float getDamageAmount(LivingEntity user, float base_damage){
+        int enchant_level = EnchantmentHelper.getEnchantmentLevel(Registration.POTENCY.get(), user);
+        if(enchant_level > 0){
+            return StrongStaffEnchantment.adjustStaffPower(base_damage, enchant_level);
+        }
+        return base_damage;
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 20;
     }
 
     @Override
@@ -124,5 +152,10 @@ public class StaffItem extends BlockItem {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
     }
 }

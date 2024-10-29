@@ -2,6 +2,7 @@
 - Added KubeJS Integration to enable custom Powers, Reactions, and Special Cases
 - Added Rending Plinth
 - Added Mnemonic Bulb
+- Added Enchantments for the Staves of Power and Displacer
 - Added `/reactive` command
 - Added the ability to disable chosen reactions in the config
 - Fixed Shukler Crucibles being lost when broken via Piston
