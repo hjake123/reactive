@@ -16,6 +16,8 @@ public class BlockMoveChecker {
             return false;
         if(level.getBlockState(pos).is(AlchemyTags.notRelocatable))
             return false;
+        if(state.isAir())
+            return false;
         return !(candidate_to_break.defaultDestroyTime() < 0) && !(candidate_to_break.defaultDestroyTime() > ConfigMan.COMMON.maxMoveBlockBreakTime.get());
     }
 
@@ -26,7 +28,7 @@ public class BlockMoveChecker {
     }
 
     public static boolean canMakeBlockFall(Level level, BlockPos pos, BlockState state) {
-        if(level.getBlockState(pos).is(AlchemyTags.doNotBlockFall))
+        if(state.is(AlchemyTags.doNotBlockFall))
             return false;
         return canMoveOrDisplaceBlock(level, pos, state);
     }

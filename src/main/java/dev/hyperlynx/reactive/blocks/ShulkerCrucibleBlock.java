@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 // Like a Crucible Block, but it can be picked up like a Skulker Box!
 public class ShulkerCrucibleBlock extends CrucibleBlock{
@@ -23,25 +24,20 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
 
     // Drop a ShulkerCrucibleBlock BlockItem with block entity data saved.
     // This negates the need for loot tables to be applied to this block.
-    @Override
-    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof CrucibleBlockEntity crucible) {
-            if (!level.isClientSide) {
-                ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
-                if(crucible.getTotalPowerLevel() > 0) {
-                    crucible.saveToItem(drop_stack);
-                    drop_stack.getTag().put(ShulkerCrucibleItem.TAG_LABEL, StringTag.valueOf(getItemLabel(crucible)));
-                }else if(state.getValue(FULL)){
-                    level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
-                }
-                ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, drop_stack);
-                drop.setDefaultPickUpDelay();
-                level.addFreshEntity(drop);
-            }
+    private static @NotNull ItemStack getDropStack(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
+        if(crucible.getTotalPowerLevel() > 0) {
+            crucible.saveToItem(drop_stack);
+            drop_stack.getTag().put(ShulkerCrucibleItem.TAG_LABEL, StringTag.valueOf(getItemLabel(crucible)));
+        }else if(state.getValue(FULL)){
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.6F, 0.8F);
         }
+        return drop_stack;
+    }
 
-        super.playerWillDestroy(level, pos, state, player);
+    @Override
+    public void onRemoveWithoutEmpty(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        super.onRemoveWithoutEmpty(state, level, pos, new_state, p_60519_);
     }
 
     private static String getItemLabel(CrucibleBlockEntity crucible){
@@ -56,6 +52,18 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
+        if(new_state.is(Registration.SHULKER_CRUCIBLE.get())){
+            return;
+        }
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof CrucibleBlockEntity crucible) {
+            if (!level.isClientSide) {
+                ItemStack drop_stack = getDropStack(level, pos, state, crucible);
+                ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, drop_stack);
+                drop.setDefaultPickUpDelay();
+                level.addFreshEntity(drop);
+            }
+        }
         super.onRemoveWithoutEmpty(state, level, pos, new_state, p_60519_);
     }
 

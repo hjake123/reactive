@@ -189,7 +189,7 @@
   "reaction.reactive.unknown": "Unknown Reaction",
   "reaction.reactive.astral": "Astral",
   "reaction.reactive.astral_synthesis": "Astral Synthesis",
-  "reaction.reactive.astral_curse_annihilation": "Astral-Curse Annihilation",
+  "reaction.reactive.astral_curse_annihilation": "Creation",
   "reaction.reactive.block_fall_effect": "Grid Break",
   "reaction.reactive.compound_degradation": "Compound Degradation",
   "reaction.reactive.curse_assimilation": "Curse Assimilation",
@@ -226,5 +226,6 @@
   "tooltip.reactive.entity_bound": "Bound to ",
   "tooltip.reactive.no_entity_bound": "No entity is bound",
   "message.reactive.warp_staff_tutorial": "The Staff needs a creature to target.",
+  "advancements.end.enter_end_gateway.description": "Traverse an End Gateway",
   "text.reactive.devoid": "I vanquish my mind to you falling turning spinning eternal cycles I dissolve to nothing but my love waking seeing hearing eating fading mixing changing learning yearning hoping crying the stars are dark between but there's no fear anymore"
 }
