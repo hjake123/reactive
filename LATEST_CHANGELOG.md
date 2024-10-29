@@ -1,1 +1,10 @@
-- Fixed some issues in the Simplified Chinese translation (by ChuijkYahus)
+- **Backport of the Version 9 Update**
+- Added KubeJS Integration to enable custom Powers, Reactions, and Special Cases
+- Added Rending Plinth
+- Added Mnemonic Bulb
+- Added `/reactive` command
+- Added the ability to disable chosen reactions in the config
+- Fixed Shukler Crucibles being lost when broken via Piston
+- Fixed Slow Falling being untranslated
+- Fixed Creation having an inconsistent name
+- Adjusted the vanilla Remote Getaway advancement to make more sense if acquired using a Rending Plinth
