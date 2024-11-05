@@ -15,6 +15,7 @@ public class PowerBuilder extends BuilderBase<Power> {
     public transient Item bottle;
     public transient Item render_item;
     public transient Block render_water_block;
+    public transient boolean invisible = false;
 
     public PowerBuilder(ResourceLocation id) {
         super(id);
@@ -26,7 +27,9 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     @Override
     public Power createObject() {
-        return new Power(this.id, color, render_water_block, bottle, render_item);
+        Power power = new Power(this.id, color, render_water_block, bottle, render_item);
+        power.invisible = this.invisible;
+        return power;
     }
 
     public PowerBuilder color(int color){
@@ -75,7 +78,15 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder setCustomWater(Block water){
+        if(water.defaultBlockState().is(Blocks.AIR)){
+            throw new KubeScriptException("Power " + this.id + " has an invalid water block!");
+        }
         this.render_water_block = water;
+        return this;
+    }
+
+    public PowerBuilder setInvisible(){
+        this.invisible = true;
         return this;
     }
 }

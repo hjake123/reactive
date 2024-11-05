@@ -32,6 +32,8 @@ public class Power {
     private final Item render_item;
     private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
+    public boolean invisible = false;
+
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
 

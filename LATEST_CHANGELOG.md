@@ -1,3 +1,4 @@
+- Added ability to define custom powers as invisible 
 - Added Crucible error handling to avoid crashing the game if something breaks
 - Fixed a potential crash when viewing invalidly defined powers in JEI
 - Clarified some error messages when working with KubeJS integration

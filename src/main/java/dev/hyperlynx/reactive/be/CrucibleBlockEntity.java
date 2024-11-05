@@ -734,22 +734,31 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         // Iterate through each power and add its tint to the total, adjusted for its actual prevalence.
         next_mix_color.reset();
         for (Power p : powers.keySet()) {
-            if(p == null){
-                continue; // Skip any invalid values if they exist.
+            if(p == null || p.invisible){
+                continue; // Skip any invalid or invisible powers.
             }
             Color pow_color = p.getColor();
-            float pow_weight = getPowerLevel(p) / (float) getTotalPowerLevel();
+            float pow_weight = getPowerLevel(p) / (float) getTotalVisiblePowerLevel();
             next_mix_color.red += pow_color.red * pow_weight;
             next_mix_color.green += pow_color.green * pow_weight;
             next_mix_color.blue += pow_color.blue * pow_weight;
         }
 
         // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
-        float tint_alpha = (float) getTotalPowerLevel()/ (float) CRUCIBLE_MAX_POWER;
+        float tint_alpha = (float) getTotalVisiblePowerLevel() / (float) CRUCIBLE_MAX_POWER;
         next_mix_color.red = (int) (water_color.red * (1 - tint_alpha) + next_mix_color.red * (tint_alpha));
         next_mix_color.green = (int) (water_color.green * (1 - tint_alpha) + next_mix_color.green * (tint_alpha));
         next_mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + next_mix_color.blue * (tint_alpha));
         color_changed = false;
+    }
+
+    private int getTotalVisiblePowerLevel(){
+        int totalpp = 0;
+        for (Power p : powers.keySet()) {
+            if(!p.invisible)
+                totalpp += powers.get(p);
+        }
+        return totalpp;
     }
 
     private void resetColor() {
@@ -760,7 +769,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     public float getOpacity() {
-        return 0.7F + (.3F * getTotalPowerLevel()/CRUCIBLE_MAX_POWER);
+        return 0.7F + (.3F * getTotalVisiblePowerLevel()/CRUCIBLE_MAX_POWER);
     }
 
     // ----- Data management methods -----
