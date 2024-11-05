@@ -114,7 +114,7 @@ public class DisplacerItem extends Item {
 
     private static boolean displace(Level level, BlockPos selected, int displace_time) {
         if(level.getBlockState(selected).getBlock() instanceof ChainDisplacingBlock cdb) {
-            cdb.breadthFirstDisplace(level, selected, false, displace_time);
+            cdb.breadthFirstDisplace(level, selected, level.getBestNeighborSignal(selected) > 0, displace_time);
             return true;
         }
         return DisplacedBlock.displace(level.getBlockState(selected), selected, level, displace_time);

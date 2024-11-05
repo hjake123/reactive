@@ -6,6 +6,7 @@ Changes to this number are marked in the changelog for a given version if they h
 |-----------------------------|----------------------------|
 | 9a                          | 1.0                        |
 | 9d                          | 2.0                        |
+| 9k                          | 2.1                        |
 
 # Adding Powers
 Custom Powers are added at startup using `StartupEvents.registry`, like so:
