@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
@@ -34,11 +35,19 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder icon(Item icon){
+        if(icon.getDefaultInstance().isEmpty()){
+            ReactiveMod.LOGGER.error("Power {} has an invalid render item! Falling back to barrier icon.", this.id);
+            return this;
+        }
         this.render_item = icon;
         return this;
     }
 
     public PowerBuilder bottle(Item bottle){
+        if(bottle.getDefaultInstance().isEmpty()){
+            ReactiveMod.LOGGER.error("Power {} has an invalid bottle item!", this.id);
+            return this;
+        }
         this.bottle = bottle;
         return this;
     }

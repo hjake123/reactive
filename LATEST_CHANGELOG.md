@@ -1,1 +1,5 @@
-- Restored EMI compatibility
+- Added Crucible error handling to avoid crashing the game if something breaks
+- Fixed a potential crash when viewing invalidly defined powers in JEI
+- Clarified some error messages when working with KubeJS integration
+- Due to above changes, the KubeJS Integration Version is now `2.1`
+- (Internal) Reverted compatibility fix for old versions of EMI

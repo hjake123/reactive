@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
 *This class creates a FlagCriterion for each Reaction alias string it is fed.
-*It must be populated before FMLCommonSetupEvent -- for example at class load in constructors.
+*It must be populated before RegisterEvent -- for example at class load in constructors.
  */
 public class ReactionCriteriaBuilder {
     private final List<String> aliases = new ArrayList<>();
@@ -22,9 +22,12 @@ public class ReactionCriteriaBuilder {
     public void add(String alias){
         aliases.add(alias);
         FlagTrigger criterion = new FlagTrigger(ResourceLocation.parse("reactive:reaction/" + alias + "_criterion"));
-        criteria.put(alias, criterion);
+        FlagTrigger existing = criteria.putIfAbsent(alias, criterion);
+        if(existing != null){
+            throw new RedundantAliasException("The reaction alias '" + alias + "' was added more then once!");
+        }
         FlagTrigger perfect_criterion = new FlagTrigger(ResourceLocation.parse("reactive:reaction/" + alias + "_perfect_criterion"));
-        criteria.put(alias+"_perfect", perfect_criterion);
+        criteria.putIfAbsent(alias+"_perfect", perfect_criterion);
     }
 
     @SubscribeEvent
@@ -42,5 +45,11 @@ public class ReactionCriteriaBuilder {
 
     public FlagTrigger get(String alias) {
         return criteria.get(alias);
+    }
+
+    public static class RedundantAliasException extends RuntimeException{
+        public RedundantAliasException(String msg) {
+            super(msg);
+        }
     }
 }
