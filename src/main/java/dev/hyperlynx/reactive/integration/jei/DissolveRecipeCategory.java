@@ -44,12 +44,6 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
     }
 
-    @SuppressWarnings({"depreciation", "removal"})
-    @Override
-    public @Nullable IDrawable getBackground() {
-        return background();
-    }
-
     @Override
     public int getHeight() {
         return background().getHeight();
