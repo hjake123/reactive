@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEvent;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
@@ -27,7 +28,7 @@ public class CustomReaction extends Reaction {
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(Reactor crucible){
         Status status = super.conditionsMet(crucible);
         if(!(status.equals(Status.REACTING))){
             return status;
@@ -46,7 +47,7 @@ public class CustomReaction extends Reaction {
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         EventTransceiver.CUSTOM_REACTION_RUN_EVENT.post(ScriptType.SERVER, new CustomReactionTickEvent(this, crucible));
         if(cost > 0){
             expendPower(crucible, cost);
@@ -56,11 +57,11 @@ public class CustomReaction extends Reaction {
     }
 
     @Override
-    public void render(Level l, CrucibleBlockEntity crucible) {
+    public void render(Level l, Reactor crucible) {
         EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(ScriptType.CLIENT, new CustomReactionTickEvent(this, crucible));
     }
 
-    private void expendPower(CrucibleBlockEntity crucible, int cost){
+    private void expendPower(Reactor crucible, int cost){
         for(Power p : this.getReagents().keySet()){
             crucible.expendPower(p, (int) ((double) cost/this.getReagents().size()) + 1);
             crucible.setDirty();

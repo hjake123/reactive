@@ -1,41 +1,40 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 // This reaction runs a particular effect function each reaction tick and removes power according to the cost when it does
 public class EffectReaction extends FreeEffectReaction{
     int cost;
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> effect, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, int numReagents) {
+    public EffectReaction(String alias, Consumer<Reactor> effect, Consumer<Reactor> render, int numReagents) {
         super(alias, effect, render, numReagents);
         cost = WorldSpecificValue.get(alias+"cost", 10, 20);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power) {
+    public EffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power) {
         super(alias, function, render, required_power);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power... required_powers) {
+    public EffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power... required_powers) {
         super(alias, function, render, required_powers);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, int num_additionals) {
+    public EffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power, int num_additionals) {
         super(alias, function, render, required_power, num_additionals);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
+    public void run(Reactor reactor) {
+        super.run(reactor);
         for(Power p : reagents.keySet()){
-            crucible.expendPower(p, (int) ((double) cost/reagents.size()) + 1);
-            crucible.setDirty();
+            reactor.expendPower(p, (int) ((double) cost/reagents.size()) + 1);
+            reactor.setDirty();
         }
     }
 }

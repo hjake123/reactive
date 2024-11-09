@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -21,7 +20,7 @@ public class WindBombReaction extends FreeEffectReaction{
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible) {
+    public Status conditionsMet(Reactor crucible) {
         Reaction.Status status = super.conditionsMet(crucible);
         if(status != Status.REACTING){
             return status;
@@ -33,12 +32,12 @@ public class WindBombReaction extends FreeEffectReaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return super.isPerfect(crucible);
     }
 
     // Returns true if there are NOT enough Breeze Rods to prevent a reaction!
-    public boolean checkBreezeRods(CrucibleBlockEntity crucible) {
+    public boolean checkBreezeRods(Reactor crucible) {
         Level level = crucible.getLevel();
         if(level == null){
             return true;

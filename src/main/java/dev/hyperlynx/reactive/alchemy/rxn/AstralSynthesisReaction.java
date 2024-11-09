@@ -17,12 +17,14 @@ public class AstralSynthesisReaction extends SynthesisReaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
-        crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
-        Objects.requireNonNull(crucible.getLevel()).playSound(null, crucible.getBlockPos(), SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.5F, 1.2F);
-        ParticleScribe.drawParticleSphere(Objects.requireNonNull(crucible.getLevel()), Registration.STARDUST_PARTICLE, crucible.getBlockPos(), 0.5, 1.0, 20);
-        Objects.requireNonNull(crucible.getLevel()).playSound(null, crucible.getBlockPos(), Registration.RUMBLE_SOUND.get(), SoundSource.BLOCKS);
-        crucible.integrity = 12;
+    public void run(Reactor reactor) {
+        super.run(reactor);
+        reactor.addPower(Powers.ASTRAL_POWER.get(), reactor.maxPower());
+        Objects.requireNonNull(reactor.getLevel()).playSound(null, reactor.getBlockPos(), SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.5F, 1.2F);
+        ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), Registration.STARDUST_PARTICLE, reactor.getBlockPos(), 0.5, 1.0, 20);
+        Objects.requireNonNull(reactor.getLevel()).playSound(null, reactor.getBlockPos(), Registration.RUMBLE_SOUND.get(), SoundSource.BLOCKS);
+        if(reactor instanceof CrucibleBlockEntity crucible){
+            crucible.integrity = 12;
+        }
     }
 }

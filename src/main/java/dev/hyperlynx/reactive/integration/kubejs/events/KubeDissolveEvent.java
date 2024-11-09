@@ -1,7 +1,8 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
 import dev.hyperlynx.reactive.alchemy.special.DissolveEvent;
-import dev.hyperlynx.reactive.integration.kubejs.KubeCrucible;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.integration.kubejs.KubeWrapped;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,7 +21,7 @@ public class KubeDissolveEvent implements CrucibleKubeEvent {
         return event.to_be_dissolved.getItem();
     }
 
-    public KubeCrucible getCrucible(){
-        return new KubeCrucible(event.crucible);
+    public KubeWrapped<CrucibleBlockEntity> getCrucible(){
+        return new KubeWrapped<>(event.crucible);
     }
 }

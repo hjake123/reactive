@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.level.Level;
 
@@ -20,19 +19,19 @@ public class AssimilationReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
-        crucible.expendPower(consumedPower, rate);
-        crucible.addPower(producedPower, rate);
+    public void run(Reactor reactor) {
+        super.run(reactor);
+        reactor.expendPower(consumedPower, rate);
+        reactor.addPower(producedPower, rate);
     }
 
     @Override
-    public void render(final Level l, final CrucibleBlockEntity crucible) {
+    public void render(final Level l, final Reactor crucible) {
 
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor reactor) {
         return true;
     }
 
