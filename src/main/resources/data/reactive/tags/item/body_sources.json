@@ -17,6 +17,38 @@
     {
       "id": "mna:bone_ash",
       "required": false
+    },
+    {
+      "id": "#alexscaves:rock_candies",
+      "required": false
+    },
+    {
+      "id": "alexscaves:dough_block",
+      "required": false
+    },
+    {
+      "id": "alexscaves:cake_layer",
+      "required": false
+    },
+    {
+      "id": "alexscaves:sweet_puff",
+      "required": false
+    },
+    {
+      "id": "alexscaves:caramel",
+      "required": false
+    },
+    {
+      "id": "alexscaves:vanilla_ice_cream_scoop",
+      "required": false
+    },
+    {
+      "id": "alexscaves:chocolate_ice_cream_scoop",
+      "required": false
+    },
+    {
+      "id": "alexscaves:sweetberry_ice_cream_scoop",
+      "required": false
     }
   ]
 }

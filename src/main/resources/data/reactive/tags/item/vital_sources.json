@@ -28,6 +28,10 @@
     {
       "id": "mna:animus_dust",
       "required": false
+    },
+    {
+      "id": "#alexscaves:gelatins",
+      "required": false
     }
   ]
 }
