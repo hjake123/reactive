@@ -9,7 +9,7 @@ Changes to this number are marked in the changelog for a given version if they h
 | 9k                          | 2.1                        |
 
 # Adding Powers
-Custom Powers are added at startup using `StartupEvents.registry`, like so:
+Custom Powers are added to `reactive:powers` at startup using `StartupEvents.registry`, like so:
 ```js
 StartupEvents.registry('reactive:powers', event => {
     event.create('custom_power')

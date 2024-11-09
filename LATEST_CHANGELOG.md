@@ -5,4 +5,5 @@
 - (KubeJS) Added an option to create Powers that aren't visible in the Crucible
 - (KubeJS) The KubeJS Integration Version is now `2.1`
 - Reverted compatibility fix for old versions of EMI
+- Added Alex's Caves compatibility proactively in case it updates soon
 
