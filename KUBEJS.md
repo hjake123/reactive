@@ -133,7 +133,7 @@ ReactiveEvents.renderReaction(event => {
 })
 ```
 
-This event has all the same fields as the `runReaction` event does. Also, as you can see, you have access to my `ParticleScribe` class if you want to use it. Check the source code  in `reactive.client.particle`.
+This event has all the same fields as the `runReaction` event does. Also, as you can see, you have access to my `ParticleScribe` class if you want to use it. Check the source code in `reactive.fx.particle`.
 
 ## REACTION CHECKS
 You can also add a custom check to determine if a reaction should occur. Due to limitations, this check must be listened for and handled on **both the client and server**. If you only listen on one side, the reaction will not render when it should, or will render without taking action.
