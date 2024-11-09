@@ -100,6 +100,12 @@ There are three config files; two in the config folder, and one in each world's 
 	colorizeLitmusOutput = true
 	(As of version 8, Litmus Paper will attempt to color the lines of its measurements to match the powers they're discussing. This setting disables that system, in case it causes eyestrain or readability issues.)
 
+	#Whether to hide the icons of Powers in JEI. This is on by default because otherwise the menu looks redundant due to how Power icons work.
+    	hidePowersFromJEI = true
+(Powers are JEI ingredients, but they share the images of items from the mod, so I recommend not having them visible unless you're debugging custom Powers.)
+
+
+
 ```
 ### TAGS
 The ```reactive:acid_immune``` block tag decides which blocks are immune to being dissolved by blocks of acid.
