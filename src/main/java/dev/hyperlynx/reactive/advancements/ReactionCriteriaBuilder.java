@@ -20,9 +20,12 @@ public class ReactionCriteriaBuilder {
     public void add(String alias){
         aliases.add(alias);
         FlagCriterion criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_criterion"));
-        criteria.put(alias, criterion);
+        FlagCriterion existing = criteria.putIfAbsent(alias, criterion);
+        if(existing != null){
+            throw new RedundantAliasException("The reaction alias '" + alias + "' was added more then once!");
+        }
         FlagCriterion perfect_criterion = new FlagCriterion(new ResourceLocation("reactive:reaction/" + alias + "_perfect_criterion"));
-        criteria.put(alias+"_perfect", perfect_criterion);
+        criteria.putIfAbsent(alias+"_perfect", perfect_criterion);
     }
 
     public void lateAdd(String alias){
@@ -45,5 +48,11 @@ public class ReactionCriteriaBuilder {
 
     public FlagCriterion get(String alias) {
         return criteria.get(alias);
+    }
+
+    public static class RedundantAliasException extends RuntimeException{
+        public RedundantAliasException(String msg) {
+            super(msg);
+        }
     }
 }

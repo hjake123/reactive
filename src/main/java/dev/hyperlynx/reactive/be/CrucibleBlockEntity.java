@@ -102,103 +102,109 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
 
     // ----- Tick and related worker methods -----
     public static void tick(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
-        crucible.tick_counter++;
+        try {
+            crucible.tick_counter++;
 
-        // Each tick, deal with ender rift if needed.
-        if(!level.isClientSide && crucible.enderRiftStrength > 0){
-            crucible.enderRiftStrength = SpecialCaseMan.tryTeleportNearbyEntity(crucible.getBlockPos(), crucible.getLevel(), crucible.getBlockPos(), true) ? 0 : crucible.enderRiftStrength-1;
-            ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5625 + level.random.nextDouble() * 2.0, pos.getZ()+ 0.5, 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
-        }
-
-        // Perform the main Crucible Tick every (tick delay) ticks.
-        if(crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
-            crucible.tick_counter = 1;
-
-            // Become empty when there's no water.
-            if (!state.getValue(CrucibleBlock.FULL)) {
-                empty(level, pos, state, crucible);
+            // Each tick, deal with ender rift if needed.
+            if (!level.isClientSide && crucible.enderRiftStrength > 0) {
+                crucible.enderRiftStrength = SpecialCaseMan.tryTeleportNearbyEntity(crucible.getBlockPos(), crucible.getLevel(), crucible.getBlockPos(), true) ? 0 : crucible.enderRiftStrength - 1;
+                ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5625 + level.random.nextDouble() * 2.0, pos.getZ() + 0.5, 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
             }
 
-            switch (crucible.process_stage){
-                case 0 -> {
-                    // Deal with electricity.
-                    if (level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15) {
-                        crucible.electricCharge = 15;
-                    } else if (crucible.electricCharge > 0) {
-                        crucible.electricCharge--;
-                    }
+            // Perform the main Crucible Tick every (tick delay) ticks.
+            if (crucible.tick_counter >= ConfigMan.COMMON.crucibleTickDelay.get()) {
+                crucible.tick_counter = 1;
 
-                    // Check for Effusive Sponges and fill if there is one.
-                    if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
-                        if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
-                            crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
-                            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
+                // Become empty when there's no water.
+                if (!state.getValue(CrucibleBlock.FULL)) {
+                    empty(level, pos, state, crucible);
+                }
+
+                switch (crucible.process_stage) {
+                    case 0 -> {
+                        // Deal with electricity.
+                        if (level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15) {
+                            crucible.electricCharge = 15;
+                        } else if (crucible.electricCharge > 0) {
+                            crucible.electricCharge--;
                         }
-                    }
 
-                    // Handle the various properties of the Curse Cell and Integrity.
-                    if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
-                        boolean hungers = true;
-                        for (Power base_power : ReactionMan.BASE_POWER_LIST) {
-                            if (crucible.getPowerLevel(base_power) > 0) {
-                                hungers = false;
-                                crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 16, 45));
+                        // Check for Effusive Sponges and fill if there is one.
+                        if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
+                            if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
+                                crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+                                level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                             }
                         }
-                        ParticleScribe.drawParticleBox(level, ParticleTypes.ASH, AABB.ofSize(Vec3.atCenterOf(pos.below()), 1, 1, 1), 2);
-                        if (hungers) {
-                            // If the Cell can't take Power from a Crucible, it will start breaking down the magic of the Crucible itself.
+
+                        // Handle the various properties of the Curse Cell and Integrity.
+                        if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
+                            boolean hungers = true;
+                            for (Power base_power : ReactionMan.BASE_POWER_LIST) {
+                                if (crucible.getPowerLevel(base_power) > 0) {
+                                    hungers = false;
+                                    crucible.expendPower(base_power, WorldSpecificValue.get("curse_cell_draw_rate:" + base_power.getId(), 16, 45));
+                                }
+                            }
+                            ParticleScribe.drawParticleBox(level, ParticleTypes.ASH, AABB.ofSize(Vec3.atCenterOf(pos.below()), 1, 1, 1), 2);
+                            if (hungers) {
+                                // If the Cell can't take Power from a Crucible, it will start breaking down the magic of the Crucible itself.
+                                crucible.integrity--;
+                            }
+                        } else if (crucible.integrity < 100 && crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 1) {
+                            crucible.integrity += 2;
+                        } else if (crucible.integrity < 100 && crucible.integrity > 10) {
+                            crucible.integrity += Math.min(10, 100 - crucible.integrity);
+                        } else if (crucible.integrity < 10) {
                             crucible.integrity--;
                         }
-                    }else if(crucible.integrity < 100 && crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 1){
-                        crucible.integrity += 2;
-                    }else if(crucible.integrity < 100 && crucible.integrity > 10){
-                        crucible.integrity += Math.min(10, 100 - crucible.integrity);
-                    }else if(crucible.integrity < 10){
-                        crucible.integrity--;
+
+                        crucible.integrity = Math.min(crucible.integrity, 100);
                     }
 
-                    crucible.integrity = Math.min(crucible.integrity, 100);
-                }
-
-                case 1 -> {
-                    // Gather energy from the surroundings.
-                    if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL)){
-                        gatherPower(level, crucible);
-                    }
-                }
-
-                case 2 -> {
-                    // Process items inside the Crucible
-                    if(!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70){
-                        if (processItemsInside(level, pos, state, crucible)) {
-                            level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F+(level.getRandom().nextFloat()/5));
+                    case 1 -> {
+                        // Gather energy from the surroundings.
+                        if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
+                            gatherPower(level, crucible);
                         }
                     }
-                }
 
-                case 3 -> {
-                    // Perform applicable reactions.
-                    if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
-                        react(level, crucible);
+                    case 2 -> {
+                        // Process items inside the Crucible
+                        if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70) {
+                            if (processItemsInside(level, pos, state, crucible)) {
+                                level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F + (level.getRandom().nextFloat() / 5));
+                            }
+                        }
                     }
 
-                    // Spread Sculk, if applicable
-                    crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
+                    case 3 -> {
+                        // Perform applicable reactions.
+                        if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
+                            react(level, crucible);
+                        }
+
+                        // Spread Sculk, if applicable
+                        crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
+                    }
+
+                    case 4 -> {
+                        // Deal with integrity violations.
+                        checkIntegrity(level, pos, state, crucible);
+
+                        // Synchronize the client and server.
+                        crucible.setDirty();
+                        crucible.process_stage = -1;
+                    }
+
+                    default -> System.err.println("Crucible ran out of steps! This can't be!");
                 }
-
-                case 4 -> {
-                    // Deal with integrity violations.
-                    checkIntegrity(level, pos, state, crucible);
-
-                    // Synchronize the client and server.
-                    crucible.setDirty();
-                    crucible.process_stage = -1;
-                }
-
-                default -> System.err.println("Crucible ran out of steps! This can't be!");
+                crucible.process_stage++;
             }
-            crucible.process_stage++;
+        } catch (Exception e) {
+            ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.ANGRY_VILLAGER, crucible.getBlockPos());
+            ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}: {}", crucible.getBlockPos(), e);
+            empty(level, pos, state, crucible);
         }
     }
 
@@ -694,22 +700,31 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         // Iterate through each power and add its tint to the total, adjusted for its actual prevalence.
         next_mix_color.reset();
         for (Power p : powers.keySet()) {
-            if(p == null){
+            if(p == null || p.invisible){
                 continue; // Skip any invalid values if they exist.
             }
             Color pow_color = p.getColor();
-            float pow_weight = getPowerLevel(p) / (float) getTotalPowerLevel();
+            float pow_weight = getPowerLevel(p) / (float) getTotalVisiblePowerLevel();
             next_mix_color.red += pow_color.red * pow_weight;
             next_mix_color.green += pow_color.green * pow_weight;
             next_mix_color.blue += pow_color.blue * pow_weight;
         }
 
         // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
-        float tint_alpha = (float) getTotalPowerLevel()/ (float) CRUCIBLE_MAX_POWER;
+        float tint_alpha = (float) getTotalVisiblePowerLevel() / (float) CRUCIBLE_MAX_POWER;
         next_mix_color.red = (int) (water_color.red * (1 - tint_alpha) + next_mix_color.red * (tint_alpha));
         next_mix_color.green = (int) (water_color.green * (1 - tint_alpha) + next_mix_color.green * (tint_alpha));
         next_mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + next_mix_color.blue * (tint_alpha));
         color_changed = false;
+    }
+
+    private int getTotalVisiblePowerLevel(){
+        int totalpp = 0;
+        for (Power p : powers.keySet()) {
+            if(!p.invisible)
+                totalpp += powers.get(p);
+        }
+        return totalpp;
     }
 
     private void resetColor() {
@@ -720,7 +735,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     public float getOpacity() {
-        return 0.7F + (.3F * getTotalPowerLevel()/CRUCIBLE_MAX_POWER);
+        return 0.7F + (.3F * getTotalVisiblePowerLevel()/CRUCIBLE_MAX_POWER);
     }
 
     // ----- Data management methods -----

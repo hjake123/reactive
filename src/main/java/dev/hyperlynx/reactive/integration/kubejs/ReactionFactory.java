@@ -14,6 +14,9 @@ public class ReactionFactory {
     CustomReaction rxn;
 
     public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations){
+        if(ReactionMan.CRITERIA_BUILDER.get(alias) == null){
+            throw new KubeScriptException("Alias " + alias + " was not registered! Please run ReactionMan.CRITERIA_BUILDER.add(\"" + alias + "\") in StartupEvents.init!");
+        }
         rxn = new CustomReaction(alias, reagent_locations, custom_name);
     }
 
@@ -54,11 +57,17 @@ public class ReactionFactory {
     }
 
     public ReactionFactory setCost(int cost){
+        if(cost < 0){
+            throw new KubeScriptException("Cost cannot be negative! Try using a yield instead!");
+        }
         rxn.cost = cost;
         return this;
     }
 
     public ReactionFactory setYield(String power_id, int yield){
+        if(yield < 0){
+            throw new KubeScriptException("Yield cannot be negative!");
+        }
         Power p = Powers.POWER_SUPPLIER.get().getValue(new ResourceLocation(power_id));
         if(p != null){
             rxn.yield = yield;

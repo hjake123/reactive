@@ -89,6 +89,7 @@ public class ConfigMan {
         public ForgeConfigSpec.BooleanValue showPowerSources;
         public ForgeConfigSpec.BooleanValue doNotChangeWaterTexture;
         public ForgeConfigSpec.BooleanValue colorizeLitmusOutput;
+        public ForgeConfigSpec.BooleanValue hidePowersFromJEI;
 
         Client(ForgeConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
@@ -99,6 +100,8 @@ public class ConfigMan {
                     .define("doNotChangeWaterTexture", false);
             colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")
                     .define("colorizeLitmusOutput", true);
+            hidePowersFromJEI = builder.comment("Whether to hide the icons of Powers in JEI. This is on by default because otherwise the menu looks redundant due to how Power icons work.")
+                    .define("hidePowersFromJEI", true);
 
             builder.pop();
         }

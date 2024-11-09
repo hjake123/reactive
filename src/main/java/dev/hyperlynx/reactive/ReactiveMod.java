@@ -9,12 +9,16 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @Mod(ReactiveMod.MODID)
 public class ReactiveMod
 {
     public static final String MODID = "reactive";
     public static final ReactionMan REACTION_MAN = new ReactionMan();
     public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
+    public static final Logger LOGGER = LogManager.getLogger();
     public ReactiveMod() {
         Registration.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientRegistration::init);

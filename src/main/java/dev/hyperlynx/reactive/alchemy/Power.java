@@ -13,6 +13,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -29,6 +30,7 @@ public class Power {
     private final Item render_item;
     private final Supplier<Block> render_water_block;
     private final PrimedWSV percent_reactivity;
+    public boolean invisible = false;
 
     public Power(String id, Supplier<Block> render_water_block, int color, Item bottle){
         this.location = new ResourceLocation(ReactiveMod.MODID, id);
@@ -164,10 +166,10 @@ public class Power {
     }
 
     public ItemStack getRenderStack() {
-        if(bottle != null)
+        if(bottle != null && bottle.getDefaultInstance().getCount() > 0)
             return bottle.getDefaultInstance();
-        if(render_item != null)
+        if(render_item != null && render_item.getDefaultInstance().getCount() > 0)
             return render_item.getDefaultInstance();
-        return ItemStack.EMPTY;
+        return Items.BARRIER.getDefaultInstance();
     }
 }

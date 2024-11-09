@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.integration.kubejs.events;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import dev.hyperlynx.reactive.integration.kubejs.KubeScriptException;
 import dev.hyperlynx.reactive.integration.kubejs.ReactionFactory;
 import dev.latvian.mods.kubejs.event.EventJS;
 import net.minecraft.network.chat.MutableComponent;
@@ -19,8 +20,16 @@ public class ReactionConstructEventJS extends EventJS {
     }
 
     public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){
-        Stream<Power> reagents = Arrays.stream(reagent_locations).map((location) -> Powers.POWER_SUPPLIER.get().getValue(new ResourceLocation(location)));
+        Stream<Power> reagents = Arrays.stream(reagent_locations).map((location) -> getPower(new ResourceLocation(location)));
         return new ReactionFactory(alias, custom_name, reagents.toList());
+    }
+
+    private Power getPower(ResourceLocation location){
+        Power power = Powers.POWER_SUPPLIER.get().getValue(location);
+        if(power == null) {
+            throw new KubeScriptException("Power " + location + " does not exist!");
+        }
+        return power;
     }
 
 }

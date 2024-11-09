@@ -53,6 +53,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             int max_level = 0;
 
             for(Power power: crucible.getPowerMap().keySet()){
+                if(power.invisible){
+                    continue;
+                }
                 if(crucible.getPowerLevel(power) > max_level){
                     max_power = power;
                     max_level = crucible.getPowerLevel(power);

@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -19,6 +20,7 @@ public class PowerBuilder extends BuilderBase<Power> {
     public transient Item bottle;
     public transient Item render_item;
     public transient Supplier<Block> render_water_block;
+    public transient boolean invisible = false;
 
     public PowerBuilder(ResourceLocation id) {
         super(id);
@@ -35,7 +37,9 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     @Override
     public Power createObject() {
-        return new Power(this.id, color, render_water_block, bottle, render_item);
+        Power power = new Power(this.id, color, render_water_block, bottle, render_item);
+        power.invisible = this.invisible;
+        return power;
     }
 
     public PowerBuilder color(int color){
@@ -44,11 +48,19 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder icon(Item icon){
+        if(icon.getDefaultInstance().isEmpty()){
+            ReactiveMod.LOGGER.error("Power {} has an invalid render item! Falling back to barrier icon.", this.id);
+            return this;
+        }
         this.render_item = icon;
         return this;
     }
 
     public PowerBuilder bottle(Item bottle){
+        if(bottle.getDefaultInstance().isEmpty()){
+            ReactiveMod.LOGGER.error("Power {} has an invalid bottle item!", this.id);
+            return this;
+        }
         this.bottle = bottle;
         return this;
     }
@@ -72,7 +84,15 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder setCustomWater(Block water){
+        if(water.defaultBlockState().is(Blocks.AIR)){
+            throw new KubeScriptException("Power " + this.id + " has an invalid water block!");
+        }
         this.render_water_block = () -> water;
+        return this;
+    }
+
+    public PowerBuilder setInvisible(){
+        this.invisible = true;
         return this;
     }
 }
