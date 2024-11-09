@@ -194,25 +194,3 @@ If you want to add a Journal of Alchemy entry for your reaction, we'll need anot
 }
 ```
 The only difference from the normal advancement is the criterion checked. This advancement must have a name of the form `(reaction alias)+perfect`, and needs to be located in the same directory as the normal reaction advancement.
-
-## REACTION PATCHOULI ENTRY
-You can add entries to the Journal of Alchemy by placing page JSON files in the proper resource pack path, `assets/reactive/patchouli_books/journal/entries`. All built-in reactions use an entry similar to this one:
-```json
-{
-  "name": "Luminous Ring",
-  "icon": "minecraft:paper",
-  "category": "reactive:reactions",
-  "advancement": "reactive:reactions/sunlight",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "$(bold)Visual:$(br)$()A ring of light appears with a 12 block radius around the Crucible.$(p)$(bold)Effect:$(br)$()Undead within the ring catch on fire as if burning in daylight."
-    },
-    {
-      "type": "reactive:reaction",
-      "reaction": "sunlight"
-    }
-  ]
-}
-```
-The important bits here are the `advancement` field, which prevents this entry from unlocking if the player hasn't ever seen the reaction, and the `reactive:reaction` page template, which shows the formula if the player has the "perfect" advancement for the reaction.
