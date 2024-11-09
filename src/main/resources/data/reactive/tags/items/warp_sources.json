@@ -50,6 +50,14 @@
     {
       "id": "mna:greater_mote_ender",
       "required": false
+    },
+    {
+      "id": "alexscaves:raw_scarlet_neodymium",
+      "required": false
+    },
+    {
+      "id": "alexscaves:raw_azure_neodymium",
+      "required": false
     }
   ]
 }

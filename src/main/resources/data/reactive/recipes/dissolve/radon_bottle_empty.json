@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "alexscaves:radon_bottle"
+  },
+  "product": {
+    "item": "minecraft:glass_bottle"
+  }
+}

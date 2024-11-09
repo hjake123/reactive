@@ -19,6 +19,10 @@
     {
       "id": "aether:aechor_petal",
       "required": false
+    },
+    {
+      "id": "alexscaves:sulfur_dust",
+      "required": false
     }
   ]
 }

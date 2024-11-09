@@ -32,6 +32,14 @@
     {
       "id": "byg:aloe_vera",
       "required": false
+    },
+    {
+      "id": "alexscaves:fiddlehead",
+      "required": false
+    },
+    {
+      "id": "alexscaves:tree_star",
+      "required": false
     }
   ]
 }

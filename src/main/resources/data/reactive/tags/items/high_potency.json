@@ -61,6 +61,18 @@
     {
       "id": "goety:ectoplasm",
       "required": false
+    },
+    {
+      "id": "alexscaves:sulfur_dust",
+      "required": false
+    },
+    {
+      "id": "alexscaves:uranium",
+      "required": false
+    },
+    {
+      "id": "alexscaves:radiant_essence",
+      "required": false
     }
   ]
 }
