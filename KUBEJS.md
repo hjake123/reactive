@@ -28,6 +28,7 @@ There are a few other possible method calls:
 - `.setFastWater()` causes the power to use a more quickly moving water texture in the Crucible.
 - `.setSlowWater()` causes the power to use a less quickly moving water texture in the Crucible.
 - `.setCustomWater(Block)` causes the power to use any given block as its water texture. If the block is not animated, this will look bad!
+- `.setInvisible()` causes the power to not change the appearance of water in the Crucible at all. The color is still used for Litmus Paper, but the water texture will not appear anywhere.
 
 Once a Power is made, it may be used as a valid entry for recipes (which can of course be made using KubeJS or a data pack). You can also add a language entry for it similarly to KubeJS custom items or blocks.
 
