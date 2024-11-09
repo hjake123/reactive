@@ -14,7 +14,7 @@ Custom Powers are added to `reactive:powers` at startup using `StartupEvents.reg
 StartupEvents.registry('reactive:powers', event => {
     event.create('custom_power')
         .color(0xFF00FF)
-        .icon('kubejs:custom_power_bottle')
+        .icon('namespace:some_item')
         .setMagicWater()
 })
 ```
