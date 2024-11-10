@@ -1,0 +1,25 @@
+---
+name: Non-crashing bug report
+about: Report an issue with the mod
+title: Bug
+labels: bug
+assignees: ''
+
+---
+
+**Version**
+The mod version number you're using, like e.g. `1.21.1-9k.0`
+
+**What you expected**
+A clear and concise description of what you expected to happen.
+
+**What actually happened**
+A clear and concise description of what happened. Please include any details you can think of.
+
+**Steps to reproduce**
+Steps to reproduce the behavior:
+1. Place the block
+2. Right click
+3. See the error
+
+(If you don't know the steps, you can skip this section!)
