@@ -1,5 +1,5 @@
 ---
-name: Non-crashing bug report
+name: Bug report without crash
 about: Report an issue with the mod
 title: Bug
 labels: bug
