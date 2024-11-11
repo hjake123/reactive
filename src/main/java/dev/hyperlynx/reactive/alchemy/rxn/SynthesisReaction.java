@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.level.Level;
 
@@ -16,7 +15,7 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         int expended = 0;
         for(Power p : reagents.keySet()){
@@ -28,12 +27,12 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public void render(Level l, CrucibleBlockEntity crucible) {
+    public void render(Level l, Reactor crucible) {
 
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         for(Power p: crucible.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !p.equals(resultPower)){
                 return false;

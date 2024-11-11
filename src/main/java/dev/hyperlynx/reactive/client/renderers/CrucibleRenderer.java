@@ -1,10 +1,8 @@
 package dev.hyperlynx.reactive.client.renderers;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
@@ -30,7 +28,7 @@ import dev.hyperlynx.reactive.ConfigMan;
 
 import java.util.Objects;
 
-public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
+public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity>, ReactorRenderer {
 
     private final BlockRenderDispatcher blockRenderDispatcher;
 
@@ -53,6 +51,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             int max_level = 0;
 
             for(Power power: crucible.getPowerMap().keySet()){
+                if(power.invisible){
+                    continue;
+                }
                 if(crucible.getPowerLevel(power) > max_level){
                     max_power = power;
                     max_level = crucible.getPowerLevel(power);
@@ -64,21 +65,6 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             }
         }
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
-    }
-
-    private void checkReactions(CrucibleBlockEntity crucible){
-        crucible.reactions_to_render.clear();
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
-            if(r.conditionsMet(crucible) == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(r);
-            }
-        }
-    }
-
-    private void renderReactions(CrucibleBlockEntity crucible){
-        for(Reaction r : crucible.reactions_to_render){
-            r.render(crucible.getLevel(), crucible);
-        }
     }
 
     private void renderElectricity(CrucibleBlockEntity crucible){

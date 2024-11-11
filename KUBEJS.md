@@ -6,14 +6,15 @@ Changes to this number are marked in the changelog for a given version if they h
 |-----------------------------|----------------------------|
 | 9a                          | 1.0                        |
 | 9d                          | 2.0                        |
+| 9k                          | 2.1                        |
 
 # Adding Powers
-Custom Powers are added at startup using `StartupEvents.registry`, like so:
+Custom Powers are added to `reactive:powers` at startup using `StartupEvents.registry`, like so:
 ```js
 StartupEvents.registry('reactive:powers', event => {
     event.create('custom_power')
         .color(0xFF00FF)
-        .icon('kubejs:custom_power_bottle')
+        .icon('namespace:some_item')
         .setMagicWater()
 })
 ```
@@ -27,6 +28,7 @@ There are a few other possible method calls:
 - `.setFastWater()` causes the power to use a more quickly moving water texture in the Crucible.
 - `.setSlowWater()` causes the power to use a less quickly moving water texture in the Crucible.
 - `.setCustomWater(Block)` causes the power to use any given block as its water texture. If the block is not animated, this will look bad!
+- `.setInvisible()` causes the power to not change the appearance of water in the Crucible at all. The color is still used for Litmus Paper, but the water texture will not appear anywhere.
 
 Once a Power is made, it may be used as a valid entry for recipes (which can of course be made using KubeJS or a data pack). You can also add a language entry for it similarly to KubeJS custom items or blocks.
 

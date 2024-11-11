@@ -12,5 +12,9 @@ public interface PowerBearer {
     void expendAnyPowerExcept(Power immune_power, int amount);
     void expendPower();
 
+    int maxPower();
+
     @NotNull Map<Power, Integer> getPowerMap();
+
+    int getPowerCount();
 }

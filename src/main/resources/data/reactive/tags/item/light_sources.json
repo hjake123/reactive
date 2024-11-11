@@ -77,6 +77,22 @@
     {
       "id": "mna:chimerite_gem",
       "required": false
+    },
+    {
+      "id": "alexscaves:radon_bottle",
+      "required": false
+    },
+    {
+      "id": "alexscaves:uranium",
+      "required": false
+    },
+    {
+      "id": "alexscaves:bioluminesscence",
+      "required": false
+    },
+    {
+      "id": "alexscaves:radiant_essence",
+      "required": false
     }
   ]
 }

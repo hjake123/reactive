@@ -1,24 +1,23 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.level.Level;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 // This reaction runs a particular effect function each reaction tick.
 public class FreeEffectReaction extends Reaction{
-    protected Function<CrucibleBlockEntity, CrucibleBlockEntity> effectFunction;
-    protected Function<CrucibleBlockEntity, CrucibleBlockEntity> renderFunction;
+    protected Consumer<Reactor> effectFunction;
+    protected Consumer<Reactor> renderFunction;
 
-    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> effect, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, int numReagents) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> effect, Consumer<Reactor> render, int numReagents) {
         super(alias, numReagents);
         effectFunction = effect;
         renderFunction = render;
     }
 
-    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power... required_powers) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power... required_powers) {
         super(alias, 0);
         effectFunction = function;
         renderFunction = render;
@@ -26,7 +25,7 @@ public class FreeEffectReaction extends Reaction{
             reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
     }
 
-    public FreeEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, int num_additionals) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power, int num_additionals) {
         super(alias, num_additionals);
         effectFunction = function;
         renderFunction = render;
@@ -34,9 +33,9 @@ public class FreeEffectReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level l, final CrucibleBlockEntity crucible) {
+    public void render(final Level l, final Reactor reactor) {
         if(renderFunction != null)
-            renderFunction.apply(crucible);
+            renderFunction.accept(reactor);
     }
 
     @Override
@@ -45,9 +44,9 @@ public class FreeEffectReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
+    public void run(Reactor reactor) {
+        super.run(reactor);
         if(effectFunction != null)
-            effectFunction.apply(crucible);
+            effectFunction.accept(reactor);
     }
 }

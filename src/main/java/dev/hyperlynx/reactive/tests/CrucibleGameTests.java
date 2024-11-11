@@ -3,6 +3,8 @@ package dev.hyperlynx.reactive.tests;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.*;
@@ -12,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
+
+import java.util.List;
 
 @GameTestHolder(ReactiveMod.MODID)
 public class CrucibleGameTests {
@@ -81,4 +85,26 @@ public class CrucibleGameTests {
         });
     }
 
+    @PrefixGameTestTemplate(false)
+    @GameTest(template = "crucible_test")
+    public static void reaction(GameTestHelper helper) {
+        if (!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity crucible)) {
+            throw new GameTestAssertException("Crucible has wrong block entity");
+        }
+        crucible.addPower(Powers.ASTRAL_POWER.get(), 100);
+        helper.runAfterDelay(50, () -> {
+            List<ReactionStatusEntry> statuses = crucible.getReactionStatus();
+            if (statuses.isEmpty()) {
+                helper.fail("No reaction statuses!");
+            }
+            if (statuses.size() > 1) {
+                helper.fail("A reaction other then astral occurred! Statuses: " + statuses);
+            }
+            if (statuses.getFirst().reaction_alias().equals("astral") && statuses.getFirst().status().equals(Reaction.Status.REACTING)) {
+                helper.succeed();
+            } else {
+                helper.fail("A reaction other then astral occurred! Alias: " + statuses.getFirst().reaction_alias());
+            }
+        });
+    }
 }

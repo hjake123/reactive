@@ -18,6 +18,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +35,8 @@ public class Power {
     private final Item render_item;
     private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
+    public boolean invisible = false;
+
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
 
@@ -60,7 +63,7 @@ public class Power {
     }
 
 
-    public Power(String id, int color, Block render_water_block,Item bottle, Item renderItem){
+    public Power(String id, int color, Block render_water_block, Item bottle, Item renderItem){
         this.location = ReactiveMod.location(id);
         this.color = new Color(color);
         this.render_water_block = render_water_block;
@@ -176,11 +179,11 @@ public class Power {
     }
 
     public ItemStack getRenderStack() {
-        if(bottle != null)
+        if(bottle != null && bottle.getDefaultInstance().getCount() > 0)
             return bottle.getDefaultInstance();
-        if(render_item != null)
+        if(render_item != null && render_item.getDefaultInstance().getCount() > 0)
             return render_item.getDefaultInstance();
-        return ItemStack.EMPTY;
+        return Items.BARRIER.getDefaultInstance();
     }
 
     static{

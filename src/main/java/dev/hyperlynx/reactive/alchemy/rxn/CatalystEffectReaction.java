@@ -1,18 +1,17 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public class CatalystEffectReaction extends EffectReaction{
     Item reactant;
 
-    public CatalystEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, Item reactant) {
+    public CatalystEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power, Item reactant) {
         super(alias, function, render, required_power);
         this.reactant = reactant;
     }
@@ -22,9 +21,9 @@ public class CatalystEffectReaction extends EffectReaction{
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible) {
-        Status reaction_status = super.conditionsMet(crucible);
-        for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())) {
+    public Status conditionsMet(Reactor reactor) {
+        Status reaction_status = super.conditionsMet(reactor);
+        for(Entity entity_inside : CrucibleBlock.getEntitesInside(reactor.getBlockPos(), reactor.getLevel())) {
             if (entity_inside instanceof ItemEntity item_ent && item_ent.getItem().is(reactant)) {
                 // The catalyst condition is met; return the check without catalyst consideration.
                 return reaction_status;

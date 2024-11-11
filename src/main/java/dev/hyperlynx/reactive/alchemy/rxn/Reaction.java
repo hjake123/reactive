@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -102,17 +101,17 @@ public abstract class Reaction {
     }
 
     // Note that this also sets the reaction status, so all overrides should do that too.
-    public Status conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(Reactor reactor){
         for(Power p : reagents.keySet()){
-            if(!p.checkReactivity(crucible.getPowerLevel(p), reagents.get(p))){
-                if(crucible.getPowerLevel(p) > 0)
+            if(!p.checkReactivity(reactor.getPowerLevel(p), reagents.get(p))){
+                if(reactor.getPowerLevel(p) > 0)
                     return Status.POWER_TOO_WEAK;
                 return Status.STABLE;
             }
         }
-        boolean met_conditions = checkStimulus(crucible);
+        boolean met_conditions = checkStimulus(reactor);
         if(met_conditions) {
-            if(crucible.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
+            if(reactor.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
             && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
             }
@@ -127,21 +126,21 @@ public abstract class Reaction {
         return Status.MISSING_STIMULUS;
     }
 
-    private boolean checkStimulus(CrucibleBlockEntity crucible){
+    private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
-            case END_CRYSTAL -> checkEndCrystal(crucible);
-            case GOLD_SYMBOL -> crucible.areaMemory.exists(crucible.getLevel(), Registration.GOLD_SYMBOL.get());
-            case ELECTRIC -> crucible.electricCharge > 0;
-            case NO_ELECTRIC -> crucible.electricCharge == 0;
-            case SACRIFICE -> crucible.sacrificeCount >= 10;
+            case END_CRYSTAL -> checkEndCrystal(reactor);
+            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case ELECTRIC -> reactor.getElectricCharge() > 0;
+            case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
+            case SACRIFICE -> reactor.getSacrificeCount() >= 10;
             default -> true;
         };
     }
 
-    private boolean checkEndCrystal(CrucibleBlockEntity crucible){
-        Level level = crucible.getLevel();
-        if(crucible.linked_crystal != null && !crucible.linked_crystal.isRemoved()) {
-            crucible.used_crystal_this_cycle = true;
+    private boolean checkEndCrystal(Reactor reactor){
+        Level level = reactor.getLevel();
+        if(reactor.getLinkedCrystal() != null && !reactor.getLinkedCrystal().isRemoved()) {
+            reactor.setUsedCrystalThisCycle(true);
             return true;
         }
         if(level.isClientSide) {
@@ -152,38 +151,38 @@ public abstract class Reaction {
         }
 
         int range = ConfigMan.COMMON.crucibleRange.get();
-        AABB aoe = new AABB(crucible.getBlockPos().offset(-range, -range, -range).getCenter(), crucible.getBlockPos().offset(range, range, range).getCenter());
+        AABB aoe = new AABB(reactor.getBlockPos().offset(-range, -range, -range).getCenter(), reactor.getBlockPos().offset(range, range, range).getCenter());
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;
-        end_crystals.get(0).setBeamTarget(crucible.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
-        crucible.linked_crystal = end_crystals.get(0);
-        crucible.used_crystal_this_cycle = true;
+        end_crystals.get(0).setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        reactor.setLinkedCrystal(end_crystals.get(0));
+        reactor.setUsedCrystalThisCycle(true);
         return true;
     }
 
-    public void run(CrucibleBlockEntity crucible){
-        if(!(crucible.getLevel() instanceof ServerLevel server))
+    public void run(Reactor reactor){
+        if(!(reactor.getLevel() instanceof ServerLevel server))
             return;
         if(observe_trigger != null) {
             // Award the completion criteria.
-            FlagTrigger.triggerForNearbyPlayers(server, observe_trigger, crucible.getBlockPos(), 6);
+            FlagTrigger.triggerForNearbyPlayers(server, observe_trigger, reactor.getBlockPos(), 6);
         }
         if(perfect_trigger != null){
-            if(always_perfect || isPerfect(crucible)){
+            if(always_perfect || isPerfect(reactor)){
                 // Award the perfect criterion.
-                FlagTrigger.triggerForNearbyPlayers(server, perfect_trigger, crucible.getBlockPos(), 6);
+                FlagTrigger.triggerForNearbyPlayers(server, perfect_trigger, reactor.getBlockPos(), 6);
             }
         }
     }
 
-    public boolean isPerfect(CrucibleBlockEntity crucible){
+    public boolean isPerfect(Reactor reactor){
         // If crucible only has the same number of powers as the reagents, and the reaction could run, then it would be running with nothing extra.
         // Therefore, it is running 'perfectly'.
-        return crucible.getPowerCount() == reagents.size();
+        return reactor.getPowerCount() == reagents.size();
     }
 
-    public abstract void render(final Level l, final CrucibleBlockEntity crucible);
+    public abstract void render(final Level l, final Reactor reactor);
 
     public enum Stimulus {
         NONE,

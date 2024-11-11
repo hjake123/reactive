@@ -2,7 +2,6 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -23,38 +22,38 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return true;
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
-        crucible.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
-        crucible.addPower(Powers.CURSE_POWER.get(), rate);
+    public void run(Reactor reactor) {
+        super.run(reactor);
+        reactor.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
+        reactor.addPower(Powers.CURSE_POWER.get(), rate);
 
-        if(Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.2 && crucible.getPowerLevel(Powers.CURSE_POWER.get()) >
+        if(Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.2 && reactor.getPowerLevel(Powers.CURSE_POWER.get()) >
                 WorldSpecificValue.get("curse_assim_hurt_threshold", 900, 1100)){
-            AABB aoe = new AABB(crucible.getBlockPos());
-            aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
-            List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            AABB aoe = new AABB(reactor.getBlockPos());
+            aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the reactor.
+            List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
                 if (CrystalIronItem.effectNotBlocked(e, 1)) {
-                    e.hurt(crucible.getLevel().damageSources().magic(), 1);
+                    e.hurt(reactor.getLevel().damageSources().magic(), 1);
                 }
             }
         }
     }
 
     @Override
-    public void render(final Level l, final CrucibleBlockEntity crucible) {
-        ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, crucible.getBlockPos(), 0.45, 0.7, 1);
+    public void render(final Level l, final Reactor reactor) {
+        ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, reactor.getBlockPos(), 0.45, 0.7, 1);
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible){
-        boolean has_curse = crucible.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
-        if (crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)
+    public Status conditionsMet(Reactor reactor){
+        boolean has_curse = reactor.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
+        if (reactor.getTotalPowerLevel() > (reactor.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)
             return Status.REACTING;
         return Status.STABLE;
     }

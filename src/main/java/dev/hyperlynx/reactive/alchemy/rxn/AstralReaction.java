@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.world.level.Level;
 
@@ -13,26 +12,26 @@ public class AstralReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return true;
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
-        super.run(crucible);
-        crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
-        crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get() + 4);
+    public void run(Reactor reactor) {
+        super.run(reactor);
+        reactor.addPower(Powers.ASTRAL_POWER.get(), reactor.maxPower());
+        reactor.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get() + 4);
     }
 
     @Override
-    public void render(final Level level, final CrucibleBlockEntity crucible) {
-        if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) < crucible.getTotalPowerLevel())
-            ParticleScribe.drawParticleRing(level, Registration.STARDUST_PARTICLE.getType(), crucible.getBlockPos(), 0.45, 0.7, 1);
+    public void render(final Level level, final Reactor reactor) {
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
+            ParticleScribe.drawParticleRing(level, Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible){
-        if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
+    public Status conditionsMet(Reactor reactor){
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
             return Status.REACTING;
         return Status.STABLE;
     }

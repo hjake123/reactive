@@ -8,14 +8,15 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.client.renderers.ReactionRenders;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-
-import java.util.*;
-
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 // Uh-oh, looks like ReactionMan's on the hunt!
 // This class manages the world's reactions.
