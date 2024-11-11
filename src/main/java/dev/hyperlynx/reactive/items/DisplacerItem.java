@@ -12,8 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -27,7 +26,9 @@ public class DisplacerItem extends Item {
     public static final int DISPLACER_BASE_DISPLACE_TIME = 200;
 
     public DisplacerItem(Properties props) {
-        super(props.attributes(SwordItem.createAttributes(Tiers.STONE, 3, -3.0F)).enchantable(10).repairable(Registration.MOTION_SALT.get()));
+        super(ToolMaterial.STONE.applySwordProperties(props, 3, -3.0F)
+                .enchantable(10)
+                .repairable(Registration.MOTION_SALT.get()));
     }
 
     @Override
@@ -118,16 +119,5 @@ public class DisplacerItem extends Item {
     public boolean hurtEnemy(ItemStack stack, LivingEntity victim, LivingEntity wielder) {
         stack.hurtAndBreak(2, wielder, Objects.requireNonNull(stack.getEquipmentSlot()));
         return true;
-    }
-
-    @Override
-    public boolean isRepairable(ItemStack stack) {
-        return true;
-    }
-
-    // Check if the item being used to repair is the assigned repair bottle for this staff.
-    @Override
-    public boolean isValidRepairItem(ItemStack self, ItemStack repair_item_candidate) {
-        return repair_item_candidate.is(Registration.MOTION_SALT.get());
     }
 }
