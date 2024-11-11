@@ -173,8 +173,8 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                     case 2 -> {
                         // Process items inside the Crucible
-                        if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70) {
-                            if (processItemsInside(level, pos, state, crucible)) {
+                        if ((level instanceof ServerLevel slevel) && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70) {
+                            if (processItemsInside(slevel, pos, state, crucible)) {
                                 level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F + (level.getRandom().nextFloat() / 5));
                             }
                         }
@@ -182,8 +182,8 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                     case 3 -> {
                         // Perform applicable reactions.
-                        if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
-                            crucible.react(level);
+                        if ((level instanceof ServerLevel slevel) && state.getValue(CrucibleBlock.FULL)) {
+                            crucible.react(slevel);
                         }
 
                         // Spread Sculk, if applicable
@@ -401,7 +401,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     // Used to gather and operate on items sitting inside the crucible.
-    private static boolean processItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
+    private static boolean processItemsInside(ServerLevel level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         if(!state.getValue(CrucibleBlock.FULL)){
             return false;
         }
@@ -414,7 +414,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 if(!item_entity.isAlive()) continue;
 
                 changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
-                changed = changed || tryReduceToPower(item_entity.getItem(), crucible);
+                changed = changed || tryReduceToPower(item_entity.getItem(), crucible, level);
 
                 // Remove entities that were completely transmuted or dissolved.
                 if(item_entity.getItem().getCount() == 0){
@@ -428,11 +428,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible, and it returns true.
-    public static boolean tryReduceToPower(ItemStack stack, CrucibleBlockEntity crucible){
+    public static boolean tryReduceToPower(ItemStack stack, CrucibleBlockEntity crucible, ServerLevel level){
         List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
         if(stack_power_list.isEmpty()){
-            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount(), crucible);
+            boolean dissolved = tryDissolveWithByproduct(level, crucible.getBlockPos(), stack, stack.getCount(), crucible);
             if(dissolved)
                 stack.setCount(0);
             return false;
@@ -443,60 +443,51 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 continue;
             }
             changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack) / stack_power_list.size());
-            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity), crucible);
+            tryDissolveWithByproduct(level, crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity), crucible);
             stack.setCount(Math.max(stack.getCount()-dissolve_capacity, 0));
         }
         return changed;
     }
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
-    private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
-        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
-        for (RecipeHolder<DissolveRecipe> holder : purify_recipes) {
-            DissolveRecipe recipe = holder.value();
-            if(recipe.needs_electricity && crucible.electricCharge < 1)
-                continue;
-            if(recipe.matches(CrucibleRecipeInput.of(stack), level)){
-                ItemStack reactant = stack.copy();
-                reactant.setCount(count);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5,
-                        recipe.assemble(CrucibleRecipeInput.of(reactant), level.registryAccess())));
-                return true;
-            }
+    private static boolean tryDissolveWithByproduct(ServerLevel level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
+        ItemStack reactant = stack.copy();
+        reactant.setCount(count);
+        CrucibleRecipeInput input = CrucibleRecipeInput.of(reactant, crucible.getElectricCharge());
+        Optional<RecipeHolder<DissolveRecipe>> potential_recipe = level.recipeAccess().getRecipeFor(Registration.DISSOLVE_RECIPE_TYPE.get(), input, level);
+        if(potential_recipe.isPresent()){
+            DissolveRecipe recipe = potential_recipe.get().value();
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5,
+                    recipe.assemble(input, level.registryAccess())));
+            return true;
         }
         return false;
     }
 
     // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
-    private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
-        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
-        for (RecipeHolder<TransmuteRecipe> holder : purify_recipes) {
-            var recipe = holder.value();
-            if(recipe.needs_electricity && crucible.electricCharge < 1)
-                continue;
-            if (recipe.matches(CrucibleRecipeInput.of(itemEntity.getItem(), crucible.getPowerMap()), level)) {
-                ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
-                crucible.setDirty(level, pos, state);
-                return true;
-            }
+    private static boolean tryTransmute(ServerLevel level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
+        CrucibleRecipeInput input = CrucibleRecipeInput.of(itemEntity.getItem().copy(), crucible.getElectricCharge(), crucible.getPowerMap());
+        Optional<RecipeHolder<TransmuteRecipe>> potential_recipe = level.recipeAccess().getRecipeFor(Registration.TRANS_RECIPE_TYPE.get(), input, level);
+        if(potential_recipe.isPresent()){
+            TransmuteRecipe recipe = potential_recipe.get().value();
+            ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
+            crucible.setDirty(level, pos, state);
+            return true;
         }
         return false;
     }
 
     // Attempts to find a precipitation recipe that matches, and if it does, adds the output as a new item entity and returns true.
-    private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
-        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
-        for(var holder : creation_recipes){
-            var recipe = holder.value();
-            if(recipe.needs_electricity && crucible.electricCharge < 1)
-                continue;
-            if(recipe.matches(CrucibleRecipeInput.of(crucible.getPowerMap()), level)){
-                ItemStack result = recipe.apply(crucible, level);
-                level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
-                crucible.setDirty(level, pos, state);
-                return true;
-            }
+    private static boolean tryPrecipitate(ServerLevel level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
+        CrucibleRecipeInput input = CrucibleRecipeInput.of(crucible.getElectricCharge(), crucible.getPowerMap());
+        Optional<RecipeHolder<PrecipitateRecipe>> potential_creation_recipe = level.recipeAccess().getRecipeFor(Registration.PRECIPITATE_RECIPE_TYPE.get(), input, level);
+        if(potential_creation_recipe.isPresent()){
+            PrecipitateRecipe recipe = potential_creation_recipe.get().value();
+            ItemStack result = recipe.apply(crucible, level);
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
+            crucible.setDirty(level, pos, state);
+            return true;
         }
         return false;
     }

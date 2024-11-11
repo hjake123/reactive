@@ -6,9 +6,7 @@ import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
-    protected final String group;
     protected final ItemStack product;
     protected final List<Power> reagents;
     int cost;
@@ -24,19 +21,13 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     int reagent_count;
     public boolean needs_electricity;
 
-    public PrecipitateRecipe(String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
-        this.group = group;
+    public PrecipitateRecipe(ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
         this.product = product;
         this.reagents = reagents;
         this.minimum = min;
         this.cost = cost;
         this.reagent_count = reagent_count;
         this.needs_electricity = needs_electricity;
-    }
-
-    @Override
-    public @NotNull String getGroup() {
-        return group;
     }
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
@@ -72,17 +63,15 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
+        if(needs_electricity && !input.hasCharge()){
+            return false;
+        }
         return powerMet(input, level); // Only power levels are relevant.
     }
 
     @Override
     public @NotNull ItemStack assemble(@NotNull CrucibleRecipeInput input, HolderLookup.@NotNull Provider provider) {
         return product.copy();
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-        return product;
     }
 
     public List<Power> getReagents(){ return reagents;}
@@ -108,21 +97,26 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<CrucibleRecipeInput>> getSerializer() {
         return Registration.PRECIPITATE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<CrucibleRecipeInput>> getType() {
         return Registration.PRECIPITATE_RECIPE_TYPE.get();
     }
 
-    // No, these recipes aren't for the recipe book, Mojang...
+    @Override
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return false;
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CAMPFIRE;
     }
+
+    // No, these recipes aren't for the recipe book, Mojang...
 
     @Override
     public boolean isSpecial() {

@@ -21,8 +21,7 @@ import java.util.List;
 public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteRecipe> {
 
     public static final MapCodec<TransmuteRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.STRING.optionalFieldOf("group", "transmute").forGetter(TransmuteRecipe::getGroup),
-            Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
+            Ingredient.CODEC.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
             ItemStack.CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
             Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(TransmuteRecipe::getMinimum),
@@ -42,17 +41,17 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         return STREAM_CODEC;
     }
 
-    public static @Nullable TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+    public static TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
-            reagents.add(Powers.POWERS.getRegistry().get().get(location));
+            reagents.add(Powers.POWERS.getRegistry().get().get(location).orElseThrow(() -> new RuntimeException("Invalid power!")).value());
         }        int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();
-        return new TransmuteRecipe("transmutation", reactant, product, reagents, min, cost, needs_electricity);
+        return new TransmuteRecipe(reactant, product, reagents, min, cost, needs_electricity);
     }
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {

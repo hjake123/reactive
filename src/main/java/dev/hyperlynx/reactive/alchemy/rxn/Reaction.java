@@ -23,7 +23,7 @@ public abstract class Reaction {
     protected Stimulus stimulus = Stimulus.NONE;
     public FlagTrigger observe_trigger;
     public FlagTrigger perfect_trigger;
-    protected MutableComponent name = Component.literal("Error!");
+    protected MutableComponent name;
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 

@@ -210,7 +210,9 @@ public class ReactionEffects {
                 reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS,
                         0.8F, 0.8F);
                 int count = item_entity.getItem().getCount();
-                item_entity.kill();
+                // This method only runs on the server, so this is a safe assertion.
+                assert (reactor.getLevel() instanceof ServerLevel);
+                item_entity.kill((ServerLevel) reactor.getLevel());
                 ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
                 drop_stack.setCount(count);
                 ItemEntity secret_scale = new ItemEntity(reactor.getLevel(), reactor.getBlockPos().getX() + 0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ() + 0.5, drop_stack);
@@ -352,7 +354,9 @@ public class ReactionEffects {
         assert level != null;
         for(Entity entity : CrucibleBlock.getEntitesInside(reactor.getBlockPos(), level)){
             if(entity instanceof ItemEntity item && item.getItem().is(Items.IRON_INGOT)){
-                item.kill();
+                // This method only runs on the server, so this is a safe assertion.
+                assert (reactor.getLevel() instanceof ServerLevel);
+                item.kill((ServerLevel) reactor.getLevel());
             }
         }
         var pos = Vec3.atCenterOf(reactor.getBlockPos());

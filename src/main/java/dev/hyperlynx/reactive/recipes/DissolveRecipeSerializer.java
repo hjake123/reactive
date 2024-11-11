@@ -15,8 +15,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
 
     public static final MapCodec<DissolveRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    Codec.STRING.optionalFieldOf("group", "dissolve").forGetter(DissolveRecipe::getGroup),
-                    Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(DissolveRecipe::getReactant),
+                    Ingredient.CODEC.fieldOf("reactant").forGetter(DissolveRecipe::getReactant),
                     ItemStack.STRICT_CODEC.fieldOf("product").forGetter(DissolveRecipe::getProduct),
                     Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(DissolveRecipe::isElectricityRequired)
             ).apply(instance, DissolveRecipe::new));
@@ -43,7 +42,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
         var reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         var product = ItemStack.STREAM_CODEC.decode(buffer);
         boolean needs_electricity = buffer.readBoolean();
-        return new DissolveRecipe("dissolve", reactant, product, needs_electricity);
+        return new DissolveRecipe(reactant, product, needs_electricity);
     }
 
 }

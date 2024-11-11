@@ -19,7 +19,6 @@ import java.util.List;
 public class PrecipitateRecipeSerializer implements RecipeSerializer<PrecipitateRecipe> {
 
     public static final MapCodec<PrecipitateRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Codec.STRING.optionalFieldOf("group", "transmute").forGetter(PrecipitateRecipe::getGroup),
             ItemStack.CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
             Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(PrecipitateRecipe::getMinimum),
@@ -45,13 +44,13 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
-            reagents.add(Powers.POWERS.getRegistry().get().get(location));
+            reagents.add(Powers.POWERS.getRegistry().get().get(location).orElseThrow(() -> new RuntimeException("Invalid power!")).value());
         }
         int min = buffer.readInt();
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
         boolean needs_electricity = buffer.readBoolean();
-        return new PrecipitateRecipe("precipitation", product, reagents, min, cost, reagent_count, needs_electricity);
+        return new PrecipitateRecipe(product, reagents, min, cost, reagent_count, needs_electricity);
     }
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {

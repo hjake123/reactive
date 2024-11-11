@@ -10,25 +10,34 @@ import java.util.Map;
 public class CrucibleRecipeInput implements RecipeInput {
     ItemStack item;
     Map<Power, Integer> reagents;
+    private int electric_charge = 0;
 
-    public static CrucibleRecipeInput of(ItemStack stack){
+    public static CrucibleRecipeInput of(ItemStack stack, int charge){
         var input = new CrucibleRecipeInput();
         input.item = stack;
+        input.electric_charge = charge;
         return input;
     }
 
-    public static CrucibleRecipeInput of(ItemStack stack, Map<Power, Integer> powers){
+    public static CrucibleRecipeInput of(ItemStack stack, int charge, Map<Power, Integer> powers){
         var input = new CrucibleRecipeInput();
         input.item = stack;
         input.reagents = powers;
+        input.electric_charge = charge;
         return input;
     }
 
-    public static CrucibleRecipeInput of(Map<Power, Integer> powers){
+    public static CrucibleRecipeInput of(int charge, Map<Power, Integer> powers){
         var input = new CrucibleRecipeInput();
         input.item = ItemStack.EMPTY;
         input.reagents = powers;
+        input.electric_charge = charge;
         return input;
+    }
+
+    public CrucibleRecipeInput charge(int charge){
+        electric_charge = charge;
+        return this;
     }
 
     public @NotNull ItemStack getItem() {
@@ -55,5 +64,9 @@ public class CrucibleRecipeInput implements RecipeInput {
     @Override
     public boolean isEmpty() {
         return item.isEmpty();
+    }
+
+    public boolean hasCharge(){
+        return electric_charge > 0;
     }
 }

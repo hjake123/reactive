@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,7 +18,7 @@ public interface Reactor extends PowerBearer {
     void resetReactionStatus();
 
     // The method that performs reactions.
-    default void react(Level level) {
+    default void react(ServerLevel level) {
         this.setUsedCrystalThisCycle(false);
         this.resetReactionStatus();
         for (Reaction r : ReactiveMod.REACTION_MAN.getReactions()) {

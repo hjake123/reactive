@@ -3,7 +3,9 @@ package dev.hyperlynx.reactive.recipes;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -12,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
-    protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
     protected final List<Power> reagents;
@@ -20,18 +21,13 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     int minimum;
     public boolean needs_electricity;
 
-    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
-        this.group = group;
+    public TransmuteRecipe(Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
         this.reactant = reactant;
         this.product = product;
         this.reagents = reagents;
         this.minimum = min;
         this.cost = cost;
         this.needs_electricity = needs_electricity;
-    }
-
-    public @NotNull String getGroup(){
-        return group;
     }
 
     private boolean powerMet(CrucibleRecipeInput input){
@@ -63,8 +59,11 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
-        for(ItemStack i : reactant.getItems()) {
-            if (input.getItem().is(i.getItem())) {
+        if(needs_electricity && !input.hasCharge()){
+            return false;
+        }
+        for(Holder<Item> i : reactant.items()) {
+            if (input.getItem().is(i)) {
                 return powerMet(input);
             }
         }
@@ -74,11 +73,6 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     @Override
     public @NotNull ItemStack assemble(@NotNull CrucibleRecipeInput input, HolderLookup.@NotNull Provider provider) {
         return product.copy();
-    }
-
-    @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-        return product;
     }
 
     public ItemStack getProduct() {
@@ -96,20 +90,25 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     public boolean isElectricityRequired(){ return needs_electricity; }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<CrucibleRecipeInput>> getSerializer() {
         return Registration.TRANS_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<CrucibleRecipeInput>> getType() {
         return Registration.TRANS_RECIPE_TYPE.get();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return false;
+    public @NotNull PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public @NotNull RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CAMPFIRE;
     }
 
     @Override

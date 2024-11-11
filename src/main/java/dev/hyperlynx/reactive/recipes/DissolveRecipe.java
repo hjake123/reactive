@@ -1,23 +1,20 @@
 package dev.hyperlynx.reactive.recipes;
 
 import dev.hyperlynx.reactive.Registration;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
-    protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
     public boolean needs_electricity;
 
-    public DissolveRecipe(String group, Ingredient reactant, ItemStack product, boolean needs_electricity) {
-        this.group = group;
+    public DissolveRecipe(Ingredient reactant, ItemStack product, boolean needs_electricity) {
         this.reactant = reactant;
         this.product = product;
         this.needs_electricity = needs_electricity;
@@ -25,8 +22,11 @@ public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
-        for(ItemStack i : reactant.getItems()) {
-            if (input.getItem().is(i.getItem()))
+        if(needs_electricity && !input.hasCharge()){
+            return false;
+        }
+        for(Holder<Item> i : reactant.items()) {
+            if (input.getItem().is(i))
                 return true;
         }
         return false;
@@ -39,11 +39,6 @@ public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
         return result;
     }
 
-    @Override
-    public ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
-        return product;
-    }
-
     public ItemStack getProduct() {
         return product;
     }
@@ -53,20 +48,25 @@ public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
     public boolean isElectricityRequired(){ return needs_electricity; }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<CrucibleRecipeInput>> getSerializer() {
         return Registration.DISSOLVE_SERIALIZER.get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<CrucibleRecipeInput>> getType() {
         return Registration.DISSOLVE_RECIPE_TYPE.get();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return false;
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.NOT_PLACEABLE;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return RecipeBookCategories.CAMPFIRE;
     }
 
     @Override
