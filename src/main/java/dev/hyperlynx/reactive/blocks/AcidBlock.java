@@ -50,6 +50,7 @@ public class AcidBlock extends Block implements BucketPickup {
         return Shapes.empty();
     }
 
+    @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if(entity instanceof ItemEntity item){
             ItemStack stack = item.getItem();
@@ -58,8 +59,8 @@ public class AcidBlock extends Block implements BucketPickup {
             }else{
                 stack.hurtAndBreak(3, (ServerLevel) level, null, (i) -> stack.setCount(0));
             }
-            if(stack.getCount() < 1){
-                item.kill();
+            if(stack.getCount() < 1 && (level instanceof ServerLevel slevel)){
+                item.kill(slevel);
                 level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0F, 1.0F);
             }else {
                 item.setItem(stack);
