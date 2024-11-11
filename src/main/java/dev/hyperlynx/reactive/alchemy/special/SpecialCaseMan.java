@@ -99,14 +99,14 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Tags.Items.ENDER_PEARLS)) {
-                enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
+                enderPearlDissolve((ServerLevel) Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Tags.Items.GUNPOWDERS) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10) {
-                explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
+                explodeGunpowderDueToBlaze((ServerLevel) Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
                 return true;
             }
             return false;
@@ -148,7 +148,7 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Items.SCULK_CATALYST)) {
-                sculkMagic(c, e);
+                sculkMagic(c);
                 return true;
             }
             return false;
@@ -226,13 +226,13 @@ public class SpecialCaseMan {
             c.getLevel().playSound(null, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.5, c.getBlockPos().getZ()+0.5, SoundEvents.ENDER_EYE_LAUNCH, SoundSource.NEUTRAL, 0.5F, 0.4F / (c.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
             e.getItem().shrink(1);
             if(e.getItem().getCount() < 1)
-                e.kill();
+                e.kill(serverlevel);
         }
     }
 
     // Dissolving a carved pumpkin might have many effects.
     private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
-        if (level.isClientSide || c.areaMemory.exists(level, Registration.IRON_SYMBOL.get()))
+        if (!(level instanceof ServerLevel slevel) || c.areaMemory.exists(level, Registration.IRON_SYMBOL.get()))
             return;
 
         BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
@@ -248,12 +248,12 @@ public class SpecialCaseMan {
         BlockPos candlePos = c.areaMemory.fetch(level, ConfigMan.COMMON.crucibleRange.get(), BlockTags.CANDLES);
 
         if (candlePos != null && level.getBlockState(candlePos).getValue(CandleBlock.LIT)) {
-            conjureSpirit(level, e, c, cause, candlePos);
+            conjureSpirit(slevel, e, c, cause, candlePos);
         }
     }
 
     // Either spread Sculk or change Vital to Soul using a Catalyst.
-    private static void sculkMagic(CrucibleBlockEntity c, ItemEntity e) {
+    private static void sculkMagic(CrucibleBlockEntity c) {
         if(!(c.getLevel() instanceof ServerLevel serverlevel))
             return;
 
@@ -276,8 +276,8 @@ public class SpecialCaseMan {
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
         c.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
-        EntityType.BLAZE.spawn((ServerLevel) level, (ItemStack) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
-        e.kill();
+        EntityType.BLAZE.spawn((ServerLevel) level, (ItemStack) null, null, blazeRodPos, EntitySpawnReason.MOB_SUMMONED, true, true);
+        e.kill((ServerLevel) level);
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
                 blazeRodPos.getX() + 0.5, blazeRodPos.getY() + 0.38, blazeRodPos.getZ() + 0.5, 20, 0.01);
@@ -289,31 +289,31 @@ public class SpecialCaseMan {
         level.playSound(null, blazeRodPos, SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
-    private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
+    private static void conjureSpirit(ServerLevel level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn(level, (ItemStack) null, null, candlePos, EntitySpawnReason.MOB_SUMMONED, true, true);
                 if(e.getOwner() instanceof ServerPlayer player)
                     Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
             }
             else
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn(level, (ItemStack) null, null, candlePos, EntitySpawnReason.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn(level, (ItemStack) null, null, candlePos, EntitySpawnReason.MOB_SUMMONED, true, true);
             else {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn(level, (ItemStack) null, null, candlePos, EntitySpawnReason.MOB_SUMMONED, true, true);
                 if(e.getOwner()  instanceof ServerPlayer player)
                     Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
             }
         }
-        e.kill();
+        e.kill(level);
         ParticleScribe.drawParticleLine(level, ParticleTypes.ENCHANTED_HIT,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
                 candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5, 20, 0.01);
 
         for(int i = 0; i < 10; i++) {
-            ((ServerLevel) level).sendParticles(ParticleTypes.POOF,
+            level.sendParticles(ParticleTypes.POOF,
                     candlePos.getX() + 0.5, candlePos.getY() + 0.38, candlePos.getZ() + 0.5,
                     1, 0, 0, 0, 0.0);
         }
@@ -322,33 +322,32 @@ public class SpecialCaseMan {
     }
 
     // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.
-    private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
+    private static void enderPearlDissolve(ServerLevel level, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
         float chance = ((float) c.getPowerLevel(Powers.WARP_POWER.get())) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
-        if(l.random.nextFloat() > chance){
+        if(level.random.nextFloat() > chance){
             return;
         }
 
         for(int i = 0; i < 32; ++i) {
-            ((ServerLevel) l).sendParticles(ParticleTypes.PORTAL, e.getX(), e.getY() + l.random.nextDouble() * 2.0, e.getZ(), 1, l.random.nextGaussian(), 0.0, l.random.nextGaussian(), 0.0);
+            level.sendParticles(ParticleTypes.PORTAL, e.getX(), e.getY() + level.random.nextDouble() * 2.0, e.getZ(), 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
         }
 
         boolean foundTarget = false;
 
         Entity thrower = e.getOwner();
         if(thrower != null) {
-            Player player = l.getPlayerByUUID(thrower.getUUID());
-            if(!l.isClientSide)
-                Registration.ENDER_PEARL_DISSOLVE_TRIGGER.get().trigger((ServerPlayer) player);
+            Player player = level.getPlayerByUUID(thrower.getUUID());
+            Registration.ENDER_PEARL_DISSOLVE_TRIGGER.get().trigger((ServerPlayer) player);
             if(player != null && e.level().dimension().equals(player.level().dimension())){
                 player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
                 foundTarget = true;
             }
         }
         if(!foundTarget){
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER.get(), p, 20);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.MAKE_RIFT_TRIGGER.get(), p, 20);
             c.enderRiftStrength = 2000;
         }
-        e.kill();
+        e.kill(level);
     }
 
     // Attempts to teleport an entity with Crucible range of pos to the destination.
@@ -385,9 +384,9 @@ public class SpecialCaseMan {
     }
 
     // Explode gunpowder due to blaze.
-    private static void explodeGunpowderDueToBlaze(Level l, BlockPos p, ItemEntity e){
-        l.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
-        e.kill();
+    private static void explodeGunpowderDueToBlaze(ServerLevel level, BlockPos p, ItemEntity e){
+        level.explode(e, p.getX()+0.5, p.getY()+0.5, p.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
+        e.kill(level);
     }
 
     // Putting a writable book in a crucible with Mind will change its contents.
@@ -509,10 +508,13 @@ public class SpecialCaseMan {
 
     // Phantom residue + verdant = summon a slime.
     private static void residualSlime(CrucibleBlockEntity c, ItemEntity e) {
+        if(!(c.getLevel() instanceof ServerLevel slevel)){
+            return;
+        }
         c.expendPower(Powers.VERDANT_POWER.get(), 400);
         c.setDirty();
         if(e.getItem().getCount() == 1)
-            e.kill();
+            e.kill(slevel);
         else
             e.getItem().shrink(1);
         Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.getLevel()));
