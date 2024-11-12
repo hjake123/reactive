@@ -147,7 +147,7 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Items.SCULK_CATALYST)) {
-                sculkMagic(c, e);
+                sculkMagic(c);
                 return true;
             }
             return false;
@@ -244,8 +244,8 @@ public class SpecialCaseMan {
     }
 
     // Either spread Sculk or change Vital to Soul using a Catalyst.
-    private static void sculkMagic(CrucibleBlockEntity c, ItemEntity e) {
-        if(!(c.getLevel() instanceof ServerLevel serverlevel))
+    private static void sculkMagic(CrucibleBlockEntity c) {
+        if(!(c.getLevel() instanceof ServerLevel))
             return;
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
@@ -472,7 +472,7 @@ public class SpecialCaseMan {
                 break;
             // Remove a random word from the page.
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).getAsString().split("\\s+")));
-            if(words.size() == 0)
+            if(words.isEmpty())
                 continue;
             did_anything = true;
             String victim = words.get(e.level().random.nextInt(words.size()));
