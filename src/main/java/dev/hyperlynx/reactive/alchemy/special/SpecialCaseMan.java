@@ -362,9 +362,11 @@ public class SpecialCaseMan {
         for(LivingEntity e : nearby_ents) {
             if (ConfigMan.COMMON.doNotTeleport.get().contains(e.getEncodeId())) {
                 to_be_excluded.add(e);
+                continue;
             }
             if (e instanceof Player && !can_teleport_players) {
                 to_be_excluded.add(e);
+                continue;
             }
             if (!CrystalIronItem.effectNotBlocked(e, level.random.nextFloat() < 0.02 ? 1 : 0)) {
                 to_be_excluded.add(e);
@@ -375,9 +377,9 @@ public class SpecialCaseMan {
         if(nearby_ents.isEmpty())
             return false;
 
-        LivingEntity victim = nearby_ents.get(0);
+        LivingEntity victim = nearby_ents.getFirst();
         for(LivingEntity e : nearby_ents){
-            if(victim == null || e.distanceToSqr(Vec3.atCenterOf(pos)) < victim.distanceToSqr(Vec3.atCenterOf(pos))){
+            if(e.distanceToSqr(Vec3.atCenterOf(pos)) < victim.distanceToSqr(Vec3.atCenterOf(pos))){
                 victim = e;
             }
         }
