@@ -359,18 +359,20 @@ public class SpecialCaseMan {
 
         List<LivingEntity> to_be_excluded = new ArrayList<>();
 
-        for(LivingEntity e : nearby_ents){
-            if(ConfigMan.COMMON.doNotTeleport.get().contains(e.getEncodeId())){
+        for(LivingEntity e : nearby_ents) {
+            if (ConfigMan.COMMON.doNotTeleport.get().contains(e.getEncodeId())) {
                 to_be_excluded.add(e);
             }
-            if(e instanceof Player && !can_teleport_players){
+            if (e instanceof Player && !can_teleport_players) {
+                to_be_excluded.add(e);
+            }
+            if (!CrystalIronItem.effectNotBlocked(e, level.random.nextFloat() < 0.02 ? 1 : 0)) {
                 to_be_excluded.add(e);
             }
         }
-
         nearby_ents.removeAll(to_be_excluded);
 
-        if(nearby_ents.isEmpty() || !CrystalIronItem.effectNotBlocked(nearby_ents.get(0), level.random.nextFloat() < 0.02 ? 1 : 0))
+        if(nearby_ents.isEmpty())
             return false;
 
         LivingEntity victim = nearby_ents.get(0);
