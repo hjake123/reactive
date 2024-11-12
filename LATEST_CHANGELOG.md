@@ -1,8 +1,2 @@
-- Added Alex's Caves compatability
-- Allowed the Displacement Mallet to displace adjacent blocks if it hits a Framed Motion Salt Block that is receiving Redstone Signal
-- Fixed a potential crash when viewing invalidly defined powers in JEI
-- Added Crucible error handling to avoid crashing the game if something breaks
-- Added a config option to view Power ingredients directly in the JEI menu
-- (KubeJS) Improved error handling for incorrect scripts
-- (KubeJS) Added an option to create Powers that aren't visible in the Crucible
-- (KubeJS) The KubeJS Integration Version is now `2.1`
+- Fixed a long-standing issue that sometimes caused Ender Rifts to teleport the player even if they were holding a Ferrous Crystal
+- Updated the Simplified Chinese translation (by ChuijkYahus)
