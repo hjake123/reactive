@@ -1,10 +1,10 @@
 package dev.hyperlynx.reactive.alchemy;
 
+import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;

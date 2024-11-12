@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.components;
 
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

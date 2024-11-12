@@ -1,5 +1,9 @@
 package dev.hyperlynx.reactive.client.renderers;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -7,9 +11,6 @@ import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.Color;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
-import dev.hyperlynx.reactive.ConfigMan;
 
 import java.util.Objects;
 

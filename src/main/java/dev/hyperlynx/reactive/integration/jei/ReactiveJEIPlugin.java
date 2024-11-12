@@ -1,12 +1,12 @@
 package dev.hyperlynx.reactive.integration.jei;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.items.StaffItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
-import dev.hyperlynx.reactive.ConfigMan;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -14,7 +14,10 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
-import mezz.jei.api.registration.*;
+import mezz.jei.api.registration.IModIngredientRegistration;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -26,7 +29,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @JeiPlugin
 public class ReactiveJEIPlugin implements IModPlugin {

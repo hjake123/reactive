@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import com.mojang.serialization.MapCodec;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;

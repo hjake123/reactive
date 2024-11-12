@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.util;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;

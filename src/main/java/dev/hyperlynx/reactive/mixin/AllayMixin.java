@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.mixin;
 
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.ConfigMan;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

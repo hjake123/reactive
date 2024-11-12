@@ -1,10 +1,10 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.components.BoundEntity;
-import dev.hyperlynx.reactive.client.particles.ParticleScribe;
-import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.components.BoundEntity;
+import dev.hyperlynx.reactive.util.BeamHelper;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,6 +36,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Objects;
 

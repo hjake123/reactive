@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

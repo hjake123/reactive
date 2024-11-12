@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.integration.kubejs.CustomReaction;

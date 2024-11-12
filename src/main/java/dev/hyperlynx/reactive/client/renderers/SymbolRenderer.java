@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.client.renderers;
 
-import dev.hyperlynx.reactive.be.SymbolBlockEntity;
-import dev.hyperlynx.reactive.blocks.SymbolBlock;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.hyperlynx.reactive.be.SymbolBlockEntity;
+import dev.hyperlynx.reactive.blocks.SymbolBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;

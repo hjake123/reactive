@@ -1,12 +1,9 @@
 package dev.hyperlynx.reactive.client;
 
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
-//import com.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
-//import com.simibubi.create.foundation.ponder.PonderRegistry;
-//import com.simibubi.create.infrastructure.ponder.AllPonderTags;
-import dev.hyperlynx.reactive.client.particles.*;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;

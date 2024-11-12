@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.mixin;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.Vex;
 import org.spongepowered.asm.mixin.Mixin;

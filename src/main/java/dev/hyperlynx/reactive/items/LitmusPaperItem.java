@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -7,7 +8,6 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
-import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;

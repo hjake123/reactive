@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
+import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.GravityBeamBlockEntity;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;

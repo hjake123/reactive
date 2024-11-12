@@ -5,6 +5,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Random;
 
 public class AcidBubbleParticle extends TextureSheetParticle {

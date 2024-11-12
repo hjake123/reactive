@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import com.mojang.serialization.MapCodec;
+import dev.hyperlynx.reactive.Registration;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantBodyBlock;

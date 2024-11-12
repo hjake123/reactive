@@ -1,7 +1,5 @@
 package dev.hyperlynx.reactive.util;
 
-import javax.annotation.Nullable;
-
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +10,8 @@ import net.minecraft.world.level.block.NetherPortalBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.extensions.IBlockStateExtension;
+
+import javax.annotation.Nullable;
 
 // Verbatim clone of PortalShape, but it pretends SolidPortalBlocks are empty space.
 // Only other way to do this was a mixin or something so this seems preferable.

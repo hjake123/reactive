@@ -2,10 +2,14 @@ package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import net.minecraft.advancements.*;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.core.HolderLookup;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
 import java.util.List;
 import java.util.function.Consumer;
 

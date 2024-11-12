@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.special;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -11,7 +12,6 @@ import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
-import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.HyperPortalShape;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,10 @@ import net.minecraft.tags.StructureTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Skeleton;
@@ -43,13 +46,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.WritableBookContent;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CandleBlock;
+import net.minecraft.world.level.block.MossBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.

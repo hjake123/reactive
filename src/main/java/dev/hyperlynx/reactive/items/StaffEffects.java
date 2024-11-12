@@ -1,10 +1,10 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.blocks.AirLightBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.BeamHelper;
-import dev.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
 import java.util.List;
 
 // A container class for the various effects that the staff items can have when right-clicked.

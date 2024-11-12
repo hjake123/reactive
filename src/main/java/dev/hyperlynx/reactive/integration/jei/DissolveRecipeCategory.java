@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.jei;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -20,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import dev.hyperlynx.reactive.ConfigMan;
 
 import java.util.List;
 

@@ -1,15 +1,18 @@
 package dev.hyperlynx.reactive.be;
 
+import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
-import dev.hyperlynx.reactive.alchemy.*;
+import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
-import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;

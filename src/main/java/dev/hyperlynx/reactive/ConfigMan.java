@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive;
 
 import com.google.common.collect.Lists;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ConfigMan {
     public static class Common {
