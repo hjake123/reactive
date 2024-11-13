@@ -38,11 +38,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Phantom;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -515,6 +515,12 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         setDirty();
     }
 
+    @Override
+    public void setRemoved() {
+        NeoForge.EVENT_BUS.unregister(this);
+        super.setRemoved();
+    }
+
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
@@ -522,14 +528,21 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
+        LivingEntity entity = event.getEntity();
+
         double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
         if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), Registration.IRON_SYMBOL.get())) {
             return;
         }
 
-        if(event.getEntity().isInvertedHealAndHarm()){
-            if(!event.getSource().is(DamageTypes.ON_FIRE) && !event.getSource().is(DamageTypes.IN_FIRE))
-                addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 30, 300));
+        if(entity.getTags().contains("reactive:sacrifice_drained")){
+            return;
+        }
+        event.getEntity().addTag("reactive:sacrifice_drained");
+
+        if(event.getEntity().isInvertedHealAndHarm()) {
+            if (!event.getSource().is(DamageTypes.ON_FIRE) && !event.getSource().is(DamageTypes.IN_FIRE))
+                addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("undead_curse_strength", 60, 300));
             return;
         }
 
@@ -555,15 +568,15 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         int power;
         int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get();
         if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 200, 400);
         } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 400, 500);
         } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 450, 500);
         } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 200, 600);
         } else {
-            power = WorldSpecificValue.get("weak_sacrifice", 30, 60);
+            power = WorldSpecificValue.get("weak_sacrifice_" + event.getEntity().getEncodeId(), 60, 120);
         }
         addPower(Powers.VITAL_POWER.get(), power);
         setDirty();
