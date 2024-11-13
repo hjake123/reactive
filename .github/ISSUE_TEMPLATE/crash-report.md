@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Version**
-Which version of the mod you're using (e.g. 1.21.1-9k.0).
+Which version of the mod you're using (e.g. `1.21.1-9k.0`).
 
 **To Reproduce**
 Steps to cause the crash:
@@ -17,4 +17,4 @@ Steps to cause the crash:
 3. Crash
 
 **Crash log**
-Please add your crash log here or attach it to the post.
+Please attach your crash log to the post.
