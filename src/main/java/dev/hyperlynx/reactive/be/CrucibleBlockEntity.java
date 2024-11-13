@@ -500,6 +500,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         setDirty();
     }
 
+    @Override
+    public void setRemoved() {
+        MinecraftForge.EVENT_BUS.unregister(this);
+        super.setRemoved();
+    }
+
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
@@ -540,15 +546,15 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         int power;
         int best_sacrifice_type = WorldSpecificValues.BEST_SACRIFICE.get();
         if (best_sacrifice_type == 1 && event.getEntity() instanceof Animal) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 200, 400);
         } else if (best_sacrifice_type == 2 && event.getEntity() instanceof AbstractVillager) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 400, 500);
         } else if (best_sacrifice_type == 3 && (event.getEntity() instanceof AbstractPiglin || event.getEntity() instanceof Hoglin)) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 450, 500);
         } else if (best_sacrifice_type == 4 && event.getEntity() instanceof Monster) {
-            power = WorldSpecificValue.get("strong_sacrifice", 300, 600);
+            power = WorldSpecificValue.get("strong_sacrifice", 200, 600);
         } else {
-            power = WorldSpecificValue.get("weak_sacrifice", 30, 60);
+            power = WorldSpecificValue.get("weak_sacrifice_" + event.getEntity().getEncodeId(), 60, 120);
         }
         addPower(Powers.VITAL_POWER.get(), power);
         setDirty();
