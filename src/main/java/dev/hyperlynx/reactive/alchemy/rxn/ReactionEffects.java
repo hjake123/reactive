@@ -137,7 +137,7 @@ public class ReactionEffects {
 
                 if (!c.getLevel().isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
-                        victim.hurt(c.getLevel().damageSources().magic(), 12);
+                        victim.hurt(c.getLevel().damageSources().magic(), 5);
                     ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             c.getBlockPos().getX() + 0.5F, c.getBlockPos().getY() + 0.5625F, c.getBlockPos().getZ() + 0.5F,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
@@ -239,8 +239,8 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
-            e.hurt(c.getLevel().damageSources().inFire(), 7);
-            e.setSecondsOnFire(7);
+            e.hurt(c.getLevel().damageSources().inFire(), 4);
+            e.setRemainingFireTicks(140);
         }
         return c;
     }
