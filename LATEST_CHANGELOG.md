@@ -1,9 +1,7 @@
-- Allowed the Displacement Mallet to displace adjacent blocks if it hits a Framed Motion Salt Block that is receiving Redstone Signal
-- Fixed a potential crash when viewing invalidly defined powers in JEI
-- Added Crucible error handling to avoid crashing the game if something breaks
-- (KubeJS) Improved error handling for incorrect scripts
-- (KubeJS) Added an option to create Powers that aren't visible in the Crucible
-- (KubeJS) The KubeJS Integration Version is now `2.1`
-- Reverted compatibility fix for old versions of EMI
-- Added Alex's Caves compatibility proactively in case it updates soon
-
+- Fixed a long-standing issue that sometimes caused Ender Rifts to teleport the player even if they were holding a Ferrous Crystal
+- Buffed sacrifice and made its yield vary between kinds of mob
+- Fixed a bug where multiple Crucibles could benefit from a single sacrifice
+- Fixed a bug where already removed Crucibles could receive a sacrifice
+- Nerfed Discharge reaction
+- Nerfed Flamethrower reaction
+- Updated the Simplified Chinese translation (by ChuijkYahus)
