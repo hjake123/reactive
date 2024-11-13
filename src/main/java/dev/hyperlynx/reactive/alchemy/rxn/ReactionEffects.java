@@ -119,7 +119,7 @@ public class ReactionEffects {
     }
 
     public static void discharge(Reactor reactor) {
-        reactor.incrementElectricCharge(5);
+        reactor.addElectricCharge(5);
         if (reactor.getElectricCharge() > 21) {
             BlockPos potential_rod = reactor.getAreaMemory().fetch(reactor.getLevel(), Blocks.LIGHTNING_ROD);
             if (potential_rod != null) {
@@ -141,7 +141,7 @@ public class ReactionEffects {
 
                 if (!reactor.getLevel().isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
-                        victim.hurt(reactor.getLevel().damageSources().magic(), 12);
+                        victim.hurt(reactor.getLevel().damageSources().magic(), 5);
                     ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             reactor.getBlockPos().getX() + 0.5F, reactor.getBlockPos().getY() + 0.5625F, reactor.getBlockPos().getZ() + 0.5F,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
@@ -239,7 +239,7 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
-            e.hurt(reactor.getLevel().damageSources().inFire(), 7);
+            e.hurt(reactor.getLevel().damageSources().inFire(), 4);
             e.setRemainingFireTicks(140);
         }
     }

@@ -73,7 +73,7 @@ public interface Reactor extends PowerBearer {
 
     void setElectricCharge(int i);
 
-    default void incrementElectricCharge(int i){
+    default void addElectricCharge(int i){
         setElectricCharge(getElectricCharge() + i);
     }
 }
