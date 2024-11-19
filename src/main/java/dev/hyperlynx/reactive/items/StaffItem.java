@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +60,7 @@ public class StaffItem extends BlockItem {
                 effectFunction.apply((Player) player);
 
             if(!level.isClientSide) {
+                level.gameEvent(GameEvent.PROJECTILE_SHOOT, player.getEyePosition(), GameEvent.Context.of(player));
                 effectFunction.apply((Player) player);
                 if (player.getOffhandItem().is(stack.getItem())) {
                     player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});

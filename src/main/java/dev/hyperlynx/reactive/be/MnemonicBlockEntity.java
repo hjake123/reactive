@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,7 @@ public class MnemonicBlockEntity extends BlockEntity {
                             output.signal > 0 ? SoundEvents.BAMBOO_WOOD_PRESSURE_PLATE_CLICK_ON : SoundEvents.BAMBOO_WOOD_PRESSURE_PLATE_CLICK_OFF,
                             SoundSource.BLOCKS, 1.3F, 0.5F + ((output.signal + 1) / 54.0F));
                     level.playSound(null, pos, SoundEvents.MUD_HIT, SoundSource.BLOCKS, 0.1F, 0.7F + ((output.signal + 1) / 54.0F));
+                    level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
                     counter = output.duration;
                     index++;
                 }

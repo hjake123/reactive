@@ -30,6 +30,7 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -173,6 +174,7 @@ public class WarpStaffItem extends StaffItem{
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
                             0.6F, 1.0F + user.level().random.nextFloat()*0.2F);
+                    level.gameEvent(GameEvent.ENTITY_DAMAGE, entityHit.getEntity().getEyePosition(), GameEvent.Context.of(entityHit.getEntity()));
                 }
                 stack.hurtAndBreak(1, user, (unused) -> {});
                 return InteractionResultHolder.success(stack);
@@ -183,6 +185,7 @@ public class WarpStaffItem extends StaffItem{
                     bound.teleportTo(beam_end.x, beam_end.y, beam_end.z);
                     zap(user, beam_end, ParticleTypes.REVERSE_PORTAL);
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    level.gameEvent(GameEvent.TELEPORT, bound.getEyePosition(), GameEvent.Context.of(bound));
                 }
                 stack.getTag().remove(TAG_BOUND_ENTITY_UUID);
                 stack.hurtAndBreak(1, user, (unused) -> {

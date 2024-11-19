@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.function.Function;
 
@@ -31,6 +32,7 @@ public class LightStaffItem extends StaffItem {
             return InteractionResultHolder.fail(player.getItemInHand(hand));
 
         if(!level.isClientSide) {
+            level.gameEvent(GameEvent.ITEM_INTERACT_FINISH, player.getEyePosition(), GameEvent.Context.of(player));
             effectFunction.apply((Player) player);
             player.getItemInHand(hand).hurtAndBreak(1, player, (LivingEntity l) -> {});
         }
@@ -47,6 +49,7 @@ public class LightStaffItem extends StaffItem {
                 level.setBlock(light_to_break, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                 ParticleScribe.drawParticleSphere(level, ParticleTypes.SMOKE, light_to_break, 0.5, 0.2, 5);
                 level.playSound(null, light_to_break, SoundEvents.GENERIC_BURN, SoundSource.PLAYERS, 0.5F, 1F);
+                level.gameEvent(GameEvent.BLOCK_DESTROY, entity.getEyePosition(), GameEvent.Context.of(entity));
             }
         }
         return false;

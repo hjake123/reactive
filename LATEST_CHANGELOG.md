@@ -1,7 +1,5 @@
-- Fixed a long-standing issue that sometimes caused Ender Rifts to teleport the player even if they were holding a Ferrous Crystal
-- Buffed sacrifice and made its yield vary between kinds of mob
-- Fixed a bug where multiple Crucibles could benefit from a single sacrifice
-- Fixed a bug where already removed Crucibles could receive a sacrifice
-- Nerfed Discharge reaction
-- Nerfed Flamethrower reaction
-- Updated the Simplified Chinese translation (by ChuijkYahus)
+- Added accurate sculk vibrations for all sound-producing features
+- (KubeJS) Added a `reactive:power_bottle` item type for custom power bottles
+- (KubeJS) Added a method to set a name component for custom Powers without using a lang file
+- (KubeJS) The KubeJS Integration Version is now `2.2`
+- (Versioning) Moved to `MAJOR.MINOR.PATCH`; `MINOR` replaces the letter

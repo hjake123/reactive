@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
+import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
@@ -12,13 +13,10 @@ import dev.hyperlynx.reactive.advancements.FlagCriterion;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.PowerBearer;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,6 +48,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -134,6 +133,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
                                 crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                                 level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
+                                level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(state));
                             }
                         }
 
@@ -174,6 +174,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70) {
                             if (processItemsInside(level, pos, state, crucible)) {
                                 level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F + (level.getRandom().nextFloat() / 5));
+                                level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(state));
                             }
                         }
                     }
@@ -226,13 +227,16 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             if(state.getValue(CrucibleBlock.FULL))
                 crucible.addPower(Powers.MIND_POWER.get(), 23);
             level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.2f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
             crucible.integrity--;
         }
         else if(crucible.integrity == 2){
             level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
         }
         else if(crucible.integrity == 1){
             level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
         }
         else if(crucible.integrity < 1){
             empty(level, pos, state, crucible);
@@ -256,11 +260,33 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
+    public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
+        boolean changed = false;
+        for(Power p : Powers.POWER_SUPPLIER.get()){
+            if(p.matchesBottle(context.getBottle())){
+                if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
+                    if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
+                        crucible.enderRiftStrength = 2000;
+                    }
+                    context.reduceByOne();
+                    changed = true;
+                }
+            }
+        }
+
+        if(changed){
+            crucible.setDirty();
+            crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
+            crucible.getLevel().gameEvent(GameEvent.FLUID_PICKUP, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
+        }
+    }
+
     public static void empty(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 400){
             // Astral takes multiple clicks to empty.
             crucible.expendPower(Powers.ASTRAL_POWER.get(), crucible.getPowerLevel(Powers.ASTRAL_POWER.get())/2);
             level.setBlock(pos, state.setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+            level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
             return;
         }
         if(crucible.getTotalPowerLevel() > 0) {
@@ -295,6 +321,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                             BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, Blocks.NETHER_PORTAL);
                             SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
                             crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            level.gameEvent(GameEvent.EXPLODE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
@@ -398,8 +425,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         boolean changed = false;
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(pos, level)){
             if(entity_inside instanceof ItemEntity item_entity){
-                SpecialCaseMan.checkDissolveSpecialCases(crucible, (ItemEntity) entity_inside);
-                PowerBottleItem.tryEmptyPowerBottle((ItemEntity) entity_inside, crucible);
+                SpecialCaseMan.checkDissolveSpecialCases(crucible, item_entity);
+                insertPowerBottle(crucible, new PowerBottleInsertContext(item_entity));
                 // The special case may have removed the item entity; continue to the next if it has died.
                 if(!item_entity.isAlive()) continue;
 

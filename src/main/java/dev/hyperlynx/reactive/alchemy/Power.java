@@ -25,8 +25,8 @@ public class Power {
     private final Color color;
     private final ResourceLocation location;
     private final String name;
-    private final Item bottle;
-    private final Item render_item;
+    protected Item bottle;
+    protected Item render_item;
     private final Supplier<Block> render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
@@ -149,7 +149,7 @@ public class Power {
 
     public boolean matchesBottle(ItemStack i){
         if(hasBottle())
-            return i.is(bottle);
+            return i.is(getBottle().getItem());
         return false;
     }
 

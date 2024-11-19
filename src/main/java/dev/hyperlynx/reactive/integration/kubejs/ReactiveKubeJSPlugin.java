@@ -21,6 +21,7 @@ public class ReactiveKubeJSPlugin extends KubeJSPlugin {
 
     public void init() {
         POWER_REGISTRY_INFO.addType("custom_power", PowerBuilder.class, PowerBuilder::new);
+        RegistryInfo.ITEM.addType("reactive:power_bottle", CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new);
     }
 
     @Override

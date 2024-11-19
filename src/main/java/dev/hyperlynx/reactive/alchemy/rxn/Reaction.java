@@ -12,6 +12,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
 import java.util.HashMap;
@@ -151,6 +152,7 @@ public abstract class Reaction {
     public void run(CrucibleBlockEntity crucible){
         if(!(crucible.getLevel() instanceof ServerLevel server))
             return;
+        crucible.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
         if(criterion != null) {
             // Award the completion criteria.
             FlagCriterion.triggerForNearbyPlayers(server, criterion, crucible.getBlockPos(), 6);

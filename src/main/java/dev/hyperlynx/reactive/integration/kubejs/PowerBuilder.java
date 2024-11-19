@@ -6,27 +6,32 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
 import dev.latvian.mods.kubejs.registry.RegistryInfo;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.RegistryObject;
+import org.apache.logging.log4j.Level;
 
 import java.util.function.Supplier;
 
 public class PowerBuilder extends BuilderBase<Power> {
     public transient int color;
-    public transient Item bottle;
-    public transient Item render_item;
+    public transient Supplier<Item> bottle;
+    public transient Supplier<Item> render_item;
     public transient Supplier<Block> render_water_block;
     public transient boolean invisible = false;
+    public transient MutableComponent custom_component = null;
 
     public PowerBuilder(ResourceLocation id) {
         super(id);
         color = 0xFFFFFF;
-        render_item = Items.BARRIER;
-        bottle = null;
+        render_item = () -> Items.BARRIER;
+        bottle = () -> null;
         render_water_block = () -> Blocks.WATER;
     }
 
@@ -37,8 +42,9 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     @Override
     public Power createObject() {
-        Power power = new Power(this.id, color, render_water_block, bottle, render_item);
+        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle, render_item);
         power.invisible = this.invisible;
+        power.custom_component = custom_component;
         return power;
     }
 
@@ -47,21 +53,13 @@ public class PowerBuilder extends BuilderBase<Power> {
         return this;
     }
 
-    public PowerBuilder icon(Item icon){
-        if(icon.getDefaultInstance().isEmpty()){
-            ReactiveMod.LOGGER.error("Power {} has an invalid render item! Falling back to barrier icon.", this.id);
-            return this;
-        }
-        this.render_item = icon;
+    public PowerBuilder icon(ResourceLocation icon_id){
+        this.render_item = () -> getItem(icon_id, true);
         return this;
     }
 
-    public PowerBuilder bottle(Item bottle){
-        if(bottle.getDefaultInstance().isEmpty()){
-            ReactiveMod.LOGGER.error("Power {} has an invalid bottle item!", this.id);
-            return this;
-        }
-        this.bottle = bottle;
+    public PowerBuilder bottle(ResourceLocation bottle_id){
+        this.bottle = () -> getItem(bottle_id, false);
         return this;
     }
 
@@ -94,5 +92,22 @@ public class PowerBuilder extends BuilderBase<Power> {
     public PowerBuilder setInvisible(){
         this.invisible = true;
         return this;
+    }
+
+    public PowerBuilder setName(MutableComponent name){
+        this.custom_component = name;
+        return this;
+    }
+
+    @SuppressWarnings("deprecation")
+    public Item getItem(ResourceLocation id, boolean barrier_if_invalid){
+        Item item = BuiltInRegistries.ITEM.get(id);
+        if(item == Items.AIR){
+            if(barrier_if_invalid){
+                return Items.BARRIER;
+            }
+            return null;
+        }
+        return item;
     }
 }
