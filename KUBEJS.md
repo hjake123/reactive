@@ -47,7 +47,7 @@ StartupEvents.registry('item', event => {
 })
 ```
 
-You can feel free to add any item properties freely (as long as you don't override the use method), and the item should work as a bottle.
+You can add any item properties freely (as long as you don't override the use method), and the item should work as a bottle.
 
 # Adding Special Cases
 Some of the effects in the mod are represented as 'Special Cases' that occur when you do certain actions involving the Crucible. You can implement two kinds of these in KubeJS by handling different events in your server script file.
