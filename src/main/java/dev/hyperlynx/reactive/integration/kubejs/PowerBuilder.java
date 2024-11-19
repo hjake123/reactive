@@ -4,6 +4,8 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -16,6 +18,7 @@ public class PowerBuilder extends BuilderBase<Power> {
     public transient Item render_item;
     public transient Block render_water_block;
     public transient boolean invisible = false;
+    public transient MutableComponent custom_component = null;
 
     public PowerBuilder(ResourceLocation id) {
         super(id);
@@ -27,8 +30,9 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     @Override
     public Power createObject() {
-        Power power = new Power(this.id, color, render_water_block, bottle, render_item);
+        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle, render_item);
         power.invisible = this.invisible;
+        power.custom_component = custom_component;
         return power;
     }
 
@@ -87,6 +91,11 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     public PowerBuilder setInvisible(){
         this.invisible = true;
+        return this;
+    }
+
+    public PowerBuilder setName(MutableComponent name){
+        this.custom_component = name;
         return this;
     }
 }

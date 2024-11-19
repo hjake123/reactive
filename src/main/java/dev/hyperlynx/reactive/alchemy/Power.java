@@ -100,7 +100,7 @@ public class Power {
         render_item = renderItem;
     }
 
-    public static TagKey<Item> getSourceTag(ResourceLocation location){
+    public TagKey<Item> getSourceTag(){
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
 
@@ -141,7 +141,7 @@ public class Power {
     public static List<Power> getSourcePower(ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
         Powers.POWER_REGISTRY.stream().forEach((power) -> {
-            if (i.is(Power.getSourceTag(power.location)))
+            if (i.is(power.getSourceTag()))
                 stack_powers.add(power);
         });
         return stack_powers;
