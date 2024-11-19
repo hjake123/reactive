@@ -17,6 +17,7 @@ StartupEvents.registry('reactive:powers', event => {
         .color(0xFF00FF)
         .icon('namespace:some_item')
         .setMagicWater()
+        .setName(Component.string('Custom'))
 })
 ```
 
@@ -29,11 +30,24 @@ There are a few other possible method calls:
 - `.setFastWater()` causes the power to use a more quickly moving water texture in the Crucible.
 - `.setSlowWater()` causes the power to use a less quickly moving water texture in the Crucible.
 - `.setCustomWater(Block)` causes the power to use any given block as its water texture. If the block is not animated, this will look bad!
-- `.setInvisible()` causes the power to not change the appearance of water in the Crucible at all. The color is still used for Litmus Paper, but the water texture will not appear anywhere.
+- `.setInvisible()` causes the power to not change the appearance of water in the Crucible at all. The color is still used for Litmus Paper, but the water texture will not appear anywhere. (added in 2.1)
+- `.setName(Component)` chooses a custom name for the Power. (added in 2.2)
 
-Once a Power is made, it may be used as a valid entry for recipes (which can of course be made using KubeJS or a data pack). You can also add a language entry for it similarly to KubeJS custom items or blocks.
+Once a Power is made, it may be used as a valid entry for recipes (which can of course be made using KubeJS or a data pack). You can also add a language entry for it similarly to KubeJS custom items or blocks. 
 
 Sources for the Power will automatically be searched for in the item tag `reactive:(power_name)_sources`; `reactive:custom_power_sources` for the above. Remember to put especially strong items into `reactive:high_potency` and consider adding Dissolve recipes if they should leave some byproduct.
+
+## Power Bottles
+The `.bottle()` method for the Power builder accepts any item, but only items that are registered as Power Bottles can be inserted into a Crucible with shift-right-click. 
+
+To create your own Power Bottle item, use the `reactive:power_bottle` item type (added in 2.2):
+```js
+StartupEvents.registry('item', event => {
+    event.create('custom_bottle', 'reactive:power_bottle')
+})
+```
+
+You can feel free to add any item properties freely (as long as you don't override the use method), and the item should work as a bottle.
 
 # Adding Special Cases
 Some of the effects in the mod are represented as 'Special Cases' that occur when you do certain actions involving the Crucible. You can implement two kinds of these in KubeJS by handling different events in your server script file.
