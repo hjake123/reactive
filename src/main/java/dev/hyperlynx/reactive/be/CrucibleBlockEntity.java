@@ -55,6 +55,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -139,6 +140,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                             if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
                                 crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                                 level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
+                                level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(state));
                             }
                         }
 
@@ -179,6 +181,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                         if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL) && crucible.integrity > 70) {
                             if (processItemsInside(level, pos, state, crucible)) {
                                 level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1F, 0.65F + (level.getRandom().nextFloat() / 5));
+                                level.gameEvent(GameEvent.BLOCK_ACTIVATE, pos, GameEvent.Context.of(state));
                             }
                         }
                     }
@@ -243,13 +246,16 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             if(state.getValue(CrucibleBlock.FULL))
                 crucible.addPower(Powers.MIND_POWER.get(), 23);
             level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 0.2f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
             crucible.integrity--;
         }
         else if(crucible.integrity == 2){
             level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
         }
         else if(crucible.integrity == 1){
             level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 1.0f, 0.9f);
+            level.gameEvent(GameEvent.EXPLODE, pos, GameEvent.Context.of(state));
         }
         else if(crucible.integrity < 1){
             empty(level, pos, state, crucible);
@@ -278,6 +284,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             // Astral takes multiple clicks to empty.
             crucible.expendPower(Powers.ASTRAL_POWER.get(), crucible.getPowerLevel(Powers.ASTRAL_POWER.get())/2);
             level.setBlock(pos, state.setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+            level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(state));
             return;
         }
         if(crucible.getTotalPowerLevel() > 0) {
@@ -333,6 +340,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                             BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, Blocks.NETHER_PORTAL);
                             SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
                             crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            level.gameEvent(GameEvent.EXPLODE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
@@ -612,6 +620,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         if(changed){
             crucible.setDirty();
             crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
+            crucible.getLevel().gameEvent(GameEvent.FLUID_PICKUP, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
         }
     }
 

@@ -18,6 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -41,6 +42,8 @@ public class DisplacerItem extends Item {
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
         EquipmentSlot slot = LivingEntity.getSlotForHand(context.getHand());
+
+        level.gameEvent(GameEvent.HIT_GROUND, context.getClickedPos(), GameEvent.Context.of(context.getLevel().getBlockState(context.getClickedPos())));
 
         ItemStack stack = context.getItemInHand();
         boolean hyper_mode = EnchantmentHelper.has(stack, Registration.WORLD_PIERCER.value());

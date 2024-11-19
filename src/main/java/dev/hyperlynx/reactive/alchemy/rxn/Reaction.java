@@ -11,6 +11,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
 import java.util.HashMap;
@@ -164,6 +165,7 @@ public abstract class Reaction {
     public void run(Reactor reactor){
         if(!(reactor.getLevel() instanceof ServerLevel server))
             return;
+        reactor.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, reactor.getBlockPos(), GameEvent.Context.of(reactor.getBlockState()));
         if(observe_trigger != null) {
             // Award the completion criteria.
             FlagTrigger.triggerForNearbyPlayers(server, observe_trigger, reactor.getBlockPos(), 6);

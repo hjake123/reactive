@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 
 public class VortexStoneItem extends Item {
@@ -34,6 +35,7 @@ public class VortexStoneItem extends Item {
         player.setDeltaMovement(new_movement);
         player.resetFallDistance();
         level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS, 1.0F, 0.95F + (level.random.nextFloat()*0.1F));
+        level.gameEvent(GameEvent.PROJECTILE_SHOOT, player.getEyePosition(), GameEvent.Context.of(player));
         ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
         player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), ConfigMan.SERVER.vortexStoneCooldown.get());
 
