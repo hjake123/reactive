@@ -7,7 +7,7 @@ Changes to this number are marked in the changelog for a given version if they h
 | 9a                          | 1.0                        |
 | 9d                          | 2.0                        |
 | 9k                          | 2.1                        |
-| 9.13.0                      | 2.2                        |
+| 9.13                        | 2.2                        |
 
 # Adding Powers
 Custom Powers are added to `reactive:powers` at startup using `StartupEvents.registry`, like so:
