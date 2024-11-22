@@ -299,6 +299,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         }
         crucible.sculkSpreader.clear();
         crucible.reaction_status.clear();
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
     }
 
     @Override
