@@ -55,7 +55,7 @@ ordering="NONE"
 # Side this dependency is applied on - BOTH, CLIENT, or SERVER
 side="BOTH"
 
-[dependencies.${mod_id}]] #optional
+[[dependencies.${mod_id}]] #optional
 # the modid of the dependency
 modId="patchouli" #mandatory
 # Does this dependency have to exist - if not, ordering below must be specified

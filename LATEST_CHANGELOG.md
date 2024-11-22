@@ -1,5 +1,4 @@
-- Added accurate sculk vibrations for all sound-producing features
-- (KubeJS) Added a `reactive:power_bottle` item type for custom power bottles
-- (KubeJS) Added a method to set a name component for custom Powers without using a lang file
-- (KubeJS) The KubeJS Integration Version is now `2.2`
-- (Versioning) Moved to `MAJOR.MINOR.PATCH`; `MINOR` replaces the letter
+- Fixed JEI recipes not reporting their id correctly when debug tooltips are enabled
+- Added missing vibrations for some Crucible events
+- Patchouli dependency is now enforced
+- Filled in missing information in the Mods menu and jar file manifest
