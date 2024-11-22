@@ -29,7 +29,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
     public @Nullable ResourceLocation getRegistryName(DissolveRecipe recipe) {
-        return ReactiveMod.location("dissolve");
+        return recipe.getId();
     }
 
     @Override

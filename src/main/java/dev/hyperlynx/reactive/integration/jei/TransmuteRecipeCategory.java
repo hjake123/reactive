@@ -24,7 +24,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public @Nullable ResourceLocation getRegistryName(TransmuteRecipe recipe) {
-        return ReactiveMod.location("transmute");
+        return recipe.getId();
     }
 
     @Override
