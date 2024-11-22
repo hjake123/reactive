@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
@@ -191,6 +192,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             level.setBlock(pos, state.setValue(FULL, true), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.4F, 1F);
         }
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
     }
 
     private static void extractQuartzBottle(Level level, BlockPos pos, Player player, InteractionHand hand, CrucibleBlockEntity c) {
@@ -202,6 +204,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 player.addItem(SpecialCaseMan.checkBottleSpecialCases(c, p.getBottle()));
                 player.getItemInHand(hand).shrink(1);
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1F);
+                level.gameEvent(GameEvent.ITEM_INTERACT_FINISH, pos, GameEvent.Context.of(level.getBlockState(pos)));
             }
         }
         c.setDirty();
@@ -227,6 +230,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         }
         player.getItemInHand(hand).shrink(amount);
         level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1F, 1F);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
         level.setBlock(pos, state.setValue(FULL, false), Block.UPDATE_CLIENTS);
     }
 
@@ -238,6 +242,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 7);
         level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
         CriteriaTriggers.TRY_LAVA_CRUCIBLE_TRIGGER.trigger(player);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
     }
 
     private static void netherCrucibleFill(Level level, BlockPos pos, ServerPlayer player) {

@@ -301,6 +301,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
         crucible.sculkSpreader.clear();
         crucible.reaction_status.clear();
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
