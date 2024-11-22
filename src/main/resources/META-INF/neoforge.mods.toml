@@ -59,6 +59,7 @@ config="reactive.mixins.json"
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
+
 [[dependencies.${mod_id}]] #optional
     # the modid of the dependency
     modId="patchouli" #mandatory
@@ -72,7 +73,7 @@ config="reactive.mixins.json"
     ordering="AFTER"
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
-# Here's another dependency
+
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required" #mandatory
