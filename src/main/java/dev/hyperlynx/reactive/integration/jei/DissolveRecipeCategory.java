@@ -19,20 +19,21 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
+public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<DissolveRecipe>> {
     @Override
-    public @Nullable ResourceLocation getRegistryName(@Nullable DissolveRecipe recipe) {
-        return ReactiveMod.location("dissolve");
+    public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<DissolveRecipe> holder) {
+        return holder.id();
     }
 
     @Override
-    public @NotNull RecipeType<DissolveRecipe> getRecipeType() {
-        return RecipeType.create(ReactiveMod.MODID, "dissolve", DissolveRecipe.class);
+    public @NotNull RecipeType<RecipeHolder<DissolveRecipe>> getRecipeType() {
+        return RecipeType.createFromVanilla(Registration.DISSOLVE_RECIPE_TYPE.get());
     }
 
     @Override
@@ -60,7 +61,9 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, @NotNull IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<DissolveRecipe> holder, @NotNull IFocusGroup focuses) {
+        DissolveRecipe recipe = holder.value();
+
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
         input_slot.setSlotName("reactant");
@@ -78,9 +81,9 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     }
 
     @Override
-    public void draw(DissolveRecipe recipe, @Nullable IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<DissolveRecipe> holder, @Nullable IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
         background().draw(gui);
-        if(recipe.needs_electricity){
+        if(holder.value().needs_electricity){
             drawElectricLabel(gui);
         }
     }

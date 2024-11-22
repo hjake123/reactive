@@ -71,8 +71,8 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         setHelpers(registration.getJeiHelpers());
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());
-        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()).parallelStream().map(RecipeHolder::value).toList());
+        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()));
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()));
         addDescriptions(registration);
         addStaffRepairRecipe(Registration.STAFF_OF_BLAZE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe(Registration.STAFF_OF_LIFE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
@@ -101,9 +101,11 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
         for(ItemStack i : registration.getIngredientManager().getAllIngredients(VanillaTypes.ITEM_STACK)){
             if(!Power.getSourcePower(i).isEmpty() && !excluded.contains(i.getItem())) {
-                registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), List.of(new DissolveRecipe(
-                        "power_source",
-                        Ingredient.of(i), ItemStack.EMPTY, false)));
+                registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), List.of(new RecipeHolder<>(
+                        ReactiveMod.location(i.getDescriptionId() + ".power_release_autogen"),
+                        new DissolveRecipe(
+                            "power_source",
+                            Ingredient.of(i), ItemStack.EMPTY, false))));
             }
         }
     }

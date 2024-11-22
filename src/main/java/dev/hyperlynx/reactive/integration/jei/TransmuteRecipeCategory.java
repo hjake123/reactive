@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -16,21 +17,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe> {
-
+public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<TransmuteRecipe>> {
     @Override
-    public @Nullable ResourceLocation getRegistryName(@Nullable TransmuteRecipe recipe) {
-        return ReactiveMod.location("transmute");
+    public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<TransmuteRecipe> holder) {
+        return holder.id();
     }
 
     @Override
-    public @NotNull RecipeType<TransmuteRecipe> getRecipeType() {
-        return RecipeType.create(ReactiveMod.MODID, "transmute", TransmuteRecipe.class);
+    public RecipeType<RecipeHolder<TransmuteRecipe>> getRecipeType() {
+        return RecipeType.createFromVanilla(Registration.TRANS_RECIPE_TYPE.get());
     }
 
     @Override
@@ -58,7 +59,9 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, TransmuteRecipe recipe, @Nullable IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TransmuteRecipe> holder, @Nullable IFocusGroup focuses) {
+        TransmuteRecipe recipe = holder.value();
+
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
@@ -105,9 +108,9 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     @Override
-    public void draw(TransmuteRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<TransmuteRecipe> holder, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
         background().draw(gui);
-        if(recipe.needs_electricity){
+        if(holder.value().needs_electricity){
             drawElectricLabel(gui);
         }
     }
