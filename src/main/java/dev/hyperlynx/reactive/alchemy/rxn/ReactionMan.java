@@ -217,6 +217,7 @@ public class ReactionMan {
         initialized = false;
         REACTIONS.clear();
         BASE_POWER_LIST.clear();
+        NeoForge.EVENT_BUS.post(new ReactionResetEvent());
     }
 
     /**
@@ -226,6 +227,13 @@ public class ReactionMan {
      * if you want reaction advancements and their data gen to work.
      */
     public static class ReactionConstructEvent extends Event {
+
+    }
+
+    /**
+     * This event is fired after ReactionMan resets the world's reactions.
+     */
+    public static class ReactionResetEvent extends Event {
 
     }
 

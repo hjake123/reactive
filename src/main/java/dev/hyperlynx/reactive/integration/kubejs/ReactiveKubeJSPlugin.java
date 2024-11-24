@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.integration.kubejs;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
@@ -13,6 +14,8 @@ import dev.latvian.mods.kubejs.script.BindingRegistry;
 import net.minecraft.core.registries.Registries;
 
 public class ReactiveKubeJSPlugin implements KubeJSPlugin {
+    public static EventHandlerCache REACTIONS = new EventHandlerCache();
+
     @Override
     public void init() {
 

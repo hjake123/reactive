@@ -5,6 +5,8 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.integration.kubejs.KubeScriptException;
 import dev.hyperlynx.reactive.integration.kubejs.ReactionFactory;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,4 +34,9 @@ public class KubeReactionConstructEvent implements KubeEvent {
         }
     }
 
+
+    @Override
+    public void afterPosted(EventResult result) {
+        ReactiveKubeJSPlugin.REACTIONS.ingestReactionHandlers();
+    }
 }

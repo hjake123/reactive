@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEvent;
+import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
@@ -35,9 +36,9 @@ public class CustomReaction extends Reaction {
         var event = new CustomReactionTickEvent(this, crucible);
         EventResult result;
         if(crucible.getLevel().isClientSide){
-            result = EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.post(ScriptType.CLIENT, event);
+            result = ReactiveKubeJSPlugin.REACTIONS.processClientTestEvent(event);
         } else {
-            result = EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.post(ScriptType.SERVER, event);
+            result = ReactiveKubeJSPlugin.REACTIONS.processServerTestEvent(event);
         }
         if(result.interruptFalse()){
             return Status.INHIBITED;
@@ -46,24 +47,24 @@ public class CustomReaction extends Reaction {
     }
 
     @Override
-    public void run(Reactor crucible) {
-        EventTransceiver.CUSTOM_REACTION_RUN_EVENT.post(ScriptType.SERVER, new CustomReactionTickEvent(this, crucible));
+    public void run(Reactor reactor) {
+        ReactiveKubeJSPlugin.REACTIONS.processRunEvent(new CustomReactionTickEvent(this, reactor));
         if(cost > 0){
-            expendPower(crucible, cost);
+            expendPower(reactor, cost);
         }
-        output_power.ifPresent(power -> crucible.addPower(power, yield));
-        super.run(crucible);
+        output_power.ifPresent(power -> reactor.addPower(power, yield));
+        super.run(reactor);
     }
 
     @Override
-    public void render(Level l, Reactor crucible) {
-        EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(ScriptType.CLIENT, new CustomReactionTickEvent(this, crucible));
+    public void render(Level l, Reactor reactor) {
+        ReactiveKubeJSPlugin.REACTIONS.processRenderEvent(new CustomReactionTickEvent(this, reactor));
     }
 
-    private void expendPower(Reactor crucible, int cost){
+    private void expendPower(Reactor reactor, int cost){
         for(Power p : this.getReagents().keySet()){
-            crucible.expendPower(p, (int) ((double) cost/this.getReagents().size()) + 1);
-            crucible.setDirty();
+            reactor.expendPower(p, (int) ((double) cost/this.getReagents().size()) + 1);
+            reactor.setDirty();
         }
     }
 }
