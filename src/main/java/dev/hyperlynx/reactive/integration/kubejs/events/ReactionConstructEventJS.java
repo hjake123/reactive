@@ -32,4 +32,9 @@ public class ReactionConstructEventJS extends EventJS {
         return power;
     }
 
+
+    @Override
+    public void afterPosted(EventResult result) {
+        ReactiveKubeJSPlugin.REACTIONS.ingestReactionHandlers();
+    }
 }

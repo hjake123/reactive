@@ -35,9 +35,9 @@ public class CustomReaction extends Reaction {
         var event = new CustomReactionTickEventJS(this, crucible);
         EventResult result;
         if(crucible.getLevel().isClientSide){
-            result = EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.post(ScriptType.CLIENT, event);
+            result = ReactiveKubeJSPlugin.REACTIONS.processClientTestEvent(event);
         } else {
-            result = EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.post(ScriptType.SERVER, event);
+            result = ReactiveKubeJSPlugin.REACTIONS.processServerTestEvent(event);
         }
         if(result.interruptFalse()){
             return Status.INHIBITED;
