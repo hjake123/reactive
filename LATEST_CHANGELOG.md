@@ -1,4 +1,2 @@
-- Fixed JEI recipes not reporting their id correctly when debug tooltips are enabled
-- Added missing vibrations for some Crucible events
-- Patchouli dependency is now enforced
-- Filled in missing information in the Mods menu and jar file manifest
+- Fixed a broken link in the Journal
+- Optimized KubeJS reaction event handling by adding a cache
