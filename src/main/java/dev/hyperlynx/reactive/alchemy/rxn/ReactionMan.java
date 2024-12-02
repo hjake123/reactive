@@ -189,7 +189,7 @@ public class ReactionMan {
         initialized = false;
         REACTIONS.clear();
         BASE_POWER_LIST.clear();
-        NeoForge.EVENT_BUS.post(new ReactionResetEvent());
+        MinecraftForge.EVENT_BUS.post(new ReactionResetEvent());
     }
 
     /**

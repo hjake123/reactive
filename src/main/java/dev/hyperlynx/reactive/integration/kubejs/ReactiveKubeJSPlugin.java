@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
@@ -14,6 +15,7 @@ import dev.latvian.mods.kubejs.util.ClassFilter;
 
 public class ReactiveKubeJSPlugin extends KubeJSPlugin {
     protected static RegistryInfo<Power> POWER_REGISTRY_INFO;
+    public static EventHandlerCache REACTIONS = new EventHandlerCache();
 
     public ReactiveKubeJSPlugin(){
         POWER_REGISTRY_INFO = RegistryInfo.of(Powers.POWERS.getRegistryKey(), Power.class);

@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
 import dev.latvian.mods.kubejs.event.EventExit;
+import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.IEventHandler;
-import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class EventHandlerCache {
         client_reaction_tests.clear();
     }
 
-    private EventResult processEvent(KubeEvent event, List<IEventHandler> handlers){
+    private EventResult processEvent(EventJS event, List<IEventHandler> handlers){
         for(IEventHandler handler : handlers){
             try {
                 handler.onEvent(event);
@@ -51,19 +51,19 @@ public class EventHandlerCache {
         return EventResult.PASS;
     }
 
-    public EventResult processClientTestEvent(CustomReactionTickEvent event){
+    public EventResult processClientTestEvent(CustomReactionTickEventJS event){
         return processEvent(event, client_reaction_tests);
     }
 
-    public EventResult processServerTestEvent(CustomReactionTickEvent event){
+    public EventResult processServerTestEvent(CustomReactionTickEventJS event){
         return processEvent(event, server_reaction_tests);
     }
 
-    public EventResult processRunEvent(CustomReactionTickEvent event){
+    public EventResult processRunEvent(CustomReactionTickEventJS event){
         return processEvent(event, reaction_runners);
     }
 
-    public EventResult processRenderEvent(CustomReactionTickEvent event){
+    public EventResult processRenderEvent(CustomReactionTickEventJS event){
         return processEvent(event, reaction_renderers);
     }
 

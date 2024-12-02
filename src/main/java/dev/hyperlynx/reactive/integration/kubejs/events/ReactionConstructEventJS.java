@@ -5,7 +5,9 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.integration.kubejs.KubeScriptException;
 import dev.hyperlynx.reactive.integration.kubejs.ReactionFactory;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.latvian.mods.kubejs.event.EventJS;
+import dev.latvian.mods.kubejs.event.EventResult;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 

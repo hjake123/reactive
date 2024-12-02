@@ -35,7 +35,7 @@ public class EventTransceiver {
     }
 
     @SubscribeEvent
-    private static void translateReactionResetEvent(ReactionMan.ReactionResetEvent event){
+    public static void translateReactionResetEvent(ReactionMan.ReactionResetEvent event){
         ReactiveKubeJSPlugin.REACTIONS.resetReactionHandlers();
     }
 }
