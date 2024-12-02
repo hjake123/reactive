@@ -1,6 +1,10 @@
 {
   "replace": false,
   "values": [
-    "minecraft:piston_head"
+    "minecraft:piston_head",
+    {
+      "id": "quark:sturdy_stone",
+      "required": false
+    }
   ]
 }
