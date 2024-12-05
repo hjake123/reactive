@@ -1,3 +1,2 @@
-- Fixed a broken link in the Journal
-- Optimized KubeJS reaction event handling by adding a cache
-- (Integration) Prevented Quark's Sturdy Stone from falling due to motion salt gravity
+- Fixed a broken link in the Simplified Chinese translation (by ChuijkYahus)
+
