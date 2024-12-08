@@ -65,20 +65,23 @@ public class LitmusScreen extends Screen {
         switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 5 - switch_button.getHeight());
         this.addRenderableWidget(switch_button);
 
-        Button page_backward = Button.builder(
-                Component.literal("<"),
-                LitmusScreen::pageBackward).build();
-        page_backward.setPosition(0, 0);
-        page_backward.setWidth(10);
-        this.addRenderableWidget(page_backward);
+        if(this.page > 0) {
+            Button page_backward = Button.builder(
+                    Component.literal("<"),
+                    LitmusScreen::pageBackward).build();
+            page_backward.setWidth(20);
+            page_backward.setPosition(this.width / 2 - (switch_button.getWidth() / 2) - page_backward.getWidth(), this.height / 5 - switch_button.getHeight());
+            this.addRenderableWidget(page_backward);
+        }
 
-        Button page_forward = Button.builder(
-                Component.literal(">"),
-                LitmusScreen::pageForward).build();
-        page_forward.setPosition(10, 0);
-        page_forward.setWidth(10);
-        this.addRenderableWidget(page_forward);
-
+        if(this.page < this.max_page){
+            Button page_forward = Button.builder(
+                    Component.literal(">"),
+                    LitmusScreen::pageForward).build();
+            page_forward.setWidth(20);
+            page_forward.setPosition(this.width / 2 + (switch_button.getWidth() / 2), this.height / 5 - switch_button.getHeight());
+            this.addRenderableWidget(page_forward);
+        }
     }
 
     /*
