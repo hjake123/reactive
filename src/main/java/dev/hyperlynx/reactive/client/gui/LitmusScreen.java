@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class LitmusScreen extends Screen {
@@ -23,6 +24,8 @@ public class LitmusScreen extends Screen {
     List<Component> reaction_lines;
     int y = 0;
     DisplayState state = DisplayState.POWERS;
+    int page = 0;
+    int max_page = 0;
 
     enum DisplayState {
         POWERS,
@@ -42,14 +45,16 @@ public class LitmusScreen extends Screen {
 
     protected void init() {
         super.init();
+        addLine(Component.empty());
         switch (state){
             case DisplayState.POWERS -> {
-                for (Component component : buildPowerText(measurement)) {
+                List<Component> measurement_lines = paginate(buildPowerText(measurement));
+                for (Component component : measurement_lines) {
                     addLine(component);
                 }
             }
             case DisplayState.REACTIONS -> {
-                for(Component component : reaction_lines){
+                for(Component component : paginate(reaction_lines)){
                     addLine(component);
                 }
             }
@@ -57,8 +62,40 @@ public class LitmusScreen extends Screen {
         Button switch_button = Button.builder(
                 Component.translatable(state.equals(DisplayState.POWERS) ? "text.reactive.view_reactions" : "text.reactive.view_powers"),
                 LitmusScreen::toggle).build();
-        switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 7 - switch_button.getHeight());
+        switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 5 - switch_button.getHeight());
         this.addRenderableWidget(switch_button);
+
+        Button page_backward = Button.builder(
+                Component.literal("<"),
+                LitmusScreen::pageBackward).build();
+        page_backward.setPosition(0, 0);
+        page_backward.setWidth(10);
+        this.addRenderableWidget(page_backward);
+
+        Button page_forward = Button.builder(
+                Component.literal(">"),
+                LitmusScreen::pageForward).build();
+        page_forward.setPosition(10, 0);
+        page_forward.setWidth(10);
+        this.addRenderableWidget(page_forward);
+
+    }
+
+    /*
+    Select only lines on page (this.page).
+    There are 10 lines on each page.
+     */
+    static int PAGE_LENGTH = 16;
+    private List<Component> paginate(List<Component> components) {
+        List<Component> paginated = new LinkedList<>(components);
+        for(int i = 0; i < page * PAGE_LENGTH; i++) {
+            paginated.removeFirst();
+        }
+        while (paginated.size() > PAGE_LENGTH) {
+            paginated.removeLast();
+        }
+        this.max_page = components.size() / PAGE_LENGTH;
+        return paginated;
     }
 
     private static void toggle(Button button) {
@@ -66,6 +103,27 @@ public class LitmusScreen extends Screen {
             switch (lit_screen.state) {
                 case DisplayState.POWERS -> lit_screen.state = DisplayState.REACTIONS;
                 case DisplayState.REACTIONS -> lit_screen.state = DisplayState.POWERS;
+            }
+            lit_screen.page = 0;
+            lit_screen.y = 0;
+            Minecraft.getInstance().setScreen(lit_screen);
+        }
+    }
+
+    private static void pageForward(Button button) {
+        if (Minecraft.getInstance().screen instanceof LitmusScreen lit_screen){
+            if(lit_screen.page < lit_screen.max_page){
+                lit_screen.page++;
+            }
+            lit_screen.y = 0;
+            Minecraft.getInstance().setScreen(lit_screen);
+        }
+    }
+
+    private static void pageBackward(Button button) {
+        if (Minecraft.getInstance().screen instanceof LitmusScreen lit_screen){
+            if(lit_screen.page > 0){
+                lit_screen.page--;
             }
             lit_screen.y = 0;
             Minecraft.getInstance().setScreen(lit_screen);
@@ -75,7 +133,7 @@ public class LitmusScreen extends Screen {
     private void addLine(Component component) {
         StringWidget line = new StringWidget(component, Minecraft.getInstance().font);
         int line_width = line.getWidth();
-        line.setPosition(this.width / 2 - line_width / 2, this.height / 7 + 10 + y);
+        line.setPosition(this.width / 2 - line_width / 2, this.height / 5 + y);
         line.alignCenter();
         y += 10;
         this.addRenderableWidget(line);
