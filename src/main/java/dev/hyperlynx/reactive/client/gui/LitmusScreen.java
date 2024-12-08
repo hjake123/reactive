@@ -23,7 +23,7 @@ public class LitmusScreen extends Screen {
     LitmusMeasurement measurement;
     List<Component> reaction_lines;
     int y = 0;
-    DisplayState state = DisplayState.POWERS;
+    DisplayState state;
     int page = 0;
     int max_page = 0;
 
@@ -36,6 +36,8 @@ public class LitmusScreen extends Screen {
         super(Component.translatable("item.reactive.litmus_paper"));
         this.reaction_lines = reaction_lines;
         this.measurement = measurement;
+        assert Minecraft.getInstance().player != null;
+        this.state = Minecraft.getInstance().player.isShiftKeyDown() ? DisplayState.REACTIONS : DisplayState.POWERS;
     }
 
     @Override
