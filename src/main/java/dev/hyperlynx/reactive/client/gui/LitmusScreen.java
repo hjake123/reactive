@@ -1,13 +1,12 @@
 package dev.hyperlynx.reactive.client.gui;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -15,18 +14,20 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class LitmusScreen extends Screen {
     LitmusMeasurement measurement;
     List<Component> reaction_lines;
     int y = 0;
+    DisplayState state = DisplayState.POWERS;
+
+    enum DisplayState {
+        POWERS,
+        REACTIONS
+    }
 
     public LitmusScreen(LitmusMeasurement measurement, List<Component> reaction_lines) {
         super(Component.translatable("item.reactive.litmus_paper"));
@@ -41,19 +42,40 @@ public class LitmusScreen extends Screen {
 
     protected void init() {
         super.init();
-
-        for(Component component : buildPowerText(measurement)){
-            addLine(component);
+        switch (state){
+            case DisplayState.POWERS -> {
+                for (Component component : buildPowerText(measurement)) {
+                    addLine(component);
+                }
+            }
+            case DisplayState.REACTIONS -> {
+                for(Component component : reaction_lines){
+                    addLine(component);
+                }
+            }
         }
-        for(Component component : reaction_lines){
-            addLine(component);
+        Button switch_button = Button.builder(
+                Component.translatable(state.equals(DisplayState.POWERS) ? "text.reactive.view_reactions" : "text.reactive.view_powers"),
+                LitmusScreen::toggle).build();
+        switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 7 - switch_button.getHeight());
+        this.addRenderableWidget(switch_button);
+    }
+
+    private static void toggle(Button button) {
+        if (Minecraft.getInstance().screen instanceof LitmusScreen lit_screen){
+            switch (lit_screen.state) {
+                case DisplayState.POWERS -> lit_screen.state = DisplayState.REACTIONS;
+                case DisplayState.REACTIONS -> lit_screen.state = DisplayState.POWERS;
+            }
+            lit_screen.y = 0;
+            Minecraft.getInstance().setScreen(lit_screen);
         }
     }
 
     private void addLine(Component component) {
         StringWidget line = new StringWidget(component, Minecraft.getInstance().font);
         int line_width = line.getWidth();
-        line.setPosition(this.width / 2 - line_width / 2, this.height / 4 + y);
+        line.setPosition(this.width / 2 - line_width / 2, this.height / 7 + 10 + y);
         line.alignCenter();
         y += 10;
         this.addRenderableWidget(line);
