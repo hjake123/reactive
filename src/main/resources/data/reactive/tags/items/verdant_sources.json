@@ -5,7 +5,6 @@
     "minecraft:moss_carpet",
     "minecraft:grass",
     "minecraft:fern",
-    "minecraft:glow_lichen",
     "#minecraft:saplings",
     "#minecraft:flowers",
     "minecraft:kelp",
@@ -41,5 +40,8 @@
       "id": "alexscaves:tree_star",
       "required": false
     }
+  ],
+  "remove": [
+    "minecraft:wither_rose"
   ]
 }

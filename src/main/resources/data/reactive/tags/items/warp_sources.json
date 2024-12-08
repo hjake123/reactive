@@ -7,6 +7,7 @@
     "minecraft:warped_roots",
     "minecraft:twisting_vines",
     "minecraft:warped_roots",
+    "minecraft:chorus_fruit",
     {
       "id": "quark:chorus_weeds",
       "required": false
