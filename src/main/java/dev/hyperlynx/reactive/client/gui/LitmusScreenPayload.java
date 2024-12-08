@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.client.gui;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -15,9 +16,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record LitmusScreenPayload(List<Component> components) implements CustomPacketPayload {
+public record LitmusScreenPayload(LitmusMeasurement measurement, List<Component> components) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<LitmusScreenPayload> TYPE = new CustomPacketPayload.Type<>(ReactiveMod.location("litmus_screen_payload"));
     public static final StreamCodec<? super FriendlyByteBuf, LitmusScreenPayload> STREAM_CODEC = StreamCodec.composite(
+            LitmusMeasurement.STREAM_CODEC, LitmusScreenPayload::measurement,
             ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.apply(ByteBufCodecs.list()), LitmusScreenPayload::components,
             LitmusScreenPayload::new
     );
@@ -36,7 +38,7 @@ public record LitmusScreenPayload(List<Component> components) implements CustomP
     public static class Handler implements IPayloadHandler<LitmusScreenPayload> {
         @Override
         public void handle(@NotNull LitmusScreenPayload payload, @NotNull IPayloadContext context) {
-            Minecraft.getInstance().setScreen(new LitmusScreen(payload.components));
+            Minecraft.getInstance().setScreen(new LitmusScreen(payload.measurement, payload.components));
         }
     }
 

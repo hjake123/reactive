@@ -80,27 +80,31 @@ public class LitmusPaperItem extends Item {
         }else{
             if(!player.level().isClientSide){
                 // This must be done on the server to allow for querying the player's advancements.
-                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
-                for(ReactionStatusEntry entry : measurement.statuses()){
-                    switch(entry.status()){
-                        case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
-                        case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                        case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
-                        case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                        case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
-                        case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
-                        case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.reacting")));
-                    }
-                }
+                appendReactionText(player, text, measurement);
             }
         }
         return text;
+    }
+
+    private void appendReactionText(Player player, List<Component> text, LitmusMeasurement measurement) {
+        text.add(Component.translatable("text.reactive.reaction_header").withStyle(ChatFormatting.GRAY));
+        for(ReactionStatusEntry entry : measurement.statuses()){
+            switch(entry.status()){
+                case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
+                case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
+                case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
+                case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
+                case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.reacting")));
+            }
+        }
     }
 
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
@@ -129,19 +133,18 @@ public class LitmusPaperItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
+        ItemStack stack = player.getItemInHand(hand);
+        if(!stack.has(Registration.LITMUS_MEASUREMENT))
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        if(!player.isShiftKeyDown() && level.isClientSide) {
-            Minecraft.getInstance().setScreen(new LitmusScreen(buildMeasurementText(player.getItemInHand(hand), player)));
-        } else if(player.isShiftKeyDown() && player instanceof ServerPlayer splayer) {
-            PacketDistributor.sendToPlayer(splayer, new LitmusScreenPayload(buildMeasurementText(player.getItemInHand(hand), player)));
-        }
+        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT);
+
+        showScreen(player, measurement);
 
 //        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
 //            player.sendSystemMessage(line);
 //        }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
+        return InteractionResultHolder.pass(stack);
     }
 
     @Override
@@ -156,8 +159,18 @@ public class LitmusPaperItem extends Item {
         }
 
         takeMeasurement(context.getItemInHand(), crucible);
+        LitmusMeasurement measurement = context.getItemInHand().get(Registration.LITMUS_MEASUREMENT);
+        showScreen(context.getPlayer(), measurement);
 
         return InteractionResult.SUCCESS;
+    }
+
+    private void showScreen(Player player, LitmusMeasurement measurement) {
+        if(player instanceof ServerPlayer splayer) {
+            List<Component> reaction_text = new ArrayList<>();
+            appendReactionText(player, reaction_text, measurement);
+            PacketDistributor.sendToPlayer(splayer, new LitmusScreenPayload(measurement, reaction_text));
+        }
     }
 
     public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible){
