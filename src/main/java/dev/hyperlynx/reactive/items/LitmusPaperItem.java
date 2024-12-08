@@ -8,9 +8,12 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
+import dev.hyperlynx.reactive.client.gui.LitmusScreen;
+import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,6 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -128,9 +132,15 @@ public class LitmusPaperItem extends Item {
         if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
-            player.sendSystemMessage(line);
+        if(!player.isShiftKeyDown() && level.isClientSide) {
+            Minecraft.getInstance().setScreen(new LitmusScreen(buildMeasurementText(player.getItemInHand(hand), player)));
+        } else if(player.isShiftKeyDown() && player instanceof ServerPlayer splayer) {
+            PacketDistributor.sendToPlayer(splayer, new LitmusScreenPayload(buildMeasurementText(player.getItemInHand(hand), player)));
         }
+
+//        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
+//            player.sendSystemMessage(line);
+//        }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 

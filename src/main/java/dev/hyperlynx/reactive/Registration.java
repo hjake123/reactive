@@ -8,6 +8,8 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
+import dev.hyperlynx.reactive.client.gui.LitmusScreen;
+import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.components.BoundEntity;
@@ -682,6 +684,11 @@ public class Registration {
                 WorldSpecificValue.AlchemySeedData.TYPE,
                 WorldSpecificValue.AlchemySeedData.STREAM_CODEC,
                 new WorldSpecificValue.AlchemySeedPayloadHandler()
+        );
+        registrar.commonToClient(
+                LitmusScreenPayload.TYPE,
+                LitmusScreenPayload.STREAM_CODEC,
+                new LitmusScreenPayload.Handler()
         );
     }
 
