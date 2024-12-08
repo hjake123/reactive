@@ -7,7 +7,6 @@
     "minecraft:tall_grass",
     "minecraft:seagrass",
     "minecraft:fern",
-    "minecraft:glow_lichen",
     "#minecraft:saplings",
     "#minecraft:flowers",
     "minecraft:kelp",
@@ -43,5 +42,8 @@
       "id": "alexscaves:tree_star",
       "required": false
     }
+  ],
+  "remove": [
+    "minecraft:wither_rose"
   ]
 }
