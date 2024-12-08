@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LitmusPaperItem extends Item {
     public LitmusPaperItem(Properties props) {
@@ -167,6 +168,10 @@ public class LitmusPaperItem extends Item {
 
     private void showScreen(Player player, LitmusMeasurement measurement) {
         if(player instanceof ServerPlayer splayer) {
+            if(measurement.measurements().stream().anyMatch(line ->
+                    Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
+                Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+            }
             List<Component> reaction_text = new ArrayList<>();
             appendReactionText(player, reaction_text, measurement);
             PacketDistributor.sendToPlayer(splayer, new LitmusScreenPayload(measurement, reaction_text));
