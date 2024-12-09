@@ -1,19 +1,23 @@
 package dev.hyperlynx.reactive.client.gui;
 
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -64,7 +68,7 @@ public class LitmusScreen extends Screen {
         Button switch_button = Button.builder(
                 Component.translatable(state.equals(DisplayState.POWERS) ? "text.reactive.view_reactions" : "text.reactive.view_powers"),
                 LitmusScreen::toggle).build();
-        switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 5 - switch_button.getHeight());
+        switch_button.setPosition(this.width / 2 - (switch_button.getWidth() / 2), this.height / 6 - switch_button.getHeight());
         this.addRenderableWidget(switch_button);
 
         if(this.page > 0) {
@@ -72,7 +76,7 @@ public class LitmusScreen extends Screen {
                     Component.literal("<"),
                     LitmusScreen::pageBackward).build();
             page_backward.setWidth(20);
-            page_backward.setPosition(this.width / 2 - (switch_button.getWidth() / 2) - page_backward.getWidth(), this.height / 5 - switch_button.getHeight());
+            page_backward.setPosition(this.width / 2 - (switch_button.getWidth() / 2) - page_backward.getWidth(), this.height / 6 - switch_button.getHeight());
             this.addRenderableWidget(page_backward);
         }
 
@@ -81,16 +85,15 @@ public class LitmusScreen extends Screen {
                     Component.literal(">"),
                     LitmusScreen::pageForward).build();
             page_forward.setWidth(20);
-            page_forward.setPosition(this.width / 2 + (switch_button.getWidth() / 2), this.height / 5 - switch_button.getHeight());
+            page_forward.setPosition(this.width / 2 + (switch_button.getWidth() / 2), this.height / 6 - switch_button.getHeight());
             this.addRenderableWidget(page_forward);
         }
     }
 
     /*
     Select only lines on page (this.page).
-    There are 10 lines on each page.
      */
-    static int PAGE_LENGTH = 16;
+    static int PAGE_LENGTH = 13;
     private List<Component> paginate(List<Component> components) {
         List<Component> paginated = new LinkedList<>(components);
         for(int i = 0; i < page * PAGE_LENGTH; i++) {
@@ -99,7 +102,7 @@ public class LitmusScreen extends Screen {
         while (paginated.size() > PAGE_LENGTH) {
             paginated.removeLast();
         }
-        this.max_page = components.size() / PAGE_LENGTH;
+        this.max_page = (components.size() - 1) / PAGE_LENGTH;
         return paginated;
     }
 
@@ -146,7 +149,7 @@ public class LitmusScreen extends Screen {
 
     private List<Component> buildPowerText(LitmusMeasurement measurement){
         List<Component> text = new ArrayList<>();
-        text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+        //text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
         for(LitmusMeasurement.Line line : measurement.measurements()){
             TextColor color = TextColor.fromRgb(0xFFFFFF);
             if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
@@ -154,9 +157,6 @@ public class LitmusScreen extends Screen {
                 if(power != null) {
                     color = power.getTextColor();
                 }
-//                if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-//                    Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
-//                } TODO re-implement
             }
             text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
         }
@@ -167,12 +167,19 @@ public class LitmusScreen extends Screen {
             text.add(Component.translatable("text.reactive.measurement_empty")
                     .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
         }
-        text.add(Component.empty());
         if(measurement.integrity_violated()){
             text.add(Component.translatable("text.reactive.litmus_integrity_failure")
                     .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.DARK_RED : ChatFormatting.WHITE));
         }
 
         return text;
+    }
+
+    private static final ResourceLocation PAPER_BACKGROUND = ReactiveMod.location("textures/gui/litmus.png");
+
+    @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.renderBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.blit(PAPER_BACKGROUND, this.width / 2 - 90, this.height / 8, 26, 8, 181, 200);
     }
 }
