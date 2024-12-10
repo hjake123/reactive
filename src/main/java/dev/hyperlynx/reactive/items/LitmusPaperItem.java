@@ -42,7 +42,6 @@ public class LitmusPaperItem extends Item {
     }
 
     private void appendReactionText(Player player, List<Component> text, LitmusMeasurement measurement) {
-        text.add(Component.translatable("text.reactive.reaction_header").withStyle(ConfigMan.COMMON.litmusScreen.get() ? ChatFormatting.BOLD : ChatFormatting.GRAY));
         for(ReactionStatusEntry entry : measurement.statuses()){
             switch(entry.status()){
                 case STABLE -> text.add(Component.translatable("text.reactive.stable"));

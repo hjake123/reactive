@@ -74,8 +74,11 @@ public class LitmusScreen extends Screen {
     protected void init() {
         super.init();
         List<LitmusScreenComponent> lines = buildPowerText(measurement);
-        lines.add(new LitmusScreenComponent(Component.empty(), false));
-        lines.addAll(reaction_lines.stream().map((line) -> new LitmusScreenComponent(line, false)).toList());
+        lines.add(new LitmusScreenComponent(Component.empty(), false, false));
+        lines.add(new LitmusScreenComponent(
+                Component.translatable("text.reactive.reaction_header").withStyle(ConfigMan.COMMON.litmusScreen.get() ? ChatFormatting.BOLD : ChatFormatting.GRAY),
+                false, true));
+        lines.addAll(reaction_lines.stream().map((line) -> new LitmusScreenComponent(line, false, false)).toList());
         lines_to_draw = lines;
 
         page_backward = Button.builder(
@@ -123,9 +126,15 @@ public class LitmusScreen extends Screen {
     private List<LitmusScreenComponent> paginate(List<LitmusScreenComponent> components) {
         List<LitmusScreenComponent> paginated = new LinkedList<>(components);
         for(int i = 0; i < page * PAGE_LENGTH; i++) {
+            if(paginated.getFirst().header && i == (page * PAGE_LENGTH - 1)){
+                continue;
+            }
             paginated.removeFirst();
         }
         while (paginated.size() > PAGE_LENGTH) {
+            paginated.removeLast();
+        }
+        if(paginated.getLast().header){
             paginated.removeLast();
         }
         this.max_page = (components.size() - 1) / PAGE_LENGTH;
@@ -154,7 +163,9 @@ public class LitmusScreen extends Screen {
 
     private List<LitmusScreenComponent> buildPowerText(LitmusMeasurement measurement){
         List<LitmusScreenComponent> text = new ArrayList<>();
-        text.add(new LitmusScreenComponent(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.BOLD), false));
+        text.add(new LitmusScreenComponent(
+                Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.BOLD),
+                false, true));
         for(LitmusMeasurement.Line line : measurement.measurements()){
             TextColor color = TextColor.fromRgb(0xFFFFFF);
             if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
@@ -164,7 +175,7 @@ public class LitmusScreen extends Screen {
                 }
             }
             text.add(new LitmusScreenComponent(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color).withBold(false)),
-                    true));
+                    true, false));
         }
 
         LocalPlayer player = Minecraft.getInstance().player;
@@ -173,13 +184,13 @@ public class LitmusScreen extends Screen {
             text.add(new LitmusScreenComponent(
                     Component.translatable("text.reactive.measurement_empty")
                     .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY),
-                    false));
+                    true, false));
         }
         if(measurement.integrity_violated()){
             text.add(new LitmusScreenComponent(
                     Component.translatable("text.reactive.litmus_integrity_failure")
-                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.DARK_RED : ChatFormatting.WHITE),
-                    false));
+                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.RED : ChatFormatting.WHITE),
+                    true, false));
         }
 
         return text;
@@ -201,5 +212,5 @@ public class LitmusScreen extends Screen {
         );
     }
 
-    static record LitmusScreenComponent (Component component, boolean power_text) {}
+    static record LitmusScreenComponent (Component component, boolean power_text, boolean header) {}
 }
