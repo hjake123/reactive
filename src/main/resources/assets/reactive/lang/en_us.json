@@ -255,6 +255,7 @@
   "reactive.configuration.maxMoveBlockBreakTime": "Max Movable Blocks Break Duration",
   "reactive.configuration.lightStaffLightsPermanent": "Light Staff Permanent Lights",
   "reactive.configuration.registerCommand": "Register /reactive Command",
+  "reactive.configuration.litmusScreen": "Use GUI for Litmus Paper",
   "reactive.configuration.colorizeLitmusOutput": "Colorized Litmus Paper Output",
   "reactive.configuration.crucibleRange": "Crucible Entity Effect Range",
   "reactive.configuration.doNotTeleport": "Do Not Teleport",

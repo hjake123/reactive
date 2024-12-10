@@ -42,20 +42,20 @@ public class LitmusPaperItem extends Item {
     }
 
     private void appendReactionText(Player player, List<Component> text, LitmusMeasurement measurement) {
-        text.add(Component.translatable("text.reactive.reaction_header").withStyle(ChatFormatting.BOLD));
+        text.add(Component.translatable("text.reactive.reaction_header").withStyle(ConfigMan.COMMON.litmusScreen.get() ? ChatFormatting.BOLD : ChatFormatting.GRAY));
         for(ReactionStatusEntry entry : measurement.statuses()){
             switch(entry.status()){
                 case STABLE -> text.add(Component.translatable("text.reactive.stable"));
                 case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.RED)));
+                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
                 case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.DARK_RED)));
+                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
                 case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.RED)));
+                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
                 case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.RED)));
+                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
                 case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.RED)));
+                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
                 case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
                         .append(Component.translatable("text.reactive.reacting").withStyle(ChatFormatting.BOLD)));
             }
@@ -92,13 +92,15 @@ public class LitmusPaperItem extends Item {
         if(!stack.has(Registration.LITMUS_MEASUREMENT))
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT);
+        if(ConfigMan.COMMON.litmusScreen.get()) {
+            LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT);
+            showScreen(player, measurement);
+        } else {
+            for(Component line : buildMeasurementText(player.getItemInHand(hand), player)) {
+                player.sendSystemMessage(line);
+            }
+        }
 
-        showScreen(player, measurement);
-
-//        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
-//            player.sendSystemMessage(line);
-//        }
         return InteractionResultHolder.pass(stack);
     }
 
@@ -114,8 +116,10 @@ public class LitmusPaperItem extends Item {
         }
 
         takeMeasurement(context.getItemInHand(), crucible);
-        LitmusMeasurement measurement = context.getItemInHand().get(Registration.LITMUS_MEASUREMENT);
-        showScreen(context.getPlayer(), measurement);
+        if(ConfigMan.COMMON.litmusScreen.get()){
+            LitmusMeasurement measurement = context.getItemInHand().get(Registration.LITMUS_MEASUREMENT);
+            showScreen(context.getPlayer(), measurement);
+        }
 
         return InteractionResult.SUCCESS;
     }
@@ -158,8 +162,7 @@ public class LitmusPaperItem extends Item {
     }
 
     // Create a list of lines that is the measurement.
-    // Deprecated. Only for legacy behavior.
-    @Deprecated
+    // Only for legacy behavior.
     private List<Component> buildMeasurementText(ItemStack stack, Player player){
         List<Component> text = new ArrayList<>();
         LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
