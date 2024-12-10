@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
+import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -34,6 +36,7 @@ public class LitmusScreen extends Screen {
     private Button page_forward;
     private static final int BOX_WIDTH = 180;
     private static final int BOX_HEIGHT = 200;
+    private final List<Color> decoration_colors = new ArrayList<>();
 
     public LitmusScreen(LitmusMeasurement measurement, List<Component> reaction_lines) {
         super(Component.translatable("item.reactive.litmus_paper"));
@@ -85,7 +88,7 @@ public class LitmusScreen extends Screen {
                 Component.literal("<"),
                 LitmusScreen::pageBackward).build();
         page_backward.setWidth(20);
-        page_backward.setPosition(getBoxLeftX() - page_backward.getWidth(), getBoxTopY());
+        page_backward.setPosition(getBoxLeftX() - page_backward.getWidth(), getBoxTopY()+8);
         page_backward.visible = false;
         this.addRenderableWidget(page_backward);
 
@@ -94,7 +97,7 @@ public class LitmusScreen extends Screen {
                 Component.literal(">"),
                 LitmusScreen::pageForward).build();
         page_forward.setWidth(20);
-        page_forward.setPosition(getBoxRightX(), getBoxTopY());
+        page_forward.setPosition(getBoxRightX(), getBoxTopY()+8);
         page_forward.visible = false;
         this.addRenderableWidget(page_forward);
 
@@ -110,6 +113,7 @@ public class LitmusScreen extends Screen {
         for(LitmusScreenComponent component : paginate(lines_to_draw)){
             renderLine(graphics, component.component, component.power_text);
         }
+        renderDecorations(graphics);
         this.y = 0;
     }
 
@@ -172,6 +176,14 @@ public class LitmusScreen extends Screen {
                 Power power = Powers.POWER_REGISTRY.get(line.power());
                 if(power != null) {
                     color = power.getTextColor();
+                    if(decoration_colors.size() < DECORATIONS.size() && !power.invisible) {
+                        if(power.equals(Powers.ASTRAL_POWER.get())){
+                            // As a special signal, an entry with -1 color signifies ASTRAL.
+                            decoration_colors.add(new Color(-1));
+                        } else {
+                            decoration_colors.add(new Color(color.getValue()));
+                        }
+                    }
                 }
             }
             text.add(new LitmusScreenComponent(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color).withBold(false)),
@@ -201,8 +213,6 @@ public class LitmusScreen extends Screen {
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(graphics, mouseX, mouseY, partialTick);
-        //graphics.blit(PAPER_BACKGROUND, this.width / 2 - 90, this.height / 8, 26, 8, 181, 200);
-
         graphics.fill(
                 this.width / 2 - (BOX_WIDTH/2),
                 getBoxTopY(),
@@ -210,7 +220,42 @@ public class LitmusScreen extends Screen {
                 getBoxTopY() + BOX_HEIGHT,
                 0x60606060
         );
+        graphics.blit(PAPER_BACKGROUND, getBoxLeftX(), getBoxTopY(), 0, 0, 180, 224);
     }
 
-    static record LitmusScreenComponent (Component component, boolean power_text, boolean header) {}
+    private static final List<Rect> DECORATIONS = List.of(
+            new Rect(28, 3, 44, 4),
+            new Rect(127, 3, 135, 4),
+            new Rect(8, 195, 15, 196),
+            new Rect(90, 3, 99, 4),
+            new Rect(135, 195, 151, 196),
+            new Rect(123, 195, 133, 196),
+            new Rect(80, 195, 89, 196),
+            new Rect(44, 195, 52, 196),
+            new Rect(164, 3, 171, 4),
+            new Rect(105, 3, 109, 4)
+    );
+    private void renderDecorations(GuiGraphics graphics) {
+        for(int i = 0; i < decoration_colors.size(); i++) {
+            if(decoration_colors.get(i).hex == -1){
+                // This is Astral. Render differently.
+                graphics.fill(RenderType.END_GATEWAY, getBoxLeftX(), getBoxTopY() + 2,
+                        getBoxLeftX() + BOX_WIDTH, getBoxTopY() + 6,
+                        0xFFFFFFFF);
+                graphics.fill(RenderType.END_GATEWAY, getBoxLeftX(), getBoxBottomY() - 6,
+                        getBoxLeftX() + BOX_WIDTH, getBoxBottomY() - 2,
+                        0xFFFFFFFF);
+                return;
+            }
+
+            Rect rect = DECORATIONS.get(i);
+            graphics.fill(rect.x1 + getBoxLeftX(), rect.y1 + getBoxTopY(),
+                        rect.x2 + getBoxLeftX() + 1, rect.y2 + getBoxTopY() + 1,
+                        0xFF000000 | decoration_colors.get(i).hex);
+        }
+    }
+
+    private record Rect(int x1, int y1, int x2, int y2) {}
+
+    record LitmusScreenComponent (Component component, boolean power_text, boolean header) {}
 }
