@@ -1,2 +1,2 @@
-- Fixed a broken link in the Journal
-- Optimized KubeJS reaction event handling by adding a cache
+- **Added a GUI for Litmus Paper**
+- Corrected Nether Wart, Glow Lichen, and Chorus Fruit power yields
