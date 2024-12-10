@@ -41,69 +41,23 @@ public class LitmusPaperItem extends Item {
         super(props.stacksTo(1));
     }
 
-    // Create a list of lines that is the measurement.
-    private List<Component> buildMeasurementText(ItemStack stack, Player player){
-        List<Component> text = new ArrayList<>();
-        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
-        if(measurement == null){
-            return text;
-        }
-
-        boolean mode = !player.isCrouching();
-
-        if(mode){
-            if(player.level().isClientSide){
-                // This must be done on the client to allow for querying the water color.
-                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
-                for(LitmusMeasurement.Line line : measurement.measurements()){
-                    TextColor color = TextColor.fromRgb(0xFFFFFF);
-                    if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                        Power power = Powers.POWER_REGISTRY.get(line.power());
-                        if(power != null) {
-                            color = power.getTextColor();
-                        }
-                        if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-                            Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
-                        }
-                    }
-                    text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
-                }
-
-                if(measurement.measurements().isEmpty()){
-                    text.add(Component.translatable("text.reactive.measurement_empty")
-                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
-                }
-                if(measurement.integrity_violated()){
-                    text.add(Component.translatable("text.reactive.litmus_integrity_failure")
-                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.DARK_RED : ChatFormatting.WHITE));
-                }
-            }
-        }else{
-            if(!player.level().isClientSide){
-                // This must be done on the server to allow for querying the player's advancements.
-                appendReactionText(player, text, measurement);
-            }
-        }
-        return text;
-    }
-
     private void appendReactionText(Player player, List<Component> text, LitmusMeasurement measurement) {
-        //text.add(Component.translatable("text.reactive.reaction_header").withStyle(ChatFormatting.GRAY));
+        text.add(Component.translatable("text.reactive.reaction_header").withStyle(ChatFormatting.BOLD));
         for(ReactionStatusEntry entry : measurement.statuses()){
             switch(entry.status()){
-                case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
+                case STABLE -> text.add(Component.translatable("text.reactive.stable"));
                 case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.RED)));
                 case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
+                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.DARK_RED)));
                 case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.RED)));
                 case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
+                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.RED)));
                 case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
+                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.RED)));
                 case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
-                        .append(Component.translatable("text.reactive.reacting")));
+                        .append(Component.translatable("text.reactive.reacting").withStyle(ChatFormatting.BOLD)));
             }
         }
     }
@@ -201,6 +155,54 @@ public class LitmusPaperItem extends Item {
     @NotNull
     public static String getPercent(int pow) {
         return pow > 16 ? pow / 16 + "%" : Component.translatable("text.reactive.trace").getString();
+    }
+
+    // Create a list of lines that is the measurement.
+    // Deprecated. Only for legacy behavior.
+    @Deprecated
+    private List<Component> buildMeasurementText(ItemStack stack, Player player){
+        List<Component> text = new ArrayList<>();
+        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
+        if(measurement == null){
+            return text;
+        }
+
+        boolean mode = !player.isCrouching();
+
+        if(mode){
+            if(player.level().isClientSide){
+                // This must be done on the client to allow for querying the water color.
+                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+                for(LitmusMeasurement.Line line : measurement.measurements()){
+                    TextColor color = TextColor.fromRgb(0xFFFFFF);
+                    if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
+                        Power power = Powers.POWER_REGISTRY.get(line.power());
+                        if(power != null) {
+                            color = power.getTextColor();
+                        }
+                        if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
+                            Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                        }
+                    }
+                    text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));
+                }
+
+                if(measurement.measurements().isEmpty()){
+                    text.add(Component.translatable("text.reactive.measurement_empty")
+                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY));
+                }
+                if(measurement.integrity_violated()){
+                    text.add(Component.translatable("text.reactive.litmus_integrity_failure")
+                            .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? ChatFormatting.DARK_RED : ChatFormatting.WHITE));
+                }
+            }
+        }else{
+            if(!player.level().isClientSide){
+                // This must be done on the server to allow for querying the player's advancements.
+                appendReactionText(player, text, measurement);
+            }
+        }
+        return text;
     }
 
 }
