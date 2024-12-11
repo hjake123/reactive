@@ -8,9 +8,12 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
+import dev.hyperlynx.reactive.client.gui.LitmusScreen;
+import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,17 +29,139 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LitmusPaperItem extends Item {
     public LitmusPaperItem(Properties props) {
         super(props.stacksTo(1));
     }
 
+    private void appendReactionText(Player player, List<Component> text, LitmusMeasurement measurement) {
+        for(ReactionStatusEntry entry : measurement.statuses()){
+            switch(entry.status()){
+                case STABLE -> text.add(Component.translatable("text.reactive.stable"));
+                case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
+                case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
+                case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
+                case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
+                case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
+                        .append(Component.translatable("text.reactive.reacting").withStyle(ChatFormatting.BOLD)));
+            }
+        }
+    }
+
+    private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
+        if(player instanceof ServerPlayer splayer){
+            if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
+                return ReactiveMod.REACTION_MAN.get(reaction_alias).getName();
+            else
+                return Component.translatable("reaction.reactive.unknown");
+        }
+        return Component.literal("Error");
+    }
+
+    private MutableComponent getReactionOrUnknownComponent(ReactionStatusEntry entry, Player player){
+        return getReactionOrUnknownComponent(entry.reaction_alias(), player);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
+        super.appendHoverText(stack, context, hover_text, tooltip_flag);
+        if(stack.has(Registration.LITMUS_MEASUREMENT)) {
+            hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+            hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
+        }
+    }
+
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if(!stack.has(Registration.LITMUS_MEASUREMENT))
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
+
+        if(ConfigMan.COMMON.litmusScreen.get()) {
+            LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT);
+            showScreen(player, measurement);
+        } else {
+            for(Component line : buildMeasurementText(player.getItemInHand(hand), player)) {
+                player.sendSystemMessage(line);
+            }
+        }
+
+        return InteractionResultHolder.pass(stack);
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        if(!(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof CrucibleBlock)){
+            return InteractionResult.PASS;
+        }
+
+        CrucibleBlockEntity crucible = (CrucibleBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
+        if(crucible == null) {
+            return InteractionResult.PASS;
+        }
+
+        takeMeasurement(context.getItemInHand(), crucible);
+        if(ConfigMan.COMMON.litmusScreen.get()){
+            LitmusMeasurement measurement = context.getItemInHand().get(Registration.LITMUS_MEASUREMENT);
+            showScreen(context.getPlayer(), measurement);
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    private void showScreen(Player player, LitmusMeasurement measurement) {
+        if(player instanceof ServerPlayer splayer) {
+            if(measurement.measurements().stream().anyMatch(line ->
+                    Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
+                Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+            }
+            List<Component> reaction_text = new ArrayList<>();
+            appendReactionText(player, reaction_text, measurement);
+            PacketDistributor.sendToPlayer(splayer, new LitmusScreenPayload(measurement, reaction_text));
+        }
+    }
+
+    public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible){
+        List<LitmusMeasurement.Line> lines = new ArrayList<>();
+
+        for(Power power : crucible.getPowerMap().keySet()) {
+            int power_level = crucible.getPowerLevel(power);
+            if(power_level == 0)
+                continue;
+
+            lines.add(new LitmusMeasurement.Line(Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow(),
+                    power.getName().toUpperCase() + " - " + getPercent(power_level)
+            ));
+        }
+
+        paper.set(Registration.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
+                lines,
+                crucible.reaction_status,
+                crucible.integrity < 85
+        ));
+    }
+
+    @NotNull
+    public static String getPercent(int pow) {
+        return pow > 16 ? pow / 16 + "%" : Component.translatable("text.reactive.trace").getString();
+    }
+
     // Create a list of lines that is the measurement.
+    // Only for legacy behavior.
     private List<Component> buildMeasurementText(ItemStack stack, Player player){
         List<Component> text = new ArrayList<>();
         LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
@@ -76,103 +201,10 @@ public class LitmusPaperItem extends Item {
         }else{
             if(!player.level().isClientSide){
                 // This must be done on the server to allow for querying the player's advancements.
-                text.add(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
-                for(ReactionStatusEntry entry : measurement.statuses()){
-                    switch(entry.status()){
-                        case STABLE -> text.add(Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY));
-                        case VOLATILE -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.single_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                        case POWER_TOO_WEAK -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.power_too_weak").withStyle(ChatFormatting.GRAY)));
-                        case MISSING_STIMULUS -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.multi_power_reaction_missing_condition").withStyle(ChatFormatting.GRAY)));
-                        case MISSING_CATALYST -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.missing_catalyst").withStyle(ChatFormatting.GRAY)));
-                        case INHIBITED -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.inhibited").withStyle(ChatFormatting.GRAY)));
-                        case REACTING -> text.add(getReactionOrUnknownComponent(entry, player)
-                                .append(Component.translatable("text.reactive.reacting")));
-                    }
-                }
+                appendReactionText(player, text, measurement);
             }
         }
         return text;
-    }
-
-    private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
-        if(player instanceof ServerPlayer splayer){
-            if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
-                return ReactiveMod.REACTION_MAN.get(reaction_alias).getName();
-            else
-                return Component.translatable("reaction.reactive.unknown");
-        }
-        return Component.literal("Error");
-    }
-
-    private MutableComponent getReactionOrUnknownComponent(ReactionStatusEntry entry, Player player){
-        return getReactionOrUnknownComponent(entry.reaction_alias(), player);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
-        super.appendHoverText(stack, context, hover_text, tooltip_flag);
-        if(stack.has(Registration.LITMUS_MEASUREMENT)) {
-            hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
-            hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
-        }
-    }
-
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if(!player.getItemInHand(hand).has(Registration.LITMUS_MEASUREMENT))
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
-
-        for(Component line : buildMeasurementText(player.getItemInHand(hand), player)){
-            player.sendSystemMessage(line);
-        }
-        return InteractionResultHolder.pass(player.getItemInHand(hand));
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        if(!(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof CrucibleBlock)){
-            return InteractionResult.PASS;
-        }
-
-        CrucibleBlockEntity crucible = (CrucibleBlockEntity) context.getLevel().getBlockEntity(context.getClickedPos());
-        if(crucible == null) {
-            return InteractionResult.PASS;
-        }
-
-        takeMeasurement(context.getItemInHand(), crucible);
-
-        return InteractionResult.SUCCESS;
-    }
-
-    public static void takeMeasurement(ItemStack paper, CrucibleBlockEntity crucible){
-        List<LitmusMeasurement.Line> lines = new ArrayList<>();
-
-        for(Power power : crucible.getPowerMap().keySet()) {
-            int power_level = crucible.getPowerLevel(power);
-            if(power_level == 0)
-                continue;
-
-            lines.add(new LitmusMeasurement.Line(Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow(),
-                    power.getName().toUpperCase() + " - " + getPercent(power_level)
-            ));
-        }
-
-        paper.set(Registration.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
-                lines,
-                crucible.reaction_status,
-                crucible.integrity < 85
-        ));
-    }
-
-    @NotNull
-    public static String getPercent(int pow) {
-        return pow > 16 ? pow / 16 + "%" : Component.translatable("text.reactive.trace").getString();
     }
 
 }
