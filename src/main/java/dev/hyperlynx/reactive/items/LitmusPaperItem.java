@@ -79,8 +79,12 @@ public class LitmusPaperItem extends Item {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
         if(stack.has(Registration.LITMUS_MEASUREMENT)) {
-            hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
-            hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
+            if(ConfigMan.COMMON.litmusScreen.get()) {
+                hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+            } else {
+                hover_text.add(Component.translatable("text.reactive.litmus_instructions_1"));
+                hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
+            }
         }
     }
 
