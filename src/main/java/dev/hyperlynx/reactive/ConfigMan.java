@@ -20,6 +20,7 @@ public class ConfigMan {
         public ForgeConfigSpec.BooleanValue acidMeltBlockEntities;
         public ForgeConfigSpec.BooleanValue lightStaffLightsPermanent;
         public ForgeConfigSpec.BooleanValue registerCommand;
+        public ForgeConfigSpec.BooleanValue litmusScreen;
 
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -44,6 +45,8 @@ public class ConfigMan {
                     .define("lightStaffLightsPermanent", true);
             registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
                     .define("registerCommand", true);
+            litmusScreen = builder.comment("This enables the GUI for Litmus Paper. Disabling it restores the original chat-based reporting. [Default: true]")
+                    .define("litmusScreen", true);
             builder.pop();
         }
     }

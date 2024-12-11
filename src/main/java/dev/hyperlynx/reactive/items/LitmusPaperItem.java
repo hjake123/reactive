@@ -1,12 +1,17 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.fx.gui.LitmusData;
+import dev.hyperlynx.reactive.fx.gui.LitmusScreenMessage;
+import dev.hyperlynx.reactive.fx.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.fx.gui.UnresolvedLitmusData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.client.renderer.BiomeColors;
@@ -26,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,54 +47,7 @@ public class LitmusPaperItem extends Item {
         super(props.stacksTo(1));
     }
 
-    // Create a list of lines that is the measurement.
-    private List<Component> buildMeasurementText(ItemStack stack, int water_color, boolean crouching){
-        List<Component> text = new ArrayList<>();
-        if(!stack.hasTag())
-            return text;
-
-        assert stack.getTag() != null;
-        if(stack.getTag().contains(TAG_STATUS) || !crouching) {
-            // Show the measurements either every time for a legacy Litmus Paper or when not crouching for a new one.
-            ListTag measurements = stack.getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
-            for (Tag tag : measurements) {
-                if (tag instanceof CompoundTag measurement) {
-                    String m = "";
-                    TextColor color = TextColor.fromRgb(0xFFFFFF);
-                    if (measurement.contains("power") && ConfigMan.CLIENT.colorizeLitmusOutput.get()) {
-                        color = Power.readPower(measurement, "power").getTextColor();
-                    }
-                    m += measurement.getString("value");
-                    text.add(Component.literal(m).withStyle(Style.EMPTY.withColor(color)));
-                }
-            }
-
-            if (measurements.isEmpty()) {
-                text.add(Component.translatable("text.reactive.measurement_empty")
-                        .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
-            }
-        }
-
-        if(stack.getTag().contains(TAG_STATUS)){
-            // Legacy behavior for old Litmus Paper stacks.
-            StringTag reaction_status = (StringTag) stack.getTag().get(TAG_STATUS);
-            if(reaction_status == null)
-                return text;
-            text.add(statusComponent(reaction_status.getAsString()));
-        } else if(stack.getTag().contains(TAG_MULTI_STATUS) && crouching) {
-            // New behavior.
-            ListTag status_list = stack.getTag().getList(TAG_MULTI_STATUS, Tag.TAG_STRING);
-            for(Tag status_tag : status_list){
-                if(status_tag instanceof StringTag){
-                    text.add(Component.literal(status_tag.getAsString()));
-                }
-            }
-        }
-
-        return text;
-    }
-
-    private MutableComponent statusComponent(String status){
+    private static MutableComponent statusComponent(String status){
         switch(Reaction.Status.valueOf(status)){
             case STABLE -> {
                 return Component.translatable("text.reactive.stable").withStyle(ChatFormatting.GRAY);
@@ -119,11 +78,10 @@ public class LitmusPaperItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, level, hover_text, tooltip_flag);
         if(stack.hasTag()) {
-            if(stack.getTag().contains(TAG_STATUS)){
-                hover_text.add(Component.translatable("text.reactive.legacy_litmus_instructions"));
-
-            } else {
+            if(stack.getTag().contains(TAG_STATUS) || ConfigMan.COMMON.litmusScreen.get()){
                 hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
+            } else {
+                hover_text.add(Component.translatable("text.reactive.litmus_instructions_1"));
                 hover_text.add(Component.translatable("text.reactive.litmus_instructions_2"));
             }
         }
@@ -135,9 +93,17 @@ public class LitmusPaperItem extends Item {
             if(!player.getItemInHand(hand).hasTag())
                 return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-            player.sendSystemMessage(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
-            for(Component line : buildMeasurementText(player.getItemInHand(hand), BiomeColors.getAverageWaterColor(level, player.getOnPos()), player.isCrouching())){
-                player.sendSystemMessage(line);
+            if(!ConfigMan.COMMON.litmusScreen.get()){
+                player.sendSystemMessage(Component.translatable("text.reactive.measurement_header").withStyle(ChatFormatting.GRAY));
+                for(Component line : buildMeasurementText(player.getItemInHand(hand), BiomeColors.getAverageWaterColor(level, player.getOnPos()), player.isCrouching())){
+                    player.sendSystemMessage(line);
+                }
+            } else {
+                ItemStack stack = player.getItemInHand(hand);
+                LitmusScreenOpener.open(new LitmusData(
+                        buildPowerText(stack, BiomeColors.getAverageWaterColor(level, player.getOnPos()), false),
+                        buildReactionText(stack, true)
+                ));
             }
         }
         return InteractionResultHolder.pass(player.getItemInHand(hand));
@@ -204,7 +170,7 @@ public class LitmusPaperItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity holder, int tick, boolean unknown) {
         // After taking the measurement, this method ticks on the server side to update the item's tags
-        // and finalize the reaction status info with player-specific data.
+        // and finalize the reaction status info with player-specific udata.
         super.inventoryTick(stack, level, holder, tick, unknown);
 
         if(holder instanceof ServerPlayer player && stack.hasTag() && stack.getTag().contains(TAG_UNRESOLVED_STATUS)){
@@ -220,6 +186,10 @@ public class LitmusPaperItem extends Item {
             }
             stack.getTag().put(TAG_MULTI_STATUS, multi_status);
             stack.getTag().remove(TAG_UNRESOLVED_STATUS);
+
+            // Send packet to open the screen.
+            Registration.LITMUS_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+                    new LitmusScreenMessage(new UnresolvedLitmusData(stack)));
         }
     }
 
@@ -236,5 +206,72 @@ public class LitmusPaperItem extends Item {
     @NotNull
     public static String getPercent(int pow) {
         return pow > 16 ? pow / 16 + "%" : Component.translatable("text.reactive.trace").getString();
+    }
+
+    public static List<Component> buildPowerText(ItemStack stack, int water_color, boolean crouching) {
+        List<Component> text = new ArrayList<>();
+        if(!stack.hasTag())
+            return text;
+
+        assert stack.getTag() != null;
+        if(stack.getTag().contains(TAG_STATUS) || !crouching) {
+            // Show the measurements either every time for a legacy Litmus Paper or when not crouching for a new one.
+            ListTag measurements = stack.getTag().getList(TAG_MEASUREMENT, Tag.TAG_COMPOUND);
+            for (Tag tag : measurements) {
+                if (tag instanceof CompoundTag measurement) {
+                    String m = "";
+                    TextColor color = TextColor.fromRgb(0xFFFFFF);
+                    if (measurement.contains("power") && ConfigMan.CLIENT.colorizeLitmusOutput.get()) {
+                        color = Power.readPower(measurement, "power").getTextColor();
+                    }
+                    m += measurement.getString("value");
+                    text.add(Component.literal(m).withStyle(Style.EMPTY.withColor(color)));
+                }
+            }
+
+            if (measurements.isEmpty()) {
+                text.add(Component.translatable("text.reactive.measurement_empty")
+                        .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(water_color) : Style.EMPTY));
+            }
+        }
+
+        return text;
+    }
+
+    public static List<Component> buildReactionText(ItemStack stack, boolean crouching) {
+        List<Component> text = new ArrayList<>();
+        if(!stack.hasTag())
+            return text;
+
+        assert stack.getTag() != null;
+        if(stack.getTag().contains(TAG_STATUS)){
+            // Legacy behavior for old Litmus Paper stacks.
+            StringTag reaction_status = (StringTag) stack.getTag().get(TAG_STATUS);
+            if(reaction_status == null)
+                return text;
+            text.add(statusComponent(reaction_status.getAsString()));
+        } else if(stack.getTag().contains(TAG_MULTI_STATUS) && crouching) {
+            // New behavior.
+            ListTag status_list = stack.getTag().getList(TAG_MULTI_STATUS, Tag.TAG_STRING);
+            for(Tag status_tag : status_list){
+                if(status_tag instanceof StringTag){
+                    text.add(Component.literal(status_tag.getAsString()));
+                }
+            }
+        }
+        return text;
+    }
+
+    // Create a list of lines that is the measurement.
+    // For legacy behavior only.
+    private static List<Component> buildMeasurementText(ItemStack stack, int water_color, boolean crouching){
+        List<Component> text = new ArrayList<>();
+        if(!stack.hasTag())
+            return text;
+
+        text.addAll(buildPowerText(stack, water_color, crouching));
+        text.addAll(buildReactionText(stack, crouching));
+
+        return text;
     }
 }

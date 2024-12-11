@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
+import dev.hyperlynx.reactive.fx.gui.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
@@ -20,10 +21,8 @@ import dev.hyperlynx.reactive.recipes.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
@@ -58,6 +57,8 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -472,6 +473,15 @@ public class Registration {
     public static final RegistryObject<ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
+    // Register the networking stuff for Litmus GUI.
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel LITMUS_CHANNEL = NetworkRegistry.newSimpleChannel(
+        ReactiveMod.location("litmus_gui"),
+        () -> PROTOCOL_VERSION,
+        PROTOCOL_VERSION::equals,
+        PROTOCOL_VERSION::equals
+    );
+
     // Register the creative mode tab.
     public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
@@ -505,6 +515,10 @@ public class Registration {
             MinecraftForge.EVENT_BUS.register(EventTransceiver.class);
         }
         CriteriaTriggers.enqueue(evt);
+        LITMUS_CHANNEL.registerMessage(42, LitmusScreenMessage.class,
+                LitmusScreenMessage::encoder,
+                LitmusScreenMessage::decoder,
+                LitmusScreenMessage::handler);
     }
 
     // Set up the potion items.
