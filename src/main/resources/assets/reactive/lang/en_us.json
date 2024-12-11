@@ -146,8 +146,6 @@
   "text.reactive.missing_catalyst": " Missing Catalyst",
   "text.reactive.inhibited": " Inhibited",
   "text.reactive.reacting": " Reacting",
-  "text.reactive.view_reactions": "View Reactions",
-  "text.reactive.view_powers": "View Powers",
   "text.reactive.measurement_empty": "WATER",
   "text.reactive.trace": "TRACE",
   "text.reactive.none": "None",

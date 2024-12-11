@@ -173,7 +173,7 @@ public class LitmusPaperItem extends Item {
             return text;
         }
 
-        boolean mode = !player.isCrouching();
+        boolean mode = !player.isShiftKeyDown();
 
         if(mode){
             if(player.level().isClientSide){

@@ -118,9 +118,15 @@ public class LitmusScreen extends Screen {
     }
 
     private void renderLine(GuiGraphics graphics, Component component, boolean power_text) {
-        int line_width = this.font.width(component);
-        graphics.drawString(this.font, component,getBoxCenterX() - line_width / 2, getBoxTopY() + 20 + y, 0xFFFFFF, power_text);
-        y += 10;
+        if(component.equals(Component.empty())){
+            y += 10;
+            return;
+        }
+        for(var fragment : font.split(component, BOX_WIDTH)){
+            int line_width = this.font.width(fragment);
+            graphics.drawString(this.font, fragment,getBoxCenterX() - line_width / 2, getBoxTopY() + 20 + y, 0xFFFFFF, power_text);
+            y += 10;
+        }
     }
 
     /*
