@@ -113,7 +113,7 @@ public class Registration {
     // ----------------------- REGISTRATION ------------------------
     // Register the all-important Crucible.
     public static final DeferredHolder<Block, CrucibleBlock> CRUCIBLE = BLOCKS.register("crucible",
-            () -> new CrucibleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON)));
+            () -> new CrucibleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON).forceSolidOn()));
     public static final DeferredHolder<Item, BlockItem> CRUCIBLE_ITEM = ITEMS.registerSimpleBlockItem(CRUCIBLE);
 
     // Register the Shulker Crucible
@@ -128,7 +128,7 @@ public class Registration {
 
     // Register the rest of the blocks
     public static final DeferredHolder<Block, SaltFilledCrucibleBlock> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
-            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON).sound(SoundType.BASALT)));
+            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CAULDRON).forceSolidOn().sound(SoundType.BASALT)));
     public static final DeferredHolder<Item, BlockItem> SALTY_CRUCIBLE_ITEM = ITEMS.registerSimpleBlockItem(SALTY_CRUCIBLE);
 
     public static final DeferredHolder<Block, SymbolBlock> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
