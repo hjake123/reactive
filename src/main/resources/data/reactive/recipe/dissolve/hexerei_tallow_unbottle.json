@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "hexerei"
+    }
+  ],
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "hexerei:tallow_bottle"
+  },
+  "product": {
+    "id": "minecraft:glass_bottle"
+  }
+}

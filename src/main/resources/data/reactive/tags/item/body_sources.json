@@ -53,6 +53,14 @@
     {
       "id": "occultism:tallow",
       "required": false
+    },
+    {
+      "id": "hexerei:tallow_bottle",
+      "required": false
+    },
+    {
+      "id": "hexerei:milk_bottle",
+      "required": false
     }
   ],
   "remove": [
