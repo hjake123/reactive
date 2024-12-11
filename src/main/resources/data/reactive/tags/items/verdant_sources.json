@@ -39,6 +39,14 @@
     {
       "id": "alexscaves:tree_star",
       "required": false
+    },
+    {
+      "id": "occultism:nature_paste",
+      "required": false
+    },
+    {
+      "id": "#hexerei:herbs",
+      "required": false
     }
   ],
   "remove": [

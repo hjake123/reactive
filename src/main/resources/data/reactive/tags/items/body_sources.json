@@ -49,9 +49,25 @@
     {
       "id": "alexscaves:sweetberry_ice_cream_scoop",
       "required": false
+    },
+    {
+      "id": "occultism:tallow",
+      "required": false
+    },
+    {
+      "id": "hexerei:tallow_bottle",
+      "required": false
+    },
+    {
+      "id": "hexerei:milk_bottle",
+      "required": false
     }
   ],
   "remove": [
-    "minecraft:nether_wart"
+    "minecraft:nether_wart",
+    {
+      "id": "occultism:datura",
+      "required": false
+    }
   ]
 }

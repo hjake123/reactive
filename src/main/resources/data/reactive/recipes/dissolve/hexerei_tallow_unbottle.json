@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "hexerei:tallow_bottle"
+  },
+  "product": {
+    "id": "minecraft:glass_bottle"
+  }
+}

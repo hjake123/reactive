@@ -32,6 +32,10 @@
     {
       "id": "#alexscaves:gelatins",
       "required": false
+    },
+    {
+      "id": "hexerei:blood_bottle",
+      "required": false
     }
   ]
 }
