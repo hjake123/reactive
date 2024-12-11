@@ -48,6 +48,14 @@
     {
       "id": "goety:ectoplasm",
       "required": false
+    },
+    {
+      "id": "occultism:otherworld_essence",
+      "required": false
+    },
+    {
+      "id": "occultism:echo_dust",
+      "required": false
     }
   ]
 }

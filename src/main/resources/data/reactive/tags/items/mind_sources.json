@@ -68,6 +68,30 @@
     {
       "id": "mna:greater_mote_arcane",
       "required": false
+    },
+    {
+      "id": "occultism:amethyst_dust",
+      "required": false
+    },
+    {
+      "id": "occultism:lapis_dust",
+      "required": false
+    },
+    {
+      "id": "occultism:datura",
+      "required": false
+    },
+    {
+      "id": "occultism:awakened_feather",
+      "required": false
+    },
+    {
+      "id": "occultism:spirit_attuned_gem",
+      "required": false
+    },
+    {
+      "id": "occultism:taboo_book",
+      "required": false
     }
   ]
 }

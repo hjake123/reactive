@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "occultism:taboo_book"
+  },
+  "product": {
+    "item": "minecraft:book"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "occultism:awakened_feather"
+  },
+  "product": {
+    "item": "minecraft:feather"
+  }
+}
