@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreen;
+import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
@@ -58,14 +59,18 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -688,7 +693,11 @@ public class Registration {
         registrar.commonToClient(
                 LitmusScreenPayload.TYPE,
                 LitmusScreenPayload.STREAM_CODEC,
-                new LitmusScreenPayload.Handler()
+                (payload, _context) -> {
+                    if (FMLLoader.getDist() == Dist.CLIENT) {
+                        LitmusScreenOpener.open(payload);
+                    }
+                }
         );
     }
 

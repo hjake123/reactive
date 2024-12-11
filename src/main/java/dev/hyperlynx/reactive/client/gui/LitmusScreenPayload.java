@@ -35,11 +35,4 @@ public record LitmusScreenPayload(LitmusMeasurement measurement, List<Component>
         return CustomPacketPayload.super.toVanillaClientbound();
     }
 
-    public static class Handler implements IPayloadHandler<LitmusScreenPayload> {
-        @Override
-        public void handle(@NotNull LitmusScreenPayload payload, @NotNull IPayloadContext context) {
-            Minecraft.getInstance().setScreen(new LitmusScreen(payload.measurement, payload.components));
-        }
-    }
-
 }
