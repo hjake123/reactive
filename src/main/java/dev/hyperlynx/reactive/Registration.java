@@ -99,7 +99,7 @@ public class Registration {
     // ----------------------- REGISTRATION ------------------------
     // Register the all-important Crucible.
     public static final RegistryObject<Block> CRUCIBLE = BLOCKS.register("crucible",
-            () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON)));
+            () -> new CrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).forceSolidOn()));
     public static final RegistryObject<Item> CRUCIBLE_ITEM = fromBlock(CRUCIBLE);
 
     // Register the Shulker Crucible
@@ -114,7 +114,7 @@ public class Registration {
 
     // Register the rest of the blocks
     public static final RegistryObject<Block> SALTY_CRUCIBLE = BLOCKS.register("salty_crucible",
-            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).sound(SoundType.BASALT)));
+            () -> new SaltFilledCrucibleBlock(BlockBehaviour.Properties.copy(Blocks.CAULDRON).forceSolidOn().sound(SoundType.BASALT)));
     public static final RegistryObject<Item> SALTY_CRUCIBLE_ITEM = fromBlock(SALTY_CRUCIBLE);
 
     public static final RegistryObject<Block> COPPER_SYMBOL = BLOCKS.register("copper_symbol",
