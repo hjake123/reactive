@@ -15,10 +15,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -110,31 +112,37 @@ public class LitmusScreen extends Screen {
         for(Renderable renderable : this.renderables) {
             renderable.render(graphics, mouseX, mouseY, partialTick);
         }
-        for(LitmusScreenComponent component : paginate(lines_to_draw)){
-            renderLine(graphics, component.component, component.power_text);
+        for(LitmusScreenLine line : paginate(lines_to_draw)){
+            renderLine(graphics, line.sequence, line.power_text);
         }
         renderDecorations(graphics);
         this.y = 0;
     }
 
-    private void renderLine(GuiGraphics graphics, Component component, boolean power_text) {
-        if(component.equals(Component.empty())){
-            y += 10;
-            return;
-        }
-        for(var fragment : font.split(component, BOX_WIDTH)){
-            int line_width = this.font.width(fragment);
-            graphics.drawString(this.font, fragment,getBoxCenterX() - line_width / 2, getBoxTopY() + 20 + y, 0xFFFFFF, power_text);
-            y += 10;
-        }
+    private void renderLine(GuiGraphics graphics, FormattedCharSequence sequence, boolean power_text) {
+        int line_width = this.font.width(sequence);
+        graphics.drawString(this.font, sequence,getBoxCenterX() - line_width / 2, getBoxTopY() + 20 + y, 0xFFFFFF, power_text);
+        y += 10;
     }
 
     /*
         Select only lines on page (this.page).
          */
     static int PAGE_LENGTH = 16;
-    private List<LitmusScreenComponent> paginate(List<LitmusScreenComponent> components) {
-        List<LitmusScreenComponent> paginated = new LinkedList<>(components);
+    private List<LitmusScreenLine> paginate(List<LitmusScreenComponent> components) {
+        this.max_page = (components.size() - 1) / PAGE_LENGTH;
+        List<LitmusScreenLine> paginated = new LinkedList<>();
+        for(LitmusScreenComponent c : components){
+            if(c.component.equals(Component.empty())){
+                paginated.add(new LitmusScreenLine(FormattedCharSequence.EMPTY, false, false));
+                continue;
+            }
+            var lines = this.font.split(c.component, BOX_WIDTH);
+            for (FormattedCharSequence sequence : lines) {
+                paginated.add(new LitmusScreenLine(sequence, c.power_text, c.header));
+            }
+        }
+
         for(int i = 0; i < page * PAGE_LENGTH; i++) {
             if(paginated.getFirst().header && i == (page * PAGE_LENGTH - 1)){
                 continue;
@@ -147,7 +155,7 @@ public class LitmusScreen extends Screen {
         if(paginated.getLast().header){
             paginated.removeLast();
         }
-        this.max_page = (components.size() - 1) / PAGE_LENGTH;
+
         return paginated;
     }
 
@@ -168,8 +176,6 @@ public class LitmusScreen extends Screen {
             lit_screen.y = 0;
         }
     }
-
-
 
     private List<LitmusScreenComponent> buildPowerText(LitmusMeasurement measurement){
         List<LitmusScreenComponent> text = new ArrayList<>();
@@ -192,8 +198,7 @@ public class LitmusScreen extends Screen {
                     }
                 }
             }
-            text.add(new LitmusScreenComponent(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color).withBold(false)),
-                    true, false));
+            text.add(new LitmusScreenComponent(Component.literal(line.line()).withColor(color.getValue()), true, false));
         }
 
         LocalPlayer player = Minecraft.getInstance().player;
@@ -264,4 +269,7 @@ public class LitmusScreen extends Screen {
     private record Rect(int x1, int y1, int x2, int y2) {}
 
     record LitmusScreenComponent (Component component, boolean power_text, boolean header) {}
+
+    record LitmusScreenLine (FormattedCharSequence sequence, boolean power_text, boolean header) {}
+
 }
