@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+  {
+    "type": "neoforge:mod_loaded",
+    "modid": "occultism"
+  }
+  ],
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "occultism:spirit_attuned_gem"
+  },
+  "product": {
+    "id": "minecraft:diamond"
+  }
+}

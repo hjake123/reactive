@@ -41,6 +41,10 @@
     {
       "id": "alexscaves:tree_star",
       "required": false
+    },
+    {
+      "id": "occultism:nature_paste",
+      "required": false
     }
   ],
   "remove": [

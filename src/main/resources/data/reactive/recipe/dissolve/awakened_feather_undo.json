@@ -1,0 +1,15 @@
+{
+  "neoforge:conditions": [
+  {
+    "type": "neoforge:mod_loaded",
+    "modid": "occultism"
+  }
+  ],
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "occultism:awakened_feather"
+  },
+  "product": {
+    "id": "minecraft:feather"
+  }
+}

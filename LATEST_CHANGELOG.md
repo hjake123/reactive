@@ -3,3 +3,4 @@
   - Litmus Paper from old worlds should work without issue
   - The original chat-based reporting can be restored using a config option
 - Corrected Nether Wart, Glow Lichen, and Chorus Fruit power yields
+- Added power sources from Occultism
