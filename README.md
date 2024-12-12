@@ -57,6 +57,11 @@ There are three config files; two in the config folder, and one in each world's 
 	#Whether to register the /reactive command on startup. [Default: true]
 	registerCommand = true
 (If true, when the server launches, you will have access to the /reactive command. Only people with at least level 2 permissions may use the command. It allows operators to generate Warp Bottles to any position, list and reload the world's reactions, and manually edit the Power content of a Crucible. Could be useful when working with custom Powers.)
+
+	#This enables the GUI for Litmus Paper. Disabling it restores the original chat-based reporting. [Default: true]
+	litmusScreen = true
+(Since 9.14.0, Litmus Paper shows a GUI with its readout instead of just printing the lines into the chat. If you dislike this change, it can be reverted here.)
+
 ```
 ### SERVER CONFIG
 ```
