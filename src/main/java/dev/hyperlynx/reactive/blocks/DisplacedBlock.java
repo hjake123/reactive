@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.advancements.FlagCriterion;
@@ -92,7 +93,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (!(blockentity instanceof DisplacedBlockEntity displaced)){
-            System.err.println("Something went wrong restoring block from displaced block. Report this to hyperlynx! I hope it wasn't expensive...");
+            ReactiveMod.LOGGER.error("Something went wrong restoring block from displaced block. Report this to hyperlynx! I hope it wasn't expensive...");
             level.setBlock(pos, Blocks.GRAVEL.defaultBlockState(), Block.UPDATE_CLIENTS);
             return;
         }
@@ -114,14 +115,13 @@ public class DisplacedBlock extends Block implements EntityBlock {
     // When broken, the displacement should end. If needed, this will instead break the Volt Cell.
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        reform(level, pos, Blocks.AIR.defaultBlockState());
+        reform(level, pos);
+        level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         return true;
     }
 
-    private static void reform(Level level, BlockPos pos, BlockState new_state) {
+    private static void reform(Level level, BlockPos pos) {
         if(level.getBlockEntity(pos) instanceof DisplacedBlockEntity displaced){
-            if(displaced.getSelfState().is(new_state.getBlock()))
-                return;
             if(displaced.getSelfState().getBlock() instanceof DisplacedBlock){
                 level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
@@ -131,9 +131,8 @@ public class DisplacedBlock extends Block implements EntityBlock {
                 level.destroyBlock(pos.below(), true);
             }
             level.setBlockAndUpdate(pos, displaced.getSelfState());
-            level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.8F);
         }else{
-            System.err.println("Didn't find a valid block entity associated with the displaced block at " + pos + "! Report this to hyperlynx!");
+            ReactiveMod.LOGGER.error("Didn't find a valid block entity associated with the displaced block at {}! Report this to hyperlynx!", pos);
         }
     }
 
@@ -141,7 +140,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean moving) {
         if (new_state.is(Registration.DISPLACED_BLOCK.get()))
             return;
-        reform(level, pos, new_state);
+        reform(level, pos);
         super.onRemove(state, level, pos, new_state, moving);
     }
 
