@@ -1,6 +1,1 @@
-- **Added a GUI for Litmus Paper**
-  - Using Litmus Paper now opens a GUI
-  - Litmus Paper from old worlds should work without issue
-  - The original chat-based reporting can be restored using a config option
-- Corrected Nether Wart, Glow Lichen, and Chorus Fruit power yields
-- Added power sources from Occultism and Hexereri
+- Fixed an issue that caused Displaced Block entities to not correctly load data on dedicated servers
