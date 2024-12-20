@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,8 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,16 +81,21 @@ public class DisplacedBlockEntity extends BlockEntity {
 
     public BlockState getSelfState() {
         if(self_state == null) {
-            if (Minecraft.getInstance().level == null) {
+            if (getLevel() == null) {
                 return null;
             }
-            if (Minecraft.getInstance().level.isClientSide && unresolved_self_state == null) {
+            if (getLevel().isClientSide && unresolved_self_state == null) {
                 // On the client, sometimes the block entity state is not synced for at least a tick.
                 // This means that things being placed and removed extremely can have no known state.
                 // The server will deal with it, so there's no worries really.
                 return Blocks.AIR.defaultBlockState();
             }
-            setSelfState(NbtUtils.readBlockState(Minecraft.getInstance().level.holderLookup(Registries.BLOCK), unresolved_self_state));
+            try {
+                setSelfState(NbtUtils.readBlockState(getLevel().holderLookup(Registries.BLOCK), unresolved_self_state));
+            } catch(NullPointerException exception) {
+                ReactiveMod.LOGGER.error("Displaced block entity at {} had no internal state, so it will now contain air.", getBlockPos());
+                setSelfState(Blocks.AIR.defaultBlockState());
+            }
         }
         return self_state;
     }
