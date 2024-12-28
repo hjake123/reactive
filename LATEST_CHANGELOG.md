@@ -1,1 +1,1 @@
-- Fixed an issue that caused Displaced Block entities to not correctly load data on dedicated servers
+- Updated the Simplified Chinese translation (by ChujikYahus)
