@@ -1,1 +1,1 @@
-- Updated the Simplified Chinese translation (by ChujikYahus)
+- Replaced missing reaction advancements that were left out of 9.14.2
