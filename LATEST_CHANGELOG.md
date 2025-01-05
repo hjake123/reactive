@@ -1,1 +1,1 @@
-- Fixed an issue that caused Displaced Block entities to not correctly load data on dedicated servers
+- Replaced missing reaction advancements that were left out of 9.14.2
