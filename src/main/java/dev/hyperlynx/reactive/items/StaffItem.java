@@ -21,20 +21,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class StaffItem extends BlockItem {
     Function<Player, Player> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
-    int frequency; // Beam abilities activate once in this many ticks.
+    Supplier<Integer> frequency; // Beam abilities activate once in this many ticks.
     public Item repair_item;
 
-    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, int frequency, Item repair_item) {
+    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
         super(block, props);
         effectFunction = effect;
         this.beam = beam;
@@ -74,11 +76,12 @@ public class StaffItem extends BlockItem {
 
     @SuppressWarnings("deprecation") // Minecraft itself will never change on this branch.
     private int getFrequency(@NotNull ItemStack stack){
+        int base_frequency = frequency.get();
         int enchant_level = EnchantmentHelper.getItemEnchantmentLevel(Registration.FAST_STAFF.get(), stack);
         if(enchant_level > 0){
-            return FastStaffEnchantment.adjustStaffTick(frequency, enchant_level);
+            return FastStaffEnchantment.adjustStaffTick(base_frequency, enchant_level);
         }
-        return frequency;
+        return base_frequency;
     }
 
     public static float getDamageAmount(LivingEntity user, float base_damage){

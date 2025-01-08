@@ -57,7 +57,7 @@ public class StaffEffects {
                 if(entity_hit.getEntity() instanceof LivingEntity victim){
                     if(victim.getMobType().equals(MobType.UNDEAD)){
                         victim.setRemainingFireTicks(300);
-                        victim.hurt(user.damageSources().inFire(), StaffItem.getDamageAmount(user, 7));
+                        victim.hurt(user.damageSources().inFire(), StaffItem.getDamageAmount(user, ConfigMan.COMMON.lightStaffPowerVsUndead.get().floatValue()));
                     }
                     victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                 }
@@ -124,7 +124,7 @@ public class StaffEffects {
             for(LivingEntity victim : user.level().getEntitiesOfClass(LivingEntity.class, aoe)){
                 if(victim instanceof ServerPlayer && !(victim.equals(user)) && !CrystalIronItem.effectNotBlocked(victim, 1))
                     continue; // This staff cannot hurt players other than the user.
-                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, 3.0F));
+                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, ConfigMan.COMMON.soulStaffPower.get().floatValue()));
                 victim.knockback(0.3, user.level().random.nextDouble()*0.2 - 0.1, user.level().random.nextDouble()*0.2 - 0.1);
             }
             user.level().playSound(null, blockHitPos.x, blockHitPos.y, blockHitPos.z, SoundEvents.SOUL_ESCAPE, SoundSource.PLAYERS, 0.5F,
@@ -154,7 +154,7 @@ public class StaffEffects {
                         continue;
                     }
                 }
-                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, 2));
+                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, ConfigMan.COMMON.mindStaffPower.get().floatValue()));
                 ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                         victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                 user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,

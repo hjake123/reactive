@@ -49,7 +49,7 @@ public class WarpStaffItem extends StaffItem{
     // private static final int RANGE_SQUARED = 40000;
 
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
-        super(block, props, null, false, 1, repair_item);
+        super(block, props, null, false, () -> 1, repair_item);
     }
 
     @Override

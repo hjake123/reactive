@@ -22,6 +22,17 @@ public class ConfigMan {
         public ForgeConfigSpec.BooleanValue registerCommand;
         public ForgeConfigSpec.BooleanValue litmusScreen;
 
+        public ForgeConfigSpec.IntValue lightStaffFrequency;
+        public ForgeConfigSpec.IntValue blazeStaffFrequency;
+        public ForgeConfigSpec.IntValue mindStaffFrequency;
+        public ForgeConfigSpec.IntValue soulStaffFrequency;
+        public ForgeConfigSpec.IntValue vitalStaffFrequency;
+
+        public ForgeConfigSpec.DoubleValue mindStaffPower;
+        public ForgeConfigSpec.DoubleValue soulStaffPower;
+        public ForgeConfigSpec.DoubleValue lightStaffPowerVsUndead;
+
+
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
                     .push("config");
@@ -43,6 +54,25 @@ public class ConfigMan {
                     .defineInRange("copperDisplaceConductRange", 8, 1, 4096);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
+
+            builder.comment("Staff Balance:").push("staff_balance");
+            lightStaffFrequency = builder.comment("The Radiant Staff of Power will activate every this many ticks while right click is held. [Default: 7]")
+                            .defineInRange("lightStaffFrequency", 7, 1, 60);
+            blazeStaffFrequency = builder.comment("The Blazing Staff of Power will activate every this many ticks while right click is held. [Default: 10]")
+                    .defineInRange("blazeStaffFrequency", 10, 1, 60);
+            soulStaffFrequency = builder.comment("The Spectral Staff of Power will activate every this many ticks while right click is held. [Default: 14]")
+                    .defineInRange("soulStaffFrequency", 14, 1, 60);
+            mindStaffFrequency = builder.comment("The Arcane Staff of Power will activate every this many ticks while right click is held. [Default: 10]")
+                    .defineInRange("mindStaffFrequency", 10, 1, 60);
+
+            mindStaffPower = builder.comment("Each bolt from the Arcane Staff of Power will do this much magic damage. [Default: 2.0]")
+                    .defineInRange("mindStaffPower", 2.0, 1.0, 100.0);
+            lightStaffPowerVsUndead = builder.comment("Undead caught in the Radiant Staff of Power's beam will take this much fire damage each activation. [Default: 7.0]")
+                    .defineInRange("lightStaffPowerVsUndead", 7.0, 1.0, 100.0);
+            soulStaffPower = builder.comment("Living entities within the Spectral Staff of Power's area of effect will take this much magic damage each activation. [Default: 3.0]")
+                    .defineInRange("soulStaffPower", 3.0, 1.0, 100.0);
+            builder.pop();
+
             registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
                     .define("registerCommand", true);
             litmusScreen = builder.comment("This enables the GUI for Litmus Paper. Disabling it restores the original chat-based reporting. [Default: true]")

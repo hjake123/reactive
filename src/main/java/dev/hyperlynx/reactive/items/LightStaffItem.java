@@ -18,12 +18,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class LightStaffItem extends StaffItem {
     private final static int LIGHT_BREAK_RANGE = 24;
 
-    public LightStaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Item repair_item) {
-        super(block, props, effect, beam, 7, repair_item);
+    public LightStaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
+        super(block, props, effect, beam, frequency, repair_item);
     }
 
     @Override
