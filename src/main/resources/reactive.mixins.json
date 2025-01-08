@@ -11,7 +11,7 @@
     "CreeperMixin",
     "LightningBoltMixin",
     "LivingEntityGravityMixin",
-    "MobMixin",
+    "LivingEntityHarmUndeadMixin",
     "PhantomMixin",
     "SpiderMixin",
     "VexMixin",

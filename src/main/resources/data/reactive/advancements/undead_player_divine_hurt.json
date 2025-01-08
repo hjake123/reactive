@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:undead_player_divine_hurt_criterion"
+    }
+  }
+}
