@@ -27,16 +27,17 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class StaffItem extends BlockItem {
-    Function<Player, Player> effectFunction;
+    Consumer<Player> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
     Supplier<Integer> frequency; // Beam abilities activate once in this many ticks.
     public Item repair_item;
 
-    public StaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
+    public StaffItem(Block block, Properties props, Consumer<Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
         super(block, props);
         effectFunction = effect;
         this.beam = beam;
@@ -59,11 +60,11 @@ public class StaffItem extends BlockItem {
             return;
         if(ticks % getFrequency(stack) == 1) {
             if(level.isClientSide && !beam)
-                effectFunction.apply((Player) player);
+                effectFunction.accept((Player) player);
 
             if(!level.isClientSide) {
                 level.gameEvent(GameEvent.PROJECTILE_SHOOT, player.getEyePosition(), GameEvent.Context.of(player));
-                effectFunction.apply((Player) player);
+                effectFunction.accept((Player) player);
                 if (player.getOffhandItem().is(stack.getItem())) {
                     player.getOffhandItem().hurtAndBreak(1, player, (LivingEntity l) -> {});
                 } else {
@@ -71,7 +72,7 @@ public class StaffItem extends BlockItem {
                 }
             }
         }
-        if (level.isClientSide && beam) effectFunction.apply((Player) player);
+        if (level.isClientSide && beam) effectFunction.accept((Player) player);
     }
 
     @SuppressWarnings("deprecation") // Minecraft itself will never change on this branch.

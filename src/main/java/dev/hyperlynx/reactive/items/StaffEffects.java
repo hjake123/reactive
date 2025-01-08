@@ -42,8 +42,8 @@ public class StaffEffects {
 
     Beam casting code is taken from Eclectic, as contributed by petrak@
      */
-    public static Player radiance(Player user){
-        int range = 64;
+    public static void radiance(Player user){
+        int range = ConfigMan.COMMON.lightStaffRange.get();
         var block_hit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, range);
         var block_hit_pos = block_hit.getBlockPos();
         var start = user.getEyePosition();
@@ -64,6 +64,9 @@ public class StaffEffects {
             }
             if(!block_hit.getType().equals(BlockHitResult.Type.MISS)) {
                 BlockPos light_target = block_hit_pos.relative(block_hit.getDirection(), 1);
+                if(!user.level().isLoaded(light_target)) {
+                    return;
+                }
                 if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
                     user.level().setBlock(light_target,
                             Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
@@ -82,11 +85,10 @@ public class StaffEffects {
                     user.getEyePosition().x, user.getEyePosition().y - 0.4, user.getEyePosition().z,
                     block_hit.getLocation().x, block_hit.getLocation().y, block_hit.getLocation().z, 2, 0.1);
         }
-        return user;
     }
 
-    public static Player blazing(Player user){
-        int range = 24;
+    public static void blazing(Player user){
+        int range = ConfigMan.COMMON.blazeStaffRange.get();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
         var entityHit = ProjectileUtil.getEntityHitResult(
@@ -109,11 +111,10 @@ public class StaffEffects {
             user.level().addFreshEntity(fireball);
             user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
         }
-        return user;
     }
 
-    public static Player spectral(Player user){
-        var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, 16);
+    public static void spectral(Player user){
+        var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, ConfigMan.COMMON.soulStaffRange.get());
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
@@ -133,17 +134,17 @@ public class StaffEffects {
             ParticleScribe.drawParticleBox(user.level(), ParticleTypes.SOUL, aoe, 10);
             user.level().addParticle(ParticleTypes.SOUL, blockHitPos.x, blockHitPos.y, blockHitPos.z, 0, 0, 0);
         }
-        return user;
     }
 
-    public static Player missile(Player user){
+    public static void missile(Player user){
         if (user instanceof ServerPlayer) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
             boolean super_missile = EnchantmentHelper.getEnchantmentLevel(Registration.WIDE_RANGE.get(), user) > 0;
-            aoe = aoe.inflate(super_missile ? 10 : 6);
+            int base_range = ConfigMan.COMMON.mindStaffRange.get();
+            aoe = aoe.inflate(super_missile ? base_range * 1.67 : base_range);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
-            for(int i = 0; i < (super_missile ? 7 : 3); i++) {
+            for(int i = 0; i < (super_missile ? ConfigMan.COMMON.mindStaffEnchantedMissiles.get() : ConfigMan.COMMON.mindStaffBaseMissiles.get()); i++) {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
@@ -161,30 +162,29 @@ public class StaffEffects {
                         user.level().random.nextFloat()*0.1f + 0.8f);
             }
         }
-        return user;
     }
 
-    public static Player living(Player user){
+    public static void living(Player user){
         if (user.level().random.nextFloat() < 0.4) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(5);
+            aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : nearby_ents) {
                 boolean has_regen = false, has_hp_up = false;
                 for(MobEffectInstance mei : victim.getActiveEffects()){
                     if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
-                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, 2));
+                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get()));
                         has_hp_up = true;
                     }
                     else if(mei.getEffect().equals(MobEffects.REGENERATION)){
-                        mei.update(new MobEffectInstance(MobEffects.REGENERATION, 50, 2));
+                        mei.update(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get()));
                         has_regen = true;
                     }
                 }
-                if(!has_regen)
-                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, 2));
                 if(!has_hp_up)
-                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, 2));
+                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get()));
+                if(!has_regen)
+                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get()));
             }
         }
 
@@ -193,8 +193,5 @@ public class StaffEffects {
                     user.getRandomZ(5.0), 0, 0, 0);
         }
         user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
-
-        return user;
     }
-
 }

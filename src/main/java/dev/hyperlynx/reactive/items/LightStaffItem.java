@@ -17,13 +17,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class LightStaffItem extends StaffItem {
     private final static int LIGHT_BREAK_RANGE = 24;
 
-    public LightStaffItem(Block block, Properties props, Function<Player, Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
+    public LightStaffItem(Block block, Properties props, Consumer<Player> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
         super(block, props, effect, beam, frequency, repair_item);
     }
 
@@ -34,7 +35,7 @@ public class LightStaffItem extends StaffItem {
 
         if(!level.isClientSide) {
             level.gameEvent(GameEvent.ITEM_INTERACT_FINISH, player.getEyePosition(), GameEvent.Context.of(player));
-            effectFunction.apply((Player) player);
+            effectFunction.accept(player);
             player.getItemInHand(hand).hurtAndBreak(1, player, (LivingEntity l) -> {});
         }
         return super.use(level, player, hand);

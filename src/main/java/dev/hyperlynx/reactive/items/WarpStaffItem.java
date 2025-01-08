@@ -129,7 +129,7 @@ public class WarpStaffItem extends StaffItem{
         if(onLastDurability(stack))
             return InteractionResultHolder.fail(stack);
 
-        int range = 12;
+        int range = ConfigMan.COMMON.warpStaffRange.get();
         var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
