@@ -157,7 +157,10 @@ public class WarpStaffItem extends StaffItem{
                     return InteractionResultHolder.success(stack);
                 }
                 // Select the entity.
-                if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId()) && !(entityHit.getEntity() instanceof Player)) {
+                if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId())) {
+                    if(!ConfigMan.COMMON.warpStaffAffectsPlayers.get() && entityHit.getEntity() instanceof Player) {
+                        return InteractionResultHolder.fail(stack);
+                    }
                     if(!stack.hasTag()){
                         stack.setTag(new CompoundTag());
                     }

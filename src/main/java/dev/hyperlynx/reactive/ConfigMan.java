@@ -45,6 +45,8 @@ public class ConfigMan {
         public ForgeConfigSpec.IntValue vitalStaffHealthBoost;
         public ForgeConfigSpec.IntValue vitalStaffRegeneration;
 
+        public ForgeConfigSpec.BooleanValue warpStaffAffectsPlayers;
+
         Common(ForgeConfigSpec.Builder builder){
             builder.comment("Options:")
                     .push("config");
@@ -111,6 +113,8 @@ public class ConfigMan {
                     .defineInRange("vitalStaffHealthBoost", 3, 1, 5);
             vitalStaffRegeneration = builder.comment("The Vital Staff of Power gives this level of Regeneration to affected entities. [Default: 3]")
                     .defineInRange("vitalStaffRegeneration", 3, 1, 5);
+            warpStaffAffectsPlayers = builder.comment("Whether the Warping Staff of Power can bind to players. If allowed, this means one can teleport players with no warning from across the map once bound. [Default: false]")
+                            .define("warpStaffAffectsPlayers", false);
             builder.pop();
             builder.pop();
 
