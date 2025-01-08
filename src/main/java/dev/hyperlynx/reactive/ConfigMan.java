@@ -106,7 +106,7 @@ public class ConfigMan {
             mindStaffEnchantedMissiles = builder.comment("How many TOTAL missiles the Arcane Staff of Power shoots each activation while enchanted with Wide Range. Recommended to be higher than the prior key. [Default: 7]")
                     .defineInRange("mindStaffEnchantedMissiles", 7, 2, 40);
             soulStaffPower = builder.comment("Living entities within the Spectral Staff of Power's area of effect will take this much magic damage each activation. [Default: 3.0]")
-                    .defineInRange("soulStaffPower", 3.0, 1.0, 100.0);
+                    .defineInRange("soulStaffPower", 4.0, 1.0, 100.0);
             vitalStaffHealthBoost = builder.comment("The Vital Staff of Power gives this level of Health Boost to affected entities. [Default: 3]")
                     .defineInRange("vitalStaffHealthBoost", 3, 1, 5);
             vitalStaffRegeneration = builder.comment("The Vital Staff of Power gives this level of Regeneration to affected entities. [Default: 3]")
