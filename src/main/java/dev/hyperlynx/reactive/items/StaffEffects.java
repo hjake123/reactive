@@ -17,6 +17,8 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -107,7 +109,13 @@ public class StaffEffects {
                     .add(user.getLookAngle().scale(1.5))
                     .add(user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
-            SmallFireball fireball = new SmallFireball(user.level(), user, aim.x, aim.y, aim.z);
+
+            Fireball fireball;
+            if(ConfigMan.COMMON.blazeStaffExplosionSize.get() > 0) {
+                fireball = new LargeFireball(user.level(), user, aim.x, aim.y, aim.z, ConfigMan.COMMON.blazeStaffExplosionSize.get());
+            } else {
+                fireball = new SmallFireball(user.level(), user, aim.x, aim.y, aim.z);
+            }
             fireball.setPos(fireball_position);
             user.level().addFreshEntity(fireball);
             user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);

@@ -38,6 +38,8 @@ public class ConfigMan {
         public ForgeConfigSpec.DoubleValue soulStaffPower;
         public ForgeConfigSpec.DoubleValue lightStaffPowerVsUndead;
 
+        public ForgeConfigSpec.IntValue blazeStaffExplosionSize;
+
         public ForgeConfigSpec.IntValue mindStaffMaxHits;
         public ForgeConfigSpec.IntValue mindStaffBaseMissiles;
         public ForgeConfigSpec.IntValue mindStaffEnchantedMissiles;
@@ -95,6 +97,8 @@ public class ConfigMan {
             builder.pop();
 
             builder.comment("Effect Power:").push("power");
+            blazeStaffExplosionSize = builder.comment("Blazing Staves of Power shoot fireballs that cause explosions of this size. If 0, uses a blaze-like not explosive fireball instead. [Default: 0]")
+                    .defineInRange("blazeStaffExplosionSize", 0, 0, 10);
             lightStaffPowerVsUndead = builder.comment("Undead caught in the Radiant Staff of Power's beam will take this much fire damage each activation. [Default: 7.0]")
                     .defineInRange("lightStaffPowerVsUndead", 7.0, 1.0, 100.0);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
