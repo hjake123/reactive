@@ -27,7 +27,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
+import java.io.ObjectInputFilter;
+import java.util.*;
 
 // A container class for the various effects that the staff items can have when right-clicked.
 // Similar in concept to ReactionEffects
@@ -144,10 +145,14 @@ public class StaffEffects {
             aoe = aoe.inflate(super_missile ? base_range * 1.67 : base_range);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             nearby_ents.remove(user);
+            Map<LivingEntity, Integer> hit_counts = new HashMap<>();
+
             for(int i = 0; i < (super_missile ? ConfigMan.COMMON.mindStaffEnchantedMissiles.get() : ConfigMan.COMMON.mindStaffBaseMissiles.get()); i++) {
                 if(nearby_ents.isEmpty())
                     break;
                 LivingEntity victim = nearby_ents.get(user.level().random.nextInt(0, nearby_ents.size()));
+                if(victim.isDeadOrDying())
+                    continue;
                 if(victim instanceof ArmorStand)
                     continue;
                 if(victim instanceof TamableAnimal tamable_victim){
@@ -155,11 +160,21 @@ public class StaffEffects {
                         continue;
                     }
                 }
-                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, ConfigMan.COMMON.mindStaffPower.get().floatValue()));
-                ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
-                        victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
-                user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
-                        user.level().random.nextFloat()*0.1f + 0.8f);
+                hit_counts.put(victim, hit_counts.getOrDefault(victim, 0) + 1);
+                if(hit_counts.get(victim) >= ConfigMan.COMMON.mindStaffMaxHits.get()) {
+                    nearby_ents.remove(victim);
+                }
+            }
+
+            for(LivingEntity victim : hit_counts.keySet()) {
+                for(int i = 0; i < hit_counts.get(victim); i++) {
+                    ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                            victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
+                    user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
+                            user.level().random.nextFloat()*0.1f + 0.8f);
+                }
+                float damage = hit_counts.get(victim) * ConfigMan.COMMON.mindStaffPower.get().floatValue();
+                victim.hurt(user.damageSources().magic(), StaffItem.getDamageAmount(user, damage));
             }
         }
     }
@@ -173,18 +188,18 @@ public class StaffEffects {
                 boolean has_regen = false, has_hp_up = false;
                 for(MobEffectInstance mei : victim.getActiveEffects()){
                     if(mei.getEffect().equals(MobEffects.HEALTH_BOOST)){
-                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get()));
+                        mei.update(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get() - 1));
                         has_hp_up = true;
                     }
                     else if(mei.getEffect().equals(MobEffects.REGENERATION)){
-                        mei.update(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get()));
+                        mei.update(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get() - 1));
                         has_regen = true;
                     }
                 }
                 if(!has_hp_up)
-                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get()));
+                    victim.addEffect(new MobEffectInstance(MobEffects.HEALTH_BOOST, 500, ConfigMan.COMMON.vitalStaffHealthBoost.get() - 1));
                 if(!has_regen)
-                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get()));
+                    victim.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 50, ConfigMan.COMMON.vitalStaffRegeneration.get() - 1));
             }
         }
 

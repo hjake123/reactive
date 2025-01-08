@@ -38,6 +38,7 @@ public class ConfigMan {
         public ForgeConfigSpec.DoubleValue soulStaffPower;
         public ForgeConfigSpec.DoubleValue lightStaffPowerVsUndead;
 
+        public ForgeConfigSpec.IntValue mindStaffMaxHits;
         public ForgeConfigSpec.IntValue mindStaffBaseMissiles;
         public ForgeConfigSpec.IntValue mindStaffEnchantedMissiles;
 
@@ -92,26 +93,26 @@ public class ConfigMan {
             builder.pop();
 
             builder.comment("Effect Power:").push("power");
-            mindStaffPower = builder.comment("Each bolt from the Arcane Staff of Power will do this much magic damage. [Default: 2.0]")
-                    .defineInRange("mindStaffPower", 2.0, 1.0, 100.0);
             lightStaffPowerVsUndead = builder.comment("Undead caught in the Radiant Staff of Power's beam will take this much fire damage each activation. [Default: 7.0]")
                     .defineInRange("lightStaffPowerVsUndead", 7.0, 1.0, 100.0);
-            soulStaffPower = builder.comment("Living entities within the Spectral Staff of Power's area of effect will take this much magic damage each activation. [Default: 3.0]")
-                    .defineInRange("soulStaffPower", 3.0, 1.0, 100.0);
-            vitalStaffHealthBoost = builder.comment("The Vital Staff of Power gives this level of Health Boost to affected entities.")
-                    .defineInRange("vitalStaffHealthBoost", 2, 1, 5);
-            vitalStaffRegeneration = builder.comment("The Vital Staff of Power gives this level of Regeneration to affected entities.")
-                    .defineInRange("vitalStaffRegeneration", 2, 1, 5);
-            builder.pop();
-
-            builder.comment("Other:").push("other");
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
+            mindStaffPower = builder.comment("Each bolt from the Arcane Staff of Power will do this much magic damage. [Default: 2.0]")
+                    .defineInRange("mindStaffPower", 2.0, 1.0, 100.0);
+            mindStaffMaxHits = builder.comment("The maximum number of bolts that the Arcane Staff of Power can hit a single target with each activation. [Default: 2]")
+                    .defineInRange("mindStaffMaxHits", 2, 1, 40);
             mindStaffBaseMissiles = builder.comment("How many missiles the Arcane Staff of Power shoots each activation. [Default: 4]")
                     .defineInRange("mindStaffBaseMissiles", 4, 1, 20);
             mindStaffEnchantedMissiles = builder.comment("How many TOTAL missiles the Arcane Staff of Power shoots each activation while enchanted with Wide Range. Recommended to be higher than the prior key. [Default: 7]")
                     .defineInRange("mindStaffEnchantedMissiles", 7, 2, 40);
-            builder.pop(2);
+            soulStaffPower = builder.comment("Living entities within the Spectral Staff of Power's area of effect will take this much magic damage each activation. [Default: 3.0]")
+                    .defineInRange("soulStaffPower", 3.0, 1.0, 100.0);
+            vitalStaffHealthBoost = builder.comment("The Vital Staff of Power gives this level of Health Boost to affected entities. [Default: 3]")
+                    .defineInRange("vitalStaffHealthBoost", 3, 1, 5);
+            vitalStaffRegeneration = builder.comment("The Vital Staff of Power gives this level of Regeneration to affected entities. [Default: 3]")
+                    .defineInRange("vitalStaffRegeneration", 3, 1, 5);
+            builder.pop();
+            builder.pop();
 
             registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
                     .define("registerCommand", true);
