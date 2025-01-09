@@ -6,3 +6,4 @@
 - Added a config option to allow the Warping Staff of Power to affect players
 - Added a config option to allow the Blazing Staff of Power to fire explosive fireballs instead
 - (Goety Compat) Liches who are near Divine Symbols are hurt like other undead
+- Fixed an issue that might cause players to be kicked from servers when potion effects are removed by a Ferrous Crystal
