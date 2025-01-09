@@ -32,14 +32,15 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class StaffItem extends BlockItem {
     BiConsumer<Player, ItemStack> effectFunction;
     boolean beam; // Whether the effect should render as a beam (true) or zap (false).
-    private final int frequency; // Beam abilities activate once in this many ticks.
+    private final Supplier<Integer> frequency; // Beam abilities activate once in this many ticks.
     public Item repair_item;
 
-    public StaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, int frequency, Item repair_item) {
+    public StaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
         super(block, props);
         effectFunction = effect;
         this.beam = beam;
@@ -93,7 +94,7 @@ public class StaffItem extends BlockItem {
     }
 
     private int getFrequency(@NotNull ItemStack stack){
-        MutableInt frequency = new MutableInt(this.frequency);
+        MutableInt frequency = new MutableInt(this.frequency.get());
 
         EnchantmentHelper.runIterationOnItem(stack, (enchant, enchant_level) -> {
             for(var effect : enchant.value().getEffects(Registration.STAFF_RATE.value())){

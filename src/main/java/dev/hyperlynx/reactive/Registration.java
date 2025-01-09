@@ -329,22 +329,26 @@ public class Registration {
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_BLAZE = BLOCKS.register("blaze_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 13)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_BLAZE_ITEM = ITEMS.register(STAFF_OF_BLAZE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().durability(1200).fireResistant(), StaffEffects::blazing, false, 10, BLAZE_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_BLAZE.get(), new Item.Properties().durability(1200).fireResistant(), StaffEffects::blazing, false,
+                    ConfigMan.COMMON.blazeStaffFrequency, BLAZE_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_SOUL = BLOCKS.register("soul_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_SOUL_ITEM = ITEMS.register(STAFF_OF_SOUL.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().durability(800), StaffEffects::spectral, false, 14, SOUL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_SOUL.get(), new Item.Properties().durability(800), StaffEffects::spectral, false,
+                    ConfigMan.COMMON.soulStaffFrequency, SOUL_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_MIND = BLOCKS.register("mind_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_MIND_ITEM = ITEMS.register(STAFF_OF_MIND.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().durability(1200), StaffEffects::missile, false, 10, MIND_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_MIND.get(), new Item.Properties().durability(1200), StaffEffects::missile, false,
+                    ConfigMan.COMMON.mindStaffFrequency, MIND_BOTTLE.get()));
 
     public static final DeferredHolder<Block, StaffBlock> STAFF_OF_LIFE = BLOCKS.register("vital_staff",
             () -> new StaffBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_ROD).lightLevel((BlockState) -> 7)));
     public static final DeferredHolder<Item, StaffItem> STAFF_OF_LIFE_ITEM = ITEMS.register(STAFF_OF_LIFE.getId().getPath(),
-            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().durability(600), StaffEffects::living, true, 10, VITAL_BOTTLE.get()));
+            () -> new StaffItem(STAFF_OF_LIFE.get(), new Item.Properties().durability(600), StaffEffects::living, true,
+                    () -> 10, VITAL_BOTTLE.get()));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StaffBlockEntity>> STAFF_BE = BLOCK_ENTITY_TYPES.register("staff_be",
             () -> BlockEntityType.Builder.of(StaffBlockEntity::new, STAFF_OF_LIGHT.get(), STAFF_OF_SOUL.get(), STAFF_OF_LIFE.get(), STAFF_OF_MIND.get(), STAFF_OF_BLAZE.get(), STAFF_OF_WARP.get()).build(null));
@@ -563,7 +567,7 @@ public class Registration {
     //Register advancement criteria for the book
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> MAKE_CRUCIBLE_TRIGGER = CRITERIA_TRIGGERS.register("make_crucible_criterion",
             () -> new FlagTrigger(ReactiveMod.location("make_crucible_criterion")));
-    
+
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> ISOLATE_OMEN_TRIGGER = CRITERIA_TRIGGERS.register("isolate_omen_criterion",
             () -> new FlagTrigger(ReactiveMod.location("isolate_omen_criterion")));
 
@@ -635,6 +639,9 @@ public class Registration {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_FLOW_CONTAINMENT = CRITERIA_TRIGGERS.register("see_flow_containment_criterion",
             () -> new FlagTrigger(ReactiveMod.location("see_flow_containment_criterion")));
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> UNDEAD_PLAYER_DIVINE_HURT = CRITERIA_TRIGGERS.register("undead_player_divine_hurt_criterion",
+            () -> new FlagTrigger(ReactiveMod.location("undead_player_divine_hurt_criterion")));
 
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);

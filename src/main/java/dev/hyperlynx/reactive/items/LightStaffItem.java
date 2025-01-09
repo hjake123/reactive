@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,7 @@ public class LightStaffItem extends StaffItem {
     private final static int LIGHT_BREAK_RANGE = 24;
 
     public LightStaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, Item repair_item) {
-        super(block, props, effect, beam, 7, repair_item);
+        super(block, props, effect, beam, ConfigMan.COMMON.lightStaffFrequency, repair_item);
     }
 
     @Override
