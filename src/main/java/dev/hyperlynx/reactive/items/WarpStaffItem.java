@@ -43,7 +43,7 @@ import java.util.Objects;
 
 public class WarpStaffItem extends StaffItem{
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
-        super(block, props, null, false, 1, repair_item);
+        super(block, props, null, false, () -> 1, repair_item);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class WarpStaffItem extends StaffItem{
         if(onLastDurability(stack))
             return InteractionResultHolder.fail(stack);
 
-        int range = 12;
+        int range = ConfigMan.COMMON.warpStaffRange.get();
         var blockHit = BeamHelper.playerRayTrace(user.level(), user, ClipContext.Fluid.NONE, ClipContext.Block.OUTLINE, range);
         var blockHitPos = blockHit.getLocation();
         var start = user.getEyePosition();
@@ -150,7 +150,10 @@ public class WarpStaffItem extends StaffItem{
                     return InteractionResultHolder.success(stack);
                 }
                 // Select the entity.
-                if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId()) && !(entityHit.getEntity() instanceof Player)) {
+                if (!ConfigMan.COMMON.doNotTeleport.get().contains(entityHit.getEntity().getEncodeId())) {
+                    if(!ConfigMan.COMMON.warpStaffAffectsPlayers.get() && entityHit.getEntity() instanceof Player) {
+                        return InteractionResultHolder.fail(stack);
+                    }
                     Entity entity = entityHit.getEntity();
                     if(entity instanceof EnderMan man){ // Trying to warp an Enderman breaks the staff momentarily.
                         man.hurt(user.damageSources().magic(), 1);

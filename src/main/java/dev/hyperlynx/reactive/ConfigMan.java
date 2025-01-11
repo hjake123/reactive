@@ -20,6 +20,33 @@ public class ConfigMan {
         public ModConfigSpec.BooleanValue registerCommand;
         public ModConfigSpec.BooleanValue litmusScreen;
 
+        public ModConfigSpec.IntValue lightStaffFrequency;
+        public ModConfigSpec.IntValue blazeStaffFrequency;
+        public ModConfigSpec.IntValue mindStaffFrequency;
+        public ModConfigSpec.IntValue soulStaffFrequency;
+
+        public ModConfigSpec.IntValue lightStaffRange;
+        public ModConfigSpec.IntValue blazeStaffRange;
+        public ModConfigSpec.IntValue mindStaffRange;
+        public ModConfigSpec.IntValue soulStaffRange;
+        public ModConfigSpec.IntValue warpStaffRange;
+        public ModConfigSpec.IntValue vitalStaffRange;
+
+        public ModConfigSpec.DoubleValue mindStaffPower;
+        public ModConfigSpec.DoubleValue soulStaffPower;
+        public ModConfigSpec.DoubleValue lightStaffPowerVsUndead;
+
+        public ModConfigSpec.IntValue blazeStaffExplosionSize;
+
+        public ModConfigSpec.IntValue mindStaffMaxHits;
+        public ModConfigSpec.IntValue mindStaffBaseMissiles;
+        public ModConfigSpec.IntValue mindStaffEnchantedMissiles;
+
+        public ModConfigSpec.IntValue vitalStaffHealthBoost;
+        public ModConfigSpec.IntValue vitalStaffRegeneration;
+
+        public ModConfigSpec.BooleanValue warpStaffAffectsPlayers;
+
         Common(ModConfigSpec.Builder builder){
             builder.comment("Options:")
                     .push("config");
@@ -28,7 +55,7 @@ public class ConfigMan {
             crucibleRange = builder.comment("The crucible affect entities with an area of this radius. [Default: 12]")
                     .defineInRange("crucibleRange", 12, 2, 64);
             areaMemoryRange = builder.comment("The crucible checks an area this many blocks in radius up to a few times a second. Do not set this too high. [Default: 6]")
-                    .defineInRange("areaMemoryRange", 6, 2, 16);
+                    .defineInRange("areaMemoryRange", 6, 2, 64);
             doNotTeleport = builder.comment("Certain effects might teleport entities if they are not in this blacklist. [Default: \"minecraft:ender_dragon\", \"minecraft:wither\", \"minecraft:warden\"]")
                     .define("doNotTeleport", Lists.newArrayList("minecraft:ender_dragon", "minecraft:wither", "minecraft:warden"));
             acidMeltBlockEntities = builder.comment("Whether acid should dissolve entity blocks. This would delete the contents of said blocks. [Default: false]")
@@ -39,8 +66,60 @@ public class ConfigMan {
                     .defineInRange("maxDisplaceCount", 128, 4, 4096);
             displaceConductRange = builder.comment("The maximum distance that a block like Copper can convey a displacement pulse [Default: 8]")
                     .defineInRange("copperDisplaceConductRange", 8, 1, 4096);
+
+            builder.comment("Staff Balance:").push("staff_balance");
+            builder.comment("Range:").push("range");
+            blazeStaffRange = builder.comment("The range to which the Blazing Staff of Power's fireballs are accurate. [Default: 24]")
+                            .defineInRange("blazeStaffRange", 24, 4, 1024);
+            lightStaffRange = builder.comment("The range of the Radiant Staff of Power. [Default: 64]")
+                    .defineInRange("lightStaffRange", 64, 4, 1024);
+            mindStaffRange = builder.comment("The range of the Arcane Staff of Power. [Default: 6]")
+                    .defineInRange("mindStaffRange", 6, 4, 1024);
+            soulStaffRange = builder.comment("The range of the Spectral Staff of Power. [Default: 16]")
+                    .defineInRange("soulStaffRange", 16, 4, 1024);
+            vitalStaffRange = builder.comment("The size of the area of effect for the Living Staff of Power. [Default: 5]")
+                    .defineInRange("vitalStaffRange", 5, 4, 1024);
+            warpStaffRange = builder.comment("The range of the Warping Staff of Power. [Default: 12]")
+                    .defineInRange("warpStaffRange", 12, 4, 1024);
+            builder.pop();
+
+            builder.comment("Frequency:").push("frequency");
+            lightStaffFrequency = builder.comment("The Radiant Staff of Power will activate every this many ticks while right click is held. [Default: 7]")
+                            .defineInRange("lightStaffFrequency", 7, 2, 60);
+            blazeStaffFrequency = builder.comment("The Blazing Staff of Power will activate every this many ticks while right click is held. [Default: 10]")
+                    .defineInRange("blazeStaffFrequency", 10, 2, 60);
+            soulStaffFrequency = builder.comment("The Spectral Staff of Power will activate every this many ticks while right click is held. [Default: 14]")
+                    .defineInRange("soulStaffFrequency", 14, 2, 60);
+            mindStaffFrequency = builder.comment("The Arcane Staff of Power will activate every this many ticks while right click is held. [Default: 10]")
+                    .defineInRange("mindStaffFrequency", 10, 2, 60);
+            builder.pop();
+
+            builder.comment("Effect Power:").push("power");
+            blazeStaffExplosionSize = builder.comment("Blazing Staves of Power shoot fireballs that cause explosions of this size. If 0, uses a blaze-like not explosive fireball instead. [Default: 0]")
+                    .defineInRange("blazeStaffExplosionSize", 0, 0, 10);
+            lightStaffPowerVsUndead = builder.comment("Undead caught in the Radiant Staff of Power's beam will take this much fire damage each activation. [Default: 7.0]")
+                    .defineInRange("lightStaffPowerVsUndead", 7.0, 1.0, 100.0);
             lightStaffLightsPermanent = builder.comment("Whether the Radiant Staff of Power produces permanent light sources. When false, its lights will gradually vanish. [Default: true]")
                     .define("lightStaffLightsPermanent", true);
+            mindStaffPower = builder.comment("Each bolt from the Arcane Staff of Power will do this much magic damage. [Default: 2.0]")
+                    .defineInRange("mindStaffPower", 2.0, 1.0, 100.0);
+            mindStaffMaxHits = builder.comment("The maximum number of bolts that the Arcane Staff of Power can hit a single target with each activation. [Default: 2]")
+                    .defineInRange("mindStaffMaxHits", 2, 1, 40);
+            mindStaffBaseMissiles = builder.comment("How many missiles the Arcane Staff of Power shoots each activation. [Default: 4]")
+                    .defineInRange("mindStaffBaseMissiles", 4, 1, 20);
+            mindStaffEnchantedMissiles = builder.comment("How many TOTAL missiles the Arcane Staff of Power shoots each activation while enchanted with Wide Range. Recommended to be higher than the prior key. [Default: 7]")
+                    .defineInRange("mindStaffEnchantedMissiles", 7, 2, 40);
+            soulStaffPower = builder.comment("Living entities within the Spectral Staff of Power's area of effect will take this much magic damage each activation. [Default: 3.0]")
+                    .defineInRange("soulStaffPower", 4.0, 1.0, 100.0);
+            vitalStaffHealthBoost = builder.comment("The Vital Staff of Power gives this level of Health Boost to affected entities. [Default: 3]")
+                    .defineInRange("vitalStaffHealthBoost", 3, 1, 5);
+            vitalStaffRegeneration = builder.comment("The Vital Staff of Power gives this level of Regeneration to affected entities. [Default: 3]")
+                    .defineInRange("vitalStaffRegeneration", 3, 1, 5);
+            warpStaffAffectsPlayers = builder.comment("Whether the Warping Staff of Power can bind to players. If allowed, this means one can teleport players with no warning from across the map once bound. [Default: false]")
+                            .define("warpStaffAffectsPlayers", false);
+            builder.pop();
+            builder.pop();
+
             registerCommand = builder.comment("Whether to register the /reactive command on startup. [Default: true]")
                     .define("registerCommand", true);
             litmusScreen = builder.comment("This enables the GUI for Litmus Paper. Disabling it restores the original chat-based reporting. [Default: true]")
