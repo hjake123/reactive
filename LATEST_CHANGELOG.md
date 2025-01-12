@@ -1,9 +1,1 @@
-- **Added config options for most attributes of the Staves of Power**
-  - Range, attack damage, rate of fire, and a few staff-specific values can now be configured
-- Buffed the Spectral Staff of Power (3 -> 4 damage per hit)
-- Buffed the Arcane Staff of Power to allow more then one bolt to hit a single target
-  - How many bolts can hit a single target is controlled by a new config option
-- Added a config option to allow the Warping Staff of Power to affect players
-- Added a config option to allow the Blazing Staff of Power to fire explosive fireballs instead
-- (Goety Compat) Liches who are near Divine Symbols are hurt like other undead
-- Fixed an issue that might cause players to be kicked from servers when potion effects are removed by a Ferrous Crystal
+- Updated the Simplified Chinese translation (by ChuijkYahus)
