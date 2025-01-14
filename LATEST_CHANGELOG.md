@@ -1,1 +1,2 @@
-- Updated the Simplified Chinese translation (by ChuijkYahus)
+- Fixed Mounted Breeze Rods not dropping themselves when broken
+- Made Shulker Crucibles mine faster with a pickaxe
