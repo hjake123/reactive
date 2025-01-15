@@ -1,27 +1,48 @@
 package dev.hyperlynx.reactive.client.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
+import net.minecraft.core.Direction;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
 
-// Duplicated from TheEndPortalRenderer
-public class GatewayRenderer<T extends GatewayBlockEntity> extends TheEndPortalRenderer<T> {
+import static java.lang.Math.sin;
+
+// Adapted from TheEndPortalRenderer
+public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntityRenderer<T> {
+    BlockEntityRendererProvider.Context context;
+
     public GatewayRenderer(BlockEntityRendererProvider.Context context) {
-        super(context);
+        this.context = context;
     }
 
-    @Override
-    public void render(T blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        super.render(blockEntity, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+    public void render(@NotNull T gateway, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        Matrix4f matrix4f = poseStack.last().pose();
+        this.renderCube(gateway, matrix4f, bufferSource.getBuffer(RenderType.END_GATEWAY), partialTick);
     }
 
-    protected float getOffsetUp() {
-        return 1F;
+    private void renderCube(T gateway, Matrix4f pose, VertexConsumer consumer, float partialTick) {
+        double time = gateway.totalTick(partialTick);
+        float distortion = (float) (Math.sin(time / 25) * 0.02);
+
+        this.renderFace(gateway, pose, consumer, 0.0F + distortion, 1.0F - distortion, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion);
+        this.renderFace(gateway, pose, consumer, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion);
+        this.renderFace(gateway, pose, consumer, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 0.0F + distortion, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion, 0.0F + distortion);
+        this.renderFace(gateway, pose, consumer, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion, 1.0F - distortion, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion, 0.0F + distortion);
+        this.renderFace(gateway, pose, consumer, 0.0F + distortion, 1.0F - distortion, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion);
+        this.renderFace(gateway, pose, consumer, 0.0F + distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 1.0F - distortion, 0.0F + distortion, 0.0F + distortion);
     }
 
-    protected float getOffsetDown() {
-        return 0F;
+    private void renderFace(T gateway, Matrix4f pose, VertexConsumer consumer, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3) {
+        consumer.addVertex(pose, x0, y0, z0);
+        consumer.addVertex(pose, x1, y0, z1);
+        consumer.addVertex(pose, x1, y1, z2);
+        consumer.addVertex(pose, x0, y1, z3);
     }
 }
