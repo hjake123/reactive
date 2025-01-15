@@ -26,23 +26,24 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
 
     private void renderCube(T gateway, Matrix4f pose, VertexConsumer consumer, float partialTick) {
         double time = gateway.totalTick(partialTick);
-        float distortion = (float) (Math.sin(time / 50) * 0.03 + 0.04);
+        float distortion_1 = (float) (Math.sin(time / 50) * 0.03 + 0.95);
+        float distortion_2 = (float) (Math.sin(time / 51) * 0.03 + 0.95);
 
         // SOUTH, NORTH
         this.renderFace(pose, consumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F , 1.0F, 1.0F, 1.0F,
-                1.0F, 0.9F, 1.0F, 1.0F);
+                1.0F, distortion_1, 1.0F, distortion_2);
         this.renderFace(pose, consumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
                 1.0F, 1.0F, 1.0F, 1.0F);
 
         // EAST, WEST
         this.renderFace(pose, consumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F,
-                1.0F, 1.0F, 1.0F, 1.0F);
+                1.0F, 1.0F, distortion_2, 1.0F);
         this.renderFace(pose, consumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F,
-                1.0F, 1.0F, 1.0F, 0.9F);
+                1.0F, 1.0F, 1.0F, distortion_1);
 
         // DOWN, UP
         this.renderFace(pose, consumer, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F,
-                0.9F, 1.0F, 1.0F, 1.0F);
+                distortion_1, 1.0F, distortion_2, 1.0F);
         this.renderFace(pose, consumer, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F,
                 1.0F, 1.0F, 1.0F, 1.0F);
     }
