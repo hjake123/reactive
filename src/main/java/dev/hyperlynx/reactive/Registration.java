@@ -377,6 +377,12 @@ public class Registration {
                     .emissiveRendering((a, b, c) -> true)
                     .pushReaction(PushReaction.DESTROY)));
 
+    public static final DeferredHolder<Block, GatewayBlock> GATEWAY_BLOCK = BLOCKS.register("gateway",
+            () -> new GatewayBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_GATEWAY)));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GatewayBlockEntity>> GATEWAY_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("gateway_be",
+            () -> BlockEntityType.Builder.of(GatewayBlockEntity::new, GATEWAY_BLOCK.get()).build(null));
+
     // Register items.
     public static final DeferredHolder<Item, VortexStoneItem> VORTEX_STONE = ITEMS.register("vortex_stone",
             () -> new VortexStoneItem(new Item.Properties()
