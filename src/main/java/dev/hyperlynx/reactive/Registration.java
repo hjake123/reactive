@@ -8,7 +8,6 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
-import dev.hyperlynx.reactive.client.gui.LitmusScreen;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
@@ -69,8 +68,6 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -128,7 +125,7 @@ public class Registration {
             () -> new BlockItem(SHULKER_CRUCIBLE.get(), new Item.Properties()));
 
     // Register the Crucible BE.
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = BLOCK_ENTITY_TYPES.register("crucible_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE = BLOCK_ENTITY_TYPES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get(), SHULKER_CRUCIBLE.get()).build(null));
 
     // Register the rest of the blocks
@@ -157,7 +154,7 @@ public class Registration {
     public static final DeferredHolder<Item, SymbolItem> DIVINE_SYMBOL_ITEM = SymbolItem.registerSimpleBlockItem(DIVINE_SYMBOL);
 
     // Register the Symbol BE
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = BLOCK_ENTITY_TYPES.register("symbol_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SymbolBlockEntity>> SYMBOL_BE = BLOCK_ENTITY_TYPES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get(), DIVINE_SYMBOL.get()).build(null));
 
     public static final DeferredHolder<Block, BlazeRodBlock> BLAZE_ROD = BLOCKS.register("blaze_rod",
@@ -380,7 +377,7 @@ public class Registration {
     public static final DeferredHolder<Block, GatewayBlock> GATEWAY_BLOCK = BLOCKS.register("gateway",
             () -> new GatewayBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.END_GATEWAY)));
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GatewayBlockEntity>> GATEWAY_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register("gateway_be",
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GatewayBlockEntity>> GATEWAY_BE = BLOCK_ENTITY_TYPES.register("gateway_be",
             () -> BlockEntityType.Builder.of(GatewayBlockEntity::new, GATEWAY_BLOCK.get()).build(null));
 
     // Register items.

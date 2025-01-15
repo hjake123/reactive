@@ -101,7 +101,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
+        super(Registration.CRUCIBLE_BE.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }

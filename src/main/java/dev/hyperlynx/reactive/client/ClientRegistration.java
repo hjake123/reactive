@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.client;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
+import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.IEventBus;
@@ -27,8 +28,9 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
-        evt.registerBlockEntityRenderer(Registration.CRUCIBLE_BE_TYPE.get(), CrucibleRenderer::new);
-        evt.registerBlockEntityRenderer(Registration.SYMBOL_BE_TYPE.get(), SymbolRenderer::new);
+        evt.registerBlockEntityRenderer(Registration.CRUCIBLE_BE.get(), CrucibleRenderer::new);
+        evt.registerBlockEntityRenderer(Registration.SYMBOL_BE.get(), SymbolRenderer::new);
+        evt.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), GatewayRenderer::new);
     }
 
     @SubscribeEvent
