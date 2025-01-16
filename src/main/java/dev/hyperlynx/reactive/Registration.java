@@ -16,6 +16,8 @@ import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.components.BoundEntity;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.items.*;
 import dev.hyperlynx.reactive.recipes.*;
@@ -507,6 +509,10 @@ public class Registration {
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_TYPE = RECIPE_TYPES.register("power_bottle", () -> getRecipeType("power_bottle"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("power_bottle", PowerBottleRecipeSerializer::new);
+
 
     // Register the data components.
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> TUTORIAL_DONE =

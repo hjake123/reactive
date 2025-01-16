@@ -57,7 +57,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
 
     @Override
     public IDrawable getIcon() {
-        return  ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
     }
 
     @Override
