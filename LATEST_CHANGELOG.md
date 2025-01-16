@@ -1,2 +1,8 @@
-- Fixed Mounted Breeze Rods not dropping themselves when broken
-- Made Shulker Crucibles mine faster with a pickaxe
+- **Improved how Powers present in JEI**
+- **Made Rending Plinth portals work across dimensions**
+- Gave Rending Plinth portals a new animated appearance
+- Redesigned the JEI recipe views
+- Made Warped foliage correctly yield Warp power
+- Added some anti-overlap logic to the Power Source tags
+- (KubeJS) Disabled the functionality of the setIcon() method for Power creation, since Powers no longer have icons
+- (KubeJS) The KubeJS Integration Version is now `3.0` due to this possibly breaking change
