@@ -7,7 +7,6 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,7 @@ public class PowerBottleRecipeSerializer implements RecipeSerializer<PowerBottle
     public static @NotNull PowerBottleRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         Power power = Powers.POWER_REGISTRY.get(buffer.readResourceKey(Powers.POWER_REGISTRY_KEY));
         return new PowerBottleRecipe("power_bottle", Objects.requireNonNullElseGet(power,
-                () -> new Power("error", 0xFF0000, Blocks.WATER, null, Items.BARRIER)));
+                () -> new Power("error", 0xFF0000, Blocks.WATER, null)));
     }
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PowerBottleRecipe recipe) {

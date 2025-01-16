@@ -4,18 +4,15 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class PowerBuilder extends BuilderBase<Power> {
     public transient int color;
     public transient Item bottle;
-    public transient Item render_item;
     public transient Block render_water_block;
     public transient boolean invisible = false;
     public transient MutableComponent custom_component = null;
@@ -23,14 +20,13 @@ public class PowerBuilder extends BuilderBase<Power> {
     public PowerBuilder(ResourceLocation id) {
         super(id);
         color = 0xFFFFFF;
-        render_item = Items.BARRIER;
         bottle = null;
         render_water_block = Blocks.WATER;
     }
 
     @Override
     public Power createObject() {
-        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle, render_item);
+        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle);
         power.invisible = this.invisible;
         power.custom_component = custom_component;
         return power;
@@ -42,11 +38,7 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder icon(Item icon){
-        if(icon.getDefaultInstance().isEmpty()){
-            ReactiveMod.LOGGER.error("Power {} has an invalid render item! Falling back to barrier icon.", this.id);
-            return this;
-        }
-        this.render_item = icon;
+        ReactiveMod.LOGGER.error("Power {} sets a legacy power icon! This won't have any effect.", this.id);
         return this;
     }
 
