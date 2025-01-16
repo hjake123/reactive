@@ -175,6 +175,7 @@ public class Power {
         return name;
     }
 
+    @Deprecated
     public ItemStack getRenderStack() {
         if(bottle != null && bottle.getDefaultInstance().getCount() > 0)
             return bottle.getDefaultInstance();

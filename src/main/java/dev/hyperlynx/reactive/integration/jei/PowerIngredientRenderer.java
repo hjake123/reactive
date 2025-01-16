@@ -1,13 +1,21 @@
 package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import mezz.jei.api.constants.VanillaTypes;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.util.Color;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -16,9 +24,12 @@ import java.util.List;
 public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     @Override
     public void render(GuiGraphics gui, Power ingredient) {
-        if(ingredient.getRenderStack() != null){
-            ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ingredient.getRenderStack()).draw(gui);
-        }
+        TextureAtlasSprite sprite = getSprite(ingredient);
+        Color color = ingredient.getColor();
+        gui.pose().pushPose();
+        gui.blit(0, 0, 0, 16, 16, sprite,
+                (float) color.red / 255, (float) color.green / 255, (float) color.blue / 255, 1.0F);
+        gui.pose().popPose();
     }
 
     @SuppressWarnings("removal") // Needed for override.
@@ -35,5 +46,10 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     public void getTooltip(ITooltipBuilder builder, @NotNull Power ingredient, @NotNull TooltipFlag tooltipFlag) {
         List<Component> tooltip = this.getTooltip(ingredient, tooltipFlag);
         builder.addAll(tooltip);
+    }
+
+    private static TextureAtlasSprite getSprite(Power power) {
+        BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+        return dispatcher.getBlockModel(power.getWaterRenderBlock().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 }
