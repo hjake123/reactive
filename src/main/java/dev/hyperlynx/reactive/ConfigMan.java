@@ -172,7 +172,7 @@ public class ConfigMan {
 
     public static class Client {
         public ModConfigSpec.BooleanValue showPowerSources;
-        public ModConfigSpec.BooleanValue hidePowersFromJEI;
+        public ModConfigSpec.BooleanValue listPowersAsIngredients;
         public ModConfigSpec.BooleanValue doNotChangeWaterTexture;
         public ModConfigSpec.BooleanValue colorizeLitmusOutput;
 
@@ -181,8 +181,8 @@ public class ConfigMan {
                     .push("config");
             showPowerSources = builder.comment("Whether to show the sources of each Power in JEI. Disable this for a greater challenge.")
                     .define("showPowerSources", true);
-            hidePowersFromJEI = builder.comment("Whether to hide the icons of Powers in JEI. This is on by default because otherwise the menu looks redundant due to how Power icons work.")
-                    .define("hidePowersFromJEI", true);
+            listPowersAsIngredients = builder.comment("Whether to show Powers as JEI ingredients.")
+                    .define("listPowersAsIngredients", true);
             doNotChangeWaterTexture = builder.comment("Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.")
                     .define("doNotChangeWaterTexture", false);
             colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")

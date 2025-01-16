@@ -84,7 +84,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe(Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
-        if(ConfigMan.CLIENT.hidePowersFromJEI.get())
+        if(!ConfigMan.CLIENT.listPowersAsIngredients.get())
             registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList());
         addComposterRecipes(registration);
         addPowerBottleRecipes(registration);
