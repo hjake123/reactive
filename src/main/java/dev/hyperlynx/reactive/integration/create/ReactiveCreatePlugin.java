@@ -13,9 +13,9 @@ public class ReactiveCreatePlugin {
 
     public static void init(){
         AllDisplayBehaviours.register(ReactiveMod.location("crucible_powers"), CRUCIBLE_DISPLAY_SOURCE);
-        AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_DISPLAY_SOURCE, Registration.CRUCIBLE_BE_TYPE.get());
+        AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_DISPLAY_SOURCE, Registration.CRUCIBLE_BE.get());
         AllDisplayBehaviours.register(ReactiveMod.location("crucible_integrity"), CRUCIBLE_INTEGRITY_DISPLAY_SOURCE);
-        AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_INTEGRITY_DISPLAY_SOURCE, Registration.CRUCIBLE_BE_TYPE.get());
+        AllDisplayBehaviours.assignBlockEntity(CRUCIBLE_INTEGRITY_DISPLAY_SOURCE, Registration.CRUCIBLE_BE.get());
     }
 
     public static void initClient(){

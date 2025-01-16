@@ -308,7 +308,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     @Nullable
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
-       if(type == Registration.CRUCIBLE_BE_TYPE.get()){
+       if(type == Registration.CRUCIBLE_BE.get()){
            return (l, p, s, c) -> dev.hyperlynx.reactive.be.CrucibleBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.CrucibleBlockEntity) c);
        }
        return null;

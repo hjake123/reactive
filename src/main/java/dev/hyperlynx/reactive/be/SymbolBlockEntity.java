@@ -31,13 +31,13 @@ public class SymbolBlockEntity extends BlockEntity {
     public Item symbol_item = Items.BARRIER;
 
     public SymbolBlockEntity(BlockPos pos, BlockState state, Item item) {
-        super(Registration.SYMBOL_BE_TYPE.get(), pos, state);
+        super(Registration.SYMBOL_BE.get(), pos, state);
         MinecraftForge.EVENT_BUS.register(this);
         setItem(item);
     }
 
     public SymbolBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.SYMBOL_BE_TYPE.get(), pos, state);
+        super(Registration.SYMBOL_BE.get(), pos, state);
     }
 
     public void setFacing(Direction facing) {

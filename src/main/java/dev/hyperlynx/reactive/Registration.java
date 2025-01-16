@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
+import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
@@ -63,8 +64,10 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
-@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
 public class Registration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ReactiveMod.MODID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ReactiveMod.MODID);
@@ -110,7 +113,7 @@ public class Registration {
             () -> new ShulkerCrucibleItem(new Item.Properties()));
 
     // Register the Crucible BE.
-    public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE_TYPE = TILES.register("crucible_be",
+    public static final RegistryObject<BlockEntityType<CrucibleBlockEntity>> CRUCIBLE_BE = TILES.register("crucible_be",
             () -> BlockEntityType.Builder.of(CrucibleBlockEntity::new, CRUCIBLE.get(), SHULKER_CRUCIBLE.get()).build(null));
 
     // Register the rest of the blocks
@@ -139,7 +142,7 @@ public class Registration {
     public static final RegistryObject<Item> DIVINE_SYMBOL_ITEM = SymbolItem.fromBlock(DIVINE_SYMBOL);
 
     // Register the Symbol BE
-    public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE_TYPE = TILES.register("symbol_be",
+    public static final RegistryObject<BlockEntityType<SymbolBlockEntity>> SYMBOL_BE = TILES.register("symbol_be",
             () -> BlockEntityType.Builder.of(SymbolBlockEntity::new, COPPER_SYMBOL.get(), IRON_SYMBOL.get(), GOLD_SYMBOL.get(), OCCULT_SYMBOL.get(), DIVINE_SYMBOL.get()).build(null));
 
     public static final RegistryObject<Block> BLAZE_ROD = BLOCKS.register("blaze_rod",
@@ -348,6 +351,12 @@ public class Registration {
                     .hasPostProcess((a, b, c) -> true)
                     .emissiveRendering((a, b, c) -> true)
                     .pushReaction(PushReaction.DESTROY)));
+
+    public static final RegistryObject<Block> GATEWAY_BLOCK = BLOCKS.register("gateway",
+            () -> new GatewayBlock(BlockBehaviour.Properties.copy(Blocks.END_GATEWAY)));
+
+    public static final RegistryObject<BlockEntityType<GatewayBlockEntity>> GATEWAY_BE = TILES.register("gateway_be",
+            () -> BlockEntityType.Builder.of(GatewayBlockEntity::new, GATEWAY_BLOCK.get()).build(null));
 
     // Register items.
     public static final RegistryObject<Item> DISPLACER = ITEMS.register("displacer",

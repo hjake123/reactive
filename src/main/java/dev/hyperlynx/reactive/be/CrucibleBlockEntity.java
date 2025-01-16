@@ -94,7 +94,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction states of the previous tick. Only updated on the server. Used by Litmus Paper.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.CRUCIBLE_BE_TYPE.get(), pos, state);
+        super(Registration.CRUCIBLE_BE.get(), pos, state);
         MinecraftForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }

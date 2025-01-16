@@ -9,6 +9,7 @@
     "AllayMixin",
     "BoatMixin",
     "CreeperMixin",
+    "EndGatewayExitViewerMixin",
     "LightningBoltMixin",
     "LivingEntityGravityMixin",
     "LivingEntityHarmUndeadMixin",
