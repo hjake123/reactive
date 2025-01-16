@@ -1,12 +1,19 @@
 package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import mezz.jei.api.constants.VanillaTypes;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.util.Color;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +21,30 @@ import java.util.List;
 public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     @Override
     public void render(GuiGraphics gui, Power ingredient) {
-        if(ingredient.getRenderStack() != null){
-            ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ingredient.getRenderStack()).draw(gui);
+        TextureAtlasSprite sprite = getSprite(ingredient);
+        Color color = ingredient.getColor();
+        if(ingredient == Powers.ASTRAL_POWER.get()){
+            gui.fill(RenderType.endGateway(), 0, 0, 16, 16, 0);
+        } else if(!ingredient.invisible) {
+            gui.fill(0, 0, 16, 16, 0xEE000000 | color.hex);
         }
+        gui.blit(0, 0, 0, 16, 16, sprite,
+                (float) color.red / 255, (float) color.green / 255, (float) color.blue / 255, ingredient.invisible ? 0.2F : 1.0F);
     }
 
+    @SuppressWarnings("removal")
     @Override
-    public List<Component> getTooltip(Power ingredient, TooltipFlag tooltipFlag) {
+    public @NotNull List<Component> getTooltip(Power ingredient, TooltipFlag tooltipFlag) {
         List<Component> ret = new ArrayList<>();
         ret.add(Component.literal(ingredient.getName() + " Power"));
         if(tooltipFlag.isAdvanced()){
             ret.add(Component.literal("reactive:" + ingredient.getId()).withStyle(ChatFormatting.GRAY));
         }
         return ret;
+    }
+
+    private static TextureAtlasSprite getSprite(Power power) {
+        BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+        return dispatcher.getBlockModel(power.getRenderBlock().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 }

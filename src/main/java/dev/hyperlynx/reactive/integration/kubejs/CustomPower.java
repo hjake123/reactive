@@ -15,12 +15,10 @@ import java.util.function.Supplier;
 public class CustomPower extends Power {
     MutableComponent custom_component = null;
     Supplier<Item> bottle_supplier;
-    Supplier<Item> render_item_supplier;
 
-    public CustomPower(ResourceLocation id, int color, Supplier<Block> render_water_block, Supplier<Item> bottle, Supplier<Item> renderItem) {
-        super(id, color, render_water_block, null, null);
+    public CustomPower(ResourceLocation id, int color, Supplier<Block> render_water_block, Supplier<Item> bottle) {
+        super(id, color, render_water_block, null);
         bottle_supplier = bottle;
-        render_item_supplier = renderItem;
     }
 
     @Override
@@ -29,13 +27,6 @@ public class CustomPower extends Power {
             return custom_component.getString();
         }
         return super.getName();
-    }
-
-    @Override
-    public ItemStack getRenderStack() {
-        this.bottle = bottle_supplier.get();
-        this.render_item = render_item_supplier.get();
-        return super.getRenderStack();
     }
 
     @Override

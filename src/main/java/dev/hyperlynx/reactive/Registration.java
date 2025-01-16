@@ -13,6 +13,8 @@ import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
 import dev.hyperlynx.reactive.fx.gui.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
@@ -482,6 +484,10 @@ public class Registration {
 
     public static final RegistryObject<RecipeType<PrecipitateRecipe>> PRECIPITATE_RECIPE_TYPE = RECIPE_TYPES.register("precipitation", () -> getRecipeType("precipitation"));
     public static final RegistryObject<RecipeSerializer<PrecipitateRecipe>> PRECIPITATE_SERIALIZER = RECIPE_SERIALIZERS.register("precipitation", PrecipitateRecipeSerializer::new);
+
+    public static final RegistryObject<RecipeType<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_TYPE = RECIPE_TYPES.register("jei_bottle", () -> getRecipeType("jei_bottle"));
+    public static final RegistryObject<RecipeSerializer<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("jei_bottle", PowerBottleRecipeSerializer::new);
+
 
     // Register the power argument.
     public static final RegistryObject<ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =

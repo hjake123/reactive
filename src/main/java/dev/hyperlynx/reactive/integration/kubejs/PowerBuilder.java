@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 public class PowerBuilder extends BuilderBase<Power> {
     public transient int color;
     public transient Supplier<Item> bottle;
-    public transient Supplier<Item> render_item;
     public transient Supplier<Block> render_water_block;
     public transient boolean invisible = false;
     public transient MutableComponent custom_component = null;
@@ -30,7 +29,6 @@ public class PowerBuilder extends BuilderBase<Power> {
     public PowerBuilder(ResourceLocation id) {
         super(id);
         color = 0xFFFFFF;
-        render_item = () -> Items.BARRIER;
         bottle = () -> null;
         render_water_block = () -> Blocks.WATER;
     }
@@ -42,7 +40,7 @@ public class PowerBuilder extends BuilderBase<Power> {
 
     @Override
     public Power createObject() {
-        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle, render_item);
+        CustomPower power = new CustomPower(this.id, color, render_water_block, bottle);
         power.invisible = this.invisible;
         power.custom_component = custom_component;
         return power;
@@ -54,7 +52,7 @@ public class PowerBuilder extends BuilderBase<Power> {
     }
 
     public PowerBuilder icon(ResourceLocation icon_id){
-        this.render_item = () -> getItem(icon_id, true);
+        ReactiveMod.LOGGER.error("Power {} sets a legacy power icon! This won't have any effect.", this.id);
         return this;
     }
 

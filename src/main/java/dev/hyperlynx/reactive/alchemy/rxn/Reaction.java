@@ -90,12 +90,22 @@ public abstract class Reaction {
 
     // Note that this also sets the reaction status, so all overrides should do that too.
     public Status conditionsMet(CrucibleBlockEntity crucible){
+        boolean missing_a_power = false;
+        boolean too_little_power = false;
         for(Power p : reagents.keySet()){
             if(!p.checkReactivity(crucible.getPowerLevel(p), reagents.get(p))){
-                if(crucible.getPowerLevel(p) > 0)
-                    return Status.POWER_TOO_WEAK;
+                too_little_power = true;
+                if(crucible.getPowerLevel(p) == 0){
+                    missing_a_power = true;
+                    break;
+                }
+            }
+        }
+        if(too_little_power){
+            if(missing_a_power){
                 return Status.STABLE;
             }
+            return Status.POWER_TOO_WEAK;
         }
         boolean met_conditions = checkStimulus(crucible);
         if(met_conditions) {

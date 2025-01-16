@@ -64,10 +64,6 @@
     }
   ],
   "remove": [
-    "minecraft:nether_wart",
-    {
-      "id": "occultism:datura",
-      "required": false
-    }
+    "#reactive:important_power_sources"
   ]
 }

@@ -26,7 +26,6 @@ public class Power {
     private final ResourceLocation location;
     private final String name;
     protected Item bottle;
-    protected Item render_item;
     private final Supplier<Block> render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
@@ -38,7 +37,6 @@ public class Power {
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = null;
     }
 
     public Power(String id, Supplier<Block> render_water_block, Color color, Item bottle){
@@ -48,38 +46,15 @@ public class Power {
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = null;
     }
 
-
-    public Power(String id, Supplier<Block> render_water_block, int color, Item bottle, Item renderItem){
-        this.location = ReactiveMod.location(id);
-        this.render_water_block = render_water_block;
-        this.color = new Color(color);
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(String id, Supplier<Block> render_water_block, Color color, Item bottle, Item renderItem){
-        this.location = ReactiveMod.location(id);
-        this.render_water_block = render_water_block;
-        this.color = color;
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(ResourceLocation location, int color, Supplier<Block> render_water_block, Item bottle, Item renderItem){
+    public Power(ResourceLocation location, int color, Supplier<Block> render_water_block, Item bottle){
         this.location = location;
         this.color = new Color(color);
         this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
-        render_item = renderItem;
     }
 
     public static TagKey<Item> getSourceTag(ResourceLocation location){
@@ -164,11 +139,4 @@ public class Power {
         return name;
     }
 
-    public ItemStack getRenderStack() {
-        if(bottle != null && bottle.getDefaultInstance().getCount() > 0)
-            return bottle.getDefaultInstance();
-        if(render_item != null && render_item.getDefaultInstance().getCount() > 0)
-            return render_item.getDefaultInstance();
-        return Items.BARRIER.getDefaultInstance();
-    }
 }

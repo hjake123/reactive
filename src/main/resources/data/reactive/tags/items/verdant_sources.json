@@ -50,6 +50,7 @@
     }
   ],
   "remove": [
-    "minecraft:wither_rose"
+    "#reactive:important_power_sources",
+    "#reactive:body_sources"
   ]
 }

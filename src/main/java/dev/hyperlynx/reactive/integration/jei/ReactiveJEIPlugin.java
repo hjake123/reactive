@@ -4,6 +4,8 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
+import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
 import dev.hyperlynx.reactive.items.StaffItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.ConfigMan;
@@ -32,6 +34,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public static IJeiHelpers HELPERS;
     public static DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
     public static TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
+    public static PowerBottleRecipeCategory POWER_BOTTLE_CATEGORY = new PowerBottleRecipeCategory();
     public static PowerIngredientType POWER_TYPE = new PowerIngredientType();
     public static PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
     public static PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
@@ -53,6 +56,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         setHelpers(registration.getJeiHelpers());
         registration.addRecipeCategories(DISSOLVE_CATEGORY);
         registration.addRecipeCategories(TRANSMUTE_CATEGORY);
+        registration.addRecipeCategories(POWER_BOTTLE_CATEGORY);
     }
 
     @Override
@@ -74,10 +78,16 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addStaffRepairRecipe((StaffItem) Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
-        if(ConfigMan.CLIENT.hidePowersFromJEI.get())
+        if(!ConfigMan.CLIENT.listPowersAsIngredients.get())
             registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_SUPPLIER.get().getValues());
+        addPowerBottleRecipes(registration);
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
+    }
+
+    private void addPowerBottleRecipes(IRecipeRegistration registration){
+        registration.addRecipes(POWER_BOTTLE_CATEGORY.getRecipeType(), Powers.POWER_SUPPLIER.get().getValues().stream()
+                .map((power -> power.hasBottle() ? new PowerBottleRecipe(ReactiveMod.location("bottle_of_" + power.getId()),"power_bottles", power) : null)).filter((recipe) -> !(recipe == null)).toList());
     }
 
     // TODO: this is bad! and slow!
