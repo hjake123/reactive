@@ -17,7 +17,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class Power {
     private final ResourceLocation location;
     private final String name;
     private final Item bottle;
-    private final Item render_item;
     private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
@@ -46,7 +44,6 @@ public class Power {
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = null;
     }
 
     public Power(String id, Color color, Block render_water_block, Item bottle){
@@ -56,48 +53,25 @@ public class Power {
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = null;
     }
 
 
-    public Power(String id, int color, Block render_water_block, Item bottle, Item renderItem){
-        this.location = ReactiveMod.location(id);
-        this.color = new Color(color);
-        this.render_water_block = render_water_block;
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(ResourceLocation location, int color, Block render_water_block, Item bottle, Item renderItem){
-        this.location = location;
-        this.color = new Color(color);
-        this.render_water_block = render_water_block;
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(String id, Color color, Block render_water_block, Item bottle, Item renderItem){
-        this.location = ReactiveMod.location(id);
-        this.color = color;
-        this.render_water_block = render_water_block;
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-        render_item = renderItem;
-    }
-
-    public Power(ResourceLocation location, Color color, Block render_water_block, Item bottle, Item renderItem){
+    public Power(ResourceLocation location, Color color, Block render_water_block, Item bottle){
         this.location = location;
         this.color = color;
         this.render_water_block = render_water_block;
         this.bottle = bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
-        render_item = renderItem;
+    }
+
+    public Power(ResourceLocation location, int color, Block render_water_block, Item bottle){
+        this.location = location;
+        this.render_water_block = render_water_block;
+        this.color = new Color(color);
+        this.bottle = bottle;
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
     public TagKey<Item> getSourceTag(){
@@ -173,14 +147,6 @@ public class Power {
     @Override
     public String toString(){
         return name;
-    }
-
-    public ItemStack getRenderStack() {
-        if(bottle != null && bottle.getDefaultInstance().getCount() > 0)
-            return bottle.getDefaultInstance();
-        if(render_item != null && render_item.getDefaultInstance().getCount() > 0)
-            return render_item.getDefaultInstance();
-        return Items.BARRIER.getDefaultInstance();
     }
 
     static{
