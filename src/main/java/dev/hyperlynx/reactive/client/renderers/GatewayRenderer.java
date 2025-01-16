@@ -25,7 +25,7 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
 
     private void renderVolume(T gateway, Matrix4f pose, VertexConsumer consumer, float partialTick) {
         double time = gateway.totalTick(partialTick);
-        float amplitude = 0.15F;
+        float amplitude = 0.12F;
         float distortion_1 = (float) (Math.sin(time / 50) * amplitude + 0.95);
         float distortion_2 = (float) (Math.sin(time / 55) * amplitude + 0.95);
         float distortion_3 = (float) (Math.sin(time / 48) * amplitude + 0.95);
