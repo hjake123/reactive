@@ -1,7 +1,7 @@
 {
   "type": "reactive:transmutation",
   "reactant": {
-    "item": "minecraft:lodestone"
+    "item": "reactive:runestone"
   },
   "product": {
     "id": "reactive:rending_plinth"
