@@ -46,13 +46,15 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
         IRecipeSlotBuilder bottle_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         bottle_slot.setSlotName("bottle");
         bottle_slot.addIngredients(recipe.bottle);
-        IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 20);
+        bottle_slot.setStandardSlotBackground();
+        IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 21);
         power_slot.setSlotName("power");
         power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
+        power_slot.setStandardSlotBackground();
     }
 
     public IDrawable background() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/bottle_jei.png"), 2, 2, 18, 36);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/bottle_jei.png"), 2, 2, 18, 38);
     }
 
     @Override

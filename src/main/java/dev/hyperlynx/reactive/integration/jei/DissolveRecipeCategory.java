@@ -42,7 +42,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
     }
 
     public IDrawable background() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 38);
     }
 
     @Override
@@ -65,18 +65,21 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
         DissolveRecipe recipe = holder.value();
 
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
-        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 1);
+        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 1);
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
+        input_slot.setStandardSlotBackground();
         output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getProduct());
+        output_slot.setStandardSlotBackground();
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
-            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 60, 20);
+            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 21);
             power_slot.setSlotName("power_result");
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(input));
             }
+            power_slot.setStandardSlotBackground();
         }
     }
 
