@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "reactive:block/iron_symbol_placeholder"
+      }
+    }
+  ]
+}
