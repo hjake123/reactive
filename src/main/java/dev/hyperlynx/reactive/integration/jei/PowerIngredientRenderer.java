@@ -26,10 +26,13 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     public void render(GuiGraphics gui, Power ingredient) {
         TextureAtlasSprite sprite = getSprite(ingredient);
         Color color = ingredient.getColor();
-        gui.pose().pushPose();
+        if(ingredient == Powers.ASTRAL_POWER.get()){
+            gui.fill(RenderType.END_GATEWAY, 0, 0, 16, 16, 0);
+        } else if(!ingredient.invisible) {
+            gui.fill(0, 0, 16, 16, 0xEE000000 | color.hex);
+        }
         gui.blit(0, 0, 0, 16, 16, sprite,
-                (float) color.red / 255, (float) color.green / 255, (float) color.blue / 255, 1.0F);
-        gui.pose().popPose();
+                (float) color.red / 255, (float) color.green / 255, (float) color.blue / 255, ingredient.invisible ? 0.2F : 1.0F);
     }
 
     @SuppressWarnings("removal") // Needed for override.
