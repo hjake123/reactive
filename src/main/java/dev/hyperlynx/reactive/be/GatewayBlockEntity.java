@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -7,6 +8,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceKey;
@@ -17,6 +19,7 @@ import net.minecraft.world.level.block.entity.TheEndPortalBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
+import java.util.Random;
 
 public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     private int tick_count;
@@ -26,6 +29,8 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
 
     public GatewayBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.GATEWAY_BE.get(), pos, blockState);
+        Random random = new Random(pos.hashCode());
+        tick_count = random.nextInt(0, 12000);
     }
 
     @Override
@@ -33,8 +38,10 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         return true;
     }
 
-    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T gateway) {
-        ((GatewayBlockEntity) gateway).tick_count++;
+    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+        if(level.isClientSide() && t instanceof GatewayBlockEntity gateway){
+            gateway.tick_count++;
+        }
     }
 
     public float totalTick(float partialTick) {

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GatewayBlock extends Block implements Portal, EntityBlock {
-    private final VoxelShape SHAPE = Block.box(6, 6, 6, 10, 10, 10);
+    private final VoxelShape SHAPE = Block.box(5, 5, 5, 11, 11, 11);
 
     public GatewayBlock(Properties properties) {
         super(properties);
