@@ -42,7 +42,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
     }
 
     public IDrawable background() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 38);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 39);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
         output_slot.setStandardSlotBackground();
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
-            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 21);
+            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 22);
             power_slot.setSlotName("power_result");
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(input));
