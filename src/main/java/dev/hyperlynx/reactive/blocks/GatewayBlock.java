@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +78,8 @@ public class GatewayBlock extends Block implements EntityBlock {
                     ReactiveMod.LOGGER.error("No valid dimension for the gateway at {}!", pos);
                     return;
                 }
-                entity.teleportTo(target_level, destination.pos().getX(), destination.pos().getY(), destination.pos().getZ(),
+                Vec3 target_vector = Vec3.atCenterOf(destination.pos());
+                entity.teleportTo(target_level, target_vector.x(), target_vector.y(), target_vector.z(),
                         Set.of(), entity.getYRot(), entity.getXRot());
                 gateway.setCooldown(20);
             }
