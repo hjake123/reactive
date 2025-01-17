@@ -7,3 +7,4 @@
 - Improved logic for reaction status calculation to be more consistent
 - (KubeJS) Disabled the functionality of the setIcon() method for Power creation, since Powers no longer have icons
 - (KubeJS) The KubeJS Integration Version is now `3.0` due to this possibly breaking change
+- (Compat) Added Alex's Mobs power sources

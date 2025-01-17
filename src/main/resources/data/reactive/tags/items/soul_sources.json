@@ -56,6 +56,18 @@
     {
       "id": "occultism:echo_dust",
       "required": false
+    },
+    {
+      "id": "alexsmobs:soul_heart",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:skreecher_soul",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:hemolymph_sac",
+      "required": false
     }
   ]
 }

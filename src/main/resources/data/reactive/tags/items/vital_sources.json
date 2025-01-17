@@ -36,6 +36,10 @@
     {
       "id": "hexerei:blood_bottle",
       "required": false
+    },
+    {
+      "id": "alexsmobs:blood_sac",
+      "required": false
     }
   ]
 }
