@@ -38,12 +38,13 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     }
 
     public IDrawable background() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 38);
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 39);
     }
 
+    @SuppressWarnings("removal")
     @Override
     public IDrawable getBackground() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 76, 38);
+        return background();
     }
 
     @Override
@@ -65,40 +66,40 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
         switch (recipe.getReagents().size()) {
             case 1 -> {
-                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 22);
                 power_slot.setSlotName("reagent_middle");
                 power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
                 power_slot.setStandardSlotBackground();
             }
             case 2 -> {
-                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 19, 24);
+                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 19, 22);
                 power_slotl.setSlotName("reagent_left");
                 power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
                 power_slotl.setStandardSlotBackground();
 
-                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 37, 24);
+                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 37, 22);
                 power_slotr.setSlotName("reagent_right");
                 power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
                 power_slotr.setStandardSlotBackground();
             }
             case 3 -> {
-                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 10, 24);
+                IRecipeSlotBuilder power_slotl = builder.addSlot(RecipeIngredientRole.CATALYST, 10, 22);
                 power_slotl.setSlotName("reagent_left");
                 power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
                 power_slotl.setStandardSlotBackground();
 
-                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 22);
                 power_slot.setSlotName("reagent_middle");
                 power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
                 power_slot.setStandardSlotBackground();
 
-                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 46, 24);
+                IRecipeSlotBuilder power_slotr = builder.addSlot(RecipeIngredientRole.CATALYST, 46, 22);
                 power_slotr.setSlotName("reagent_right");
                 power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(2));
                 power_slotr.setStandardSlotBackground();
             }
             default -> {
-                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 24);
+                IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.CATALYST, 28, 22);
                 power_slot.setSlotName("reagents");
                 power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents());
             }
