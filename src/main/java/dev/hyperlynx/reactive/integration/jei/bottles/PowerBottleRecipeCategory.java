@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.integration.jei.bottles;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin;
-import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.integration.jei.SlotManager;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -21,6 +21,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRecipe> {
+    SlotManager slot_manager = new SlotManager();
+
+    public PowerBottleRecipeCategory() {
+        slot_manager.builder("only").addSlot(1, 1).addSlot(1, 21).build();
+    }
+
     @Override
     public RecipeType<PowerBottleRecipe> getRecipeType() {
         return RecipeType.create(ReactiveMod.MODID, "power_bottle", PowerBottleRecipe.class);
@@ -39,6 +45,7 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
     @Override
     public void draw(PowerBottleRecipe recipe, @Nullable IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
         background().draw(gui);
+        slot_manager.drawSlotBackgrounds(gui, "only");
     }
 
     @Override
@@ -46,11 +53,10 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
         IRecipeSlotBuilder bottle_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         bottle_slot.setSlotName("bottle");
         bottle_slot.addIngredients(recipe.bottle);
-        bottle_slot.setStandardSlotBackground();
         IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 21);
         power_slot.setSlotName("power");
         power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
-        power_slot.setStandardSlotBackground();
+
     }
 
     public IDrawable background() {

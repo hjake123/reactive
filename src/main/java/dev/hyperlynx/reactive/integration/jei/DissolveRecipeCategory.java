@@ -26,6 +26,11 @@ import java.util.List;
 import static dev.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin.POWER_TYPE;
 
 public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
+    SlotManager slot_manager = new SlotManager();
+
+    public DissolveRecipeCategory() {
+        slot_manager.builder("only").addSlot(1, 1).addSlot(55, 1).addSlot(55, 22).build();
+    }
 
     @Override
     public @Nullable ResourceLocation getRegistryName(DissolveRecipe recipe) {
@@ -42,9 +47,9 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         return Component.translatable("title.reactive.dissolve");
     }
 
+    @SuppressWarnings("removal")
     @Override
     public IDrawable getBackground() {
-        //return ReactiveJEIPlugin.HELPERS.getGuiHelper().createBlankDrawable(76, 38);
         return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawable(ReactiveMod.location("textures/gui/tf_jei.png"), 2, 2, 72, 39);
     }
 
@@ -57,12 +62,11 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, IFocusGroup focuses) {
         IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
         IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 1);
+
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
-        input_slot.setStandardSlotBackground();
         output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getResultItem());
-        output_slot.setStandardSlotBackground();
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
             IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 22);
@@ -70,7 +74,6 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(POWER_TYPE, Power.getSourcePower(input));
             }
-            power_slot.setStandardSlotBackground();
         }
     }
 
@@ -79,6 +82,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         if(recipe.needs_electricity){
             drawElectricLabel(gui);
         }
+        slot_manager.drawSlotBackgrounds(gui, "only");
     }
 
     private void drawElectricLabel(GuiGraphics gui) {
