@@ -1,1 +1,1 @@
-- Updated the Simplified Chinese translation (by ChuijkYahus)
+- Added Shulker Crucibles to the mineable/pickaxe tag
