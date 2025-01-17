@@ -60,6 +60,14 @@
     {
       "id": "alexscaves:raw_azure_neodymium",
       "required": false
+    },
+    {
+      "id": "alexsmobs:warped_muscle",
+      "required": false
+    },
+    {
+      "id": "alexsmobs:cosmic_cod",
+      "required": false
     }
   ]
 }
