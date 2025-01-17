@@ -60,8 +60,8 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, IFocusGroup focuses) {
-        IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
-        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 1);
+        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "only", 0, RecipeIngredientRole.INPUT);
+        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "only", 1, RecipeIngredientRole.OUTPUT);
 
         input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
@@ -69,7 +69,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         output_slot.addItemStack(recipe.getResultItem());
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
-            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 22);
+            IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "only", 2, RecipeIngredientRole.OUTPUT);
             power_slot.setSlotName("power_result");
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(POWER_TYPE, Power.getSourcePower(input));

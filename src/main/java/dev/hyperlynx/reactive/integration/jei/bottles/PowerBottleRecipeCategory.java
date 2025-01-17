@@ -50,10 +50,10 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PowerBottleRecipe recipe, IFocusGroup focus_group) {
-        IRecipeSlotBuilder bottle_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
+        IRecipeSlotBuilder bottle_slot = slot_manager.buildSlot(builder, "only", 0, RecipeIngredientRole.INPUT);
         bottle_slot.setSlotName("bottle");
         bottle_slot.addIngredients(recipe.bottle);
-        IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 21);
+        IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "only", 1, RecipeIngredientRole.INPUT);
         power_slot.setSlotName("power");
         power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
 
