@@ -24,11 +24,13 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
     SlotManager slot_manager = new SlotManager();
 
     public TransmuteRecipeCategory() {
-        slot_manager.builder("one_reagent").addSlot(1, 1).addSlot(55, 1).addSlot(28, 22).build();
-        slot_manager.builder("two_reagents").addSlot(1, 1).addSlot(55, 1)
-                .addSlot(19, 22).addSlot(37, 22).build();
-        slot_manager.builder("three_reagents").addSlot(1, 1).addSlot(55, 1)
-                .addSlot(10, 22).addSlot(28, 22).addSlot(46, 22).build();
+        slot_manager.addSlot("reactant", 1, 1);
+        slot_manager.addSlot("product",55, 1);
+        slot_manager.addSlot("center_reagent", 28, 22);
+        slot_manager.addSlot("mid_left_reagent", 19, 22);
+        slot_manager.addSlot("mid_right_reagent", 37, 22);
+        slot_manager.addSlot("left_reagent", 10, 22);
+        slot_manager.addSlot("right_reagent", 46, 22);
     }
 
     @Override
@@ -58,50 +60,41 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
 
     @Override
     public IDrawable getIcon() {
-        return  ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TransmuteRecipe recipe, IFocusGroup focuses) {
-        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "one_reagent", 0, RecipeIngredientRole.INPUT);
-        input_slot.setSlotName("reactant");
+        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "reactant", RecipeIngredientRole.INPUT);
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
 
-        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "one_reagent", 1, RecipeIngredientRole.OUTPUT);
-        output_slot.setSlotName("product");
+        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "product", RecipeIngredientRole.OUTPUT);
         output_slot.addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
 
         switch (recipe.getReagents().size()) {
             case 1 -> {
-                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "one_reagent", 3, RecipeIngredientRole.CATALYST);
-                power_slot.setSlotName("reagent_middle");
+                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
                 power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
             }
             case 2 -> {
-                IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "two_reagents", 3, RecipeIngredientRole.CATALYST);
-                power_slotl.setSlotName("reagent_left");
+                IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "mid_left_reagent", RecipeIngredientRole.CATALYST);
                 power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
 
-                IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "two_reagents", 4, RecipeIngredientRole.CATALYST);
-                power_slotr.setSlotName("reagent_right");
+                IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "mid_right_reagent", RecipeIngredientRole.CATALYST);
                 power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
             }
             case 3 -> {
-                IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "three_reagents", 3, RecipeIngredientRole.CATALYST);
-                power_slotl.setSlotName("reagent_left");
+                IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "left_reagent", RecipeIngredientRole.CATALYST);
                 power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(0));
 
-                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "three_reagents", 4, RecipeIngredientRole.CATALYST);
-                power_slot.setSlotName("reagent_middle");
+                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
                 power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
 
-                IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "three_reagents", 5, RecipeIngredientRole.CATALYST);
-                power_slotr.setSlotName("reagent_right");
+                IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "right_reagent", RecipeIngredientRole.CATALYST);
                 power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(2));
             }
             default -> {
-                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "one_reagent", 3, RecipeIngredientRole.CATALYST);
-                power_slot.setSlotName("reagents");
+                IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
                 power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents());
             }
         }
@@ -112,10 +105,11 @@ public class TransmuteRecipeCategory implements IRecipeCategory<TransmuteRecipe>
         if(recipe.needs_electricity){
             drawElectricLabel(gui);
         }
+        slot_manager.drawSlotBackgrounds(gui, List.of("reactant", "product"));
         switch (recipe.getReagents().size()) {
-            case 2 -> slot_manager.drawSlotBackgrounds(gui, "two_reagents");
-            case 3 -> slot_manager.drawSlotBackgrounds(gui, "three_reagents");
-            default -> slot_manager.drawSlotBackgrounds(gui, "one_reagent");
+            case 2 -> slot_manager.drawSlotBackgrounds(gui, List.of("mid_left_reagent", "mid_right_reagent"));
+            case 3 -> slot_manager.drawSlotBackgrounds(gui, List.of("left_reagent", "center_reagent", "right_reagent"));
+            default -> slot_manager.drawSlotBackground(gui, "center_reagent");
         }
     }
 

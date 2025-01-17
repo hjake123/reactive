@@ -24,7 +24,8 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
     SlotManager slot_manager = new SlotManager();
 
     public PowerBottleRecipeCategory() {
-        slot_manager.builder("only").addSlot(1, 1).addSlot(1, 21).build();
+        slot_manager.addSlot("bottle", 1, 1);
+        slot_manager.addSlot("power", 1, 21);
     }
 
     @Override
@@ -45,16 +46,14 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
     @Override
     public void draw(PowerBottleRecipe recipe, @Nullable IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics gui, double mouseX, double mouseY) {
         background().draw(gui);
-        slot_manager.drawSlotBackgrounds(gui, "only");
+        slot_manager.drawAllSlotBackgrounds(gui);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PowerBottleRecipe recipe, IFocusGroup focus_group) {
-        IRecipeSlotBuilder bottle_slot = slot_manager.buildSlot(builder, "only", 0, RecipeIngredientRole.INPUT);
-        bottle_slot.setSlotName("bottle");
+        IRecipeSlotBuilder bottle_slot = slot_manager.buildSlot(builder, "bottle", RecipeIngredientRole.INPUT);
         bottle_slot.addIngredients(recipe.bottle);
-        IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "only", 1, RecipeIngredientRole.INPUT);
-        power_slot.setSlotName("power");
+        IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power", RecipeIngredientRole.INPUT);
         power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
 
     }

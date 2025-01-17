@@ -29,7 +29,9 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
     SlotManager slot_manager = new SlotManager();
 
     public DissolveRecipeCategory() {
-        slot_manager.builder("only").addSlot(1, 1).addSlot(55, 1).addSlot(55, 22).build();
+        slot_manager.addSlot("reactant", 1, 1);
+        slot_manager.addSlot("product", 55, 1);
+        slot_manager.addSlot("power_result", 55, 22);
     }
 
     @Override
@@ -60,17 +62,14 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, DissolveRecipe recipe, IFocusGroup focuses) {
-        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "only", 0, RecipeIngredientRole.INPUT);
-        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "only", 1, RecipeIngredientRole.OUTPUT);
+        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "reactant", RecipeIngredientRole.INPUT);
+        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "product", RecipeIngredientRole.OUTPUT);
 
-        input_slot.setSlotName("reactant");
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
-        output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getResultItem());
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
-            IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "only", 2, RecipeIngredientRole.OUTPUT);
-            power_slot.setSlotName("power_result");
+            IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power_result", RecipeIngredientRole.OUTPUT);
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(POWER_TYPE, Power.getSourcePower(input));
             }
@@ -82,7 +81,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<DissolveRecipe> {
         if(recipe.needs_electricity){
             drawElectricLabel(gui);
         }
-        slot_manager.drawSlotBackgrounds(gui, "only");
+        slot_manager.drawAllSlotBackgrounds(gui);
     }
 
     private void drawElectricLabel(GuiGraphics gui) {
