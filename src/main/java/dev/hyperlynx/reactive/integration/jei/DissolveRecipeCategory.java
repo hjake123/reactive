@@ -26,6 +26,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<DissolveRecipe>> {
+    SlotManager slot_manager = new SlotManager();
+
+    public DissolveRecipeCategory() {
+        slot_manager.addSlot("reactant", 1, 1);
+        slot_manager.addSlot("product", 55, 1);
+        slot_manager.addSlot("power_result", 55, 22);
+    }
     @Override
     public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<DissolveRecipe> holder) {
         return holder.id();
@@ -64,22 +71,16 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<DissolveRecipe> holder, @NotNull IFocusGroup focuses) {
         DissolveRecipe recipe = holder.value();
 
-        IRecipeSlotBuilder input_slot = builder.addSlot(RecipeIngredientRole.INPUT, 1, 1);
-        IRecipeSlotBuilder output_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 1);
-        input_slot.setSlotName("reactant");
+        IRecipeSlotBuilder input_slot = slot_manager.buildSlot(builder, "reactant", RecipeIngredientRole.INPUT);
+        IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "product", RecipeIngredientRole.OUTPUT);
         input_slot.addItemStacks(List.of(recipe.getReactant().getItems()));
-        input_slot.setStandardSlotBackground();
-        output_slot.setSlotName("product");
         output_slot.addItemStack(recipe.getProduct());
-        output_slot.setStandardSlotBackground();
 
         if(ConfigMan.CLIENT.showPowerSources.get()){
-            IRecipeSlotBuilder power_slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 22);
-            power_slot.setSlotName("power_result");
+            IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power_result", RecipeIngredientRole.OUTPUT);
             for (ItemStack input : recipe.getReactant().getItems()) {
                 power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(input));
             }
-            power_slot.setStandardSlotBackground();
         }
     }
 
@@ -89,6 +90,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
         if(holder.value().needs_electricity){
             drawElectricLabel(gui);
         }
+        slot_manager.drawAllSlotBackgrounds(gui);
     }
 
     private void drawElectricLabel(GuiGraphics gui) {
