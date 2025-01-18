@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -37,6 +39,7 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
@@ -130,10 +133,18 @@ public class ReactionEffects {
                 AABB aoe = new AABB(c.getBlockPos());
                 aoe = aoe.inflate(ConfigMan.COMMON.crucibleRange.get()); // Inflate the AOE to be 5x the size of the crucible?
                 List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
-                if (nearby_ents.isEmpty()) {
+
+                LivingEntity victim = null;
+                for(LivingEntity e : nearby_ents){
+                    if((victim == null || e.distanceToSqr(Vec3.atCenterOf(c.getBlockPos())) < victim.distanceToSqr(Vec3.atCenterOf(c.getBlockPos())))
+                    && BeamHelper.hasLineOfSight(c.getLevel(), Vec3.atCenterOf(c.getBlockPos()), e.getEyePosition(0), ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, c.getBlockState().getBlock())){
+                        victim = e;
+                    }
+                }
+
+                if(victim == null){
                     return c;
                 }
-                LivingEntity victim = nearby_ents.get(0);
 
                 if (!c.getLevel().isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
@@ -239,6 +250,9 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
+            if(!BeamHelper.hasLineOfSight(c.getLevel(), c.getBlockPos().getCenter(), e.getEyePosition(0), ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, c.getBlockState().getBlock())) {
+                continue;
+            }
             e.hurt(c.getLevel().damageSources().inFire(), 4);
             e.setRemainingFireTicks(140);
         }
