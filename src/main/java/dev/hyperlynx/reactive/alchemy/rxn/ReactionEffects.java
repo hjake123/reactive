@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
+import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -33,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -119,13 +121,14 @@ public class ReactionEffects {
     }
 
     public static void discharge(Reactor reactor) {
+        Level level = reactor.getLevel();
         reactor.addElectricCharge(5);
         if (reactor.getElectricCharge() > 21) {
-            BlockPos potential_rod = reactor.getAreaMemory().fetch(reactor.getLevel(), Blocks.LIGHTNING_ROD);
+            BlockPos potential_rod = reactor.getAreaMemory().fetch(level, Blocks.LIGHTNING_ROD);
             if (potential_rod != null) {
                 if (!reactor.getLevel().isClientSide) {
-                    ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(reactor.getLevel().getBlockState(potential_rod), reactor.getLevel(), potential_rod);
-                    ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
+                    ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(reactor.getLevel().getBlockState(potential_rod), level, potential_rod);
+                    ParticleScribe.drawParticleZigZag(level, ParticleTypes.ELECTRIC_SPARK,
                             reactor.getBlockPos().getX() + 0.5F, reactor.getBlockPos().getY() + 0.5625F, reactor.getBlockPos().getZ() + 0.5F,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
                     reactor.getLevel().playSound(null, potential_rod, Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 1F);
@@ -134,12 +137,20 @@ public class ReactionEffects {
                 AABB aoe = new AABB(reactor.getBlockPos());
                 aoe = aoe.inflate(ConfigMan.COMMON.crucibleRange.get()); // Inflate the AOE to be 5x the size of the crucible?
                 List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
-                if (nearby_ents.isEmpty()) {
+
+                LivingEntity victim = null;
+                for(LivingEntity e : nearby_ents){
+                    if((victim == null || e.distanceToSqr(Vec3.atCenterOf(reactor.getBlockPos())) < victim.distanceToSqr(Vec3.atCenterOf(reactor.getBlockPos())))
+                    && BeamHelper.hasLineOfSight(level, Vec3.atCenterOf(reactor.getBlockPos()), e.getEyePosition(0), ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, reactor.getBlockState().getBlock())){
+                        victim = e;
+                    }
+                }
+
+                if(victim == null){
                     return;
                 }
-                LivingEntity victim = nearby_ents.get(0);
 
-                if (!reactor.getLevel().isClientSide) {
+                if (!level.isClientSide) {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
                         victim.hurt(reactor.getLevel().damageSources().magic(), 5);
                     ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
@@ -239,6 +250,9 @@ public class ReactionEffects {
 
         List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
         for(LivingEntity e : nearby_ents){
+            if(!BeamHelper.hasLineOfSight(reactor.getLevel(), reactor.getBlockPos().getCenter(), e.getEyePosition(0), ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, reactor.getBlockState().getBlock())) {
+                continue;
+            }
             e.hurt(reactor.getLevel().damageSources().inFire(), 4);
             e.setRemainingFireTicks(140);
         }
