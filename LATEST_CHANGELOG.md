@@ -1,12 +1,1 @@
-- **Improved how Powers present in JEI**
-- **Made Rending Plinth portals work across dimensions**
-- Gave Rending Plinth portals a new animated appearance
-- Redesigned the JEI recipe views
-- Made Warped foliage correctly yield Warp power
-- Added some anti-overlap logic to the Power Source tags
-- Made Discharge and Flamethrower reactions require line-of-sight to deal damage
-- Made Discharge reaction reliably target the nearest viable creature
-- Improved logic for reaction status calculation to be more consistent
-- (KubeJS) Disabled the functionality of the setIcon() method for Power creation, since Powers no longer have icons
-- (KubeJS) The KubeJS Integration Version is now `2.3`
-- (Compat) Added Alex's Mobs power sources
+- Fixed invalid tag #reactive:important_power_sources.
