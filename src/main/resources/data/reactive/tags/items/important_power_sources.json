@@ -3,10 +3,8 @@
   "values": [
     "#reactive:caustic_sources",
     "#reactive:curse_sources",
-    "#reactive:flow_sources",
     "#reactive:light_sources",
     "#reactive:mind_sources",
-    "#reactive:omen_sources",
     "#reactive:soul_sources",
     "#reactive:vital_sources",
     "#reactive:warp_sources"
