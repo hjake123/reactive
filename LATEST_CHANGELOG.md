@@ -1,1 +1,1 @@
-- Fixed invalid tag #reactive:important_power_sources.
+- Updated the Simplified Chinese translations (ChujikYahus)
