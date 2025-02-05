@@ -1,1 +1,6 @@
-- Updated the Simplified Chinese translations (ChujikYahus)
+- **Added experimental compatibility between the Rending Plinth and Iris shaders**
+  - To take advantage of this, one must add `reactive:gateway` to each shader's `block.properties` in the same category as `minecraft:end_gateway`
+  - Unpatched or incompatible shader users will see a dark tetrahedron
+  - There is an option to disable this interaction in the client config (which renders the gateway invisible with shaders)
+- Fixed the Power Result slot being drawn even when the config to show power outputs is turned off
+- Removed recipe for releasing power from Bucket of Source in versions where that item was removed
