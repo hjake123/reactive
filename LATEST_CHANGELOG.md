@@ -1,5 +1,6 @@
 - **Added experimental compatibility between the Rending Plinth and Iris shaders**
   - To take advantage of this, one must add `reactive:gateway` to each shader's `block.properties` in the same category as `minecraft:end_gateway`
+  - See https://github.com/hjake123/reactive/wiki/Iris-Shader-Compatibility for detailed instructions
   - Unpatched or incompatible shader users will see a dark tetrahedron
   - There is an option to disable this interaction in the client config (which renders the gateway invisible with shaders)
 - Fixed the Power Result slot being drawn even when the config to show power outputs is turned off
