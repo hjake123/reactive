@@ -172,6 +172,7 @@ public class ConfigMan {
         public ForgeConfigSpec.BooleanValue doNotChangeWaterTexture;
         public ForgeConfigSpec.BooleanValue colorizeLitmusOutput;
         public ForgeConfigSpec.BooleanValue listPowersAsIngredients;
+        public ForgeConfigSpec.BooleanValue irisCompat;
 
         Client(ForgeConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
@@ -184,6 +185,10 @@ public class ConfigMan {
                     .define("colorizeLitmusOutput", true);
             listPowersAsIngredients = builder.comment("Whether to show Powers as JEI ingredients.")
                     .define("listPowersAsIngredients", true);
+            listPowersAsIngredients = builder.comment("Whether to show Powers as JEI ingredients.")
+                    .define("listPowersAsIngredients", true);
+            irisCompat = builder.comment("Whether gateways should change their renderer to attempt to be compatible with Iris/Oculus if it is detected. Disable if rendering of gateways looks bad or you want them to be invisible with shaders on.")
+                    .define("irisCompat", true);
 
             builder.pop();
         }
