@@ -175,6 +175,7 @@ public class ConfigMan {
         public ModConfigSpec.BooleanValue listPowersAsIngredients;
         public ModConfigSpec.BooleanValue doNotChangeWaterTexture;
         public ModConfigSpec.BooleanValue colorizeLitmusOutput;
+        public ModConfigSpec.BooleanValue irisCompat;
 
         Client(ModConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
@@ -187,6 +188,8 @@ public class ConfigMan {
                     .define("doNotChangeWaterTexture", false);
             colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")
                     .define("colorizeLitmusOutput", true);
+            irisCompat = builder.comment("Whether gateways should change their renderer to attempt to be compatible with Iris/Oculus if it is detected. Disable if rendering of gateways looks bad or you want them to be invisible with shaders on.")
+                    .define("irisCompat", true);
             builder.pop();
         }
     }

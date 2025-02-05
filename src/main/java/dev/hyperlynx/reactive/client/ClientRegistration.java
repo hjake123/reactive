@@ -1,20 +1,29 @@
 package dev.hyperlynx.reactive.client;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
+import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class ClientRegistration {
+    public static boolean IRIS_SHADERS = false;
+
     public static void init(IEventBus bus) {
         bus.register(ClientRegistration.class);
+        if(ModList.get().isLoaded("iris") || ModList.get().isLoaded("oculus")){
+            // Enable special handling for Iris shaders to draw the Gateway block correctly.
+            IRIS_SHADERS = true;
+        }
     }
 
     @SubscribeEvent
@@ -30,7 +39,11 @@ public class ClientRegistration {
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         evt.registerBlockEntityRenderer(Registration.CRUCIBLE_BE.get(), CrucibleRenderer::new);
         evt.registerBlockEntityRenderer(Registration.SYMBOL_BE.get(), SymbolRenderer::new);
-        evt.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), GatewayRenderer::new);
+        if(IRIS_SHADERS && ConfigMan.CLIENT.irisCompat.get()){
+            evt.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), IrisGatewayRenderer::new);
+        } else {
+            evt.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), GatewayRenderer::new);
+        }
     }
 
     @SubscribeEvent

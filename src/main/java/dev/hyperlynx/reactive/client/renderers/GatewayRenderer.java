@@ -20,10 +20,10 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
 
     public void render(@NotNull T gateway, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         Matrix4f matrix4f = poseStack.last().pose();
-        this.renderVolume(gateway, matrix4f, bufferSource.getBuffer(RenderType.END_GATEWAY), partialTick);
+        this.renderVolume(gateway, matrix4f, bufferSource.getBuffer(RenderType.END_GATEWAY), partialTick, packedLight, packedOverlay);
     }
 
-    private void renderVolume(T gateway, Matrix4f pose, VertexConsumer consumer, float partialTick) {
+    protected void renderVolume(T gateway, Matrix4f pose, VertexConsumer consumer, float partialTick, int light, int overlay) {
         double time = gateway.totalTick(partialTick);
         float amplitude = 0.12F;
         float distortion_1 = (float) (Math.sin(time / 50) * amplitude + 0.95);
@@ -37,31 +37,35 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
 
         // SOUTH, NORTH
         this.renderFace(pose, consumer, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F , 1.0F, 1.0F, 1.0F,
-                distortion_3, distortion_1, distortion_4, distortion_2);
+                distortion_3, distortion_1, distortion_4, distortion_2, light, overlay);
         this.renderFace(pose, consumer, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-                distortion_7, distortion_5, distortion_6, distortion_8);
+                distortion_7, distortion_5, distortion_6, distortion_8, light, overlay);
 
         // EAST, WEST
         this.renderFace(pose, consumer, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F,
-                distortion_6, distortion_8, distortion_2, distortion_4);
+                distortion_6, distortion_8, distortion_2, distortion_4, light, overlay);
         this.renderFace(pose, consumer, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 1.0F, 1.0F, 0.0F,
-                distortion_5, distortion_7, distortion_3, distortion_1);
+                distortion_5, distortion_7, distortion_3, distortion_1, light, overlay);
 
         // DOWN, UP
         this.renderFace(pose, consumer, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 1.0F,
-                distortion_1, distortion_7, distortion_2, distortion_6);
+                distortion_1, distortion_7, distortion_2, distortion_6, light, overlay);
         this.renderFace(pose, consumer, 0.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, 0.0F,
-                distortion_5, distortion_3, distortion_8, distortion_4);
+                distortion_5, distortion_3, distortion_8, distortion_4, light, overlay);
     }
 
-    private void renderFace(Matrix4f pose, VertexConsumer consumer, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float ul_distort, float dl_distort, float ur_distort, float dr_distort) {
-        consumer.addVertex(pose, adjust(x0, dl_distort), adjust(y0,  dl_distort), adjust(z0, dl_distort));
-        consumer.addVertex(pose, adjust(x1,  dr_distort), adjust(y0,  dr_distort), adjust(z1, dr_distort));
-        consumer.addVertex(pose, adjust(x1,  ur_distort), adjust(y1,  ur_distort), adjust(z2, ur_distort));
-        consumer.addVertex(pose, adjust(x0,  ul_distort), adjust(y1,  ul_distort), adjust(z3, ul_distort));
+    protected void renderFace(Matrix4f pose, VertexConsumer consumer, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float ul_distort, float dl_distort, float ur_distort, float dr_distort, int light, int overlay) {
+        renderVertex(consumer, pose, adjust(x0, dl_distort), adjust(y0,  dl_distort), adjust(z0, dl_distort), light, overlay);
+        renderVertex(consumer, pose, adjust(x1,  dr_distort), adjust(y0,  dr_distort), adjust(z1, dr_distort), light, overlay);
+        renderVertex(consumer, pose, adjust(x1,  ur_distort), adjust(y1,  ur_distort), adjust(z2, ur_distort), light, overlay);
+        renderVertex(consumer, pose, adjust(x0,  ul_distort), adjust(y1,  ul_distort), adjust(z3, ul_distort), light, overlay);
     }
 
-    private float adjust(float base, float distort_factor){
+    protected void renderVertex(VertexConsumer consumer, Matrix4f pose, float x, float y, float z, int light, int overlay) {
+        consumer.addVertex(pose, x, y, z);
+    }
+
+    protected float adjust(float base, float distort_factor){
         float core_dist = base - 0.5F;
         float result_dist = core_dist * distort_factor;
         return result_dist + 0.5F;
