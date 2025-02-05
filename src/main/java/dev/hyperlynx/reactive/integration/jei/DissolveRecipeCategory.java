@@ -90,7 +90,10 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
         if(holder.value().needs_electricity){
             drawElectricLabel(gui);
         }
-        slot_manager.drawAllSlotBackgrounds(gui);
+        slot_manager.drawSlotBackgrounds(gui, List.of("reactant", "product"));
+        if(ConfigMan.CLIENT.showPowerSources.get()) {
+            slot_manager.drawSlotBackground(gui, "power_result");
+        }
     }
 
     private void drawElectricLabel(GuiGraphics gui) {
