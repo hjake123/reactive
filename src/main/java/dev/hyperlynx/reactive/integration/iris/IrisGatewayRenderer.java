@@ -11,11 +11,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 // Adapted from Iris source code. (https://github.com/IrisShaders/Iris/blob/multiloader-new/common/src/main/java/net/irisshaders/iris/mixin/MixinTheEndPortalRenderer.java)

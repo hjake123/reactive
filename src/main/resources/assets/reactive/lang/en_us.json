@@ -255,6 +255,7 @@
   "reactive.configuration.hidePowersFromJEI": "Hide Power Icons from JEI",
   "reactive.configuration.maxMoveBlockBreakTime": "Max Movable Blocks Break Duration",
   "reactive.configuration.lightStaffLightsPermanent": "Light Staff Permanent Lights",
+  "reactive.configuration.irisCompat": "Iris Shader Compatibility",
   "reactive.configuration.registerCommand": "Register /reactive Command",
   "reactive.configuration.litmusScreen": "Use GUI for Litmus Paper",
   "reactive.configuration.colorizeLitmusOutput": "Colorized Litmus Paper Output",
