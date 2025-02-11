@@ -1,4 +1,6 @@
 - (KubeJS) Removed the need to register reaction criteria at startup
-- (KubeJS) This is a breaking change and raises the KIV to 3.0
+  - (KubeJS) This is a breaking change for those using custom reactions
+  - (KubeJS) A migration guide is provided [here](https://github.com/hjake123/reactive/wiki/Custom-Reactions-with-KubeJS-Integration-2.x-to-3.0-Migration-Guide)
+  - (KubeJS) The KubeJS Integration Version is now `3.0`
 - Removed excess translucent pixels from the Bottle of Light texture
 - Updated the Simplified Chinese Translation (ChuijkYahus)
