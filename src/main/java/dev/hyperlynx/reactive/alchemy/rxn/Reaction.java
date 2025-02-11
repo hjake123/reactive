@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
+import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -22,8 +23,6 @@ public abstract class Reaction {
 
     protected HashMap<Power, Integer> reagents = new HashMap<>();
     protected Stimulus stimulus = Stimulus.NONE;
-    public FlagTrigger observe_trigger;
-    public FlagTrigger perfect_trigger;
     protected MutableComponent name = Component.literal("Error!");
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
@@ -34,9 +33,6 @@ public abstract class Reaction {
     public Reaction(String alias, int max_reagent_count){
         this.alias = alias;
         this.name = Component.translatable("reaction.reactive." + alias);
-
-        observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
-        perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
 
         int reagent_count;
         if(max_reagent_count < 3){
@@ -59,8 +55,6 @@ public abstract class Reaction {
         this.alias = alias;
         this.name = Component.translatable("reaction.reactive." + alias);
 
-        observe_trigger = ReactionMan.CRITERIA_BUILDER.get(alias);
-        perfect_trigger = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         for(Power p : powers){
             reagents.put(p, WorldSpecificValue.get(alias+p.getId(), 1, 400));
         }
@@ -176,15 +170,12 @@ public abstract class Reaction {
         if(!(reactor.getLevel() instanceof ServerLevel server))
             return;
         reactor.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, reactor.getBlockPos(), GameEvent.Context.of(reactor.getBlockState()));
-        if(observe_trigger != null) {
-            // Award the completion criteria.
-            FlagTrigger.triggerForNearbyPlayers(server, observe_trigger, reactor.getBlockPos(), 6);
-        }
-        if(perfect_trigger != null){
-            if(always_perfect || isPerfect(reactor)){
-                // Award the perfect criterion.
-                FlagTrigger.triggerForNearbyPlayers(server, perfect_trigger, reactor.getBlockPos(), 6);
-            }
+        // Award the completion criteria.
+        ReactionTrigger.triggerForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
+
+        if(always_perfect || isPerfect(reactor)){
+            // Award the perfect criterion.
+            ReactionTrigger.triggerPerfectForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
         }
     }
 

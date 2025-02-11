@@ -26,7 +26,7 @@ public class DataGenerationMan {
                         output,
                         event.getLookupProvider(),
                         event.getExistingFileHelper(),
-                        List.of(new ReactiveAdvancementGenerator())
+                        List.of(new ReactionAdvancementGenerator())
                 )
         );
     }

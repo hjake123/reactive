@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive;
 
 import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
+import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
@@ -106,7 +107,6 @@ public class Registration {
         COMPONENT_TYPES.register(bus);
         ENCHANTMENT_COMPONENT_TYPES.register(bus);
         CRITERIA_TRIGGERS.register(bus);
-        bus.addListener(ReactionMan.CRITERIA_BUILDER::register);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
@@ -651,6 +651,14 @@ public class Registration {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> UNDEAD_PLAYER_DIVINE_HURT = CRITERIA_TRIGGERS.register("undead_player_divine_hurt_criterion",
             () -> new FlagTrigger(ReactiveMod.location("undead_player_divine_hurt_criterion")));
+
+    // Register the new singular reaction criterion trigger.
+    public static final DeferredHolder<CriterionTrigger<?>, ReactionTrigger> REACTION_TRIGGER = CRITERIA_TRIGGERS.register("reaction",
+            ReactionTrigger::new);
+
+    // Register the new singular reaction criterion trigger.
+    public static final DeferredHolder<CriterionTrigger<?>, ReactionTrigger> PERFECT_REACTION_TRIGGER = CRITERIA_TRIGGERS.register("perfect_reaction",
+            ReactionTrigger::new);
 
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
