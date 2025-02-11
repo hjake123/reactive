@@ -13,7 +13,10 @@
   },
   "criteria": {
     "criterion": {
-      "trigger": "reactive:reaction/astral_synthesis_criterion"
+      "conditions": {
+        "reaction_alias": "astral"
+      },
+      "trigger": "reactive:reaction"
     }
   },
   "parent": "reactive:activate_eye"
