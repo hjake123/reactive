@@ -1,9 +1,2 @@
-- **Added experimental compatibility between the Rending Plinth and Iris shaders**
-  - To take advantage of this, one must add `reactive:gateway` to each shader's `block.properties` in the same category as `minecraft:end_gateway`
-  - See https://github.com/hjake123/reactive/wiki/Iris-Shader-Compatibility for detailed instructions
-  - This feature only seems to work with some shaders
-  - There is an option to disable this interaction in the client config (which renders the gateway invisible with shaders)
-- Fixed the Power Result slot being drawn even when the config to show power outputs is turned off
-- Removed recipe for releasing power from Bucket of Source in versions where that item was removed
-- Added a translation for the Rending Plinth's Gateway 
-- Stopped overriding the Remote Getaway advancement
+- Removed excess translucent pixels from the Bottle of Light texture
+- Updated the Simplified Chinese Translation (ChuijkYahus)
