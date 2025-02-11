@@ -95,6 +95,9 @@ public class Registration {
         PARTICLES.register(bus);
         TILES.register(bus);
         Powers.POWERS.register(bus);
+        COMPONENT_TYPES.register(bus);
+        ENCHANTMENT_COMPONENT_TYPES.register(bus);
+        CRITERIA_TRIGGERS.register(bus);
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);

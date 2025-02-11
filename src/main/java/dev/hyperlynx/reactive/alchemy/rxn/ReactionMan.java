@@ -2,11 +2,11 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.fx.renderers.ReactionRenders;
+import dev.hyperlynx.reactive.datagen.ReactionAdvancementGenerator;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.level.LevelEvent;
@@ -26,36 +26,36 @@ public class ReactionMan {
     static boolean initializer_lock = false; // Prevent multiple things trying to initialize reactions at once.
     private static final ReactionMap REACTIONS = new ReactionMap();
     public static ArrayList<Power> BASE_POWER_LIST = new ArrayList<>();
-    public static ReactionCriteriaBuilder CRITERIA_BUILDER = new ReactionCriteriaBuilder();
+
     public ReactionMan(){
-        CRITERIA_BUILDER.add("curse_assimilation");
-        CRITERIA_BUILDER.add("vital_kill");
-        CRITERIA_BUILDER.add("vital_eat");
-        CRITERIA_BUILDER.add("verdant_consume");
-        CRITERIA_BUILDER.add("vital_consume");
-        CRITERIA_BUILDER.add("verdant_growth");
-        CRITERIA_BUILDER.add("vital_growth");
-        CRITERIA_BUILDER.add("discharge_annihilation");
-        CRITERIA_BUILDER.add("smoke_annihilation");
-        CRITERIA_BUILDER.add("salt_annihilation");
-        CRITERIA_BUILDER.add("x_synthesis");
-        CRITERIA_BUILDER.add("y_synthesis");
-        CRITERIA_BUILDER.add("z_synthesis");
-        CRITERIA_BUILDER.add("growth");
-        CRITERIA_BUILDER.add("flames");
-        CRITERIA_BUILDER.add("levitation");
-        CRITERIA_BUILDER.add("sunlight");
-        CRITERIA_BUILDER.add("immobilize");
-        CRITERIA_BUILDER.add("soul_to_warp");
-        CRITERIA_BUILDER.add("warp_to_soul");
-        CRITERIA_BUILDER.add("compound_degradation");
-        CRITERIA_BUILDER.add("explosion_effect");
-        CRITERIA_BUILDER.add("formation_effect");
-        CRITERIA_BUILDER.add("block_fall_effect");
-        CRITERIA_BUILDER.add("slowfall_effect");
-        CRITERIA_BUILDER.add("astral_synthesis");
-        CRITERIA_BUILDER.add("astral");
-        CRITERIA_BUILDER.add("astral_curse_annihilation");
+        ReactionAdvancementGenerator.add("curse_assimilation");
+        ReactionAdvancementGenerator.add("vital_kill");
+        ReactionAdvancementGenerator.add("vital_eat");
+        ReactionAdvancementGenerator.add("verdant_consume");
+        ReactionAdvancementGenerator.add("vital_consume");
+        ReactionAdvancementGenerator.add("verdant_growth");
+        ReactionAdvancementGenerator.add("vital_growth");
+        ReactionAdvancementGenerator.add("discharge_annihilation");
+        ReactionAdvancementGenerator.add("smoke_annihilation");
+        ReactionAdvancementGenerator.add("salt_annihilation");
+        ReactionAdvancementGenerator.add("x_synthesis");
+        ReactionAdvancementGenerator.add("y_synthesis");
+        ReactionAdvancementGenerator.add("z_synthesis");
+        ReactionAdvancementGenerator.add("growth");
+        ReactionAdvancementGenerator.add("flames");
+        ReactionAdvancementGenerator.add("levitation");
+        ReactionAdvancementGenerator.add("sunlight");
+        ReactionAdvancementGenerator.add("immobilize");
+        ReactionAdvancementGenerator.add("soul_to_warp");
+        ReactionAdvancementGenerator.add("warp_to_soul");
+        ReactionAdvancementGenerator.add("compound_degradation");
+        ReactionAdvancementGenerator.add("explosion_effect");
+        ReactionAdvancementGenerator.add("formation_effect");
+        ReactionAdvancementGenerator.add("block_fall_effect");
+        ReactionAdvancementGenerator.add("slowfall_effect");
+        ReactionAdvancementGenerator.add("astral_synthesis");
+        ReactionAdvancementGenerator.add("astral");
+        ReactionAdvancementGenerator.add("astral_curse_annihilation");
     }
 
     public List<Reaction> getReactions(){

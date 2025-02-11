@@ -14,9 +14,6 @@ public class ReactionFactory {
     CustomReaction rxn;
 
     public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations){
-        if(ReactionMan.CRITERIA_BUILDER.get(alias) == null){
-            throw new KubeScriptException("Alias " + alias + " was not registered! Please run ReactionMan.CRITERIA_BUILDER.add(\"" + alias + "\") in StartupEvents.init!");
-        }
         rxn = new CustomReaction(alias, reagent_locations, custom_name);
     }
 
