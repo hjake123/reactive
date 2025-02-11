@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
@@ -14,6 +15,9 @@ public class ReactionFactory {
     CustomReaction rxn;
 
     public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations){
+        if(ReactiveMod.REACTION_MAN.get(alias) != null){
+            throw new KubeScriptException("Reaction alias '" + alias + "' already exists! Ignoring this registration attempt...");
+        }
         rxn = new CustomReaction(alias, reagent_locations, custom_name);
     }
 
@@ -55,7 +59,7 @@ public class ReactionFactory {
 
     public ReactionFactory setCost(int cost){
         if(cost < 0){
-            throw new KubeScriptException("Cost cannot be negative! Try using a yield instead!");
+            throw new KubeScriptException("Cost cannot be negative! Try using a yield instead.");
         }
         rxn.cost = cost;
         return this;
