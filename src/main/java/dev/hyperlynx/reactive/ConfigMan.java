@@ -1,8 +1,6 @@
 package dev.hyperlynx.reactive;
 
 import com.google.common.collect.Lists;
-import dev.hyperlynx.reactive.advancements.ReactionCriteriaBuilder;
-import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -177,8 +175,8 @@ public class ConfigMan {
         Client(ForgeConfigSpec.Builder builder){
             builder.comment("Client Side Options:")
                     .push("config");
-            showPowerSources = builder.comment("Whether to show the sources of each Power in JEI. Use this if your pack adds a lot of unintuitive Power sources, or you become frustrated.")
-                    .define("showPowerSources", false);
+            showPowerSources = builder.comment("Whether to show the sources of each Power in JEI. Disable this for a greater challenge.")
+                    .define("showPowerSources", true);
             doNotChangeWaterTexture = builder.comment("Whether to render all Powers using vanilla Water's icon. Use if Rubidium or other rendering mods make the custom water textures break.")
                     .define("doNotChangeWaterTexture", false);
             colorizeLitmusOutput = builder.comment("Whether to allow Litmus Paper to use multicolored text. Disable if the colored text is hard to read.")

@@ -1,8 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.advancements.FlagCriterion;
-import dev.hyperlynx.reactive.advancements.ReactionTrigger;
+import dev.hyperlynx.reactive.advancements.ReactionCriterion;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -19,7 +18,6 @@ import net.minecraft.world.phys.AABB;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 public abstract class Reaction {
 
@@ -34,8 +32,6 @@ public abstract class Reaction {
     // Creates the reaction with a random set of reagents.
     public Reaction(String alias, int max_reagent_count){
         this.alias = alias;
-        criterion = ReactionMan.CRITERIA_BUILDER.get(alias);
-        perfect_criterion = ReactionMan.CRITERIA_BUILDER.get(alias+"_perfect");
         this.name = Component.translatable("reaction.reactive." + alias);
 
         int reagent_count;
@@ -162,11 +158,11 @@ public abstract class Reaction {
             return;
         crucible.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
         // Award the completion criteria.
-        ReactionTrigger.triggerForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
+        ReactionCriterion.triggerForNearbyPlayers(server, alias, crucible.getBlockPos(), 6);
 
-        if(always_perfect || isPerfect(reactor)){
+        if(always_perfect || isPerfect(crucible)){
             // Award the perfect criterion.
-            ReactionTrigger.triggerPerfectForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
+            ReactionCriterion.triggerPerfectForNearbyPlayers(server, alias, crucible.getBlockPos(), 6);
         }
     }
 

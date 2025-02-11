@@ -29,6 +29,9 @@ public class CriteriaTriggers {
     public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(ReactiveMod.location("see_blaze_gather_criterion"));
     public static final FlagCriterion UNDEAD_PLAYER_DIVINE_HURT = new FlagCriterion(ReactiveMod.location("undead_player_divine_hurt_criterion"));
 
+    public static final ReactionCriterion REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("reaction"));
+    public static final ReactionCriterion PERFECT_REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("perfect_reaction"));
+
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(MAKE_CRUCIBLE_TRIGGER));
@@ -52,6 +55,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(HARVEST_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_BLAZE_GATHER_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(UNDEAD_PLAYER_DIVINE_HURT));
-        ReactionMan.CRITERIA_BUILDER.register(evt);
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(REACTION_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(PERFECT_REACTION_TRIGGER));
     }
 }
