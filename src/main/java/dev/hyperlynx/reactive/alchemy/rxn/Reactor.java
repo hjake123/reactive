@@ -20,7 +20,7 @@ public interface Reactor extends PowerBearer {
     default void react(Level level) {
         this.setUsedCrystalThisCycle(false);
         this.resetReactionStatus();
-        for (Reaction r : ReactiveMod.REACTION_MAN.getReactions(level.registryAccess())) {
+        for (Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)) {
             Reaction.Status reaction_status = r.conditionsMet(this);
             // If the reaction should occur, conditionsMet will return REACTING.
             if (reaction_status == Reaction.Status.REACTING) {

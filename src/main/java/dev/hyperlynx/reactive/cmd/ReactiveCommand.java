@@ -128,9 +128,9 @@ public class ReactiveCommand {
         if(!source.isPlayer()){
             throw ERROR_NO_PLAYER.create();
         }
-        List<String> aliases = ReactiveMod.REACTION_MAN.getReactionAliases(source.registryAccess());
+        List<String> aliases = ReactiveMod.REACTION_MAN.getReactionAliases(source.getLevel());
         aliases.stream().sorted().forEach((alias) -> {
-            Reaction reaction = ReactiveMod.REACTION_MAN.get(alias, source.registryAccess());
+            Reaction reaction = ReactiveMod.REACTION_MAN.get(alias, source.getLevel());
             source.sendSuccess(() -> Component.literal(alias + " : " + reaction.getName().getString()), true);
         });
         return 1;

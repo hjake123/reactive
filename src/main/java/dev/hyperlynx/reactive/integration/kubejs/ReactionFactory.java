@@ -8,18 +8,20 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
 
 public class ReactionFactory {
     CustomReaction rxn;
-    RegistryAccess access;
+    Level level;
 
-    public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations, RegistryAccess access){
-        if(ReactiveMod.REACTION_MAN.get(alias, access) != null){
+    public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations, Level level){
+        if(ReactiveMod.REACTION_MAN.get(alias, level) != null){
             throw new KubeScriptException("Reaction alias '" + alias + "' already exists! Ignoring this registration attempt...");
         }
+        this.level = level;
         rxn = new CustomReaction(alias, reagent_locations, custom_name);
     }
 
@@ -71,7 +73,7 @@ public class ReactionFactory {
         if(yield < 0){
             throw new KubeScriptException("Yield cannot be negative!");
         }
-        Power p = Powers.get(ResourceLocation.parse(power_id), access);
+        Power p = Powers.get(ResourceLocation.parse(power_id), level.registryAccess());
         if(p != null){
             rxn.yield = yield;
             rxn.output_power = Optional.of(p);

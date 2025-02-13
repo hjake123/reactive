@@ -21,7 +21,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
     @Override
     public IVariable process(Level level, String key) {
         if(key.equals("formula")){
-            for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(level.registryAccess())){
+            for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(level)){
                 if(reaction.getAlias().equals(reaction_alias)){
                     StringBuilder formula = new StringBuilder();
                     formula.append(Component.translatable("docs.reactive.powers_label").getString());
@@ -54,7 +54,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
             return IVariable.empty();
         }
         if(key.equals("lock")){
-            for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(level.registryAccess())) {
+            for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(level)) {
                 if (reaction.getAlias().equals(reaction_alias)) {
                     return IVariable.wrap("reactive:reactions/" + reaction_alias + "_perfect", level.registryAccess());
                 }

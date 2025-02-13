@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 public interface ReactorRenderer {
     default void checkReactions(Reactor reactor){
         reactor.resetRenderReactions();
-        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(Minecraft.getInstance().getConnection().registryAccess())){
+        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(Minecraft.getInstance().level)){
             if(reaction.conditionsMet(reactor) == Reaction.Status.REACTING){
                 reactor.addRenderReaction(reaction);
             }
