@@ -27,7 +27,7 @@ public class ReactionRenders {
     public static void flamethrower(Reactor reactor) {
         if(reactor.getLevel() == null) return;
 
-        if(reactor.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
+        if(reactor.getPowerLevel(Powers.SOUL_POWER.getOnClient()) > 20){
             ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, reactor.getBlockPos(), 0.1F, 0, 0.1, 0);
         }else{
             ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.FLAME, reactor.getBlockPos(), 0.1F, 0, 0.1, 0);

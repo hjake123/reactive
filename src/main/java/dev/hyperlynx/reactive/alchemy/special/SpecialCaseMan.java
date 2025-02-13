@@ -115,7 +115,7 @@ public class SpecialCaseMan {
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Tags.Items.GUNPOWDERS) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10) {
+            if(e.getItem().is(Tags.Items.GUNPOWDERS) && c.getPowerLevel(Powers.BLAZE_POWER.get(c)) > 10) {
                 explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
                 return true;
             }
@@ -136,21 +136,21 @@ public class SpecialCaseMan {
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Tags.Items.INGOTS_COPPER) && c.getPowerLevel(Powers.ACID_POWER.get()) > 10) {
+            if(e.getItem().is(Tags.Items.INGOTS_COPPER) && c.getPowerLevel(Powers.ACID_POWER.get(c)) > 10) {
                 copperCharging(c);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get()) < 10) {
+            if(e.getItem().is(Items.ENDER_EYE) && c.getPowerLevel(Powers.CURSE_POWER.get(c)) < 10) {
                 enderEyeFlyAway(c, e);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700) {
+            if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get(c)) > 700) {
                 residualSlime(c, e);
                 return true;
             }
@@ -175,31 +175,31 @@ public class SpecialCaseMan {
 
     public static void register_empty_cases(){
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.SOUL_POWER.get()) > WorldSpecificValue.get("soul_escape_threshold", 300, 600))
+            if(c.getPowerLevel(Powers.SOUL_POWER.get(c)) > WorldSpecificValue.get("soul_escape_threshold", 300, 600))
                 soulEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 665)
+            if(c.getPowerLevel(Powers.CURSE_POWER.get(c)) > 665)
                 curseEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.BLAZE_POWER.get()) > WorldSpecificValue.get("blaze_escape_threshold", 20, 100))
+            if(c.getPowerLevel(Powers.BLAZE_POWER.get(c)) > WorldSpecificValue.get("blaze_escape_threshold", 20, 100))
                 blazeEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.VERDANT_POWER.get()) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
+            if(c.getPowerLevel(Powers.VERDANT_POWER.get(c)) > WorldSpecificValue.get("verdant_escape_threshold", 1300, 1500))
                 verdantEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
+            if(c.getPowerLevel(Powers.LIGHT_POWER.get(c)) > WorldSpecificValue.get("light_escape_threshold", 800, 1100))
                 lightEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.FLOW_POWER.get()) > 0)
+            if(c.getPowerLevel(Powers.FLOW_POWER.get(c)) > 0)
                 windBomb(c.getLevel(), Vec3.atCenterOf(c.getBlockPos()));
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.getPowerLevel(Powers.OMEN_POWER.get()) > 121)
+            if(c.getPowerLevel(Powers.OMEN_POWER.get(c)) > 121)
                 badOmen(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
@@ -246,12 +246,12 @@ public class SpecialCaseMan {
             return;
 
         BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
-        if(blazeRodPos != null && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 0){
+        if(blazeRodPos != null && c.getPowerLevel(Powers.BLAZE_POWER.get(c)) > 0){
             conjureBlaze(level, e, c, blazeRodPos);
             return;
         }
 
-        if(c.getPowerLevel(Powers.SOUL_POWER.get()) == 0)
+        if(c.getPowerLevel(Powers.SOUL_POWER.get(c)) == 0)
             return;
 
         int cause = WorldSpecificValues.GOLEM_CAUSE.get();
@@ -269,23 +269,23 @@ public class SpecialCaseMan {
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
 
-        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 800){
+        if(c.getPowerLevel(Powers.SOUL_POWER.get(c)) > 800){
             c.sculkSpreader.addCursors(c.getBlockPos().north(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().south(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().east(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().west(), spread);
-            c.expendPower(Powers.SOUL_POWER.get(), 500);
+            c.expendPower(Powers.SOUL_POWER.get(c), 500);
         }else{
-            if(c.getPowerLevel(Powers.VITAL_POWER.get()) > 100){
-                c.expendPower(Powers.VITAL_POWER.get(), 100);
-                c.addPower(Powers.SOUL_POWER.get(), WorldSpecificValue.get("sculk_soul_return", 60, 100));
+            if(c.getPowerLevel(Powers.VITAL_POWER.get(c)) > 100){
+                c.expendPower(Powers.VITAL_POWER.get(c), 100);
+                c.addPower(Powers.SOUL_POWER.get(c), WorldSpecificValue.get("sculk_soul_return", 60, 100));
             }
         }
     }
 
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
-        c.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
+        c.addPower(Powers.BLAZE_POWER.get(c), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
         EntityType.BLAZE.spawn((ServerLevel) level, (ItemStack) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
@@ -301,7 +301,7 @@ public class SpecialCaseMan {
 
     private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
-            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
+            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get(c)) > 20)) {
                 EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner() instanceof ServerPlayer player)
                     Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
@@ -309,7 +309,7 @@ public class SpecialCaseMan {
             else
                 EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
-            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
+            if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get(c)) > 20))
                 EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             else {
                 EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
@@ -333,7 +333,7 @@ public class SpecialCaseMan {
 
     // Dissolving an Ender Pearl teleports you onto the crucible if there's enough Warp.
     private static void enderPearlDissolve(Level l, BlockPos p, ItemEntity e, CrucibleBlockEntity c){
-        float chance = ((float) c.getPowerLevel(Powers.WARP_POWER.get())) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
+        float chance = ((float) c.getPowerLevel(Powers.WARP_POWER.get(c))) / CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
         if(l.random.nextFloat() > chance){
             return;
         }
@@ -413,14 +413,14 @@ public class SpecialCaseMan {
     private static void waterWriting(CrucibleBlockEntity c, ItemEntity e){
         int low = WorldSpecificValue.get("water_write_low_threshold", 200, 400);
         int high = WorldSpecificValue.get("water_write_high_threshold", 500, 800);
-        if(c.getPowerLevel(Powers.MIND_POWER.get()) < low) {
+        if(c.getPowerLevel(Powers.MIND_POWER.get(c)) < low) {
             boolean harvested = lowWaterWriting(c, e, low);
             if(harvested){
                 e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
                 e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.6F, 0.6F);
             }
         }
-        else if(c.getPowerLevel(Powers.MIND_POWER.get()) > high){
+        else if(c.getPowerLevel(Powers.MIND_POWER.get(c)) > high){
             highWaterWriting(c, e, high);
             e.level().playSound(null, c.getBlockPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F, 1F);
             e.level().playSound(null, c.getBlockPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 0.7F, 0.7F);
@@ -447,7 +447,7 @@ public class SpecialCaseMan {
         }
 
         for(int page_index = 0; page_index < pages.size(); page_index++){
-            if(c.getPowerLevel(Powers.MIND_POWER.get()) < threshold)
+            if(c.getPowerLevel(Powers.MIND_POWER.get(c)) < threshold)
                 break;
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
             if(words.isEmpty() || e.level().random.nextFloat() < 0.1F){
@@ -482,7 +482,7 @@ public class SpecialCaseMan {
                 text = text.substring(0, 250);
             }
             pages.set(page_index, literalFilteredString(text));
-            c.expendPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20));
+            c.expendPower(Powers.MIND_POWER.get(c), WorldSpecificValue.get("water_write_cost", 10, 20));
         }
 
         WritableBookContent new_book_content = book_content.withReplacedPages(pages);
@@ -501,7 +501,7 @@ public class SpecialCaseMan {
         List<Filterable<String>> pages = new ArrayList<>(book_content.pages());
 
         for(int page_index = 0; page_index < pages.size(); page_index++) {
-            if(c.getPowerLevel(Powers.MIND_POWER.get()) > threshold)
+            if(c.getPowerLevel(Powers.MIND_POWER.get(c)) > threshold)
                 break;
             // Remove a random word from the page.
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
@@ -511,7 +511,7 @@ public class SpecialCaseMan {
             String victim = words.get(e.level().random.nextInt(words.size()));
             String blank = " ".repeat(victim.length());
             pages.set(page_index, literalFilteredString(pages.get(page_index).raw().replace(victim, blank)));
-            c.addPower(Powers.MIND_POWER.get(), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);
+            c.addPower(Powers.MIND_POWER.get(c), WorldSpecificValue.get("water_write_cost", 10, 20) - 1);
         }
         c.setDirty();
         if(did_anything){
@@ -523,7 +523,7 @@ public class SpecialCaseMan {
 
     // Phantom residue + verdant = summon a slime.
     private static void residualSlime(CrucibleBlockEntity c, ItemEntity e) {
-        c.expendPower(Powers.VERDANT_POWER.get(), 400);
+        c.expendPower(Powers.VERDANT_POWER.get(c), 400);
         c.setDirty();
         if(e.getItem().getCount() == 1)
             e.kill();
@@ -566,7 +566,7 @@ public class SpecialCaseMan {
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
         if(!c.getLevel().isClientSide()){
-            if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 1400){
+            if(c.getPowerLevel(Powers.CURSE_POWER.get(c)) > 1400){
                 Monster m;
                 if(c.getLevel().getRandom().nextFloat() < 0.35){
                     m = new Skeleton(EntityType.SKELETON, c.getLevel());
@@ -604,7 +604,7 @@ public class SpecialCaseMan {
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
             for(int i = 0; i < 10; i++) {
-                if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
+                if(c.getPowerLevel(Powers.SOUL_POWER.get(c)) > 20){
                     ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
                 }else{
                     ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);

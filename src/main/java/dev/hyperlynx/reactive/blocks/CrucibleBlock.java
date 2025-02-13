@@ -89,7 +89,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                         if(crucible.getTotalPowerLevel() > 1500)
                             CrucibleBlockEntity.empty(level, my_pos, state, crucible);
                         else
-                            crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(), 1500);
+                            crucible.expendAnyPowerExcept(Powers.CURSE_POWER.get(level), 1500);
                         crucible.setDirty();
                     }
                     case 2 -> state.setValue(FULL, false);
@@ -119,7 +119,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 if(!(crucible instanceof CrucibleBlockEntity c)){
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
-                c.setStartingColor(Powers.ACID_POWER.get().getColor());
+                c.setStartingColor(Powers.ACID_POWER.get(level).getColor());
             }
 
             // If it wasn't an acid bucket, just pass on the client side.
@@ -162,7 +162,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
                 becomeFull(state, level, pos, (ServerPlayer) player);
-                c.addPower(Powers.ACID_POWER.get(), WorldSpecificValues.BOTTLE_RETURN.get()*3);
+                c.addPower(Powers.ACID_POWER.get(level), WorldSpecificValues.BOTTLE_RETURN.get()*3);
                 c.setDirty();
                 if (((ServerPlayer) player).gameMode.isSurvival()) {
                     player.setItemInHand(hand, Items.BUCKET.getDefaultInstance());
@@ -228,9 +228,9 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 player.addItem(Items.POTION.getDefaultInstance());
             } else {
                 ItemStack potion;
-                if (c.getPowerLevel(Powers.BODY_POWER.get()) > 10) {
+                if (c.getPowerLevel(Powers.BODY_POWER.get(level)) > 10) {
                     potion = PotionContents.createItemStack(Items.POTION, Potions.THICK);
-                } else if (c.getPowerLevel(Powers.ACID_POWER.get()) > 50) {
+                } else if (c.getPowerLevel(Powers.ACID_POWER.get(level)) > 50) {
                     potion = PotionContents.createItemStack(Items.POTION, Potions.AWKWARD);
                 } else {
                     potion = PotionContents.createItemStack(Items.POTION, Potions.MUNDANE);

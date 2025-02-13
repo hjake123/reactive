@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.integration.patchouli;
 
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +39,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
                 return IVariable.wrap(Component.translatable("docs.reactive.removed_recipe").getString(), level.registryAccess());
             }
             List<String> reagent_list = new ArrayList<>();
-            for(Power reagent : recipe.getReagents()){
+            for(Power reagent : recipe.getReagents().stream().map(Powers::getOnClient).toList()){
                 reagent_list.add(reagent.getName());
             }
 

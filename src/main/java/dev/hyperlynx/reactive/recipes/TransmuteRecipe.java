@@ -3,7 +3,9 @@ package dev.hyperlynx.reactive.recipes;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -18,12 +20,12 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
-    protected final List<Power> reagents;
+    protected final List<ResourceKey<Power>> reagents;
     int cost;
     int minimum;
     public boolean needs_electricity;
 
-    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
+    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<ResourceKey<Power>> reagents, int min, int cost, boolean needs_electricity) {
         this.group = group;
         this.reactant = reactant;
         this.product = product;
@@ -40,7 +42,7 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     private boolean powerMet(CrucibleRecipeInput input){
         int power_level = 0;
         boolean has_all_reagents = true;
-        for(Power p : reagents) {
+        for(Power p : reagents.stream().map((reagent) -> Powers.get(reagent, input.access)).toList()) {
             if(input.getPowerLevel(p) == 0){
                 has_all_reagents = false;
                 break;
@@ -53,7 +55,7 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     public ItemStack apply(ItemStack input, PowerBearer bearer) {
         int max_tfs = Integer.MAX_VALUE;
         if(cost > 0) {
-            for (Power p : reagents) {
+            for (Power p : reagents.stream().map((reagent) -> Powers.get(reagent, bearer.access())).toList()) {
                 max_tfs = Math.min(max_tfs, (bearer.getPowerLevel(p) / (cost / reagents.size())));
                 bearer.expendPower(p, cost / reagents.size() * input.getCount());
             }
@@ -90,7 +92,7 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
 
     public Ingredient getReactant(){ return reactant; }
 
-    public List<Power> getReagents(){ return reagents;}
+    public List<ResourceKey<Power>> getReagents(){ return reagents; }
 
     public int getCost(){ return cost; }
 

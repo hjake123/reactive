@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.recipes;
 
 import dev.hyperlynx.reactive.alchemy.Power;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import java.util.Map;
 public class CrucibleRecipeInput implements RecipeInput {
     ItemStack item;
     Map<Power, Integer> reagents;
+    RegistryAccess access;
 
     public static CrucibleRecipeInput of(ItemStack stack){
         var input = new CrucibleRecipeInput();
@@ -17,17 +19,19 @@ public class CrucibleRecipeInput implements RecipeInput {
         return input;
     }
 
-    public static CrucibleRecipeInput of(ItemStack stack, Map<Power, Integer> powers){
+    public static CrucibleRecipeInput of(ItemStack stack, Map<Power, Integer> powers, RegistryAccess access){
         var input = new CrucibleRecipeInput();
         input.item = stack;
         input.reagents = powers;
+        input.access = access;
         return input;
     }
 
-    public static CrucibleRecipeInput of(Map<Power, Integer> powers){
+    public static CrucibleRecipeInput of(Map<Power, Integer> powers, RegistryAccess access){
         var input = new CrucibleRecipeInput();
         input.item = ItemStack.EMPTY;
         input.reagents = powers;
+        input.access = access;
         return input;
     }
 

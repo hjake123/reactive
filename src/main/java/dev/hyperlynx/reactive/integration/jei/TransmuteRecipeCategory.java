@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import mezz.jei.api.constants.VanillaTypes;
@@ -83,28 +84,34 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
         switch (recipe.getReagents().size()) {
             case 1 -> {
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                var power = Powers.getOnClient(recipe.getReagents().getFirst());
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, power);
             }
             case 2 -> {
                 IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "mid_left_reagent", RecipeIngredientRole.CATALYST);
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                var powerl = Powers.getOnClient(recipe.getReagents().getFirst());
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, powerl);
 
                 IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "mid_right_reagent", RecipeIngredientRole.CATALYST);
-                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
+                var powerr = Powers.getOnClient(recipe.getReagents().getLast());
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, powerr);
             }
             case 3 -> {
                 IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "left_reagent", RecipeIngredientRole.CATALYST);
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                var powerl = Powers.getOnClient(recipe.getReagents().getFirst());
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, powerl);
 
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
+                var power = Powers.getOnClient(recipe.getReagents().get(1));
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, power);
 
                 IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "right_reagent", RecipeIngredientRole.CATALYST);
-                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(2));
+                var powerr = Powers.getOnClient(recipe.getReagents().get(2));
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, powerr);
             }
             default -> {
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents());
+                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().stream().map((key) -> Powers.getOnClient(key)).toList());
             }
         }
     }

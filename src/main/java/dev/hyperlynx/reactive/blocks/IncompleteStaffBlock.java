@@ -50,26 +50,26 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
             return;
 
         int order = WorldSpecificValues.EFFECT_ORDER.get();
-        Power[] order1 = {Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()};
-        Power[] order2 = {Powers.Y_POWER.get(), Powers.Z_POWER.get(), Powers.X_POWER.get()};
-        Power[] order3 = {Powers.Z_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get()};
+        Power[] order1 = {Powers.X_POWER.get(level), Powers.Y_POWER.get(level), Powers.Z_POWER.get(level)};
+        Power[] order2 = {Powers.Y_POWER.get(level), Powers.Z_POWER.get(level), Powers.X_POWER.get(level)};
+        Power[] order3 = {Powers.Z_POWER.get(level), Powers.X_POWER.get(level), Powers.Y_POWER.get(level)};
 
         if (state.getValue(PROGRESS) == 3) {
             // Then complete the staff!
 
             Block staff_to_become = Blocks.AIR;
 
-            if (exposed_power == Powers.LIGHT_POWER.get())
+            if (exposed_power == Powers.LIGHT_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_LIGHT.get();
-            else if (exposed_power == Powers.WARP_POWER.get())
+            else if (exposed_power == Powers.WARP_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_WARP.get();
-            else if (exposed_power == Powers.BLAZE_POWER.get())
+            else if (exposed_power == Powers.BLAZE_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_BLAZE.get();
-            else if (exposed_power == Powers.MIND_POWER.get())
+            else if (exposed_power == Powers.MIND_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_MIND.get();
-            else if (exposed_power == Powers.VITAL_POWER.get())
+            else if (exposed_power == Powers.VITAL_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_LIFE.get();
-            else if (exposed_power == Powers.SOUL_POWER.get())
+            else if (exposed_power == Powers.SOUL_POWER.get(level))
                 staff_to_become = Registration.STAFF_OF_SOUL.get();
 
             if (staff_to_become == Blocks.AIR) {
@@ -88,9 +88,9 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
             level.playSound(null, pos, SoundEvents.BEACON_ACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
         }
         else{
-            if(exposed_power.equals(Powers.X_POWER.get())
-                    || exposed_power.equals(Powers.Y_POWER.get())
-                    || exposed_power.equals(Powers.Z_POWER.get())) {
+            if(exposed_power.equals(Powers.X_POWER.get(level))
+                    || exposed_power.equals(Powers.Y_POWER.get(level))
+                    || exposed_power.equals(Powers.Z_POWER.get(level))) {
                 failCrafting(level, pos);
             }
         }

@@ -102,14 +102,14 @@ public class Power {
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
-    public static Power readPower(CompoundTag tag){
-        return readPower(tag, "name");
+    public static Power readPower(CompoundTag tag, RegistryAccess access){
+        return readPower(tag, "name", access);
     }
 
-    public static Power readPower(CompoundTag tag, String power_key){
+    public static Power readPower(CompoundTag tag, String power_key, RegistryAccess access){
         String rl = tag.getString(power_key);
         var location = ResourceLocation.parse(rl);
-        return Powers.get(location);
+        return Powers.get(location, access);
     }
 
     public Color getColor(){
@@ -123,6 +123,9 @@ public class Power {
         return Component.translatable(name).getString();
     }
     public ResourceLocation getResourceLocation() { return location; }
+
+    public ResourceKey<Power> getResourceKey() { return ResourceKey.create(Powers.POWER_REGISTRY_KEY, location); }
+
     public Block getWaterRenderBlock(){
         return render_water_block;
     }
@@ -137,7 +140,7 @@ public class Power {
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(RegistryAccess access, ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        Powers.stream().forEach((power) -> {
+        Powers.stream(access).forEach((power) -> {
             if (i.is(power.getSourceTag()))
                 stack_powers.add(power);
         });

@@ -90,7 +90,7 @@ public class GatewayPlinthBlock extends Block {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        if (Powers.WARP_POWER.get().matchesBottle(stack)) {
+        if (Powers.WARP_POWER.get(level).matchesBottle(stack)) {
             if (WarpBottleItem.isRiftBottle(stack)) {
                 GlobalPos warp_target = WarpBottleItem.getTeleportPosition(stack);
                 if(warp_target == null){

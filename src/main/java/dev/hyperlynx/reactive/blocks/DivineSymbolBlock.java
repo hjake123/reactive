@@ -41,7 +41,7 @@ public class DivineSymbolBlock extends SymbolBlock{
         boolean accepted = false;
         BlockPos player_start_pos = player.blockPosition().above(); // Captured because the player might teleport.
 
-        if(Powers.VITAL_POWER.get().matchesBottle(stack)){
+        if(Powers.VITAL_POWER.get(level).matchesBottle(stack)){
             if(player.getHealth() < 20F){
                 player.heal(20F);
                 player.displayClientMessage(Component.translatable("message.reactive.donate_vital"), true);
@@ -49,7 +49,7 @@ public class DivineSymbolBlock extends SymbolBlock{
             }else{
                 player.displayClientMessage(Component.translatable("message.reactive.reject_vital"), true);
             }
-        }else if(Powers.LIGHT_POWER.get().matchesBottle(stack)){
+        }else if(Powers.LIGHT_POWER.get(level).matchesBottle(stack)){
             if(player.getActiveEffects().stream().anyMatch(mei -> mei.getEffect().equals(MobEffects.INVISIBILITY))){
                 player.removeEffect(MobEffects.INVISIBILITY);
             }else{
@@ -57,15 +57,15 @@ public class DivineSymbolBlock extends SymbolBlock{
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_light"), true);
             accepted = true;
-        }else if(Powers.WARP_POWER.get().matchesBottle(stack)){
+        }else if(Powers.WARP_POWER.get(level).matchesBottle(stack)){
             player.addEffect(new MobEffectInstance(Registration.HIGH_STEP, 12000, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_warp"), true);
             accepted = true;
-        }else if(Powers.MIND_POWER.get().matchesBottle(stack)){
+        }else if(Powers.MIND_POWER.get(level).matchesBottle(stack)){
             player.addEffect(new MobEffectInstance(Registration.FAR_REACH, 2800, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
             accepted = true;
-        }else if(Powers.BLAZE_POWER.get().matchesBottle(stack)){
+        }else if(Powers.BLAZE_POWER.get(level).matchesBottle(stack)){
             if(player.getTicksFrozen() > 0)
                 player.setTicksFrozen(0);
             else {
@@ -75,7 +75,7 @@ public class DivineSymbolBlock extends SymbolBlock{
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);
             accepted = true;
-        }else if(Powers.SOUL_POWER.get().matchesBottle(stack)){
+        }else if(Powers.SOUL_POWER.get(level).matchesBottle(stack)){
             player.displayClientMessage(Component.translatable("message.reactive.donate_reject_soul"), true);
         }else{
             player.displayClientMessage(Component.translatable("message.reactive.donate_reject_generic"), true);

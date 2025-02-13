@@ -8,6 +8,8 @@ import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.client.renderers.ReactionRenders;
 import dev.hyperlynx.reactive.datagen.ReactionAdvancementGenerator;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -70,57 +72,57 @@ public class ReactionMan {
         ReactionAdvancementGenerator.add("chomp");
     }
 
-    public List<Reaction> getReactions(){
+    public List<Reaction> getReactions(RegistryAccess access){
         if(!initialized){
-            constructReactions();
+            constructReactions(access);
         }
         return REACTIONS.values().stream().toList();
     }
 
-    public List<String> getReactionAliases(){
+    public List<String> getReactionAliases(RegistryAccess access){
         if(!initialized){
-            constructReactions();
+            constructReactions(access);
         }
         return REACTIONS.keySet().stream().toList();
     }
 
-    public Reaction get(String alias){
+    public Reaction get(String alias, RegistryAccess access){
         if(!initialized){
-            constructReactions();
+            constructReactions(access);
         }
         return REACTIONS.get(alias);
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    private void constructReactions(){
+    private void constructReactions(RegistryAccess access){
         if(initializer_lock)
             return;
         initializer_lock = true;
 
         // Set up the Base Power List.
-        BASE_POWER_LIST.add(Powers.BLAZE_POWER.get());
-        BASE_POWER_LIST.add(Powers.WARP_POWER.get());
-        BASE_POWER_LIST.add(Powers.SOUL_POWER.get());
-        BASE_POWER_LIST.add(Powers.LIGHT_POWER.get());
-        BASE_POWER_LIST.add(Powers.MIND_POWER.get());
-        BASE_POWER_LIST.add(Powers.VITAL_POWER.get());
+        BASE_POWER_LIST.add(Powers.BLAZE_POWER.get(access));
+        BASE_POWER_LIST.add(Powers.WARP_POWER.get(access));
+        BASE_POWER_LIST.add(Powers.SOUL_POWER.get(access));
+        BASE_POWER_LIST.add(Powers.LIGHT_POWER.get(access));
+        BASE_POWER_LIST.add(Powers.MIND_POWER.get(access));
+        BASE_POWER_LIST.add(Powers.VITAL_POWER.get(access));
         BASE_POWER_LIST = WorldSpecificValue.shuffle("power_list_order", BASE_POWER_LIST);
 
         // Add assimilation reactions.
         REACTIONS.add(new CurseAssimilationReaction("curse_assimilation"));
-        REACTIONS.add(new AssimilationReaction("vital_kill", Powers.ACID_POWER.get(), Powers.VITAL_POWER.get()));
-        REACTIONS.add(new AssimilationReaction("vital_eat", Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
+        REACTIONS.add(new AssimilationReaction("vital_kill", Powers.ACID_POWER.get(access), Powers.VITAL_POWER.get(access)));
+        REACTIONS.add(new AssimilationReaction("vital_eat", Powers.VITAL_POWER.get(access), Powers.BODY_POWER.get(access)));
 
         int vvr = WorldSpecificValues.VERDANT_VITAL_RELATIONSHIP.get();
         switch (vvr) {
             case 2 ->
-                    REACTIONS.add(new AssimilationReaction("verdant_consume", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get()));
+                    REACTIONS.add(new AssimilationReaction("verdant_consume", Powers.VERDANT_POWER.get(access), Powers.VITAL_POWER.get(access)));
             case 3 ->
-                    REACTIONS.add(new AssimilationReaction("vital_consume", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get()));
+                    REACTIONS.add(new AssimilationReaction("vital_consume", Powers.VITAL_POWER.get(access), Powers.VERDANT_POWER.get(access)));
             case 4 ->
-                    REACTIONS.add(new SynthesisReaction("verdant_growth", Powers.VERDANT_POWER.get(), Powers.VITAL_POWER.get(), Powers.BODY_POWER.get()));
+                    REACTIONS.add(new SynthesisReaction("verdant_growth", Powers.VERDANT_POWER.get(access), Powers.VITAL_POWER.get(access), Powers.BODY_POWER.get(access)));
             case 5 ->
-                    REACTIONS.add(new SynthesisReaction("vital_growth", Powers.VITAL_POWER.get(), Powers.VERDANT_POWER.get(), Powers.LIGHT_POWER.get()));
+                    REACTIONS.add(new SynthesisReaction("vital_growth", Powers.VITAL_POWER.get(access), Powers.VERDANT_POWER.get(access), Powers.LIGHT_POWER.get(access)));
         }
 
         // Add annihilation reactions for each 'counteracting' pair of powers.
@@ -130,74 +132,74 @@ public class ReactionMan {
         REACTIONS.add(new AnnihilationReaction("salt_annihilation", BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(5), ReactionEffects::salt, null));
 
         // Add synthesis reactions for the three esoteric powers.
-        REACTIONS.add(new BasePowerSynthesisReaction("x_synthesis", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
+        REACTIONS.add(new BasePowerSynthesisReaction("x_synthesis", Powers.X_POWER.get(access), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new BasePowerSynthesisReaction("y_synthesis", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
+        REACTIONS.add(new BasePowerSynthesisReaction("y_synthesis", Powers.Y_POWER.get(access), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
-        REACTIONS.add(new BasePowerSynthesisReaction("z_synthesis", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
+        REACTIONS.add(new BasePowerSynthesisReaction("z_synthesis", Powers.Z_POWER.get(access), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5))
                 .setStimulus(Reaction.Stimulus.ELECTRIC));
 
         // Add effect reactions to do crazy things.
-        REACTIONS.add(new EffectReaction("growth", ReactionEffects::growth, ReactionRenders::growth, Powers.VERDANT_POWER.get(), Powers.MIND_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new FreeEffectReaction("flames", ReactionEffects::flamethrower, ReactionRenders::flamethrower, Powers.BLAZE_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
-        REACTIONS.add(new EffectReaction("sunlight", ReactionEffects::sunlight, null, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new EffectReaction("immobilize", ReactionEffects::immobilize, null, Powers.WARP_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+        REACTIONS.add(new EffectReaction("growth", ReactionEffects::growth, ReactionRenders::growth, Powers.VERDANT_POWER.get(access), Powers.MIND_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new FreeEffectReaction("flames", ReactionEffects::flamethrower, ReactionRenders::flamethrower, Powers.BLAZE_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, null, Powers.LIGHT_POWER.get(access)).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+        REACTIONS.add(new EffectReaction("sunlight", ReactionEffects::sunlight, null, Powers.LIGHT_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new EffectReaction("immobilize", ReactionEffects::immobilize, null, Powers.WARP_POWER.get(access), Powers.VERDANT_POWER.get(access)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
 
         // Add end crystal conversion reactions
         switch (WorldSpecificValues.CONDUIT_POWER.get()) {
-            case 1 -> REACTIONS.add(new DecomposeReaction("soul_to_warp", Powers.SOUL_POWER.get(), Powers.WARP_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
-            case 2 -> REACTIONS.add(new DecomposeReaction("warp_to_soul", Powers.WARP_POWER.get(), Powers.SOUL_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+            case 1 -> REACTIONS.add(new DecomposeReaction("soul_to_warp", Powers.SOUL_POWER.get(access), Powers.WARP_POWER.get(access)).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+            case 2 -> REACTIONS.add(new DecomposeReaction("warp_to_soul", Powers.WARP_POWER.get(access), Powers.SOUL_POWER.get(access)).setStimulus(Reaction.Stimulus.END_CRYSTAL));
         }
 
         // Add esoteric effect reactions and make one of them degrade when not electrified.
         int order = WorldSpecificValues.EFFECT_ORDER.get();
         switch (order) {
             case 1 -> {
-                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.X_POWER.get(), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
-                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.Z_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.X_POWER.get(access), BASE_POWER_LIST.get(0), BASE_POWER_LIST.get(1)).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.X_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.Y_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Z_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.Z_POWER.get(access), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
             case 2 -> {
-                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.X_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Y_POWER.get(access), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Y_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.Z_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.X_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.X_POWER.get(access), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
             case 3 -> {
-                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.Y_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Z_POWER.get(access), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, null, Powers.Z_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, null, Powers.X_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, null, Powers.Y_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, null, Powers.Y_POWER.get(access), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
         }
 
-        REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
+        REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(access), Powers.X_POWER.get(access), Powers.Y_POWER.get(access), Powers.Z_POWER.get(access)).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
-        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation, ReactionRenders::creation));
+        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(access), Powers.CURSE_POWER.get(access), ReactionEffects::creation, ReactionRenders::creation));
 
-        Reaction size_shrink_effect = new FreeEffectReaction("size_shrink_effect", ReactionEffects::shrink, ReactionRenders::acid_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
-        Reaction size_grow_effect = new FreeEffectReaction("size_grow_effect", ReactionEffects::grow, ReactionRenders::verdant_based, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
-        Reaction size_revert_effect = new FreeEffectReaction("size_revert_effect", ReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC);
+        Reaction size_shrink_effect = new FreeEffectReaction("size_shrink_effect", ReactionEffects::shrink, ReactionRenders::acid_based, Powers.MIND_POWER.get(access), Powers.BODY_POWER.get(access), Powers.ACID_POWER.get(access)).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
+        Reaction size_grow_effect = new FreeEffectReaction("size_grow_effect", ReactionEffects::grow, ReactionRenders::verdant_based, Powers.MIND_POWER.get(access), Powers.BODY_POWER.get(access), Powers.VERDANT_POWER.get(access)).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
+        Reaction size_revert_effect = new FreeEffectReaction("size_revert_effect", ReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(access), Powers.BODY_POWER.get(access), Powers.ACID_POWER.get(access)).setStimulus(Reaction.Stimulus.ELECTRIC);
         size_revert_effect.cloneReagentsOf(size_shrink_effect);
-        Reaction size_revert_effect_2 = new FreeEffectReaction("size_revert_effect_2", ReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC);
+        Reaction size_revert_effect_2 = new FreeEffectReaction("size_revert_effect_2", ReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(access), Powers.BODY_POWER.get(access), Powers.VERDANT_POWER.get(access)).setStimulus(Reaction.Stimulus.ELECTRIC);
         size_revert_effect_2.cloneReagentsOf(size_grow_effect);
 
         REACTIONS.addAll(size_shrink_effect, size_grow_effect, size_revert_effect, size_revert_effect_2);
 
-        REACTIONS.add(new OmenConversionReaction("ominous_transformation"));
-        REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(), Items.IRON_INGOT));
+        REACTIONS.add(new OmenConversionReaction("ominous_transformation", access));
+        REACTIONS.add(new FreeEffectReaction("omen_settling", ReactionEffects::omenSettling, ReactionRenders::ominous, Powers.OMEN_POWER.get(access)).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
+        REACTIONS.add(new CatalystEffectReaction("chomp", ReactionEffects::chomp, null, Powers.OMEN_POWER.get(access), Items.IRON_INGOT));
 
-        REACTIONS.add(new WindBombReaction("wind_bomb"));
-        REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, null, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
+        REACTIONS.add(new WindBombReaction("wind_bomb", access));
+        REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, null, Powers.FLOW_POWER.get(access), Powers.LIGHT_POWER.get(access)).setStimulus(Reaction.Stimulus.ELECTRIC));
 
-        NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
+        NeoForge.EVENT_BUS.post(new ReactionConstructEvent(access));
 
         initialized = true;
         initializer_lock = false;
@@ -221,12 +223,13 @@ public class ReactionMan {
 
     /**
      * This event is fired after ReactionMan constructs the world's reactions.
-     * You can add new reactions using ReactionMan.addReactions(). <br><br>
-     * You will need to also register the reaction's alias to ReactionCriteriaBuilder.add() at class load
-     * if you want reaction advancements and their data gen to work.
+     * You can add new reactions using ReactionMan.addReactions().
      */
     public static class ReactionConstructEvent extends Event {
-
+        public RegistryAccess access;
+        public ReactionConstructEvent(RegistryAccess access){
+            this.access = access;
+        }
     }
 
     /**

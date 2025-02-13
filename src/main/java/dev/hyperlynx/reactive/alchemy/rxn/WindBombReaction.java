@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -14,9 +15,9 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Random;
 
 public class WindBombReaction extends FreeEffectReaction{
-    public WindBombReaction(String alias) {
-        super(alias, ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get());
-        this.setReagentCost(Powers.FLOW_POWER.get(), 1);
+    public WindBombReaction(String alias, RegistryAccess access) {
+        super(alias, ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get(access));
+        this.setReagentCost(Powers.FLOW_POWER.get(access), 1);
     }
 
     @Override

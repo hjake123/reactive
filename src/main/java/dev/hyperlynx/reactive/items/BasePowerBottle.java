@@ -36,7 +36,7 @@ public interface BasePowerBottle {
             }
 
             boolean changed = false;
-            for(Power p : Powers.list()){
+            for(Power p : Powers.list(source.level().registryAccess())){
                 if(p.matchesBottle(stack)){
                     if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                         if(stack.is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(stack)){

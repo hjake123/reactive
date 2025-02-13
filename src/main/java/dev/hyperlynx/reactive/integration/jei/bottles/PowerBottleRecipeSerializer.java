@@ -7,6 +7,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
@@ -16,20 +17,19 @@ import java.util.Objects;
 public class PowerBottleRecipeSerializer implements RecipeSerializer<PowerBottleRecipe> {
     public static final MapCodec<PowerBottleRecipe> CODEC =
             RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Codec.STRING.optionalFieldOf("group", "power_bottle").forGetter(PowerBottleRecipe::getGroup),
-                Powers.getPowerRegistry().byNameCodec().fieldOf("power").forGetter(PowerBottleRecipe::getPower)
+                    Codec.STRING.optionalFieldOf("group", "power_bottle").forGetter(PowerBottleRecipe::getGroup),
+                    Power.RESOURCE_KEY_CODEC.fieldOf("power").forGetter(PowerBottleRecipe::getPowerKey)
             ).apply(instance, PowerBottleRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PowerBottleRecipe> STREAM_CODEC = StreamCodec.of(PowerBottleRecipeSerializer::toNetwork, PowerBottleRecipeSerializer::fromNetwork);
 
     public static @NotNull PowerBottleRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
-        Power power = Powers.get(buffer.readResourceKey(Powers.POWER_REGISTRY_KEY));
-        return new PowerBottleRecipe("power_bottle", Objects.requireNonNullElseGet(power,
-                () -> new Power("error", 0xFF0000, Blocks.WATER, null)));
+        ResourceKey<Power> power = buffer.readResourceKey(Powers.POWER_REGISTRY_KEY);
+        return new PowerBottleRecipe("power_bottle", power);
     }
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PowerBottleRecipe recipe) {
-        buffer.writeResourceKey(Powers.getPowerRegistry().getResourceKey(recipe.power).orElseThrow());
+        buffer.writeResourceKey(recipe.getPowerKey());
     }
 
     @Override

@@ -29,10 +29,10 @@ public class CurseAssimilationReaction extends Reaction{
     @Override
     public void run(Reactor reactor) {
         super.run(reactor);
-        reactor.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
-        reactor.addPower(Powers.CURSE_POWER.get(), rate);
+        reactor.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(reactor), rate);
+        reactor.addPower(Powers.CURSE_POWER.get(reactor), rate);
 
-        if(Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.2 && reactor.getPowerLevel(Powers.CURSE_POWER.get()) >
+        if(Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.2 && reactor.getPowerLevel(Powers.CURSE_POWER.get(reactor)) >
                 WorldSpecificValue.get("curse_assim_hurt_threshold", 900, 1100)){
             AABB aoe = new AABB(reactor.getBlockPos());
             aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the reactor.
@@ -52,8 +52,8 @@ public class CurseAssimilationReaction extends Reaction{
 
     @Override
     public Status conditionsMet(Reactor reactor){
-        boolean has_curse = reactor.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
-        if (reactor.getTotalPowerLevel() > (reactor.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)
+        boolean has_curse = reactor.getPowerLevel(Powers.CURSE_POWER.get(reactor)) > rate;
+        if (reactor.getTotalPowerLevel() > (reactor.getPowerLevel(Powers.CURSE_POWER.get(reactor)) + rate) && has_curse)
             return Status.REACTING;
         return Status.STABLE;
     }

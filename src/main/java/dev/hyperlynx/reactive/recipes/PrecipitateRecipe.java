@@ -3,8 +3,10 @@ package dev.hyperlynx.reactive.recipes;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -18,13 +20,13 @@ import java.util.List;
 public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final ItemStack product;
-    protected final List<Power> reagents;
+    protected final List<ResourceKey<Power>> reagents;
     int cost;
     int minimum;
     int reagent_count;
     public boolean needs_electricity;
 
-    public PrecipitateRecipe(String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
+    public PrecipitateRecipe(String group, ItemStack product, List<ResourceKey<Power>> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
         this.group = group;
         this.product = product;
         this.reagents = reagents;
@@ -41,7 +43,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
     private boolean powerMet(CrucibleRecipeInput input, Level level){
-        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(reagents.hashCode() + "-" + product.hashCode() + "_reagent_order", reagents);
+        ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(reagents.hashCode() + "-" + product.hashCode() + "_reagent_order", reagents.stream().map((key) -> Powers.get(key, level.registryAccess())).toList());
 
         int power_level = 0;
         int iterations = 0;
@@ -61,7 +63,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
 
     public ItemStack apply(PowerBearer bearer, Level level) {
         if(cost > 0) {
-            for (Power p : reagents) {
+            for (Power p : reagents.stream().map((key) -> Powers.get(key, level.registryAccess())).toList()) {
                 bearer.expendPower(p, cost / reagent_count);
             }
         }
@@ -85,7 +87,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
         return product;
     }
 
-    public List<Power> getReagents(){ return reagents;}
+    public List<ResourceKey<Power>> getReagents(){ return reagents; }
 
     public int getMinimum() {
         return minimum;

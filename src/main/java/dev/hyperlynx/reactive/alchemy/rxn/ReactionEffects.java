@@ -207,7 +207,7 @@ public class ReactionEffects {
         }
 
         // Craft the scales if levitation is also happening, and then empty the Crucible.
-        if(reactor.getLinkedCrystal() != null && reactor.getPowerLevel(Powers.LIGHT_POWER.get()) > WorldSpecificValue.get("levitationcost", 10, 30)){
+        if(reactor.getLinkedCrystal() != null && reactor.getPowerLevel(Powers.LIGHT_POWER.get(reactor)) > WorldSpecificValue.get("levitationcost", 10, 30)){
             craftSecretScale(reactor);
         }
     }
@@ -347,18 +347,18 @@ public class ReactionEffects {
     }
 
     public static void flowTooStrong(Reactor reactor){
-        int flow = reactor.getPowerLevel(Powers.FLOW_POWER.get());
-        reactor.expendPower(Powers.FLOW_POWER.get(), flow);
-        reactor.addPower(Powers.LIGHT_POWER.get(), flow / 3);
+        int flow = reactor.getPowerLevel(Powers.FLOW_POWER.get(reactor));
+        reactor.expendPower(Powers.FLOW_POWER.get(reactor), flow);
+        reactor.addPower(Powers.LIGHT_POWER.get(reactor), flow / 3);
         reactor.setElectricCharge(reactor.getElectricCharge() + 20);
         SpecialCaseMan.windBomb(reactor.getLevel(), Vec3.atCenterOf(reactor.getBlockPos()));
     }
 
     public static void omenSettling(Reactor reactor){
         if(reactor.getLevel().random.nextFloat() < 0.1F){
-            reactor.addPower(Powers.CURSE_POWER.get(), 1);
+            reactor.addPower(Powers.CURSE_POWER.get(reactor), 1);
         }
-        reactor.addPower(Powers.SOUL_POWER.get(), 2);
+        reactor.addPower(Powers.SOUL_POWER.get(reactor), 2);
     }
 
     public static void chomp(Reactor reactor) {
@@ -444,7 +444,7 @@ public class ReactionEffects {
             bolt.setPos(Vec3.atCenterOf(reactor.getBlockPos()));
         }
         level.addFreshEntity(bolt);
-        reactor.expendPower(Powers.LIGHT_POWER.get(), reactor.maxPower());
+        reactor.expendPower(Powers.LIGHT_POWER.get(reactor), reactor.maxPower());
         reactor.setDirty();
     }
 }
