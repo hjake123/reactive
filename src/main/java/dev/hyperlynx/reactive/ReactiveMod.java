@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive;
 
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
@@ -22,6 +23,7 @@ public class ReactiveMod
         Registration.init(reactive_bus);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
         NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
+        NeoForge.EVENT_BUS.addListener(Powers::worldLoad);
         container.registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         container.registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         container.registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);

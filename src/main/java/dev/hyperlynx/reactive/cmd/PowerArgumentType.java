@@ -29,7 +29,7 @@ public class PowerArgumentType implements ArgumentType<ResourceLocation> {
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        Powers.POWER_REGISTRY.stream().forEach((power) -> {
+        Powers.stream().forEach((power) -> {
             if(power.getResourceLocation().getNamespace().equals(ReactiveMod.MODID)){
                 builder.suggest(power.getId());
             }else{

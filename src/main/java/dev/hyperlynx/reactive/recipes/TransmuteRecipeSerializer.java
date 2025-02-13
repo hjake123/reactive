@@ -24,7 +24,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(TransmuteRecipe::getGroup),
             Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
             ItemStack.CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
-            Powers.POWERS.getRegistry().get().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
+            Powers.getPowerRegistry().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(TransmuteRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(TransmuteRecipe::getCost),
             Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(TransmuteRecipe::isElectricityRequired)
@@ -48,7 +48,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
         List<Power> reagents = new ArrayList<>();
         for(var location : reagent_locations){
-            reagents.add(Powers.POWERS.getRegistry().get().get(location));
+            reagents.add(Powers.get(location));
         }        int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();

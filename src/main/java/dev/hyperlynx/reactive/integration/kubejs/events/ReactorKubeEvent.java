@@ -13,7 +13,7 @@ public interface ReactorKubeEvent extends KubeEvent {
 
     default int getPowerLevel(String power_rl){
         var reactor = getReactor().get();
-        return reactor.getPowerLevel(Powers.POWER_REGISTRY.get(ResourceLocation.parse(power_rl)));
+        return reactor.getPowerLevel(Powers.get(ResourceLocation.parse(power_rl)));
     }
 
     default boolean hasPower(String power_rl){

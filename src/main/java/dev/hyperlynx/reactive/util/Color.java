@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.util;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 public class Color {
     public int red;
     public int green;
@@ -37,4 +40,14 @@ public class Color {
         }
         return obj_equals;
     }
+
+    public int getHex(){
+        return hex;
+    }
+
+    public static Codec<Color> CODEC = RecordCodecBuilder.create((instance) ->
+            instance.group(
+                    Codec.INT.fieldOf("hex").forGetter(Color::getHex)
+            ).apply(instance, Color::new)
+    );
 }

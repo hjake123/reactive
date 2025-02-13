@@ -441,7 +441,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to 'dissolve' the item into Power. If it does, the power is added to the Crucible, and it returns true.
     public static boolean tryReduceToPower(ItemStack stack, CrucibleBlockEntity crucible){
-        List<Power> stack_power_list = Power.getSourcePower(stack);
+        List<Power> stack_power_list = Power.getSourcePower(crucible.getLevel().registryAccess(), stack);
         boolean changed = false;
         if(stack_power_list.isEmpty()){
             boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount(), crucible);
@@ -606,7 +606,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
         boolean changed = false;
-        for(Power p : Powers.POWERS.getRegistry().get()){
+        for(Power p : Powers.list()){
             if(p.matchesBottle(context.getBottle())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                     if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){

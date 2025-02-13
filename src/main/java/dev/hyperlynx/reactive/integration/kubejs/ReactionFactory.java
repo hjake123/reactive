@@ -69,7 +69,7 @@ public class ReactionFactory {
         if(yield < 0){
             throw new KubeScriptException("Yield cannot be negative!");
         }
-        Power p = Powers.POWER_REGISTRY.get(ResourceLocation.parse(power_id));
+        Power p = Powers.get(ResourceLocation.parse(power_id));
         if(p != null){
             rxn.yield = yield;
             rxn.output_power = Optional.of(p);

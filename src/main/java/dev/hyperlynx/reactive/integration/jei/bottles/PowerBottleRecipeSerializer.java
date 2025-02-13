@@ -17,19 +17,19 @@ public class PowerBottleRecipeSerializer implements RecipeSerializer<PowerBottle
     public static final MapCodec<PowerBottleRecipe> CODEC =
             RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.optionalFieldOf("group", "power_bottle").forGetter(PowerBottleRecipe::getGroup),
-                Powers.POWERS.getRegistry().get().byNameCodec().fieldOf("power").forGetter(PowerBottleRecipe::getPower)
+                Powers.getPowerRegistry().byNameCodec().fieldOf("power").forGetter(PowerBottleRecipe::getPower)
             ).apply(instance, PowerBottleRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, PowerBottleRecipe> STREAM_CODEC = StreamCodec.of(PowerBottleRecipeSerializer::toNetwork, PowerBottleRecipeSerializer::fromNetwork);
 
     public static @NotNull PowerBottleRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
-        Power power = Powers.POWER_REGISTRY.get(buffer.readResourceKey(Powers.POWER_REGISTRY_KEY));
+        Power power = Powers.get(buffer.readResourceKey(Powers.POWER_REGISTRY_KEY));
         return new PowerBottleRecipe("power_bottle", Objects.requireNonNullElseGet(power,
                 () -> new Power("error", 0xFF0000, Blocks.WATER, null)));
     }
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PowerBottleRecipe recipe) {
-        buffer.writeResourceKey(Powers.POWER_REGISTRY.getResourceKey(recipe.power).orElseThrow());
+        buffer.writeResourceKey(Powers.getPowerRegistry().getResourceKey(recipe.power).orElseThrow());
     }
 
     @Override

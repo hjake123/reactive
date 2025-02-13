@@ -79,7 +79,8 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
         if(ConfigMan.CLIENT.showPowerSources.get()){
             IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power_result", RecipeIngredientRole.OUTPUT);
             for (ItemStack input : recipe.getReactant().getItems()) {
-                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(input));
+                assert Minecraft.getInstance().level != null;
+                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, Power.getSourcePower(Minecraft.getInstance().level.registryAccess(), input));
             }
         }
     }

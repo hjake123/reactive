@@ -184,7 +184,7 @@ public class LitmusScreen extends Screen {
         for(LitmusMeasurement.Line line : measurement.measurements()){
             TextColor color = TextColor.fromRgb(0xFFFFFF);
             if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                Power power = Powers.POWER_REGISTRY.get(line.power());
+                Power power = Powers.get(line.power());
                 if(power != null) {
                     color = power.getTextColor();
                     if(decoration_colors.size() < DECORATIONS.size() && !power.invisible) {

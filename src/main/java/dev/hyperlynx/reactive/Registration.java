@@ -25,6 +25,7 @@ import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -103,7 +104,6 @@ public class Registration {
         POTIONS.register(bus);
         PARTICLES.register(bus);
         BLOCK_ENTITY_TYPES.register(bus);
-        Powers.POWERS.register(bus);
         COMPONENT_TYPES.register(bus);
         ENCHANTMENT_COMPONENT_TYPES.register(bus);
         CRITERIA_TRIGGERS.register(bus);
@@ -688,7 +688,7 @@ public class Registration {
 //        if(ModList.get().isLoaded("create")){
 //            ReactiveCreatePlugin.init();
 //        }
-        if(ModList.get().isLoaded("kubejs")){
+        if(ModList.get().isLoaded("kubejs")) {
             NeoForge.EVENT_BUS.register(EventTransceiver.class);
         }
     }

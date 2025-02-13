@@ -28,7 +28,7 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     private Power getPower(ResourceLocation location){
         try{
-            return Powers.POWER_REGISTRY.get(location);
+            return Powers.get(location);
         } catch (NullPointerException e) {
             throw new KubeScriptException("Power " + location + " does not exist!");
         }

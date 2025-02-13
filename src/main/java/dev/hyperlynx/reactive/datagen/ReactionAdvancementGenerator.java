@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /*
-Automatically generates advancements for each reaction with a defined FlagCriterion!
+Automatically generates advancements for each reaction using the reaction and perfect_reaction criteria
  */
 public class ReactionAdvancementGenerator implements AdvancementProvider.AdvancementGenerator {
     private static final List<String> aliases = new ArrayList<>();

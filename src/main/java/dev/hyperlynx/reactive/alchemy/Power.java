@@ -1,12 +1,17 @@
 package dev.hyperlynx.reactive.alchemy;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
+import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -17,10 +22,12 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -35,7 +42,14 @@ public class Power {
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
 
-    public static final Codec<Power> CODEC;
+    public static final Codec<Power> CODEC = RecordCodecBuilder.create((instance) ->
+            instance.group(
+                    ResourceLocation.CODEC.fieldOf("location").forGetter(Power::getResourceLocation),
+                    Color.CODEC.fieldOf("color").forGetter(Power::getColor),
+                    Block.CODEC.fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
+                    ItemStack.ITEM_NON_AIR_CODEC.optionalFieldOf("bottle").forGetter(Power::getBottleItem)
+            ).apply(instance, Power::new)
+    );
 
     public Power(String id, int color, Block render_water_block, Item bottle){
         this.location = ReactiveMod.location(id);
@@ -74,6 +88,15 @@ public class Power {
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
+    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Holder<Item>> possible_bottle_holder) {
+        this.location = location;
+        this.render_water_block = render_water_block;
+        this.color = color;
+        this.bottle = possible_bottle_holder.orElse(Holder.direct(null)).value();
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+    }
+
     public TagKey<Item> getSourceTag(){
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
@@ -86,7 +109,7 @@ public class Power {
     public static Power readPower(CompoundTag tag, String power_key){
         String rl = tag.getString(power_key);
         var location = ResourceLocation.parse(rl);
-        return Powers.POWER_REGISTRY.get(location);
+        return Powers.get(location);
     }
 
     public Color getColor(){
@@ -112,9 +135,9 @@ public class Power {
     }
 
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
-    public static List<Power> getSourcePower(ItemStack i) {
+    public static List<Power> getSourcePower(RegistryAccess access, ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        Powers.POWER_REGISTRY.stream().forEach((power) -> {
+        Powers.stream().forEach((power) -> {
             if (i.is(power.getSourceTag()))
                 stack_powers.add(power);
         });
@@ -144,6 +167,12 @@ public class Power {
         return ItemStack.EMPTY;
     }
 
+    public Optional<Holder<Item>> getBottleItem() {
+        if(hasBottle())
+            return Optional.of(Holder.direct(bottle));
+        return Optional.empty();
+    }
+
     @Override
     public String toString(){
         return name;
@@ -152,6 +181,5 @@ public class Power {
     static{
         RESOURCE_KEY_CODEC = ResourceKey.codec(Powers.POWER_REGISTRY_KEY);
         RESOURCE_KEY_STREAM_CODEC = ResourceKey.streamCodec(Powers.POWER_REGISTRY_KEY);
-        CODEC = RESOURCE_KEY_CODEC.xmap(Powers.POWER_REGISTRY::get, (power) -> Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow());
     }
 }

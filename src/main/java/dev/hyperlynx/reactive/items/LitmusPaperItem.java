@@ -130,7 +130,7 @@ public class LitmusPaperItem extends Item {
     private void showScreen(Player player, LitmusMeasurement measurement) {
         if(player instanceof ServerPlayer splayer) {
             if(measurement.measurements().stream().anyMatch(line ->
-                    Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
+                    Objects.equals(line.power(), Powers.OMEN_POWER.key()))){
                 Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
             }
             List<Component> reaction_text = new ArrayList<>();
@@ -147,7 +147,7 @@ public class LitmusPaperItem extends Item {
             if(power_level == 0)
                 continue;
 
-            lines.add(new LitmusMeasurement.Line(Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow(),
+            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry().getResourceKey(power).orElseThrow(),
                     power.getName().toUpperCase() + " - " + getPercent(power_level)
             ));
         }
@@ -182,7 +182,7 @@ public class LitmusPaperItem extends Item {
                 for(LitmusMeasurement.Line line : measurement.measurements()){
                     TextColor color = TextColor.fromRgb(0xFFFFFF);
                     if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                        Power power = Powers.POWER_REGISTRY.get(line.power());
+                        Power power = Powers.get(line.power());
                         if(power != null) {
                             color = power.getTextColor();
                         }
