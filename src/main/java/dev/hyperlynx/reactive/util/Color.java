@@ -16,27 +16,20 @@ public class Color {
         blue = ((color & 0xFF));
     }
 
-    public Color() {}
+    public Color(){
 
-    public Color(int red, int green, int blue){
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
-        hex = red << 16 | green << 8 | blue;
     }
 
     public void reset(){
         red = 0;
         green = 0;
         blue = 0;
-        hex = 0;
     }
 
     public void set(Color to){
         red = to.red;
         green = to.green;
         blue = to.blue;
-        hex = to.hex;
     }
 
     @Override
@@ -48,24 +41,13 @@ public class Color {
         return obj_equals;
     }
 
-    public int red(){
-        return red;
-    }
-    public int green(){
-        return green;
-    }
-    public int blue(){
-        return blue;
-    }
-    public int hex(){
+    public int getHex(){
         return hex;
     }
 
     public static Codec<Color> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
-                    Codec.INT.fieldOf("red").forGetter(Color::red),
-                    Codec.INT.fieldOf("green").forGetter(Color::green),
-                    Codec.INT.fieldOf("blue").forGetter(Color::blue)
+                    Codec.INT.fieldOf("hex").forGetter(Color::getHex)
             ).apply(instance, Color::new)
     );
 }
