@@ -58,7 +58,7 @@ public class ReactiveCommand {
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
-                                .then(Commands.argument("power_id", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
+                                .then(Commands.argument("power", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
@@ -67,7 +67,7 @@ public class ReactiveCommand {
                                 )))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
-                                .then(Commands.argument("power_id", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
+                                .then(Commands.argument("power", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
