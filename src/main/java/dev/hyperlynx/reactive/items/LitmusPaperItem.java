@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -147,7 +148,7 @@ public class LitmusPaperItem extends Item {
             if(power_level == 0)
                 continue;
 
-            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry(crucible.getLevel().registryAccess()).getResourceKey(power).orElseThrow(),
+            lines.add(new LitmusMeasurement.Line(ResourceKey.create(Powers.POWER_REGISTRY_KEY, power.getResourceLocation()),
                     power.getName().toUpperCase() + " - " + getPercent(power_level)
             ));
         }
