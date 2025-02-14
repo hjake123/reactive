@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
@@ -185,6 +186,19 @@ public class Power {
     @Override
     public String toString(){
         return name;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(location);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Power other){
+            return other.location.equals(this.location);
+        }
+        return super.equals(obj);
     }
 
     static{
