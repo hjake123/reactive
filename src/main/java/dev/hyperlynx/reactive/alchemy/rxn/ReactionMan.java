@@ -11,7 +11,6 @@ import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -73,30 +72,29 @@ public class ReactionMan {
         ReactionAdvancementGenerator.add("chomp");
     }
 
-    public List<Reaction> getReactions(Level level){
+    public List<Reaction> getReactions(RegistryAccess access){
         if(!initialized){
-            constructReactions(level);
+            constructReactions(access);
         }
         return REACTIONS.values().stream().toList();
     }
 
-    public List<String> getReactionAliases(Level level){
+    public List<String> getReactionAliases(RegistryAccess access){
         if(!initialized){
-            constructReactions(level);
+            constructReactions(access);
         }
         return REACTIONS.keySet().stream().toList();
     }
 
-    public Reaction get(String alias, Level level){
+    public Reaction get(String alias, RegistryAccess access){
         if(!initialized){
-            constructReactions(level);
+            constructReactions(access);
         }
         return REACTIONS.get(alias);
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    private void constructReactions(Level level){
-        RegistryAccess access = level.registryAccess();
+    private void constructReactions(RegistryAccess access){
         if(initializer_lock)
             return;
         initializer_lock = true;
@@ -201,7 +199,7 @@ public class ReactionMan {
         REACTIONS.add(new WindBombReaction("wind_bomb", access));
         REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, null, Powers.FLOW_POWER.get(access), Powers.LIGHT_POWER.get(access)).setStimulus(Reaction.Stimulus.ELECTRIC));
 
-        NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
+        NeoForge.EVENT_BUS.post(new ReactionConstructEvent(access));
 
         initialized = true;
         initializer_lock = false;
@@ -228,9 +226,9 @@ public class ReactionMan {
      * You can add new reactions using ReactionMan.addReactions().
      */
     public static class ReactionConstructEvent extends Event {
-        public Level level;
-        public ReactionConstructEvent(Level level){
-            this.level = level;
+        public RegistryAccess access;
+        public ReactionConstructEvent(RegistryAccess access){
+            this.access = access;
         }
     }
 

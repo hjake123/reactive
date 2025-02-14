@@ -11,10 +11,7 @@ import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -27,7 +24,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +46,8 @@ public class Power {
             instance.group(
                     ResourceLocation.CODEC.fieldOf("location").forGetter(Power::getResourceLocation),
                     Color.CODEC.fieldOf("color").forGetter(Power::getColor),
-                    BuiltInRegistries.BLOCK.byNameCodec().fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
-                    BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle").forGetter(Power::getBottleItem)
+                    Block.CODEC.fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
+                    ItemStack.ITEM_NON_AIR_CODEC.optionalFieldOf("bottle").forGetter(Power::getBottleItem)
             ).apply(instance, Power::new)
     );
 
@@ -92,11 +88,11 @@ public class Power {
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
-    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Item> possible_bottle) {
+    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Holder<Item>> possible_bottle_holder) {
         this.location = location;
         this.render_water_block = render_water_block;
         this.color = color;
-        this.bottle = possible_bottle.orElse(null);
+        this.bottle = possible_bottle_holder.orElse(Holder.direct(null)).value();
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
@@ -174,9 +170,9 @@ public class Power {
         return ItemStack.EMPTY;
     }
 
-    public Optional<Item> getBottleItem() {
+    public Optional<Holder<Item>> getBottleItem() {
         if(hasBottle())
-            return Optional.of(bottle);
+            return Optional.of(Holder.direct(bottle));
         return Optional.empty();
     }
 
