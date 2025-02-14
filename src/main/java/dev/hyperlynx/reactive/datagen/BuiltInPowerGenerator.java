@@ -35,7 +35,7 @@ public class BuiltInPowerGenerator {
 
                     bootstrap.register(
                             Powers.WARP_KEY,
-                            new Power("light", 0xF6DAB4, Registration.DUMMY_MAGIC_WATER.get(), Registration.LIGHT_BOTTLE.get())
+                            new Power("warp", 0x118066, Registration.DUMMY_NOISE_WATER.get(),Registration.WARP_BOTTLE.get())
                     );
 
                     bootstrap.register(
