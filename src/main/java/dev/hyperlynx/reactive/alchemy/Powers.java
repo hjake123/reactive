@@ -1,28 +1,18 @@
 package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.*;
-import org.checkerframework.checker.units.qual.A;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.awt.image.PackedColorModel;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -62,24 +52,30 @@ public class Powers {
     public static final ResourceKey<Power> OMEN_KEY = ResourceKey.create(POWER_REGISTRY_KEY, ReactiveMod.location("omen"));
     public static final ResourceKey<Power> ASTRAL_KEY = ResourceKey.create(POWER_REGISTRY_KEY, ReactiveMod.location("astral"));
 
+    private static final HolderOwner<Power> POWER_OWNER = new HolderOwner<>() {
+        @Override
+        public boolean canSerializeIn(@NotNull HolderOwner<Power> owner) {
+            return HolderOwner.super.canSerializeIn(owner);
+        }
+    };
 
     // These holders are used to actually access the Powers by the mod.
-    public static final DeferredHolder<Power, Power> BLAZE_POWER = DeferredHolder.create(BLAZE_KEY);
-    public static final DeferredHolder<Power, Power> SOUL_POWER = DeferredHolder.create(SOUL_KEY);
-    public static final DeferredHolder<Power, Power> MIND_POWER = DeferredHolder.create(MIND_KEY);
-    public static final DeferredHolder<Power, Power> LIGHT_POWER = DeferredHolder.create(LIGHT_KEY);
-    public static final DeferredHolder<Power, Power> WARP_POWER = DeferredHolder.create(WARP_KEY);
-    public static final DeferredHolder<Power, Power> VITAL_POWER = DeferredHolder.create(VITAL_KEY);
-    public static final DeferredHolder<Power, Power> CURSE_POWER = DeferredHolder.create(CURSE_KEY);
-    public static final DeferredHolder<Power, Power> VERDANT_POWER = DeferredHolder.create(VERDANT_KEY);
-    public static final DeferredHolder<Power, Power> BODY_POWER = DeferredHolder.create(BODY_KEY);
-    public static final DeferredHolder<Power, Power> ACID_POWER = DeferredHolder.create(ACID_KEY);
-    public static final DeferredHolder<Power, Power> X_POWER = DeferredHolder.create(X_KEY);
-    public static final DeferredHolder<Power, Power> Y_POWER = DeferredHolder.create(Y_KEY);
-    public static final DeferredHolder<Power, Power> Z_POWER = DeferredHolder.create(Z_KEY);
-    public static final DeferredHolder<Power, Power> FLOW_POWER = DeferredHolder.create(FLOW_KEY);
-    public static final DeferredHolder<Power, Power> OMEN_POWER = DeferredHolder.create(OMEN_KEY);
-    public static final DeferredHolder<Power, Power> ASTRAL_POWER = DeferredHolder.create(ASTRAL_KEY);
+    public static final PowerHolder BLAZE_POWER = new PowerHolder(BLAZE_KEY);
+    public static final PowerHolder SOUL_POWER = new PowerHolder(SOUL_KEY);
+    public static final PowerHolder MIND_POWER = new PowerHolder(MIND_KEY);
+    public static final PowerHolder LIGHT_POWER = new PowerHolder(LIGHT_KEY);
+    public static final PowerHolder WARP_POWER = new PowerHolder(WARP_KEY);
+    public static final PowerHolder VITAL_POWER = new PowerHolder(VITAL_KEY);
+    public static final PowerHolder CURSE_POWER = new PowerHolder(CURSE_KEY);
+    public static final PowerHolder VERDANT_POWER = new PowerHolder(VERDANT_KEY);
+    public static final PowerHolder BODY_POWER = new PowerHolder(BODY_KEY);
+    public static final PowerHolder ACID_POWER = new PowerHolder(ACID_KEY);
+    public static final PowerHolder X_POWER = new PowerHolder(X_KEY);
+    public static final PowerHolder Y_POWER = new PowerHolder(Y_KEY);
+    public static final PowerHolder Z_POWER = new PowerHolder(Z_KEY);
+    public static final PowerHolder FLOW_POWER = new PowerHolder(FLOW_KEY);
+    public static final PowerHolder OMEN_POWER = new PowerHolder(OMEN_KEY);
+    public static final PowerHolder ASTRAL_POWER = new PowerHolder(ASTRAL_KEY);
 
     public static Registry<Power> getPowerRegistry(RegistryAccess access){
         Optional<Registry<Power>> possible_power_registry = access.registry(POWER_REGISTRY_KEY);
@@ -113,4 +109,32 @@ public class Powers {
     public static List<Power> list(RegistryAccess access){
         return stream(access).toList();
     }
+
+    // We know JSON is loaded by the time the world loads, and that nothing needs these power holders before then,
+    // so binding them at level load makes sense.
+    // TODO: Test /reload!
+    public static void bindOnLoad(LevelEvent.Load event){
+        PowerHolder.bindAllInstances(event.getLevel().registryAccess());
+    }
+
+    public static class PowerHolder extends Holder.Reference<Power> {
+        private static final List<PowerHolder> INSTANCE_LIST = new ArrayList<>();
+
+        protected PowerHolder(@Nullable ResourceKey<Power> key) {
+            super(Type.STAND_ALONE, POWER_OWNER, key, null);
+            INSTANCE_LIST.add(this);
+        }
+
+        public Power get(){
+            return this.value();
+        }
+
+        // Fine, I'll defer the holder myself!
+        public static void bindAllInstances(RegistryAccess access) {
+            for(PowerHolder holder : INSTANCE_LIST){
+                holder.bindValue(Powers.get(holder.key(), access));
+            }
+        }
+    }
+
 }

@@ -23,6 +23,7 @@ public class ReactiveMod
         Registration.init(reactive_bus);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
         NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
+        NeoForge.EVENT_BUS.addListener(Powers::bindOnLoad);
         container.registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         container.registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         container.registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
