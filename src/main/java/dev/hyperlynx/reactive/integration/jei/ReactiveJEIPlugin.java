@@ -67,7 +67,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerIngredients(IModIngredientRegistration registration) {
-        registration.register(POWER_TYPE, Powers.list(Minecraft.getInstance().getConnection().registryAccess()), POWER_HANDLER, POWER_RENDERER, Power.CODEC);
+        registration.register(POWER_TYPE, Powers.list(), POWER_HANDLER, POWER_RENDERER, Power.CODEC);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
         if(!ConfigMan.CLIENT.listPowersAsIngredients.get())
-            registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.list(Minecraft.getInstance().getConnection().registryAccess()));
+            registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.list());
         addComposterRecipes(registration);
         addPowerBottleRecipes(registration);
         if(ConfigMan.CLIENT.showPowerSources.get())
@@ -94,8 +94,8 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addPowerBottleRecipes(IRecipeRegistration registration){
-        registration.addRecipes(POWER_BOTTLE_CATEGORY.getRecipeType(), Powers.stream(Minecraft.getInstance().getConnection().registryAccess())
-                .map((power ->  power.hasBottle() ? new PowerBottleRecipe("power_bottles", power.getResourceKey()) : null)).filter((recipe) -> !(recipe == null)).toList());
+        registration.addRecipes(POWER_BOTTLE_CATEGORY.getRecipeType(), Powers.stream()
+                .map((power ->  power.hasBottle() ? new PowerBottleRecipe("power_bottles", power) : null)).filter((recipe) -> !(recipe == null)).toList());
     }
 
     // TODO: this is bad! and slow!
@@ -141,7 +141,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addPowerDescriptions(IRecipeRegistration registration){
-        for(Power power : Powers.list(Minecraft.getInstance().getConnection().registryAccess())){
+        for(Power power : Powers.list()){
             registration.addIngredientInfo(power, POWER_TYPE, Component.translatable("jei.reactive.power"));
         }
     }

@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.alchemy;
 
-import net.minecraft.core.RegistryAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -12,7 +11,6 @@ public interface PowerBearer {
     boolean expendPower(Power t, int amount);
     void expendAnyPowerExcept(Power immune_power, int amount);
     void expendPower();
-    RegistryAccess access();
 
     int maxPower();
 

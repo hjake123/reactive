@@ -103,7 +103,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             VertexConsumer consumer = buffer_source.getBuffer(Sheets.translucentCullBlockSheet());
             renderIcon(pose_stack, consumer, sprite, color, crucible.getOpacity(), overlay, light);
 
-            if(crucible.getPowerLevel(Powers.ASTRAL_POWER.getOnClient()) > 0){
+            if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0){
                 pose_stack.translate(0, 0, 0.05);
                 consumer = buffer_source.getBuffer(RenderType.endPortal());
                 renderEndPortalWater(pose_stack, consumer, overlay, light);

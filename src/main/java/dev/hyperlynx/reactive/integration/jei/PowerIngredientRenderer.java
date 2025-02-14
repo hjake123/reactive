@@ -24,7 +24,7 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
     public void render(GuiGraphics gui, Power ingredient) {
         TextureAtlasSprite sprite = getSprite(ingredient);
         Color color = ingredient.getColor();
-        if(ingredient == Powers.ASTRAL_POWER.getOnClient()){
+        if(ingredient == Powers.ASTRAL_POWER.get()){
             gui.fill(RenderType.END_GATEWAY, 0, 0, 16, 16, 0);
         } else if(!ingredient.invisible) {
             gui.fill(0, 0, 16, 16, 0xEE000000 | color.hex);

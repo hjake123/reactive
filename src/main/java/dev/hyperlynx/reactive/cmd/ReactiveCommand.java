@@ -13,19 +13,14 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
-import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.ResourceArgument;
-import net.minecraft.commands.arguments.ResourceKeyArgument;
-import net.minecraft.commands.arguments.ResourceOrTagKeyArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,20 +55,20 @@ public class ReactiveCommand {
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
-                                .then(Commands.argument("power_id", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
+                                .then(Commands.argument("power_id", PowerArgumentType.power())
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
-                                        context.getArgument("power_id", ResourceKey.class),
+                                        context.getArgument("power_id", ResourceLocation.class),
                                         context.getArgument("amount", Integer.class), false)
                                 )))))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
-                                .then(Commands.argument("power_id", ResourceKeyArgument.key(Powers.POWER_REGISTRY_KEY))
+                                .then(Commands.argument("power_id", PowerArgumentType.power())
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
-                                        context.getArgument("power_id", ResourceKey.class),
+                                        context.getArgument("power_id", ResourceLocation.class),
                                         context.getArgument("amount", Integer.class), true)
                                 )))))
                 );
@@ -86,7 +81,7 @@ public class ReactiveCommand {
         return 1;
     }
 
-    private static int modifyPower(CommandSourceStack source, WorldCoordinates crucible_location, ResourceKey<Power> power_key, Integer amount, boolean remove) throws CommandSyntaxException {
+    private static int modifyPower(CommandSourceStack source, WorldCoordinates crucible_location, ResourceLocation power_location, Integer amount, boolean remove) throws CommandSyntaxException {
         BlockPos pos = crucible_location.getBlockPos(source);
         ServerLevel level = source.getLevel();
 
@@ -98,7 +93,7 @@ public class ReactiveCommand {
             throw ERROR_NO_CRUCIBLE.create();
         }
 
-        Power power = Powers.get(power_key, level.registryAccess());
+        Power power = Powers.get(power_location);
         if(power == null){
             throw ERROR_FAKE_POWER.create();
         }
@@ -128,9 +123,9 @@ public class ReactiveCommand {
         if(!source.isPlayer()){
             throw ERROR_NO_PLAYER.create();
         }
-        List<String> aliases = ReactiveMod.REACTION_MAN.getReactionAliases(source.registryAccess());
+        List<String> aliases = ReactiveMod.REACTION_MAN.getReactionAliases();
         aliases.stream().sorted().forEach((alias) -> {
-            Reaction reaction = ReactiveMod.REACTION_MAN.get(alias, source.registryAccess());
+            Reaction reaction = ReactiveMod.REACTION_MAN.get(alias);
             source.sendSuccess(() -> Component.literal(alias + " : " + reaction.getName().getString()), true);
         });
         return 1;
@@ -139,6 +134,7 @@ public class ReactiveCommand {
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event){
         if(ConfigMan.COMMON.registerCommand.get()){
+            ArgumentTypeInfos.registerByClass(PowerArgumentType.class, Registration.POWER_ARGUMENT.value());
             ReactiveCommand.register(event.getDispatcher());
         }
     }

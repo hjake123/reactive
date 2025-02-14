@@ -116,8 +116,8 @@ public abstract class Reaction {
         }
         boolean met_conditions = checkStimulus(reactor);
         if(met_conditions) {
-            if(reactor.getPowerLevel(Powers.BODY_POWER.get(reactor)) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
-            && !(reagents.containsKey(Powers.BODY_POWER.get(reactor)))) {
+            if(reactor.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
+            && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
             }
             return Status.REACTING;

@@ -8,7 +8,6 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -22,7 +21,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     public static final MapCodec<PrecipitateRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(PrecipitateRecipe::getGroup),
             ItemStack.CODEC.fieldOf("product").forGetter(PrecipitateRecipe::getProduct),
-            Power.RESOURCE_KEY_CODEC.listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
+            Powers.getPowerRegistry().byNameCodec().listOf().fieldOf("reagents").forGetter(PrecipitateRecipe::getReagents),
             Codec.INT.fieldOf("min").forGetter(PrecipitateRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(PrecipitateRecipe::getCost),
             Codec.INT.fieldOf("reagent_count").forGetter(PrecipitateRecipe::getReagentCount),
@@ -43,7 +42,11 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
 
     public static @NotNull PrecipitateRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
-        List<ResourceKey<Power>> reagents = buffer.readCollection(ArrayList::new, (buff) -> buff.readResourceKey(Powers.POWER_REGISTRY_KEY));
+        List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
+        List<Power> reagents = new ArrayList<>();
+        for(var location : reagent_locations){
+            reagents.add(Powers.get(location));
+        }
         int min = buffer.readInt();
         int cost = buffer.readInt();
         int reagent_count = buffer.readInt();
@@ -53,7 +56,7 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
 
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull PrecipitateRecipe recipe) {
         ItemStack.STREAM_CODEC.encode(buffer, recipe.product);
-        buffer.writeCollection(recipe.reagents, FriendlyByteBuf::writeResourceKey);
+        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
         buffer.writeInt(recipe.minimum);
         buffer.writeInt(recipe.cost);
         buffer.writeInt(recipe.reagent_count);
@@ -61,4 +64,3 @@ public class PrecipitateRecipeSerializer implements RecipeSerializer<Precipitate
     }
 
 }
-;

@@ -64,7 +64,7 @@ public class LitmusPaperItem extends Item {
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
         if(player instanceof ServerPlayer splayer){
             if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
-                return ReactiveMod.REACTION_MAN.get(reaction_alias, player.level().registryAccess()).getName();
+                return ReactiveMod.REACTION_MAN.get(reaction_alias).getName();
             else
                 return Component.translatable("reaction.reactive.unknown");
         }
@@ -147,7 +147,7 @@ public class LitmusPaperItem extends Item {
             if(power_level == 0)
                 continue;
 
-            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry(crucible.getLevel().registryAccess()).getResourceKey(power).orElseThrow(),
+            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry().getResourceKey(power).orElseThrow(),
                     power.getName().toUpperCase() + " - " + getPercent(power_level)
             ));
         }
@@ -182,11 +182,11 @@ public class LitmusPaperItem extends Item {
                 for(LitmusMeasurement.Line line : measurement.measurements()){
                     TextColor color = TextColor.fromRgb(0xFFFFFF);
                     if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                        Power power = Powers.getOnClient(line.power());
+                        Power power = Powers.get(line.power());
                         if(power != null) {
                             color = power.getTextColor();
                         }
-                        if(power == Powers.OMEN_POWER.getOnClient() && player instanceof ServerPlayer splayer){
+                        if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
                             Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
                         }
                     }

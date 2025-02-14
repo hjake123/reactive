@@ -19,19 +19,19 @@ public class AstralReaction extends Reaction{
     @Override
     public void run(Reactor reactor) {
         super.run(reactor);
-        reactor.addPower(Powers.ASTRAL_POWER.get(reactor), reactor.maxPower());
-        reactor.expendPower(Powers.CURSE_POWER.get(reactor), WorldSpecificValues.CURSE_RATE.get() + 4);
+        reactor.addPower(Powers.ASTRAL_POWER.get(), reactor.maxPower());
+        reactor.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get() + 4);
     }
 
     @Override
     public void render(final Level level, final Reactor reactor) {
-        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get(reactor)) < reactor.getTotalPowerLevel())
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
             ParticleScribe.drawParticleRing(level, Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
     }
 
     @Override
     public Status conditionsMet(Reactor reactor){
-        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get(reactor)) > 0)
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
             return Status.REACTING;
         return Status.STABLE;
     }

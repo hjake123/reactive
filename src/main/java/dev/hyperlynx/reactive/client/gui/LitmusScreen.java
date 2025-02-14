@@ -184,11 +184,11 @@ public class LitmusScreen extends Screen {
         for(LitmusMeasurement.Line line : measurement.measurements()){
             TextColor color = TextColor.fromRgb(0xFFFFFF);
             if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                Power power = Powers.getOnClient(line.power());
+                Power power = Powers.get(line.power());
                 if(power != null) {
                     color = power.getTextColor();
                     if(decoration_colors.size() < DECORATIONS.size() && !power.invisible) {
-                        if(power.equals(Powers.ASTRAL_POWER.getOnClient())){
+                        if(power.equals(Powers.ASTRAL_POWER.get())){
                             // As a special signal, an entry with -1 color signifies ASTRAL.
                             decoration_colors.add(new Color(-1));
                         } else {

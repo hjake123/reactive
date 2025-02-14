@@ -13,7 +13,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -53,9 +52,9 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PowerBottleRecipe recipe, IFocusGroup focus_group) {
         IRecipeSlotBuilder bottle_slot = slot_manager.buildSlot(builder, "bottle", RecipeIngredientRole.INPUT);
-        bottle_slot.addIngredients(recipe.bottle(Minecraft.getInstance().getConnection().registryAccess()));
+        bottle_slot.addIngredients(recipe.bottle);
         IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power", RecipeIngredientRole.INPUT);
-        power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power(Minecraft.getInstance().getConnection().registryAccess())));
+        power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
 
     }
 

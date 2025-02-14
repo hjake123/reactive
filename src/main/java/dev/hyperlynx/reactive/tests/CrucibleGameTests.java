@@ -33,7 +33,7 @@ public class CrucibleGameTests {
             if(!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity crucible)){
                 throw new GameTestAssertException("Crucible has wrong block entity");
             }
-            helper.assertTrue(crucible.getPowerLevel(Powers.MIND_POWER.get(helper.getLevel())) > 0, "No power was added");
+            helper.assertTrue(crucible.getPowerLevel(Powers.MIND_POWER.get()) > 0, "No power was added");
             helper.succeed();
         });
     }
@@ -93,7 +93,7 @@ public class CrucibleGameTests {
         if (!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity crucible)) {
             throw new GameTestAssertException("Crucible has wrong block entity");
         }
-        crucible.addPower(Powers.ASTRAL_POWER.get(helper.getLevel()), 100);
+        crucible.addPower(Powers.ASTRAL_POWER.get(), 100);
         helper.runAfterDelay(50, () -> {
             List<ReactionStatusEntry> statuses = crucible.getReactionStatus();
             if (statuses.isEmpty()) {

@@ -22,7 +22,6 @@ import java.awt.image.PackedColorModel;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 // Registers the Alchemical Powers.
@@ -62,16 +61,28 @@ public class Powers {
     public static final PowerDefinition OMEN_POWER = new PowerDefinition(ResourceKey.create(POWER_REGISTRY_KEY, ReactiveMod.location("omen")));
     public static final PowerDefinition ASTRAL_POWER = new PowerDefinition(ResourceKey.create(POWER_REGISTRY_KEY, ReactiveMod.location("astral")));
 
-    public static Registry<Power> getPowerRegistry(RegistryAccess access) {
-        Optional<Registry<Power>> possible_power_registry = access.registry(POWER_REGISTRY_KEY);
+    // EXPERIMENTAL
+    // What if I were to capture an instance of RegistryAccess and hold it here for my own reference?
+    // Ohoho, delightfully devilish, Hyperlynx~
+    private static RegistryAccess REGISTRY_ACCESS;
+    private static boolean access_captured = false;
+
+    // Sets the registry access
+    public static void worldLoad(LevelEvent.Load event){
+        REGISTRY_ACCESS = event.getLevel().registryAccess();
+        access_captured = true;
+    }
+
+    public static Registry<Power> getPowerRegistry(){
+        Optional<Registry<Power>> possible_power_registry = REGISTRY_ACCESS.registry(POWER_REGISTRY_KEY);
         if(possible_power_registry.isEmpty()){
             throw new RuntimeException("Couldn't load Power registry!");
         }
         return possible_power_registry.get();
     }
 
-    public static Power get(ResourceKey<Power> key, RegistryAccess access){
-        Registry<Power> power_registry = getPowerRegistry(access);
+    public static Power get(ResourceKey<Power> key){
+        Registry<Power> power_registry = getPowerRegistry();
 
         if(!power_registry.containsKey(key)){
             ReactiveMod.LOGGER.error("Power {} did not exist in the registry!", key);
@@ -79,42 +90,25 @@ public class Powers {
         return power_registry.get(key);
     }
 
-    public static Power getOnClient(ResourceKey<Power> key) {
-        return get(key, Minecraft.getInstance().getConnection().registryAccess());
+    public static Power get(ResourceLocation location) {
+        return get(ResourceKey.create(POWER_REGISTRY_KEY, location));
     }
 
-    public static Power get(ResourceLocation location, RegistryAccess access) {
-        return get(ResourceKey.create(POWER_REGISTRY_KEY, location), access);
+    public static Stream<Power> stream(){
+        return getPowerRegistry().stream();
     }
 
-    public static Power getOnClient(ResourceLocation location) {
-        return get(location, Minecraft.getInstance().getConnection().registryAccess());
-    }
-
-    public static Stream<Power> stream(RegistryAccess access){
-        return getPowerRegistry(access).stream();
-    }
-
-    public static List<Power> list(RegistryAccess access){
-        return stream(access).toList();
+    public static List<Power> list(){
+        return stream().toList();
     }
 
     // A definition for one of the built-in Powers, made for ease of use.
     public record PowerDefinition(ResourceKey<Power> key) {
-        public Power get(RegistryAccess access) {
-            return Powers.getPowerRegistry(access).get(key);
-        }
-
-        public Power get(PowerBearer bearer) {
-            return Powers.getPowerRegistry(bearer.access()).get(key);
-        }
-
-        public Power get(Level level) {
-            return Powers.getPowerRegistry(level.registryAccess()).get(key);
-        }
-
-        public Power getOnClient() {
-            return Powers.getPowerRegistry(Minecraft.getInstance().getConnection().registryAccess()).get(key);
+        public Power get() {
+            if(!access_captured){
+                throw new RuntimeException("Tried to get a power before world load!");
+            }
+            return Powers.getPowerRegistry().get(key);
         }
     }
 }

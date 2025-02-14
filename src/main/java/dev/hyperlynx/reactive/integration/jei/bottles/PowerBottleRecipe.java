@@ -2,34 +2,25 @@ package dev.hyperlynx.reactive.integration.jei.bottles;
 
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class PowerBottleRecipe implements Recipe<RecipeInput> {
     protected final String group;
-    protected final ResourceKey<Power> power_key;
+    protected final Ingredient bottle;
+    protected final Power power;
 
-    public PowerBottleRecipe(String group, ResourceKey<Power> key) {
+    public PowerBottleRecipe(String group, Power power) {
         this.group = group;
-        this.power_key = key;
-    }
-
-    public Power power(RegistryAccess access) {
-        return Powers.get(power_key, access);
-    }
-
-    public Ingredient bottle(RegistryAccess access){
-        return Ingredient.of(power(access).getBottle());
+        this.bottle = Ingredient.of(power.getBottle());
+        this.power = power;
     }
 
     @Override
     public boolean matches(RecipeInput input, Level level) {
-        return power(level.registryAccess()).matchesBottle(input.getItem(0));
+        return power.matchesBottle(input.getItem(0));
     }
 
     @Override
@@ -64,7 +55,7 @@ public class PowerBottleRecipe implements Recipe<RecipeInput> {
         return true;
     }
 
-    public ResourceKey<Power> getPowerKey() {
-        return power_key;
+    public Power getPower() {
+        return power;
     }
 }
