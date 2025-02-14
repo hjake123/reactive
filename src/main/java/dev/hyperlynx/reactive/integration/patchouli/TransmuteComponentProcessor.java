@@ -38,7 +38,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
                 return IVariable.wrap(Component.translatable("docs.reactive.removed_recipe").getString(), level.registryAccess());
             }
             List<String> reagent_list = new ArrayList<>();
-            for(Power reagent : recipe.getReagents()){
+            for(Power reagent : recipe.getReagents(level.registryAccess())){
                 reagent_list.add(reagent.getName());
             }
 

@@ -2,7 +2,6 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -15,6 +14,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -78,33 +78,34 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
 
         IRecipeSlotBuilder output_slot = slot_manager.buildSlot(builder, "product", RecipeIngredientRole.OUTPUT);
         assert Minecraft.getInstance().level != null;
-        output_slot.addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
+        RegistryAccess access = Minecraft.getInstance().level.registryAccess();
+        output_slot.addItemStack(recipe.getResultItem(access));
 
-        switch (recipe.getReagents().size()) {
+        switch (recipe.getReagentKeys().size()) {
             case 1 -> {
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).getFirst());
             }
             case 2 -> {
                 IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "mid_left_reagent", RecipeIngredientRole.CATALYST);
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).getFirst());
 
                 IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "mid_right_reagent", RecipeIngredientRole.CATALYST);
-                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).get(1));
             }
             case 3 -> {
                 IRecipeSlotBuilder power_slotl = slot_manager.buildSlot(builder, "left_reagent", RecipeIngredientRole.CATALYST);
-                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().getFirst());
+                power_slotl.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).getFirst());
 
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(1));
+                power_slot.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).get(1));
 
                 IRecipeSlotBuilder power_slotr = slot_manager.buildSlot(builder, "right_reagent", RecipeIngredientRole.CATALYST);
-                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents().get(2));
+                power_slotr.addIngredient(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access).get(2));
             }
             default -> {
                 IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "center_reagent", RecipeIngredientRole.CATALYST);
-                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents());
+                power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, recipe.getReagents(access));
             }
         }
     }
@@ -116,7 +117,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
             drawElectricLabel(gui);
         }
         slot_manager.drawSlotBackgrounds(gui, List.of("reactant", "product"));
-        switch (holder.value().getReagents().size()) {
+        switch (holder.value().getReagentKeys().size()) {
             case 2 -> slot_manager.drawSlotBackgrounds(gui, List.of("mid_left_reagent", "mid_right_reagent"));
             case 3 -> slot_manager.drawSlotBackgrounds(gui, List.of("left_reagent", "center_reagent", "right_reagent"));
             default -> slot_manager.drawSlotBackground(gui, "center_reagent");

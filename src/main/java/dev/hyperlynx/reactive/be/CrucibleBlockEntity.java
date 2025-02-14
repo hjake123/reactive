@@ -487,7 +487,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
             if (recipe.matches(CrucibleRecipeInput.of(itemEntity.getItem(), crucible.getPowerMap()), level)) {
-                ItemStack result = recipe.apply(itemEntity.getItem(), crucible);
+                ItemStack result = recipe.apply(itemEntity.getItem(), crucible, level);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY()+0.6, pos.getZ() + 0.5, result));
                 crucible.setDirty(level, pos, state);
                 return true;
@@ -606,7 +606,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
         boolean changed = false;
-        for(Power p : Powers.list()){
+        for(Power p : Powers.list(crucible.getLevel().registryAccess())){
             if(p.matchesBottle(context.getBottle())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
                     if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
@@ -911,7 +911,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         powers.clear();
         if (power_list_tag != null && !power_list_tag.isEmpty()) {
             for (Tag power_tag : power_list_tag) {
-                Power p = Power.readPower((CompoundTag) power_tag);
+                Power p = Power.readPower((CompoundTag) power_tag, provider);
                 addPower(p, ((CompoundTag) power_tag).getInt("level"));
             }
         }else{

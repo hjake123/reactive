@@ -4,15 +4,11 @@ import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
-import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
-import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.components.BoundEntity;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
@@ -25,7 +21,6 @@ import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -659,9 +654,6 @@ public class Registration {
     // Register the new singular reaction criterion trigger.
     public static final DeferredHolder<CriterionTrigger<?>, ReactionTrigger> PERFECT_REACTION_TRIGGER = CRITERIA_TRIGGERS.register("perfect_reaction",
             ReactionTrigger::new);
-
-    public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
-            COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",

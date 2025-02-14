@@ -23,12 +23,12 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){
         Stream<Power> reagents = Arrays.stream(reagent_locations).map((location) -> getPower(ResourceLocation.parse(location)));
-        return new ReactionFactory(alias, custom_name, reagents.toList());
+        return new ReactionFactory(alias, custom_name, reagents.toList(), event.level);
     }
 
     private Power getPower(ResourceLocation location){
         try{
-            return Powers.get(location);
+            return Powers.get(location, event.level.registryAccess());
         } catch (NullPointerException e) {
             throw new KubeScriptException("Power " + location + " does not exist!");
         }

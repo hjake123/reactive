@@ -3,7 +3,11 @@ package dev.hyperlynx.reactive.recipes;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -18,12 +22,12 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
-    protected final List<Power> reagents;
+    protected final List<ResourceKey<Power>> reagents;
     int cost;
     int minimum;
     public boolean needs_electricity;
 
-    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
+    public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<ResourceKey<Power>> reagents, int min, int cost, boolean needs_electricity) {
         this.group = group;
         this.reactant = reactant;
         this.product = product;
@@ -37,25 +41,29 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
         return group;
     }
 
-    private boolean powerMet(CrucibleRecipeInput input){
+    private List<Holder.Reference<Power>> powerHolders(RegistryAccess access) {
+        return reagents.stream().map((key) -> access.lookup(Powers.POWER_REGISTRY_KEY).get().get(key).get()).toList();
+    }
+
+    private boolean powerMet(CrucibleRecipeInput input, RegistryAccess access){
         int power_level = 0;
         boolean has_all_reagents = true;
-        for(Power p : reagents) {
-            if(input.getPowerLevel(p) == 0){
+        for(Holder.Reference<Power> p : powerHolders(access)) {
+            if(input.getPowerLevel(p.value()) == 0){
                 has_all_reagents = false;
                 break;
             }
-            power_level += input.getPowerLevel(p);
+            power_level += input.getPowerLevel(p.value());
         }
         return has_all_reagents && power_level > minimum;
     }
 
-    public ItemStack apply(ItemStack input, PowerBearer bearer) {
+    public ItemStack apply(ItemStack input, PowerBearer bearer, Level level) {
         int max_tfs = Integer.MAX_VALUE;
         if(cost > 0) {
-            for (Power p : reagents) {
-                max_tfs = Math.min(max_tfs, (bearer.getPowerLevel(p) / (cost / reagents.size())));
-                bearer.expendPower(p, cost / reagents.size() * input.getCount());
+            for (Holder.Reference<Power> p : powerHolders(level.registryAccess())) {
+                max_tfs = Math.min(max_tfs, (bearer.getPowerLevel(p.value()) / (cost / reagents.size())));
+                bearer.expendPower(p.value(), cost / reagents.size() * input.getCount());
             }
         }
         ItemStack result = product.copy();
@@ -68,7 +76,7 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
         for(ItemStack i : reactant.getItems()) {
             if (input.getItem().is(i.getItem())) {
-                return powerMet(input);
+                return powerMet(input, level.registryAccess());
             }
         }
         return false;
@@ -90,7 +98,12 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
 
     public Ingredient getReactant(){ return reactant; }
 
-    public List<Power> getReagents(){ return reagents;}
+    public List<ResourceKey<Power>> getReagentKeys(){ return reagents; }
+
+    public List<Power> getReagents(RegistryAccess access) {
+        return reagents.stream().map((key) ->
+                Powers.getPowerRegistry(access).get(key)).toList();
+    }
 
     public int getCost(){ return cost; }
 

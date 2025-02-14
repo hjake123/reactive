@@ -64,7 +64,7 @@ public class LitmusPaperItem extends Item {
     private MutableComponent getReactionOrUnknownComponent(String reaction_alias, Player player){
         if(player instanceof ServerPlayer splayer){
             if(splayer.getAdvancements().getOrStartProgress(Advancement.Builder.advancement().build(ReactiveMod.location("reactions/"+reaction_alias))).isDone())
-                return ReactiveMod.REACTION_MAN.get(reaction_alias).getName();
+                return ReactiveMod.REACTION_MAN.get(reaction_alias, player.level()).getName();
             else
                 return Component.translatable("reaction.reactive.unknown");
         }
@@ -130,7 +130,7 @@ public class LitmusPaperItem extends Item {
     private void showScreen(Player player, LitmusMeasurement measurement) {
         if(player instanceof ServerPlayer splayer) {
             if(measurement.measurements().stream().anyMatch(line ->
-                    Objects.equals(line.power(), Powers.OMEN_POWER.key()))){
+                    Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
                 Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
             }
             List<Component> reaction_text = new ArrayList<>();
@@ -147,7 +147,7 @@ public class LitmusPaperItem extends Item {
             if(power_level == 0)
                 continue;
 
-            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry().getResourceKey(power).orElseThrow(),
+            lines.add(new LitmusMeasurement.Line(Powers.getPowerRegistry(crucible.getLevel().registryAccess()).getResourceKey(power).orElseThrow(),
                     power.getName().toUpperCase() + " - " + getPercent(power_level)
             ));
         }
@@ -182,7 +182,7 @@ public class LitmusPaperItem extends Item {
                 for(LitmusMeasurement.Line line : measurement.measurements()){
                     TextColor color = TextColor.fromRgb(0xFFFFFF);
                     if(ConfigMan.CLIENT.colorizeLitmusOutput.get()){
-                        Power power = Powers.get(line.power());
+                        Power power = Powers.get(line.power(), player.level().registryAccess());
                         if(power != null) {
                             color = power.getTextColor();
                         }

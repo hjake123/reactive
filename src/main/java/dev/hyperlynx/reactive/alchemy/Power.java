@@ -3,15 +3,19 @@ package dev.hyperlynx.reactive.alchemy;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
+import dev.hyperlynx.reactive.datagen.BuiltInPowerGenerator;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -46,8 +50,8 @@ public class Power {
             instance.group(
                     ResourceLocation.CODEC.fieldOf("location").forGetter(Power::getResourceLocation),
                     Color.CODEC.fieldOf("color").forGetter(Power::getColor),
-                    Block.CODEC.fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
-                    ItemStack.ITEM_NON_AIR_CODEC.optionalFieldOf("bottle").forGetter(Power::getBottleItem)
+                    BuiltInRegistries.BLOCK.byNameCodec().fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
+                    BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle").forGetter(Power::getBottleItem)
             ).apply(instance, Power::new)
     );
 
@@ -88,11 +92,11 @@ public class Power {
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
-    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Holder<Item>> possible_bottle_holder) {
+    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Item> possible_bottle_holder) {
         this.location = location;
         this.render_water_block = render_water_block;
         this.color = color;
-        this.bottle = possible_bottle_holder.orElse(Holder.direct(null)).value();
+        this.bottle = possible_bottle_holder.orElse(null);
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
@@ -102,14 +106,19 @@ public class Power {
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
-    public static Power readPower(CompoundTag tag){
-        return readPower(tag, "name");
+    public static Power readPower(CompoundTag tag, HolderLookup.Provider lookup_provider){
+        return readPower(tag, "name", lookup_provider);
     }
 
-    public static Power readPower(CompoundTag tag, String power_key){
+    public static Power readPower(CompoundTag tag, String power_key, HolderLookup.Provider lookup_provider){
         String rl = tag.getString(power_key);
         var location = ResourceLocation.parse(rl);
-        return Powers.get(location);
+        var potential_power = lookup_provider.lookup(Powers.POWER_REGISTRY_KEY).get().get(ResourceKey.create(Powers.POWER_REGISTRY_KEY, location));
+        if(potential_power.isEmpty()){
+            throw new RuntimeException("Tried to look up a power " + location.toString() + " that did not exist.");
+        }
+        var power_ref = potential_power.get();
+        return power_ref.value();
     }
 
     public Color getColor(){
@@ -137,7 +146,7 @@ public class Power {
     // Checks if the ItemStack is assigned any of the auto-assigned Power related tage, and if so, returns which power it is.
     public static List<Power> getSourcePower(RegistryAccess access, ItemStack i) {
         ArrayList<Power> stack_powers = new ArrayList<>();
-        Powers.stream().forEach((power) -> {
+        Powers.stream(access).forEach((power) -> {
             if (i.is(power.getSourceTag()))
                 stack_powers.add(power);
         });
@@ -167,9 +176,9 @@ public class Power {
         return ItemStack.EMPTY;
     }
 
-    public Optional<Holder<Item>> getBottleItem() {
+    public Optional<Item> getBottleItem() {
         if(hasBottle())
-            return Optional.of(Holder.direct(bottle));
+            return Optional.of(bottle);
         return Optional.empty();
     }
 

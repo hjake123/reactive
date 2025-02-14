@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.integration.jei.bottles;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin;
 import dev.hyperlynx.reactive.integration.jei.SlotManager;
 import mezz.jei.api.constants.VanillaTypes;
@@ -13,8 +14,10 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,10 +54,13 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PowerBottleRecipe recipe, IFocusGroup focus_group) {
+        var access = Minecraft.getInstance().getConnection().registryAccess();
+        var power = Powers.get(recipe.power_key, access);
+        var bottle = Ingredient.of(power.getBottle());
         IRecipeSlotBuilder bottle_slot = slot_manager.buildSlot(builder, "bottle", RecipeIngredientRole.INPUT);
-        bottle_slot.addIngredients(recipe.bottle);
+        bottle_slot.addIngredients(bottle);
         IRecipeSlotBuilder power_slot = slot_manager.buildSlot(builder, "power", RecipeIngredientRole.INPUT);
-        power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(recipe.power));
+        power_slot.addIngredients(ReactiveJEIPlugin.POWER_TYPE, List.of(power));
 
     }
 

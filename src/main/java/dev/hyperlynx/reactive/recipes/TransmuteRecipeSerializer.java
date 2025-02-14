@@ -8,14 +8,13 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteRecipe> {
@@ -24,7 +23,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
             Codec.STRING.optionalFieldOf("group", "transmute").forGetter(TransmuteRecipe::getGroup),
             Ingredient.CODEC_NONEMPTY.fieldOf("reactant").forGetter(TransmuteRecipe::getReactant),
             ItemStack.CODEC.fieldOf("product").forGetter(TransmuteRecipe::getProduct),
-            Powers.getPowerRegistry().byNameCodec().listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagents),
+            Power.RESOURCE_KEY_CODEC.listOf().fieldOf("reagents").forGetter(TransmuteRecipe::getReagentKeys),
             Codec.INT.fieldOf("min").forGetter(TransmuteRecipe::getMinimum),
             Codec.INT.fieldOf("cost").forGetter(TransmuteRecipe::getCost),
             Codec.BOOL.optionalFieldOf("needs_electricity", false).forGetter(TransmuteRecipe::isElectricityRequired)
@@ -45,11 +44,8 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public static @Nullable TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
-        List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);
-        List<Power> reagents = new ArrayList<>();
-        for(var location : reagent_locations){
-            reagents.add(Powers.get(location));
-        }        int min = buffer.readVarInt();
+        List<ResourceKey<Power>> reagents = buffer.readList((buff) -> buff.readResourceKey(Powers.POWER_REGISTRY_KEY));
+        int min = buffer.readVarInt();
         int cost = buffer.readVarInt();
         boolean needs_electricity = buffer.readBoolean();
         return new TransmuteRecipe("transmutation", reactant, product, reagents, min, cost, needs_electricity);
@@ -58,7 +54,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
     public static void toNetwork(@NotNull RegistryFriendlyByteBuf buffer, @NotNull TransmuteRecipe recipe) {
         Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.reactant);
         ItemStack.STREAM_CODEC.encode(buffer, recipe.product);
-        buffer.writeCollection(recipe.reagents, (FriendlyByteBuf b, Power p) -> b.writeResourceLocation(p.getResourceLocation()));
+        buffer.writeCollection(recipe.reagents, FriendlyByteBuf::writeResourceKey);
         buffer.writeVarInt(recipe.minimum);
         buffer.writeVarInt(recipe.cost);
         buffer.writeBoolean(recipe.needs_electricity);
