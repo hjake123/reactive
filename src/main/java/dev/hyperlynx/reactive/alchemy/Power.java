@@ -3,21 +3,17 @@ package dev.hyperlynx.reactive.alchemy;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
-import dev.hyperlynx.reactive.components.LitmusMeasurement;
-import dev.hyperlynx.reactive.datagen.BuiltInPowerGenerator;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +22,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -43,6 +38,7 @@ public class Power {
     private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
+    public MutableComponent name_override = null;
 
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
@@ -52,10 +48,25 @@ public class Power {
                     ResourceLocation.CODEC.fieldOf("location").forGetter(Power::getResourceLocation),
                     Color.CODEC.fieldOf("color").forGetter(Power::getColor),
                     BuiltInRegistries.BLOCK.byNameCodec().fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
-                    BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle").forGetter(Power::getBottleItem)
+                    BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle").forGetter(Power::getBottleItem),
+                    Codec.BOOL.optionalFieldOf("invisible").forGetter(Power::invisibleForCodec),
+                    Codec.STRING.optionalFieldOf("literal_name").forGetter(Power::customName)
             ).apply(instance, Power::new)
     );
 
+    // From Data constructor
+    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Item> possible_bottle_holder, Optional<Boolean> is_invisible, Optional<String> custom_name) {
+        this.location = location;
+        this.render_water_block = render_water_block;
+        this.color = color;
+        this.bottle = possible_bottle_holder.orElse(null);
+        this.name = Util.makeDescriptionId("power", this.location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+        this.invisible = is_invisible.isPresent() && is_invisible.get();
+        custom_name.ifPresent(name_override -> this.name_override = Component.literal(name_override));
+    }
+
+    // Other constructors for data generation
     public Power(String id, int color, Block render_water_block, Item bottle){
         this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
@@ -93,15 +104,6 @@ public class Power {
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
-    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Item> possible_bottle_holder) {
-        this.location = location;
-        this.render_water_block = render_water_block;
-        this.color = color;
-        this.bottle = possible_bottle_holder.orElse(null);
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
-    }
-
     public TagKey<Item> getSourceTag(){
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
@@ -129,12 +131,31 @@ public class Power {
         return TextColor.fromRgb(color.hex);
     }
     public String getId() { return location.getPath(); }
-    public String getName(){
+
+    public String getName() {
+        if(name_override != null){
+            return name_override.getString();
+        }
         return Component.translatable(name).getString();
     }
+
     public ResourceLocation getResourceLocation() { return location; }
     public Block getWaterRenderBlock(){
         return render_water_block;
+    }
+
+    public Optional<Boolean> invisibleForCodec() {
+        if(invisible){
+            return Optional.of(invisible);
+        }
+        return Optional.empty();
+    }
+
+    private Optional<String> customName() {
+        if(name_override == null){
+            return Optional.empty();
+        }
+        return Optional.of(name_override.getString());
     }
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
