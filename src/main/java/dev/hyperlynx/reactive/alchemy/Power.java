@@ -118,7 +118,8 @@ public class Power {
         var location = ResourceLocation.parse(rl);
         var potential_power = lookup_provider.lookup(Powers.POWER_REGISTRY_KEY).get().get(ResourceKey.create(Powers.POWER_REGISTRY_KEY, location));
         if(potential_power.isEmpty()){
-            throw new RuntimeException("Tried to look up a power " + location.toString() + " that did not exist.");
+            ReactiveMod.LOGGER.warn("Tried to look up a power {} that did not exist. Ignoring this power...", location.toString());
+            return null;
         }
         var power_ref = potential_power.get();
         return power_ref.value();

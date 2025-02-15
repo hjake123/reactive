@@ -19,6 +19,9 @@ public class Color {
     public Color() {}
 
     public Color(int red, int green, int blue){
+        if(red > 0xFF || green > 0xFF || blue > 0xFF || red < 0 || green < 0 || blue < 0) {
+            throw new RuntimeException("Invalid color parameters (" + red + ", " + green + ", " + blue + "); RGB must be with [0, 255]");
+        }
         this.red = red;
         this.green = green;
         this.blue = blue;
