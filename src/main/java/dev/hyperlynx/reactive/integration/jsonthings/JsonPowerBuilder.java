@@ -37,7 +37,7 @@ public class JsonPowerBuilder extends BaseBuilder<Power, JsonPowerBuilder> {
     }
 
     public JsonPowerBuilder bottle(RegistryObject<Item> bottle){
-        builder.bottle(bottle.get());
+        builder.bottle(bottle);
         return this;
     }
 

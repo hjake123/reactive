@@ -1,7 +1,4 @@
-- (KubeJS) Removed the need to register reaction criteria at startup
-  - (KubeJS) This is a breaking change for those using custom reactions
-  - (KubeJS) A migration guide is provided [here](https://github.com/hjake123/reactive/wiki/Custom-Reactions-with-KubeJS-Integration-2.x-to-3.0-Migration-Guide)
-  - (KubeJS) The KubeJS Integration Version is now `3.0`
-- Removed excess translucent pixels from the Bottle of Light texture
-- Updated the Simplified Chinese Translation (ChuijkYahus)
-- Changed the default setting of the `showPowerSources` cient-side config option to "true"
+- **Added support for Json Things to make custom Powers**
+  - This is in addition to existing KubeJS support, and works alongside it
+  - Json Powers can be used in KubeJS reactions, as well as recipes
+  - Custom power bottles can also be defined using thingpacks

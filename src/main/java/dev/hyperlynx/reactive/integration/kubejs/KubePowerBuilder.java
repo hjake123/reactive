@@ -40,8 +40,8 @@ public class KubePowerBuilder extends BuilderBase<Power> {
         return this;
     }
 
-    public KubePowerBuilder bottle(Item bottle){
-        builder.bottle(bottle);
+    public KubePowerBuilder bottle(ResourceLocation bottle_id){
+        builder.bottle = () -> getItem(bottle_id, false);
         return this;
     }
 

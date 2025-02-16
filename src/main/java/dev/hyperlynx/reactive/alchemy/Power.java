@@ -26,7 +26,7 @@ public class Power {
     private final Color color;
     private final ResourceLocation location;
     private final String name;
-    protected Item bottle;
+    protected Supplier<Item> bottle;
     private final Supplier<Block> render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
@@ -36,16 +36,26 @@ public class Power {
         this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = new Color(color);
-        this.bottle = bottle;
+        this.bottle = () -> bottle;
         this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
     }
+
+    public Power(ResourceLocation location, Supplier<Block> render_water_block, int color, Supplier<Item> bottle){
+        this.location = location;
+        this.render_water_block = render_water_block;
+        this.color = new Color(color);
+        this.bottle = bottle;
+        this.name = Util.makeDescriptionId("power", location);
+        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+    }
+
 
     public Power(String id, Supplier<Block> render_water_block, Color color, Item bottle){
         this.location = ReactiveMod.location(id);
         this.render_water_block = render_water_block;
         this.color = color;
-        this.bottle = bottle;
+        this.bottle = () -> bottle;
         this.name = Util.makeDescriptionId("power", ReactiveMod.location(id));
         this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
     }
@@ -54,7 +64,7 @@ public class Power {
         this.location = location;
         this.color = new Color(color);
         this.render_water_block = render_water_block;
-        this.bottle = bottle;
+        this.bottle = () -> bottle;
         this.name = Util.makeDescriptionId("power", this.location);
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
@@ -124,7 +134,7 @@ public class Power {
     }
 
     public boolean hasBottle(){
-        return bottle != null;
+        return bottle != null && bottle.get() != null;
     }
 
     public boolean matchesBottle(ItemStack i){
@@ -135,7 +145,7 @@ public class Power {
 
     public ItemStack getBottle(){
         if(hasBottle())
-            return bottle.getDefaultInstance();
+            return bottle.get().getDefaultInstance();
         return ItemStack.EMPTY;
     }
 

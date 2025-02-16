@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 public class PowerBuilder {
     public ResourceLocation id;
     public transient int color;
-    public transient Item bottle;
+    public transient Supplier<Item> bottle;
     public transient Supplier<Block> water;
     public transient boolean invisible = false;
     public transient MutableComponent custom_component = null;
@@ -29,7 +29,7 @@ public class PowerBuilder {
         return this;
     }
 
-    public PowerBuilder bottle(Item bottle){
+    public PowerBuilder bottle(Supplier<Item> bottle){
         this.bottle = bottle;
         return this;
     }
@@ -46,13 +46,13 @@ public class PowerBuilder {
     }
 
     public Power build() {
-        if(bottle != null && bottle.getDefaultInstance().isEmpty()){
+        if(bottle != null && bottle.get().getDefaultInstance().isEmpty()){
             ReactiveMod.LOGGER.error("Power {} has an invalid bottle item!", this.id);
         }
         if(water != null && water.get().defaultBlockState().is(Blocks.AIR)) {
             throw new InvalidPowerBuilderParameterException("Power " + this.id + " has an invalid water block!");
         }
-        Power power = new Power(id, color, water, bottle);
+        Power power = new Power(id, water, color, bottle);
         power.invisible = invisible;
         power.name_override = custom_component;
         return power;
