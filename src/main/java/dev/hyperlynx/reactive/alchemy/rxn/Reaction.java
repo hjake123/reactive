@@ -21,13 +21,17 @@ import java.util.Map;
 
 public abstract class Reaction {
 
-    protected HashMap<Power, Integer> reagents = new HashMap<>();
+    protected Map<Power, Integer> reagents = new HashMap<>();
     protected Stimulus stimulus = Stimulus.NONE;
     protected MutableComponent name = Component.literal("Error!");
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
     String alias;
+
+    protected Reaction(String alias){
+        this.alias = alias;
+    }
 
     // Creates the reaction with a random set of reagents.
     public Reaction(String alias, int max_reagent_count){

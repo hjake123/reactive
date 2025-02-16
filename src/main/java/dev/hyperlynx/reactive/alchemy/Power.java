@@ -34,6 +34,7 @@ public class Power {
 
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
+    public static final StreamCodec<ByteBuf, Power> STREAM_CODEC;
 
     public static final Codec<Power> CODEC;
 
@@ -153,5 +154,6 @@ public class Power {
         RESOURCE_KEY_CODEC = ResourceKey.codec(Powers.POWER_REGISTRY_KEY);
         RESOURCE_KEY_STREAM_CODEC = ResourceKey.streamCodec(Powers.POWER_REGISTRY_KEY);
         CODEC = RESOURCE_KEY_CODEC.xmap(Powers.POWER_REGISTRY::get, (power) -> Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow());
+        STREAM_CODEC = RESOURCE_KEY_STREAM_CODEC.map(Powers.POWER_REGISTRY::get, (power) -> Powers.POWER_REGISTRY.getResourceKey(power).orElseThrow());
     }
 }

@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
+import com.mojang.datafixers.kinds.IdF;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -9,16 +10,44 @@ import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.C;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class CustomReaction extends Reaction {
     protected int cost = 0;
     protected int yield = 0;
     protected Optional<Power> output_power = Optional.empty();
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, CustomReaction> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8, CustomReaction::getAlias,
+            ByteBufCodecs.map(HashMap::new, Power.STREAM_CODEC, ByteBufCodecs.INT), CustomReaction::getReagents,
+            ByteBufCodecs.INT, CustomReaction::cost,
+            ByteBufCodecs.INT, CustomReaction::yield,
+            Power.STREAM_CODEC.apply(ByteBufCodecs::optional), CustomReaction::outputPower,
+            StreamCodec.of(CustomReaction::serializeName, CustomReaction::deserializeName), Reaction::getName,
+            CustomReaction::new
+    );
+
+    protected static void serializeName(RegistryFriendlyByteBuf buffer, MutableComponent name) {
+        if(name == null){
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).encode(buffer, Optional.empty());
+        }
+        ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).encode(buffer, Optional.of(Component.Serializer.toJson(name, buffer.registryAccess())));
+    }
+
+    protected static MutableComponent deserializeName(RegistryFriendlyByteBuf buffer) {
+        var json = ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).decode(buffer);
+        return json.map(s -> Component.Serializer.fromJson(s, buffer.registryAccess())).orElse(null);
+    }
 
     public CustomReaction(String alias, List<Power> required_powers, MutableComponent name_override){
         super(alias, 0);
@@ -26,6 +55,19 @@ public class CustomReaction extends Reaction {
             reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
         this.name = name_override;
     }
+
+    private CustomReaction(String alias, Map<Power, Integer> reagents, int cost, int yield, Optional<Power> output, MutableComponent name){
+        super(alias);
+        this.reagents = reagents;
+        this.cost = cost;
+        this.yield = yield;
+        this.output_power = output;
+        this.name = name;
+    }
+
+    protected int cost() { return cost; }
+    protected int yield() { return yield; }
+    protected Optional<Power> outputPower() { return output_power; }
 
     @Override
     public Status conditionsMet(Reactor crucible){

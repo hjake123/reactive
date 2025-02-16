@@ -18,6 +18,7 @@ import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.items.*;
 import dev.hyperlynx.reactive.recipes.*;
@@ -723,6 +724,9 @@ public class Registration {
                     }
                 }
         );
+        if(ModList.get().isLoaded("kubejs")){
+            ReactiveKubeJSPlugin.registerPayloads(registrar);
+        }
     }
 
     @SubscribeEvent

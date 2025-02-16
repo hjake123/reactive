@@ -7,6 +7,8 @@ import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Optional;
@@ -84,5 +86,6 @@ public class ReactionFactory {
 
     public void build(){
         ReactionMan.addReactions(rxn);
+        PacketDistributor.sendToAllPlayers(new ReactionPayload(rxn));
     }
 }
