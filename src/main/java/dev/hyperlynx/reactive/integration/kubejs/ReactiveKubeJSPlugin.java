@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.kubejs.net.ReactionPayload;
 import dev.hyperlynx.reactive.integration.kubejs.net.ReactionRequestPayload;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionsSentPayload;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
@@ -72,6 +73,14 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionRequestPayload.STREAM_CODEC,
                 (payload, context) -> fetchCustomReactionsForPlayer((ServerPlayer) context.player())
         );
+
+        registrar.playToClient(
+                ReactionsSentPayload.TYPE,
+                ReactionsSentPayload.STREAM_CODEC,
+                (payload, _context) -> {
+                    REACTIONS.ingestReactionHandlers();
+                }
+        );
     }
 
     private static void fetchCustomReactionsForPlayer(ServerPlayer player){
@@ -83,6 +92,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
             }
         }
         ReactiveMod.LOGGER.info("Server has sent all custom reactions.");
+        PacketDistributor.sendToPlayer(player, new ReactionsSentPayload());
     }
 
 }

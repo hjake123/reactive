@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
 import com.mojang.datafixers.kinds.IdF;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
