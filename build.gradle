@@ -153,6 +153,7 @@ dependencies {
 
     implementation "curse.maven:spark-361579:5759671"
 
+    implementation "curse.maven:json-things-541617:6100178"
 
 //
 //    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
