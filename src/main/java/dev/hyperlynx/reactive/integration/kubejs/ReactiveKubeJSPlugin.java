@@ -63,7 +63,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionPayload.STREAM_CODEC,
                 (payload, _context) -> {
                     ReactionMan.addReactions(payload.reaction());
-                    ReactiveMod.LOGGER.info("Received reaction {} from server", payload.reaction().toString());
+                    ReactiveMod.LOGGER.debug("Received reaction {} from server", payload.reaction().toString());
                 }
         );
 
@@ -77,10 +77,9 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
     private static void fetchCustomReactionsForPlayer(ServerPlayer player){
         ReactiveMod.LOGGER.info("Server is preparing to send custom reactions...");
         for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(player.level())){
-            // ReactiveMod.LOGGER.info("Checking reaction {}", reaction.toString());
             if(reaction instanceof CustomReaction custom){
                 PacketDistributor.sendToPlayer(player, new ReactionPayload(custom));
-                ReactiveMod.LOGGER.info("Sent reaction {}", custom.toString());
+                ReactiveMod.LOGGER.debug("Sent reaction {}", custom.toString());
             }
         }
         ReactiveMod.LOGGER.info("Server has sent all custom reactions.");
