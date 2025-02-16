@@ -23,7 +23,7 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){
         Stream<Power> reagents = Arrays.stream(reagent_locations).map((location) -> getPower(ResourceLocation.parse(location)));
-        return new ReactionFactory(alias, custom_name, reagents.toList());
+        return new ReactionFactory(event.level, alias, custom_name, reagents.toList());
     }
 
     private Power getPower(ResourceLocation location){

@@ -7,7 +7,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 public interface ReactorRenderer {
     default void checkReactions(Reactor reactor){
         reactor.resetRenderReactions();
-        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions()){
+        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(reactor.getLevel())){
             if(reaction.conditionsMet(reactor) == Reaction.Status.REACTING){
                 reactor.addRenderReaction(reaction);
             }

@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.client.renderers.ReactionRenders;
 import dev.hyperlynx.reactive.datagen.ReactionAdvancementGenerator;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -70,29 +71,29 @@ public class ReactionMan {
         ReactionAdvancementGenerator.add("chomp");
     }
 
-    public List<Reaction> getReactions(){
+    public List<Reaction> getReactions(Level level){
         if(!initialized){
-            constructReactions();
+            constructReactions(level);
         }
         return REACTIONS.values().stream().toList();
     }
 
-    public List<String> getReactionAliases(){
+    public List<String> getReactionAliases(Level level){
         if(!initialized){
-            constructReactions();
+            constructReactions(level);
         }
         return REACTIONS.keySet().stream().toList();
     }
 
-    public Reaction get(String alias){
+    public Reaction get(Level level, String alias){
         if(!initialized){
-            constructReactions();
+            constructReactions(level);
         }
         return REACTIONS.get(alias);
     }
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
-    private void constructReactions(){
+    private void constructReactions(Level level){
         if(initializer_lock)
             return;
         initializer_lock = true;
@@ -197,7 +198,7 @@ public class ReactionMan {
         REACTIONS.add(new WindBombReaction("wind_bomb"));
         REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, null, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
-        NeoForge.EVENT_BUS.post(new ReactionConstructEvent());
+        NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
 
         initialized = true;
         initializer_lock = false;
@@ -226,7 +227,10 @@ public class ReactionMan {
      * if you want reaction advancements and their data gen to work.
      */
     public static class ReactionConstructEvent extends Event {
-
+        public Level level;
+        public ReactionConstructEvent(Level level){
+            this.level = level;
+        }
     }
 
     /**

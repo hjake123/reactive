@@ -2,12 +2,13 @@ package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
-import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionPayload;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionRequestPayload;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
@@ -15,8 +16,10 @@ import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ReactiveKubeJSPlugin implements KubeJSPlugin {
@@ -59,11 +62,28 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionPayload.TYPE,
                 ReactionPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    if (FMLLoader.getDist() == Dist.CLIENT) {
-                        ReactionMan.addReactions(payload.reaction());
-                    }
+                    ReactionMan.addReactions(payload.reaction());
+                    ReactiveMod.LOGGER.info("Received reaction {} from server", payload.reaction().toString());
                 }
         );
+
+        registrar.playToServer(
+                ReactionRequestPayload.TYPE,
+                ReactionRequestPayload.STREAM_CODEC,
+                (payload, context) -> fetchCustomReactionsForPlayer((ServerPlayer) context.player())
+        );
+    }
+
+    private static void fetchCustomReactionsForPlayer(ServerPlayer player){
+        ReactiveMod.LOGGER.info("Server is preparing to send custom reactions...");
+        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(player.level())){
+            // ReactiveMod.LOGGER.info("Checking reaction {}", reaction.toString());
+            if(reaction instanceof CustomReaction custom){
+                PacketDistributor.sendToPlayer(player, new ReactionPayload(custom));
+                ReactiveMod.LOGGER.info("Sent reaction {}", custom.toString());
+            }
+        }
+        ReactiveMod.LOGGER.info("Server has sent all custom reactions.");
     }
 
 }

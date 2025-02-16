@@ -21,7 +21,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
     @Override
     public IVariable process(Level level, String key) {
         if(key.equals("formula")){
-            Reaction reaction = ReactiveMod.REACTION_MAN.get(reaction_alias);
+            Reaction reaction = ReactiveMod.REACTION_MAN.get(level, reaction_alias);
             if(reaction == null){
                 return IVariable.empty();
             }
@@ -55,7 +55,7 @@ public class ReactionComponentProcessor implements IComponentProcessor {
 
         }
         if(key.equals("lock")){
-            Reaction reaction = ReactiveMod.REACTION_MAN.get(reaction_alias);
+            Reaction reaction = ReactiveMod.REACTION_MAN.get(level, reaction_alias);
             if(reaction == null){
                 return IVariable.empty();
             }

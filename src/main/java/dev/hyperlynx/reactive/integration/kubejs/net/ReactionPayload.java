@@ -1,7 +1,7 @@
-package dev.hyperlynx.reactive.integration.kubejs;
+package dev.hyperlynx.reactive.integration.kubejs.net;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraft.network.FriendlyByteBuf;
+import dev.hyperlynx.reactive.integration.kubejs.CustomReaction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

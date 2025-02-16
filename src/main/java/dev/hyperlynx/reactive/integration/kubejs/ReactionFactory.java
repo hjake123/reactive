@@ -5,9 +5,10 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionPayload;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.Optional;
 public class ReactionFactory {
     CustomReaction rxn;
 
-    public ReactionFactory(String alias, MutableComponent custom_name, List<Power> reagent_locations){
-        if(ReactiveMod.REACTION_MAN.get(alias) != null){
+    public ReactionFactory(Level level, String alias, MutableComponent custom_name, List<Power> reagent_locations){
+        if(ReactiveMod.REACTION_MAN.get(level, alias) != null){
             throw new KubeScriptException("Reaction alias '" + alias + "' already exists! Ignoring this registration attempt...");
         }
         rxn = new CustomReaction(alias, reagent_locations, custom_name);
@@ -86,6 +87,5 @@ public class ReactionFactory {
 
     public void build(){
         ReactionMan.addReactions(rxn);
-        PacketDistributor.sendToAllPlayers(new ReactionPayload(rxn));
     }
 }
