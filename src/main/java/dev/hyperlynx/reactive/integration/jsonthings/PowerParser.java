@@ -4,11 +4,8 @@ import com.google.gson.JsonObject;
 import dev.gigaherz.jsonthings.things.builders.BaseBuilder;
 import dev.gigaherz.jsonthings.things.parsers.ThingParser;
 import dev.gigaherz.jsonthings.util.parse.JParse;
-import dev.gigaherz.jsonthings.util.parse.value.Any;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,8 +37,8 @@ public class PowerParser extends ThingParser<JsonPowerBuilder> {
         JParse.begin(json)
                 .ifKey("color", (color) -> builder.color(parseColor(color.obj())))
                 .ifKey("bottle", (bottle) -> builder.bottle(DeferredHolder.create(Registries.ITEM, ResourceLocation.parse(bottle.string().getAsString()))))
-                .ifKey("render_water_block", (water) -> builder.setCustomWater(DeferredHolder.create(Registries.BLOCK, ResourceLocation.parse(water.string().getAsString()))))
-                .ifKey("invisible", (invisible) -> builder.invisible = invisible.bool().getAsBoolean())
+                .ifKey("render_water_block", (water) -> builder.water(DeferredHolder.create(Registries.BLOCK, ResourceLocation.parse(water.string().getAsString()))))
+                .ifKey("invisible", (invisible) -> builder.setInvisible(invisible.bool().getAsBoolean()))
                 .ifKey("name_override", (custom_name) -> builder.setName(Component.literal(custom_name.string().getAsString())));
         builder_modification.accept(builder);
         return builder;
