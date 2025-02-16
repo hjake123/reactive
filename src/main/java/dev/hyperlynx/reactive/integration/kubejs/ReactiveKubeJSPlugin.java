@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.PowerBuilder;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
@@ -12,6 +13,7 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
+import net.minecraft.core.registries.Registries;
 
 public class ReactiveKubeJSPlugin extends KubeJSPlugin {
     protected static RegistryInfo<Power> POWER_REGISTRY_INFO;
@@ -22,7 +24,7 @@ public class ReactiveKubeJSPlugin extends KubeJSPlugin {
     }
 
     public void init() {
-        POWER_REGISTRY_INFO.addType("custom_power", PowerBuilder.class, PowerBuilder::new);
+        POWER_REGISTRY_INFO.addType("custom_power", KubePowerBuilder.class, KubePowerBuilder::new);
         RegistryInfo.ITEM.addType("reactive:power_bottle", CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new);
     }
 

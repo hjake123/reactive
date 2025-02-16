@@ -15,6 +15,7 @@ import dev.hyperlynx.reactive.fx.gui.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
+import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
@@ -100,6 +101,9 @@ public class Registration {
         SOUND_EVENTS.register(bus);
         COMMAND_ARGUMENTS.register(bus);
         bus.register(Registration.class);
+        if(ModList.get().isLoaded("jsonthings")){
+            ReactiveJsonThingsPlugin.registerParser(bus);
+        }
     }
 
     // ----------------------- REGISTRATION ------------------------

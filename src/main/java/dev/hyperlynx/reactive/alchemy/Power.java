@@ -7,6 +7,7 @@ import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -29,6 +30,7 @@ public class Power {
     private final Supplier<Block> render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
+    public MutableComponent name_override;
 
     public Power(String id, Supplier<Block> render_water_block, int color, Item bottle){
         this.location = ReactiveMod.location(id);
@@ -87,7 +89,10 @@ public class Power {
         return TextColor.fromRgb(color.hex);
     }
     public String getId() { return location.getPath(); }
-    public String getName(){
+    public String getName() {
+        if(name_override != null){
+            return name_override.getString();
+        }
         return Component.translatable(name).getString();
     }
     public ResourceLocation getResourceLocation(){ return location; }

@@ -9,7 +9,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +19,8 @@ public class ReactiveMod
     public static final ReactionMan REACTION_MAN = new ReactionMan();
     public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
     public static final Logger LOGGER = LogManager.getLogger();
+
+    @SuppressWarnings("removal")
     public ReactiveMod() {
         Registration.init();
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClientRegistration::init);
