@@ -40,6 +40,7 @@ public class LightStaffItem extends StaffItem {
         return super.use(level, player, hand);
     }
 
+    @SuppressWarnings("removal")
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         Level level = entity.level();
