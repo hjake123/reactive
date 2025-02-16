@@ -1,12 +1,9 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.integration.custom.CustomPower;
-import dev.hyperlynx.reactive.integration.custom.PowerBuilder;
+import dev.hyperlynx.reactive.alchemy.PowerBuilder;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -14,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class KubePowerBuilder extends BuilderBase<Power> {
-    private PowerBuilder builder;
+    private final PowerBuilder builder;
 
     public KubePowerBuilder(ResourceLocation id) {
         super(id);

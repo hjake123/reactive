@@ -1,7 +1,6 @@
-package dev.hyperlynx.reactive.integration.custom;
+package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -66,8 +65,17 @@ public class PowerBuilder {
             ReactiveMod.LOGGER.error("Power {} has an invalid bottle item!", this.id);
         }
         if(water != null && water.defaultBlockState().is(Blocks.AIR)) {
-            throw new InvalidCustomObjectException("Power " + this.id + " has an invalid water block!");
+            throw new InvalidPowerBuilderParameterException("Power " + this.id + " has an invalid water block!");
         }
-        return new CustomPower(id, color, water, bottle, invisible, custom_component);
+        Power power = new Power(id, color, water, bottle);
+        power.invisible = invisible;
+        power.name_override = custom_component;
+        return power;
+    }
+
+    public static class InvalidPowerBuilderParameterException extends RuntimeException {
+        public InvalidPowerBuilderParameterException(String msg) {
+            super(msg);
+        }
     }
 }
