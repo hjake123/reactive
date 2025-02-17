@@ -14,7 +14,9 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
+import dev.hyperlynx.reactive.client.ReactiveClientMod;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.recipes.CrucibleRecipeInput;
@@ -96,11 +98,10 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
-    public int render_tick_counter = 0; // Used for counting rendering ticks on the client in CrucibleRenderer.
-    public List<Reaction> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more efficiently render reactions, and is only updated on the client.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Synced to the client.
+    public List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to render reactions, and is updated in response to the aforementioned packet.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE.get(), pos, state);
@@ -191,7 +192,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                     case 3 -> {
                         // Perform applicable reactions.
                         if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
-                            crucible.react(level);
+                            crucible.react((ServerLevel) level);
                         }
 
                         // Spread Sculk, if applicable
@@ -526,8 +527,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
             return;
         }
+        crucible.reactions_to_render.clear();
         for(ReactionStatusEntry entry : payload.statuses()){
-
+            if(entry.status() == Reaction.Status.REACTING){
+                crucible.reactions_to_render.add(entry.reaction_alias());
+            }
         }
     }
 
@@ -714,17 +718,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     @Override
-    public void resetRenderReactions() {
-        reactions_to_render.clear();
-    }
-
-    @Override
-    public void addRenderReaction(Reaction r) {
-        reactions_to_render.add(r);
-    }
-
-    @Override
-    public Iterable<Reaction> getRenderReactions() {
+    public List<String> getRenderReactions() {
         return reactions_to_render;
     }
 

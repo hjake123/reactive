@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class WindBombReaction extends FreeEffectReaction{
     public WindBombReaction(String alias) {
-        super(alias, ReactionEffects::flowTooStrong, null, Powers.FLOW_POWER.get());
+        super(alias, ReactionEffects::flowTooStrong, Powers.FLOW_POWER.get());
         this.setReagentCost(Powers.FLOW_POWER.get(), 1);
     }
 

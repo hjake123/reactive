@@ -116,13 +116,6 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             return;
         }
 
-        // Every 30 frames, check which reactions to render.
-        crucible.render_tick_counter++;
-        if(crucible.render_tick_counter > 30){
-            crucible.render_tick_counter = 0;
-            checkReactions(crucible);
-        }
-
         renderReactions(crucible);
         renderElectricity(crucible);
         renderSculkCharge(crucible);

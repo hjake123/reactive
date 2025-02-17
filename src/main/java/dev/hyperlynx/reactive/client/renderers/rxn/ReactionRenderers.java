@@ -9,10 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 // This class mananges the renderers for reactions.
 // This is important, since reaction rendering is no longer even known on the server side!
@@ -29,6 +26,14 @@ public class ReactionRenderers {
         RENDERERS.put("size_grow_effect", this::verdant_based);
         RENDERERS.put("ominous_transformation", this::ominous);
         RENDERERS.put("astral_curse_annihilation", this::creation);
+    }
+
+    public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
+        List<ReactionRenderer> ret = new ArrayList<>();
+        for(String alias : aliases){
+            ret.add(RENDERERS.get(alias));
+        }
+        return ret;
     }
 
     public void smoke(Reactor reactor) {

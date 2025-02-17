@@ -3,11 +3,15 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
+import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ public interface Reactor extends PowerBearer {
     void resetReactionStatus();
 
     // The method that performs reactions.
-    default void react(Level level) {
+    default void react(ServerLevel level) {
         this.setUsedCrystalThisCycle(false);
         this.resetReactionStatus();
         for (Reaction r : ReactiveMod.REACTION_MAN.getReactions(level)) {
@@ -30,6 +34,12 @@ public interface Reactor extends PowerBearer {
             if (!(reaction_status == Reaction.Status.STABLE))
                 this.getReactionStatus().add(new ReactionStatusEntry(reaction_status, r.getAlias()));
         }
+
+        // Update clients each reaction tick about what to display.
+        BlockPos pos = this.getBlockPos();
+        PacketDistributor.sendToPlayersNear(level, null, pos.getX(), pos.getY(), pos.getZ(), 32,
+                new ReactionStatusPayload(getReactionStatus(), pos));
+
         if (this.getReactionStatus().isEmpty()) {
             this.getReactionStatus().add(ReactionStatusEntry.stable());
         }
@@ -65,11 +75,7 @@ public interface Reactor extends PowerBearer {
 
     void setLinkedCrystal(EndCrystal end_crystal);
 
-    void resetRenderReactions();
-
-    void addRenderReaction(Reaction r);
-
-    Iterable<Reaction> getRenderReactions();
+    Iterable<String> getRenderReactions();
 
     void setElectricCharge(int i);
 
