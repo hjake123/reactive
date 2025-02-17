@@ -46,11 +46,6 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level l, final Reactor reactor) {
-        ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, reactor.getBlockPos(), 0.45, 0.7, 1);
-    }
-
-    @Override
     public Status conditionsMet(Reactor reactor){
         boolean has_curse = reactor.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
         if (reactor.getTotalPowerLevel() > (reactor.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)

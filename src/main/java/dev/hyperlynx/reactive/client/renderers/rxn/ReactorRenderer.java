@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.client.renderers;
+package dev.hyperlynx.reactive.client.renderers.rxn;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;

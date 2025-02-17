@@ -27,11 +27,6 @@ public class DecomposeReaction extends Reaction{
     }
 
     @Override
-    public void render(Level l, Reactor crucible) {
-
-    }
-
-    @Override
     public boolean isPerfect(Reactor reactor) {
         for(Power p: reactor.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !results.contains(p)){

@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.client.renderers;
+package dev.hyperlynx.reactive.client.renderers.rxn;
 
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -9,22 +9,46 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-// Just a holder class for the various reaction render methods. Please only call these on the client thank you.
-public class ReactionRenders {
-    public static void smoke(Reactor reactor) {
+// This class mananges the renderers for reactions.
+// This is important, since reaction rendering is no longer even known on the server side!
+public class ReactionRenderers {
+    public Map<String, ReactionRenderer> RENDERERS = new HashMap<>();
+
+    public ReactionRenderers(){
+        RENDERERS.put("curse_assimilation", this::curseRing);
+        RENDERERS.put("discharge_annihilation", this::annihilationSmoke);
+        RENDERERS.put("smoke_annihilation", this::smoke);
+        RENDERERS.put("growth", this::growth);
+        RENDERERS.put("flames", this::flamethrower);
+        RENDERERS.put("size_shrink_effect", this::acid_based);
+        RENDERERS.put("size_grow_effect", this::verdant_based);
+        RENDERERS.put("ominous_transformation", this::ominous);
+        RENDERERS.put("astral_curse_annihilation", this::creation);
+    }
+
+    public void smoke(Reactor reactor) {
         ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.LARGE_SMOKE, reactor.getBlockPos(), 0.3F);
     }
 
-    // Causes nearby bonemeal-ables to be fertilized occasionally.
-    public static void growth(Reactor reactor) {
+    public void annihilationSmoke(Reactor reactor) {
+        ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.SMOKE, reactor.getBlockPos(), 0.2F);
+    }
+
+    public void curseRing(Reactor reactor) {
+        ParticleScribe.drawParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getBlockPos(), 0.45, 0.7, 1);
+    }
+
+    public void growth(Reactor reactor) {
         ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.HAPPY_VILLAGER, reactor.getBlockPos(), 0.1F);
     }
 
     // Shoot flames from the crucible!
-    public static void flamethrower(Reactor reactor) {
+    public void flamethrower(Reactor reactor) {
         if(reactor.getLevel() == null) return;
 
         if(reactor.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
@@ -34,7 +58,7 @@ public class ReactionRenders {
         }
     }
 
-    public static void creation(Reactor reactor){
+    public void creation(Reactor reactor){
         Set<BlockPos> points = ReactionEffects.getCreationPoints(reactor.getBlockPos());
         for(BlockPos pos : points){
             if(reactor.getLevel().getBlockState(pos).isAir())
@@ -42,19 +66,24 @@ public class ReactionRenders {
         }
     }
 
-    public static void ominous(Reactor reactor) {
+    public void ominous(Reactor reactor) {
         ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.OMINOUS_SPAWNING, reactor.getBlockPos(), 0.005F);
     }
 
-    public static void acid_based(Reactor reactor) {
+    public void acid_based(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level.random.nextFloat() < 0.1F)
             ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), Registration.ACID_BUBBLE_PARTICLE.getType(), reactor.getBlockPos());
     }
 
-    public static void verdant_based(Reactor reactor) {
+    public void verdant_based(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level.random.nextFloat() < 0.1F)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.HAPPY_VILLAGER, reactor.getBlockPos());
+    }
+
+    public void astral(Reactor reactor) {
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
+            ParticleScribe.drawParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
     }
 }

@@ -16,6 +16,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.recipes.CrucibleRecipeInput;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.PrecipitateRecipe;
@@ -61,6 +62,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -98,7 +100,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public List<Reaction> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more efficiently render reactions, and is only updated on the client.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
-    public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Only updated on the server. Used by Litmus Paper.
+    public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Synced to the client.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE.get(), pos, state);
@@ -514,6 +516,20 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
         // ----- Helper and power management methods -----
+
+    // CLIENT ONLY
+    // Used to update reactionsToRender
+    public static void acceptReactionStatusPayload(ReactionStatusPayload payload, IPayloadContext context) {
+        Level level = context.player().level();
+        BlockEntity be = level.getBlockEntity(payload.pos());
+        if(!(be instanceof CrucibleBlockEntity crucible)){
+            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
+            return;
+        }
+        for(ReactionStatusEntry entry : payload.statuses()){
+
+        }
+    }
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());

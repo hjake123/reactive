@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 public class CatalystEffectReaction extends EffectReaction{
     Item reactant;
 
-    public CatalystEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power, Item reactant) {
-        super(alias, function, render, required_power);
+    public CatalystEffectReaction(String alias, Consumer<Reactor> function, Power required_power, Item reactant) {
+        super(alias, function, required_power);
         this.reactant = reactant;
     }
 

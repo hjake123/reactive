@@ -1,8 +1,7 @@
 package dev.hyperlynx.reactive.client.gui;
 
+import dev.hyperlynx.reactive.net.LitmusScreenPayload;
 import net.minecraft.client.Minecraft;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.fml.loading.FMLLoader;
 import org.jetbrains.annotations.NotNull;
 
 public class LitmusScreenOpener {

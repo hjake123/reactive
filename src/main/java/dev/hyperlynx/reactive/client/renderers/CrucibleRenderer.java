@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;

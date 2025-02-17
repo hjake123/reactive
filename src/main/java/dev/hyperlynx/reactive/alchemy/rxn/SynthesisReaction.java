@@ -27,11 +27,6 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public void render(Level l, Reactor crucible) {
-
-    }
-
-    @Override
     public boolean isPerfect(Reactor crucible) {
         for(Power p: crucible.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !p.equals(resultPower)){

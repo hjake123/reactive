@@ -189,8 +189,6 @@ public abstract class Reaction {
         return reactor.getPowerCount() == reagents.size();
     }
 
-    public abstract void render(final Level l, final Reactor reactor);
-
     public enum Stimulus {
         NONE,
         GOLD_SYMBOL,

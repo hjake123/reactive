@@ -11,16 +11,10 @@ import java.util.function.Consumer;
 // A reaction in which each tick the reactants destroy each other.
 public class AnnihilationReaction extends EffectReaction{
 
-    public AnnihilationReaction(String alias, Power p1, Power p2, Consumer<Reactor> function, Consumer<Reactor> render) {
-        super(alias, function, render,0);
+    public AnnihilationReaction(String alias, Power p1, Power p2, Consumer<Reactor> function) {
+        super(alias, function,0);
         reagents.put(p1, WorldSpecificValues.ANNIHILATION_THRESHOLD.get());
         reagents.put(p2, WorldSpecificValues.ANNIHILATION_THRESHOLD.get());
-    }
-
-    @Override
-    public void render(Level l, Reactor reactor) {
-        super.render(l, reactor);
-        ParticleScribe.drawParticleCrucibleTop(l, ParticleTypes.SMOKE, reactor.getBlockPos(), 0.2F);
     }
 
     @Override

@@ -99,10 +99,10 @@ public class CustomReaction extends Reaction {
         super.run(reactor);
     }
 
-    @Override
-    public void render(Level l, Reactor reactor) {
-        ReactiveKubeJSPlugin.REACTIONS.processRenderEvent(new CustomReactionTickEvent(this, reactor));
-    }
+//    @Override
+//    public void render(Level l, Reactor reactor) {
+//        ReactiveKubeJSPlugin.REACTIONS.processRenderEvent(new CustomReactionTickEvent(this, reactor));
+//    } TODO
 
     private void expendPower(Reactor reactor, int cost){
         for(Power p : this.getReagents().keySet()){

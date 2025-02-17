@@ -5,12 +5,11 @@ import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
-import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
+import dev.hyperlynx.reactive.net.LitmusScreenPayload;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.components.BoundEntity;
@@ -21,6 +20,7 @@ import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerialize
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.items.*;
+import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.recipes.*;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -723,6 +723,11 @@ public class Registration {
                         LitmusScreenOpener.open(payload);
                     }
                 }
+        );
+        registrar.commonToClient(
+                ReactionStatusPayload.TYPE,
+                ReactionStatusPayload.STREAM_CODEC,
+                CrucibleBlockEntity::acceptReactionStatusPayload
         );
         if(ModList.get().isLoaded("kubejs")){
             ReactiveKubeJSPlugin.registerPayloads(registrar);

@@ -24,12 +24,6 @@ public class AstralReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level level, final Reactor reactor) {
-        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
-            ParticleScribe.drawParticleRing(level, Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
-    }
-
-    @Override
     public Status conditionsMet(Reactor reactor){
         if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
             return Status.REACTING;

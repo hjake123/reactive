@@ -9,33 +9,23 @@ import java.util.function.Consumer;
 // This reaction runs a particular effect function each reaction tick.
 public class FreeEffectReaction extends Reaction{
     protected Consumer<Reactor> effectFunction;
-    protected Consumer<Reactor> renderFunction;
 
-    public FreeEffectReaction(String alias, Consumer<Reactor> effect, Consumer<Reactor> render, int numReagents) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> effect, int numReagents) {
         super(alias, numReagents);
         effectFunction = effect;
-        renderFunction = render;
     }
 
-    public FreeEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power... required_powers) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> function, Power... required_powers) {
         super(alias, 0);
         effectFunction = function;
-        renderFunction = render;
         for(Power required_power : required_powers)
             reagents.put(required_power, WorldSpecificValue.get(alias+required_power+"required", 1, 400));
     }
 
-    public FreeEffectReaction(String alias, Consumer<Reactor> function, Consumer<Reactor> render, Power required_power, int num_additionals) {
+    public FreeEffectReaction(String alias, Consumer<Reactor> function, Power required_power, int num_additionals) {
         super(alias, num_additionals);
         effectFunction = function;
-        renderFunction = render;
         reagents.put(required_power, WorldSpecificValue.get(alias+"required", 1, 400));
-    }
-
-    @Override
-    public void render(final Level l, final Reactor reactor) {
-        if(renderFunction != null)
-            renderFunction.accept(reactor);
     }
 
     @Override

@@ -31,10 +31,4 @@ public class OmenConversionReaction extends Reaction {
         reactor.setDirty();
     }
 
-    @Override
-    public void render(Level l, Reactor crucible) {
-
-    }
-
-
 }

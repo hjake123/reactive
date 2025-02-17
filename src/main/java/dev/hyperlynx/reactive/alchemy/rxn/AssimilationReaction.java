@@ -26,11 +26,6 @@ public class AssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level l, final Reactor crucible) {
-
-    }
-
-    @Override
     public boolean isPerfect(Reactor reactor) {
         return true;
     }
