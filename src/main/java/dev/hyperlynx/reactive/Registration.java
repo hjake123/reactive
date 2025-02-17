@@ -729,6 +729,7 @@ public class Registration {
                 ReactionStatusPayload.STREAM_CODEC,
                 CrucibleBlockEntity::acceptReactionStatusPayload
         );
+
         if(ModList.get().isLoaded("kubejs")){
             ReactiveKubeJSPlugin.registerPayloads(registrar);
         }
@@ -737,5 +738,8 @@ public class Registration {
     @SubscribeEvent
     public static void register(final RegisterConfigurationTasksEvent event) {
         event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
+        if(ModList.get().isLoaded("kubejs")) {
+            ReactiveKubeJSPlugin.registerConfigurationTasks(event);
+        }
     }
 }

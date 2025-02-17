@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.alchemy;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 
 /*
-This class is a holder for alias strings for WSV generation that might need to be repeated.
+This class is a holder for aliases strings for WSV generation that might need to be repeated.
  */
 public class WorldSpecificValues {
     public final static PrimedWSV GOLEM_CAUSE = new PrimedWSV("golem_cause", 1, 2);

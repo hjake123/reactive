@@ -9,11 +9,16 @@ import dev.latvian.mods.kubejs.event.KubeEvent;
 
 public class CustomReactionTickEvent implements KubeEvent, ReactorKubeEvent {
     KubeWrapped<Reactor> reactor;
-    CustomReaction rxn;
+    String alias;
 
     public CustomReactionTickEvent(CustomReaction rxn, Reactor reactor){
         this.reactor = new KubeWrapped<>(reactor);
-        this.rxn = rxn;
+        this.alias = rxn.getAlias();
+    }
+
+    public CustomReactionTickEvent(String alias, Reactor reactor){
+        this.reactor = new KubeWrapped<>(reactor);
+        this.alias = alias;
     }
 
     @Override
@@ -22,7 +27,7 @@ public class CustomReactionTickEvent implements KubeEvent, ReactorKubeEvent {
     }
 
     public String getAlias(){
-        return rxn.getAlias();
+        return alias;
     }
 
     public KubeWrapped<CrucibleBlockEntity> getCrucible(){

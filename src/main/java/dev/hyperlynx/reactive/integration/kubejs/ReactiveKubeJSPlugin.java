@@ -2,14 +2,11 @@ package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import dev.hyperlynx.reactive.client.ReactiveClientMod;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
-import dev.hyperlynx.reactive.integration.kubejs.net.ReactionPayload;
-import dev.hyperlynx.reactive.integration.kubejs.net.ReactionRequestPayload;
-import dev.hyperlynx.reactive.integration.kubejs.net.ReactionEffectResetPayload;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
@@ -17,12 +14,26 @@ import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
+import net.minecraft.server.network.ConfigurationTask;
+import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+
 public class ReactiveKubeJSPlugin implements KubeJSPlugin {
-    public static EventHandlerCache REACTIONS = new EventHandlerCache();
+    public static EventHandlerCache REACTION_EFFECT_CACHE = new EventHandlerCache();
+    public static Set<String> CUSTOM_REACTION_ALIASES = new HashSet<>();
 
     @Override
     public void init() {
@@ -57,41 +68,46 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
     }
 
     public static void registerPayloads(PayloadRegistrar registrar) {
-        registrar.playToClient(
-                ReactionPayload.TYPE,
-                ReactionPayload.STREAM_CODEC,
+            registrar.commonToClient(
+                ReactionAliasPayload.TYPE,
+                ReactionAliasPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    ReactionMan.addReactions(payload.reaction());
-                    ReactiveMod.LOGGER.debug("Received reaction {} from server", payload.reaction().toString());
+                    for(String alias : payload.aliases()){
+                        ReactiveClientMod.REACTION_RENDERERS.RENDERERS.put(alias, CustomReaction.getRenderFunction(alias));
+                    }
                 }
-        );
-
-        registrar.playToServer(
-                ReactionRequestPayload.TYPE,
-                ReactionRequestPayload.STREAM_CODEC,
-                (payload, context) -> fetchCustomReactionsForPlayer((ServerPlayer) context.player())
-        );
-
-        registrar.playToClient(
-                ReactionEffectResetPayload.TYPE,
-                ReactionEffectResetPayload.STREAM_CODEC,
-                (payload, _context) -> {
-                    REACTIONS.resetReactionHandlers();
-                    REACTIONS.ingestReactionHandlers();
-                }
-        );
+            );
     }
 
-    private static void fetchCustomReactionsForPlayer(ServerPlayer player){
-        ReactiveMod.LOGGER.info("Server is preparing to send custom reactions...");
-        for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(player.level())){
-            if(reaction instanceof CustomReaction custom){
-                PacketDistributor.sendToPlayer(player, new ReactionPayload(custom));
-                ReactiveMod.LOGGER.debug("Sent reaction {}", custom.toString());
-            }
+    protected record ReactionAliasPayload(Set<String> aliases) implements CustomPacketPayload {
+        public static final CustomPacketPayload.Type<ReactionAliasPayload> TYPE = new CustomPacketPayload.Type<>(ReactiveMod.location("kubejs_reaction_alias"));
+        public static final StreamCodec<? super FriendlyByteBuf, ReactionAliasPayload> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.collection(HashSet::new, ByteBufCodecs.STRING_UTF8), ReactionAliasPayload::aliases,
+                ReactionAliasPayload::new
+        );
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
         }
-        ReactiveMod.LOGGER.info("Server has sent all custom reactions.");
-        PacketDistributor.sendToPlayer(player, new ReactionEffectResetPayload());
     }
 
+    public static void registerConfigurationTasks(final RegisterConfigurationTasksEvent event) {
+        event.register(new CustomReactionSyncConfigTask(event.getListener()));
+    }
+
+    private record CustomReactionSyncConfigTask(ServerConfigurationPacketListener listener) implements ICustomConfigurationTask {
+        public static final ConfigurationTask.Type TYPE = new ConfigurationTask.Type(ReactiveMod.location("kubejs_reaction_sync_task"));
+
+        @Override
+        public void run(Consumer<CustomPacketPayload> sender) {
+            sender.accept(new ReactionAliasPayload(CUSTOM_REACTION_ALIASES));
+            this.listener().finishCurrentTask(this.type());
+        }
+
+        @Override
+        public Type type() {
+            return TYPE;
+        }
+    }
 }

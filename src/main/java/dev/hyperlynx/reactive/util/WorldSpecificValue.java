@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 This class represents a factory for values unique to each world, as determined by either a Server config file or the world seed.
 A custom network packet is used to notify the client of the world seed.
 
-To ensure the values are different from each other, I add the value from a hash of a placeholder alias string, which is
+To ensure the values are different from each other, I add the value from a hash of a placeholder aliases string, which is
 meant to be unique per instance. This also prevents drawing from the randomizer more than once.
 
 When called outside a world (by the data generator) it uses a seed of 0.

@@ -19,6 +19,7 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     public KubeReactionConstructEvent(ReactionMan.ReactionConstructEvent event){
         this.event = event;
+
     }
 
     public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){
@@ -37,6 +38,6 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     @Override
     public void afterPosted(EventResult result) {
-        ReactiveKubeJSPlugin.REACTIONS.ingestReactionHandlers();
+        ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.ingestReactionHandlers();
     }
 }

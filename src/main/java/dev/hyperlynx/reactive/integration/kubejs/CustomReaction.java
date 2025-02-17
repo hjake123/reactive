@@ -1,25 +1,17 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
-import com.mojang.datafixers.kinds.IdF;
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEvent;
-import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
-import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
-import dev.latvian.mods.kubejs.script.ScriptType;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.level.Level;
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.*;
 
@@ -79,9 +71,9 @@ public class CustomReaction extends Reaction {
         var event = new CustomReactionTickEvent(this, crucible);
         EventResult result;
         if(crucible.getLevel().isClientSide){
-            result = ReactiveKubeJSPlugin.REACTIONS.processClientTestEvent(event);
+            result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processClientTestEvent(event);
         } else {
-            result = ReactiveKubeJSPlugin.REACTIONS.processServerTestEvent(event);
+            result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processServerTestEvent(event);
         }
         if(result.interruptFalse()){
             return Status.INHIBITED;
@@ -91,7 +83,7 @@ public class CustomReaction extends Reaction {
 
     @Override
     public void run(Reactor reactor) {
-        ReactiveKubeJSPlugin.REACTIONS.processRunEvent(new CustomReactionTickEvent(this, reactor));
+        ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processRunEvent(new CustomReactionTickEvent(this, reactor));
         if(cost > 0){
             expendPower(reactor, cost);
         }
@@ -99,10 +91,9 @@ public class CustomReaction extends Reaction {
         super.run(reactor);
     }
 
-//    @Override
-//    public void render(Level l, Reactor reactor) {
-//        ReactiveKubeJSPlugin.REACTIONS.processRenderEvent(new CustomReactionTickEvent(this, reactor));
-//    } TODO
+    public static ReactionRenderer getRenderFunction(String alias) {
+        return (reactor) -> ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processRenderEvent(new CustomReactionTickEvent(alias, reactor));
+    }
 
     private void expendPower(Reactor reactor, int cost){
         for(Power p : this.getReagents().keySet()){
