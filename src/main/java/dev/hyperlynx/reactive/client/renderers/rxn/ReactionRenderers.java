@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.client.renderers.rxn;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
@@ -31,7 +32,9 @@ public class ReactionRenderers {
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
         List<ReactionRenderer> ret = new ArrayList<>();
         for(String alias : aliases){
-            ret.add(RENDERERS.get(alias));
+            if(RENDERERS.containsKey(alias)){
+                ret.add(RENDERERS.get(alias));
+            }
         }
         return ret;
     }
