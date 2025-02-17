@@ -214,10 +214,12 @@ public class ReactionMan {
     }
 
     public void reset() {
-        initialized = false;
-        REACTIONS.clear();
-        BASE_POWER_LIST.clear();
-        NeoForge.EVENT_BUS.post(new ReactionResetEvent());
+        if(initialized){
+            initialized = false;
+            REACTIONS.clear();
+            BASE_POWER_LIST.clear();
+            NeoForge.EVENT_BUS.post(new ReactionResetEvent());
+        }
     }
 
     /**

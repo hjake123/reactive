@@ -9,7 +9,7 @@ import dev.hyperlynx.reactive.integration.kubejs.events.EventHandlerCache;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.kubejs.net.ReactionPayload;
 import dev.hyperlynx.reactive.integration.kubejs.net.ReactionRequestPayload;
-import dev.hyperlynx.reactive.integration.kubejs.net.ReactionsSentPayload;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionEffectResetPayload;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventGroupRegistry;
 import dev.latvian.mods.kubejs.plugin.ClassFilter;
@@ -17,9 +17,7 @@ import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -75,9 +73,10 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
         );
 
         registrar.playToClient(
-                ReactionsSentPayload.TYPE,
-                ReactionsSentPayload.STREAM_CODEC,
+                ReactionEffectResetPayload.TYPE,
+                ReactionEffectResetPayload.STREAM_CODEC,
                 (payload, _context) -> {
+                    REACTIONS.resetReactionHandlers();
                     REACTIONS.ingestReactionHandlers();
                 }
         );
@@ -92,7 +91,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
             }
         }
         ReactiveMod.LOGGER.info("Server has sent all custom reactions.");
-        PacketDistributor.sendToPlayer(player, new ReactionsSentPayload());
+        PacketDistributor.sendToPlayer(player, new ReactionEffectResetPayload());
     }
 
 }

@@ -6,26 +6,26 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public class ReactionsSentPayload implements CustomPacketPayload {
+public class ReactionEffectResetPayload implements CustomPacketPayload {
     private static final int VERSION = 1;
 
-    public static final Type<ReactionsSentPayload> TYPE = new Type<>(ReactiveMod.location("kubejs_reactions_done"));
+    public static final Type<ReactionEffectResetPayload> TYPE = new Type<>(ReactiveMod.location("kubejs_reaction_effect_cache_reset"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ReactionsSentPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, ReactionsSentPayload::version,
-            ReactionsSentPayload::verify
+    public static final StreamCodec<RegistryFriendlyByteBuf, ReactionEffectResetPayload> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, ReactionEffectResetPayload::version,
+            ReactionEffectResetPayload::verify
     );
 
     public int version(){
         return VERSION;
     }
 
-    public ReactionsSentPayload(){}
-    public static ReactionsSentPayload verify(int version){
+    public ReactionEffectResetPayload(){}
+    public static ReactionEffectResetPayload verify(int version){
         if(version != VERSION){
             throw new RuntimeException("Incompatible Reactive versions detected on the client and server!");
         }
-        return new ReactionsSentPayload();
+        return new ReactionEffectResetPayload();
     }
 
     @Override

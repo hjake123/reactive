@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.DissolveEvent;
 import dev.hyperlynx.reactive.alchemy.special.EmptyEvent;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.hyperlynx.reactive.integration.kubejs.net.ReactionEffectResetPayload;
 import dev.hyperlynx.reactive.integration.kubejs.net.ReactionRequestPayload;
 import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
@@ -47,5 +48,7 @@ public class EventTransceiver {
     @SubscribeEvent
     private static void translateReactionResetEvent(ReactionMan.ReactionResetEvent event){
         ReactiveKubeJSPlugin.REACTIONS.resetReactionHandlers();
+        ReactiveKubeJSPlugin.REACTIONS.ingestReactionHandlers();
+        PacketDistributor.sendToAllPlayers(new ReactionEffectResetPayload());
     }
 }
