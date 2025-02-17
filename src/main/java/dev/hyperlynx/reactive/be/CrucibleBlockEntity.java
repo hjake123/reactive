@@ -64,6 +64,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -302,6 +303,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         }
         crucible.sculkSpreader.clear();
         crucible.reaction_status.clear();
+        crucible.reactions_to_render.clear();
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
     }
 
