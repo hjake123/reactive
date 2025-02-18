@@ -31,10 +31,6 @@ public class ReactionComponentProcessor implements IComponentProcessor {
             }
         }
         if(key.equals("lock")){
-            Reaction reaction = ReactiveMod.REACTION_MAN.get(level, reaction_alias);
-            if(reaction == null){
-                return IVariable.empty();
-            }
             return IVariable.wrap("reactive:reactions/" + reaction_alias + "_perfect", level.registryAccess());
         }
         return IVariable.empty();

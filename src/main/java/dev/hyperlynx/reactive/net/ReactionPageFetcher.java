@@ -1,25 +1,13 @@
 package dev.hyperlynx.reactive.net;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
-import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.network.ConfigurationTask;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class ReactionPageFetcher {
     private static final ConcurrentMap<String, Semaphore> REQUEST_BLOCKERS = new ConcurrentHashMap<>();
