@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -31,6 +32,7 @@ public class Power {
     private final Block render_water_block;
     private final PrimedWSV percent_reactivity;
     public boolean invisible = false;
+    public MutableComponent name_override;
 
     public static final Codec<ResourceKey<Power>> RESOURCE_KEY_CODEC;
     public static final StreamCodec<ByteBuf, ResourceKey<Power>> RESOURCE_KEY_STREAM_CODEC;
@@ -97,7 +99,10 @@ public class Power {
         return TextColor.fromRgb(color.hex);
     }
     public String getId() { return location.getPath(); }
-    public String getName(){
+    public String getName() {
+        if(name_override != null){
+            return name_override.getString();
+        }
         return Component.translatable(name).getString();
     }
     public ResourceLocation getResourceLocation() { return location; }

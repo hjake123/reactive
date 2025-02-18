@@ -5,6 +5,7 @@ import mezz.jei.api.ingredients.IIngredientType;
 import org.jetbrains.annotations.NotNull;
 
 public class PowerIngredientType implements IIngredientType<Power> {
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public @NotNull Class getIngredientClass() {
         return Power.class;

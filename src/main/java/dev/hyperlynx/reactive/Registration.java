@@ -17,6 +17,7 @@ import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
+import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.items.*;
@@ -113,6 +114,9 @@ public class Registration {
         SOUND_EVENTS.register(bus);
         COMMAND_ARGUMENTS.register(bus);
         bus.register(Registration.class);
+        if(ModList.get().isLoaded("jsonthings")){
+            ReactiveJsonThingsPlugin.registerParser(bus);
+        }
     }
 
     // ----------------------- REGISTRATION ------------------------
