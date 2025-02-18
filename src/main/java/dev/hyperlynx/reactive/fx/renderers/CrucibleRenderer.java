@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.fx.renderers;
 
+import dev.hyperlynx.reactive.ClientRegistration;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -69,18 +70,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
     }
 
-    private void checkReactions(CrucibleBlockEntity crucible){
-        crucible.reactions_to_render.clear();
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()){
-            if(r.conditionsMet(crucible) == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(r);
-            }
-        }
-    }
-
     private void renderReactions(CrucibleBlockEntity crucible){
-        for(Reaction r : crucible.reactions_to_render){
-            r.render(crucible.getLevel(), crucible);
+        for(String alias : crucible.reactions_to_render){
+            ClientRegistration.REACTION_RENDERERS.RENDERERS.get(alias).render(crucible);
         }
     }
 
@@ -130,13 +122,6 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
 
         if(Minecraft.getInstance().isPaused()){
             return;
-        }
-
-        // Every 30 frames, check which reactions to render.
-        crucible.render_tick_counter++;
-        if(crucible.render_tick_counter > 30){
-            crucible.render_tick_counter = 0;
-            checkReactions(crucible);
         }
 
         renderReactions(crucible);

@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.PowerBuilder;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
@@ -13,11 +12,17 @@ import dev.latvian.mods.kubejs.registry.RegistryInfo;
 import dev.latvian.mods.kubejs.script.BindingsEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import dev.latvian.mods.kubejs.util.ClassFilter;
-import net.minecraft.core.registries.Registries;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ReactiveKubeJSPlugin extends KubeJSPlugin {
+    public static final Logger LOGGER = LogManager.getLogger("Reactive/KubeJS Integration");
     protected static RegistryInfo<Power> POWER_REGISTRY_INFO;
-    public static EventHandlerCache REACTIONS = new EventHandlerCache();
+    public static EventHandlerCache REACTION_EFFECT_CACHE = new EventHandlerCache();
+    public static Set<String> CUSTOM_REACTION_ALIASES = new HashSet<>();
 
     public ReactiveKubeJSPlugin(){
         POWER_REGISTRY_INFO = RegistryInfo.of(Powers.POWERS.getRegistryKey(), Power.class);

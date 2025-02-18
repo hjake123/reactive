@@ -18,7 +18,7 @@ public class ReactiveMod
     public static final String MODID = "reactive";
     public static final ReactionMan REACTION_MAN = new ReactionMan();
     public static final WorldSpecificValue WORLD_SPECIFIC_VALUE = new WorldSpecificValue();
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("Reactive");
 
     @SuppressWarnings("removal")
     public ReactiveMod() {

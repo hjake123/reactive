@@ -4,7 +4,6 @@ import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
-import dev.hyperlynx.reactive.items.PowerBottleItem;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
@@ -14,6 +13,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.net.rxn.ReactionStatusMessage;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.recipes.PrecipitateRecipe;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
@@ -54,9 +54,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.annotation.Target;
 import java.util.*;
+import java.util.function.Supplier;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.
@@ -87,11 +91,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
-    public int render_tick_counter = 0; // Used for counting rendering ticks on the client in CrucibleRenderer.
-    public List<Reaction> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more efficiently render reactions, and is only updated on the client.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction states of the previous tick. Only updated on the server. Used by Litmus Paper.
+    public List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more render reactions, and is updated by a packet.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE.get(), pos, state);
@@ -409,12 +412,37 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
         }
 
+        // Update clients each reaction tick about what to display.
+        BlockPos pos = crucible.getBlockPos();
+        Registration.REACTION_SYNC_CHANNEL.send(
+                PacketDistributor.NEAR.with(() ->
+                        PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 32, crucible.getLevel().dimension()).get()
+                ),
+                new ReactionStatusMessage(pos, crucible.reaction_status));
+
         if(crucible.reaction_status.isEmpty()){
             crucible.reaction_status.add(ReactionStatusEntry.stable());
         }
 
         if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null) {
             crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
+        }
+    }
+
+    // CLIENT ONLY
+    // Used to update reactionsToRender
+    public static void handleReactionStatusMessage(ReactionStatusMessage message, Supplier<NetworkEvent.Context> context) {
+        Level level = context.get().getSender().level();
+        BlockEntity be = level.getBlockEntity(message.pos());
+        if(!(be instanceof CrucibleBlockEntity crucible)){
+            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
+            return;
+        }
+        crucible.reactions_to_render.clear();
+        for(ReactionStatusEntry entry : message.statuses()){
+            if(entry.status() == Reaction.Status.REACTING){
+                crucible.reactions_to_render.add(entry.reaction_alias());
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.integration.kubejs;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.fx.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEventJS;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -26,19 +27,21 @@ public class CustomReaction extends Reaction {
         this.name = name_override;
     }
 
+    public static ReactionRenderer getRenderFunction(String alias) {
+        return (reactor) -> {
+            EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(new CustomReactionTickEventJS(alias, reactor));
+        };
+    }
+
     @Override
     public Status conditionsMet(CrucibleBlockEntity crucible){
         Status status = super.conditionsMet(crucible);
         if(!(status.equals(Status.REACTING))){
             return status;
         }
-        var event = new CustomReactionTickEventJS(this, crucible);
+        var event = new CustomReactionTickEventJS(this.getAlias(), crucible);
         EventResult result;
-        if(crucible.getLevel().isClientSide){
-            result = ReactiveKubeJSPlugin.REACTIONS.processClientTestEvent(event);
-        } else {
-            result = ReactiveKubeJSPlugin.REACTIONS.processServerTestEvent(event);
-        }
+        result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processServerTestEvent(event);
         if(result.interruptFalse()){
             return Status.INHIBITED;
         }
@@ -47,17 +50,12 @@ public class CustomReaction extends Reaction {
 
     @Override
     public void run(CrucibleBlockEntity crucible) {
-        EventTransceiver.CUSTOM_REACTION_RUN_EVENT.post(ScriptType.SERVER, new CustomReactionTickEventJS(this, crucible));
+        EventTransceiver.CUSTOM_REACTION_RUN_EVENT.post(ScriptType.SERVER, new CustomReactionTickEventJS(this.getAlias(), crucible));
         if(cost > 0){
             expendPower(crucible, cost);
         }
         output_power.ifPresent(power -> crucible.addPower(power, yield));
         super.run(crucible);
-    }
-
-    @Override
-    public void render(Level l, CrucibleBlockEntity crucible) {
-        EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(ScriptType.CLIENT, new CustomReactionTickEventJS(this, crucible));
     }
 
     private void expendPower(CrucibleBlockEntity crucible, int cost){

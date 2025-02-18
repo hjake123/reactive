@@ -8,7 +8,6 @@ import dev.latvian.mods.kubejs.event.EventGroup;
 import dev.latvian.mods.kubejs.event.EventHandler;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 public class EventTransceiver {
     public static EventGroup EVENTS = EventGroup.of("ReactiveEvents");
@@ -36,6 +35,6 @@ public class EventTransceiver {
 
     @SubscribeEvent
     public static void translateReactionResetEvent(ReactionMan.ReactionResetEvent event){
-        ReactiveKubeJSPlugin.REACTIONS.resetReactionHandlers();
+        ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.resetReactionHandlers();
     }
 }

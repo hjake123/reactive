@@ -12,8 +12,8 @@ import java.util.function.Function;
 public class CatalystEffectReaction extends EffectReaction{
     Item reactant;
 
-    public CatalystEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, Item reactant) {
-        super(alias, function, render, required_power);
+    public CatalystEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, Item reactant) {
+        super(alias, function, required_power);
         this.reactant = reactant;
     }
 

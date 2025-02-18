@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive;
 import dev.hyperlynx.reactive.fx.particles.*;
 import dev.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.fx.renderers.SymbolRenderer;
+import dev.hyperlynx.reactive.fx.renderers.rxn.ReactionRenderers;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -16,6 +17,7 @@ import dev.hyperlynx.reactive.fx.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 
 public class ClientRegistration {
+    public static final ReactionRenderers REACTION_RENDERERS = new ReactionRenderers();
     public static boolean IRIS_MODE = false;
     public static void init() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

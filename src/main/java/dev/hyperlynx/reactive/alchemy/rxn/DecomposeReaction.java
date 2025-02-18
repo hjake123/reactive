@@ -28,11 +28,6 @@ public class DecomposeReaction extends Reaction{
     }
 
     @Override
-    public void render(Level l, CrucibleBlockEntity crucible) {
-
-    }
-
-    @Override
     public boolean isPerfect(CrucibleBlockEntity crucible) {
         for(Power p: crucible.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !results.contains(p)){

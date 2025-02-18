@@ -47,11 +47,6 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level l, final CrucibleBlockEntity crucible) {
-        ParticleScribe.drawParticleRing(l, ParticleTypes.ASH, crucible.getBlockPos(), 0.45, 0.7, 1);
-    }
-
-    @Override
     public Status conditionsMet(CrucibleBlockEntity crucible){
         boolean has_curse = crucible.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
         if (crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)

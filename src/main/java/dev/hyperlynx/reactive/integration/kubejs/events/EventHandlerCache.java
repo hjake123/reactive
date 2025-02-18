@@ -1,11 +1,18 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
+import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.hyperlynx.reactive.integration.kubejs.net.CustomReactionAliasRequest;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraftforge.network.PacketDistributor;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,30 +20,21 @@ import java.util.List;
 // as well as running those event handlers.
 public class EventHandlerCache {
     private final List<IEventHandler> reaction_runners = new ArrayList<>();
-    private final List<IEventHandler> reaction_renderers = new ArrayList<>();
     private final List<IEventHandler> server_reaction_tests = new ArrayList<>();
-    private final List<IEventHandler> client_reaction_tests = new ArrayList<>();
 
     public void ingestReactionHandlers(){
         EventTransceiver.CUSTOM_REACTION_RUN_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             reaction_runners.add(container.handler);
         });
-        EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.forEachListener(ScriptType.CLIENT, (container) -> {
-            reaction_renderers.add(container.handler);
-        });
         EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             server_reaction_tests.add(container.handler);
         });
-        EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.CLIENT, (container) -> {
-            client_reaction_tests.add(container.handler);
-        });
+        this.reaction_construct_done = true;
     }
 
     public void resetReactionHandlers(){
-        reaction_renderers.clear();
         reaction_runners.clear();
         server_reaction_tests.clear();
-        client_reaction_tests.clear();
     }
 
     private EventResult processEvent(EventJS event, List<IEventHandler> handlers){
@@ -51,10 +49,6 @@ public class EventHandlerCache {
         return EventResult.PASS;
     }
 
-    public EventResult processClientTestEvent(CustomReactionTickEventJS event){
-        return processEvent(event, client_reaction_tests);
-    }
-
     public EventResult processServerTestEvent(CustomReactionTickEventJS event){
         return processEvent(event, server_reaction_tests);
     }
@@ -63,8 +57,23 @@ public class EventHandlerCache {
         return processEvent(event, reaction_runners);
     }
 
-    public EventResult processRenderEvent(CustomReactionTickEventJS event){
-        return processEvent(event, reaction_renderers);
+    // SERVER ONLY
+    public boolean reaction_construct_done = false;
+
+    // CLIENT ONLY
+    public boolean received_renderers = false;
+    private Instant last_request_timestamp;
+
+    public void requestRenderers(){
+        if(received_renderers){
+            return;
+        }
+
+        if(last_request_timestamp == null || last_request_timestamp.isBefore(Instant.now().minus(10, ChronoUnit.SECONDS))){
+            ReactiveKubeJSPlugin.LOGGER.info("Requesting KubeJS reaction aliases");
+            Registration.REACTION_SYNC_CHANNEL.send(PacketDistributor.SERVER.noArg(), new CustomReactionAliasRequest());
+            last_request_timestamp = Instant.now();
+        }
     }
 
 }

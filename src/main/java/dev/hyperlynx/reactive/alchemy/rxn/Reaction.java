@@ -172,8 +172,6 @@ public abstract class Reaction {
         return crucible.getPowerMap().keySet().size() == reagents.size();
     }
 
-    public abstract void render(final Level l, final CrucibleBlockEntity crucible);
-
     public MutableComponent getName() {
         return name.copy();
     }

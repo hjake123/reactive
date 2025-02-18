@@ -10,23 +10,18 @@ import java.util.function.Function;
 public class EffectReaction extends FreeEffectReaction{
     int cost;
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> effect, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, int numReagents) {
-        super(alias, effect, render, numReagents);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> effect, int numReagents) {
+        super(alias, effect, numReagents);
         cost = WorldSpecificValue.get(alias+"cost", 10, 20);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power) {
-        super(alias, function, render, required_power);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power) {
+        super(alias, function, required_power);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power... required_powers) {
-        super(alias, function, render, required_powers);
-        cost = WorldSpecificValue.get(alias+"cost", 1, 20);
-    }
-
-    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Function<CrucibleBlockEntity, CrucibleBlockEntity> render, Power required_power, int num_additionals) {
-        super(alias, function, render, required_power, num_additionals);
+    public EffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power... required_powers) {
+        super(alias, function, required_powers);
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 

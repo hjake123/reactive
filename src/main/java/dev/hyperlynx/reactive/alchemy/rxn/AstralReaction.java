@@ -25,12 +25,6 @@ public class AstralReaction extends Reaction{
     }
 
     @Override
-    public void render(final Level level, final CrucibleBlockEntity crucible) {
-        if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) < crucible.getTotalPowerLevel())
-            ParticleScribe.drawParticleCrucibleTop(level, Registration.STARDUST_PARTICLE.getType(), crucible.getBlockPos(), 0.3F);
-    }
-
-    @Override
     public Status conditionsMet(CrucibleBlockEntity crucible){
         if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
             return Status.REACTING;

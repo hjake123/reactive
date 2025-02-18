@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.List;
 import java.util.Optional;
 
+import static dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES;
+
 public class ReactionFactory {
     CustomReaction rxn;
 
@@ -84,5 +86,6 @@ public class ReactionFactory {
 
     public void build(){
         ReactionMan.addReactions(rxn);
+        CUSTOM_REACTION_ALIASES.add(rxn.getAlias());
     }
 }

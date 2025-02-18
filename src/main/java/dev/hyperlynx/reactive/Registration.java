@@ -18,6 +18,7 @@ import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerialize
 import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
+import dev.hyperlynx.reactive.net.rxn.*;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.items.*;
 import dev.hyperlynx.reactive.recipes.*;
@@ -503,6 +504,13 @@ public class Registration {
         PROTOCOL_VERSION::equals
     );
 
+    public static final SimpleChannel REACTION_SYNC_CHANNEL = NetworkRegistry.newSimpleChannel(
+            ReactiveMod.location("reaction_sync"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals
+    );
+
     // Register the creative mode tab.
     public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
@@ -540,6 +548,21 @@ public class Registration {
                 LitmusScreenMessage::encoder,
                 LitmusScreenMessage::decoder,
                 LitmusScreenMessage::handler);
+
+        REACTION_SYNC_CHANNEL.registerMessage(1, ReactionStatusMessage.class,
+                ReactionStatusMessage::encoder,
+                ReactionStatusMessage::decoder,
+                ReactionStatusMessage::handler);
+
+        REACTION_SYNC_CHANNEL.registerMessage(10, ReactionPageFetcher.ReactionFormulaRequest.class,
+                ReactionPageFetcher.ReactionFormulaRequest::encoder,
+                ReactionPageFetcher.ReactionFormulaRequest::decoder,
+                ReactionPageServer::handlePageRequest);
+
+        REACTION_SYNC_CHANNEL.registerMessage(11, ReactionPageServer.ReactionFormulaResponse.class,
+                ReactionPageServer.ReactionFormulaResponse::encoder,
+                ReactionPageServer.ReactionFormulaResponse::decoder,
+                ReactionPageFetcher::handleFormulaResponse);
     }
 
     // Set up the potion items.

@@ -7,11 +7,11 @@ import dev.latvian.mods.kubejs.event.EventJS;
 
 public class CustomReactionTickEventJS extends EventJS implements KubeCrucibleEvent {
     KubeCrucible crucible;
-    CustomReaction rxn;
+    String alias;
 
-    public CustomReactionTickEventJS(CustomReaction rxn, CrucibleBlockEntity crucible){
+    public CustomReactionTickEventJS(String alias, CrucibleBlockEntity crucible){
         this.crucible = new KubeCrucible(crucible);
-        this.rxn = rxn;
+        this.alias = alias;
     }
 
     @Override
@@ -20,6 +20,6 @@ public class CustomReactionTickEventJS extends EventJS implements KubeCrucibleEv
     }
 
     public String getAlias(){
-        return rxn.getAlias();
+        return alias;
     }
 }
