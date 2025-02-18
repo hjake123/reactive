@@ -71,11 +71,7 @@ public class CustomReaction extends Reaction {
         }
         var event = new CustomReactionTickEvent(this, crucible);
         EventResult result;
-        if(crucible.getLevel().isClientSide){
-            result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processClientTestEvent(event);
-        } else {
-            result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processServerTestEvent(event);
-        }
+        result = ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processServerTestEvent(event);
         if(result.interruptFalse()){
             return Status.INHIBITED;
         }

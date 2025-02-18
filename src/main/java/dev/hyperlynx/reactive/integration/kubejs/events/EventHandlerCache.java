@@ -21,7 +21,6 @@ public class EventHandlerCache {
     private final List<IEventHandler> reaction_runners = new ArrayList<>();
     private final List<IEventHandler> reaction_renderers = new ArrayList<>();
     private final List<IEventHandler> server_reaction_tests = new ArrayList<>();
-    private final List<IEventHandler> client_reaction_tests = new ArrayList<>();
 
     public void ingestReactionHandlers(){
         EventTransceiver.CUSTOM_REACTION_RUN_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
@@ -33,9 +32,6 @@ public class EventHandlerCache {
         EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             server_reaction_tests.add(container.handler);
         });
-        EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.CLIENT, (container) -> {
-            client_reaction_tests.add(container.handler);
-        });
         this.reaction_construct_done = true;
     }
 
@@ -43,7 +39,6 @@ public class EventHandlerCache {
         reaction_renderers.clear();
         reaction_runners.clear();
         server_reaction_tests.clear();
-        client_reaction_tests.clear();
     }
 
     private EventResult processEvent(KubeEvent event, List<IEventHandler> handlers) {
@@ -61,10 +56,6 @@ public class EventHandlerCache {
             }
         }
         return EventResult.PASS;
-    }
-
-    public EventResult processClientTestEvent(CustomReactionTickEvent event){
-        return processEvent(event, client_reaction_tests);
     }
 
     public EventResult processServerTestEvent(CustomReactionTickEvent event){
