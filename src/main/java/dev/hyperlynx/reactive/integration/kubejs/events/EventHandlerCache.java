@@ -1,11 +1,16 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class EventHandlerCache {
         EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.CLIENT, (container) -> {
             client_reaction_tests.add(container.handler);
         });
+        this.reaction_construct_done = true;
     }
 
     public void resetReactionHandlers(){
@@ -67,4 +73,22 @@ public class EventHandlerCache {
         return processEvent(event, reaction_renderers);
     }
 
+    // SERVER ONLY
+    public boolean reaction_construct_done = false;
+
+    // CLIENT ONLY
+    public boolean received_renderers = false;
+    private Instant last_request_timestamp;
+
+    public void requestRenderers(){
+        if(received_renderers){
+            return;
+        }
+
+        if(last_request_timestamp == null || last_request_timestamp.isBefore(Instant.now().minus(10, ChronoUnit.SECONDS))){
+            ReactiveMod.LOGGER.info("Requesting KubeJS reaction aliases");
+            PacketDistributor.sendToServer(new ReactiveKubeJSPlugin.ReactionAliasRequestPayload());
+            last_request_timestamp = Instant.now();
+        }
+    }
 }

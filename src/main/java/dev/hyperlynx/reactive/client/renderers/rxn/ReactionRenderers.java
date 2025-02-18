@@ -6,9 +6,11 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModList;
 
 import java.util.*;
 
@@ -30,6 +32,10 @@ public class ReactionRenderers {
     }
 
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
+        if(ModList.get().isLoaded("kubejs")){
+            ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.requestRenderers();
+        }
+
         List<ReactionRenderer> ret = new ArrayList<>();
         for(String alias : aliases){
             if(RENDERERS.containsKey(alias)){
