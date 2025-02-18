@@ -738,8 +738,5 @@ public class Registration {
     @SubscribeEvent
     public static void register(final RegisterConfigurationTasksEvent event) {
         event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
-        if(ModList.get().isLoaded("kubejs")) {
-            ReactiveKubeJSPlugin.registerConfigurationTasks(event);
-        }
     }
 }

@@ -16,7 +16,7 @@ public class ReactiveMod
 {
     public static final String MODID = "reactive";
     public static final ReactionMan REACTION_MAN = new ReactionMan();
-    public static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("Reactive");
     public ReactiveMod(ModContainer container) {
         IEventBus reactive_bus = container.getEventBus();
         Registration.init(reactive_bus);
@@ -28,7 +28,7 @@ public class ReactiveMod
     }
 
     /** Creates a ResourceLocation with the mod id as the namespace. **/
-    public static ResourceLocation location(String path){
+    public static ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 

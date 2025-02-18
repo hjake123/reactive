@@ -24,6 +24,7 @@ import net.minecraft.server.network.ConfigurationTask;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,14 +73,16 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionAliasPayload.TYPE,
                 ReactionAliasPayload.STREAM_CODEC,
                 (payload, _context) -> {
+                    ReactiveMod.LOGGER.info("Received KubeJS reactions, registering them to renderer");
                     for(String alias : payload.aliases()){
+                        ReactiveMod.LOGGER.debug("-> {}", alias);
                         ReactiveClientMod.REACTION_RENDERERS.RENDERERS.put(alias, CustomReaction.getRenderFunction(alias));
                     }
                 }
             );
     }
 
-    protected record ReactionAliasPayload(Set<String> aliases) implements CustomPacketPayload {
+    public record ReactionAliasPayload(Set<String> aliases) implements CustomPacketPayload {
         public static final CustomPacketPayload.Type<ReactionAliasPayload> TYPE = new CustomPacketPayload.Type<>(ReactiveMod.location("kubejs_reaction_alias"));
         public static final StreamCodec<? super FriendlyByteBuf, ReactionAliasPayload> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.collection(HashSet::new, ByteBufCodecs.STRING_UTF8), ReactionAliasPayload::aliases,
@@ -87,26 +90,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
         );
 
         @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
-
-    public static void registerConfigurationTasks(final RegisterConfigurationTasksEvent event) {
-        event.register(new CustomReactionSyncConfigTask(event.getListener()));
-    }
-
-    private record CustomReactionSyncConfigTask(ServerConfigurationPacketListener listener) implements ICustomConfigurationTask {
-        public static final ConfigurationTask.Type TYPE = new ConfigurationTask.Type(ReactiveMod.location("kubejs_reaction_sync_task"));
-
-        @Override
-        public void run(Consumer<CustomPacketPayload> sender) {
-            sender.accept(new ReactionAliasPayload(CUSTOM_REACTION_ALIASES));
-            this.listener().finishCurrentTask(this.type());
-        }
-
-        @Override
-        public Type type() {
+        public @NotNull Type<? extends CustomPacketPayload> type() {
             return TYPE;
         }
     }

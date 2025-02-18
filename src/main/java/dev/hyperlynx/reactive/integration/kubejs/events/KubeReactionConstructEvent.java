@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
@@ -10,6 +11,7 @@ import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -38,6 +40,8 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     @Override
     public void afterPosted(EventResult result) {
+        ReactiveMod.LOGGER.info("Finished constructing KubeJS reactions");
         ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.ingestReactionHandlers();
+        PacketDistributor.sendToAllPlayers(new ReactiveKubeJSPlugin.ReactionAliasPayload(ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES));
     }
 }

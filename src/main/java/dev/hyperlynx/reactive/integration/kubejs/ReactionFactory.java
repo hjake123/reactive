@@ -88,6 +88,5 @@ public class ReactionFactory {
 
     public void build(){
         ReactionMan.addReactions(rxn);
-        PacketDistributor.sendToAllPlayers(new ReactiveKubeJSPlugin.ReactionAliasPayload(Set.of(rxn.getAlias())));
     }
 }

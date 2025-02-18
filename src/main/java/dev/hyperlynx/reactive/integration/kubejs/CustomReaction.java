@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -92,7 +93,9 @@ public class CustomReaction extends Reaction {
     }
 
     public static ReactionRenderer getRenderFunction(String alias) {
-        return (reactor) -> ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processRenderEvent(new CustomReactionTickEvent(alias, reactor));
+        return (reactor) -> {
+            ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processRenderEvent(new CustomReactionTickEvent(alias, reactor));
+        };
     }
 
     private void expendPower(Reactor reactor, int cost){
