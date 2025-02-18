@@ -728,17 +728,17 @@ public class Registration {
                 ReactionStatusPayload.STREAM_CODEC,
                 CrucibleBlockEntity::acceptReactionStatusPayload
         );
-
         registrar.playToServer(
                 ReactionPageRequestPayload.TYPE,
                 ReactionPageRequestPayload.STREAM_CODEC,
                 ReactionPageServer::handlePageRequest
         );
-
-        registrar.playToClient(
+        registrar.commonToClient(
                 ReactionPagePayload.TYPE,
                 ReactionPagePayload.STREAM_CODEC,
-                ReactionPageFetcher::handlePageResponse
+                (payload, context) -> {
+                    ReactionPageFetcher.handlePageResponse(payload, context);
+                }
         );
 
         if(ModList.get().isLoaded("kubejs")){

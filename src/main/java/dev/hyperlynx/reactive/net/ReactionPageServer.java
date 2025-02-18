@@ -7,13 +7,20 @@ import dev.hyperlynx.reactive.alchemy.rxn.CurseAssimilationReaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import vazkii.patchouli.api.IVariable;
 
 public class ReactionPageServer {
     public static void handlePageRequest(ReactionPageRequestPayload payload, IPayloadContext context) {
-        Reaction reaction = ReactiveMod.REACTION_MAN.get(context.player().level(), payload.alias());
+        String page = makePageFor(context.player().level(), payload.alias());
+        ReactiveMod.LOGGER.debug("Sending formula for {} to {}", payload.alias(), context.player());
+        PacketDistributor.sendToAllPlayers(new ReactionPagePayload(payload.alias(), page));
+    }
+
+    public static String makePageFor(Level level, String alias){
+        Reaction reaction = ReactiveMod.REACTION_MAN.get(level, alias);
         StringBuilder formula = new StringBuilder();
         if(reaction != null) {
             formula.append(Component.translatable("docs.reactive.powers_label").getString());
@@ -43,7 +50,6 @@ public class ReactionPageServer {
                 formula.append(catre.getCatalyst().getDescription().getString());
             }
         }
-        ReactiveMod.LOGGER.debug("Sending formula for {}", payload.alias());
-        PacketDistributor.sendToAllPlayers(new ReactionPagePayload(payload.alias(), formula.toString()));
+        return formula.toString();
     }
 }
