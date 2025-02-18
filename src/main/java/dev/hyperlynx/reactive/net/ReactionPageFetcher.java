@@ -49,27 +49,9 @@ public class ReactionPageFetcher {
     public static void handlePageResponse(ReactionPagePayload payload, IPayloadContext context) {
         ReactiveMod.LOGGER.debug("Received response for page about {}", payload.alias());
         RESPONSES.put(payload.alias(), payload.contents());
-        if(!REQUEST_BLOCKERS.containsKey(payload.alias())){
+        if (!REQUEST_BLOCKERS.containsKey(payload.alias())) {
             REQUEST_BLOCKERS.put(payload.alias(), new Semaphore(0, false));
         }
         REQUEST_BLOCKERS.get(payload.alias()).release();
     }
-
-//    public record ReactionPagesConfigurationTask(ServerConfigurationPacketListener listener, ServerLevel level) implements ICustomConfigurationTask {
-//        public static final ConfigurationTask.Type TYPE = new ConfigurationTask.Type(ReactiveMod.location("reaction_formulae_config_task"));
-//
-//        @Override
-//        public void run(Consumer<CustomPacketPayload> consumer) {
-//
-//            for(Reaction reaction : ReactiveMod.REACTION_MAN.getReactions(level)){
-//                consumer.accept(new ReactionPagePayload(reaction.getAlias(), ReactionPageServer.makePageFor(level, reaction.getAlias())));
-//            }
-//            this.listener().finishCurrentTask(TYPE);
-//        }
-//
-//        @Override
-//        public Type type() {
-//            return TYPE;
-//        }
-//    }
 }

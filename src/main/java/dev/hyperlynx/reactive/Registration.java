@@ -71,6 +71,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -733,12 +734,12 @@ public class Registration {
                 ReactionPageRequestPayload.STREAM_CODEC,
                 ReactionPageServer::handlePageRequest
         );
-        registrar.commonToClient(
+
+        final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
+        async_registrar.commonToClient(
                 ReactionPagePayload.TYPE,
                 ReactionPagePayload.STREAM_CODEC,
-                (payload, context) -> {
-                    ReactionPageFetcher.handlePageResponse(payload, context);
-                }
+                ReactionPageFetcher::handlePageResponse
         );
 
         if(ModList.get().isLoaded("kubejs")){
