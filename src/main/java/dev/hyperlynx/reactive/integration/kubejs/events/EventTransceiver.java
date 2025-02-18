@@ -32,7 +32,6 @@ public class EventTransceiver {
     @SubscribeEvent
     private static void translateConstructReactionEvent(ReactionMan.ReactionConstructEvent event){
         if(!event.level.isClientSide()){
-            ReactiveKubeJSPlugin.LOGGER.info("Received Reaction Construct Event");
             ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES.clear();
             REACTION_BUILD_EVENT.post(ScriptType.SERVER, new KubeReactionConstructEvent(event));
         }

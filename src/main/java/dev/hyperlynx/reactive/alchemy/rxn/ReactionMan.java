@@ -109,7 +109,7 @@ public class ReactionMan {
 
         if(initializer_lock)
             return;
-        ReactiveMod.LOGGER.info("ReactionMan is constructing built-in reactions");
+        ReactiveMod.LOGGER.info("Constructing reactions");
         initializer_lock = true;
 
         // Set up the Base Power List.
@@ -212,9 +212,7 @@ public class ReactionMan {
         REACTIONS.add(new WindBombReaction("wind_bomb"));
         REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
-        ReactiveMod.LOGGER.info("ReactionMan is done with built-ins");
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
-        ReactiveMod.LOGGER.info("Reaction construct event posted");
 
         initialized = true;
         initializer_lock = false;

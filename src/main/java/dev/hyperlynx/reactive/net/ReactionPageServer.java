@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 public class ReactionPageServer {
     public static void handlePageRequest(ReactionPageRequestPayload payload, IPayloadContext context) {
         String page = makePageFor(context.player().level(), payload.alias());
-        ReactiveMod.LOGGER.debug("Sending formula for {} to {}", payload.alias(), context.player());
+        ReactiveMod.LOGGER.debug("Sending formula for {} to {}", payload.alias(), context.player().getName().getString());
         PacketDistributor.sendToAllPlayers(new ReactionPagePayload(payload.alias(), page));
     }
 
