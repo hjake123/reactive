@@ -14,9 +14,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
-import dev.hyperlynx.reactive.client.ReactiveClientMod;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
-import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.recipes.CrucibleRecipeInput;
@@ -64,7 +62,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -218,7 +215,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             }
         } catch (Exception e){
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.ANGRY_VILLAGER, crucible.getBlockPos());
-            ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}: {}", crucible.getBlockPos(), e);
+            ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}: ", crucible.getBlockPos(), e);
             empty(level, pos, state, crucible);
         }
     }

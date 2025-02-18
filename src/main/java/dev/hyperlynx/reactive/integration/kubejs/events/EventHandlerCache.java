@@ -7,6 +7,7 @@ import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 import dev.latvian.mods.kubejs.script.ScriptType;
+import dev.latvian.mods.rhino.WrappedException;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.time.Instant;
@@ -45,13 +46,18 @@ public class EventHandlerCache {
         client_reaction_tests.clear();
     }
 
-    private EventResult processEvent(KubeEvent event, List<IEventHandler> handlers){
+    private EventResult processEvent(KubeEvent event, List<IEventHandler> handlers) {
         for(IEventHandler handler : handlers){
             try {
                 handler.onEvent(event);
                 return EventResult.PASS;
             } catch (EventExit exit){
                 return exit.result;
+            } catch (WrappedException exception){
+                if(exception.getWrappedException() instanceof EventExit exit){
+                    return exit.result;
+                }
+                throw exception;
             }
         }
         return EventResult.PASS;
