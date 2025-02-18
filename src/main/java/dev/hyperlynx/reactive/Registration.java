@@ -11,7 +11,7 @@ import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
-import dev.hyperlynx.reactive.fx.gui.LitmusScreenMessage;
+import dev.hyperlynx.reactive.net.litmus.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerializer;
@@ -19,7 +19,6 @@ import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
-import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.items.*;
 import dev.hyperlynx.reactive.recipes.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
@@ -66,8 +65,6 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.List;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)

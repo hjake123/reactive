@@ -1,10 +1,11 @@
 package dev.hyperlynx.reactive.fx.gui;
 
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
+import dev.hyperlynx.reactive.net.litmus.LitmusData;
+import dev.hyperlynx.reactive.net.litmus.UnresolvedLitmusData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
-import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 public class LitmusScreenOpener {

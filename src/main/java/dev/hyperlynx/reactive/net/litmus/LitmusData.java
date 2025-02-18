@@ -1,7 +1,6 @@
-package dev.hyperlynx.reactive.fx.gui;
+package dev.hyperlynx.reactive.net.litmus;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 

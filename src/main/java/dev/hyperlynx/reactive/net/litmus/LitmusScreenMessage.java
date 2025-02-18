@@ -1,10 +1,10 @@
-package dev.hyperlynx.reactive.fx.gui;
+package dev.hyperlynx.reactive.net.litmus;
 
+import dev.hyperlynx.reactive.fx.gui.LitmusScreenOpener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public record LitmusScreenMessage(UnresolvedLitmusData udata)  {
