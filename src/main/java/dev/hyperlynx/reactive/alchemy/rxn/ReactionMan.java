@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
@@ -95,8 +96,14 @@ public class ReactionMan {
 
     // Creates, from scratch, a set of all possible reactions that can be done in the world.
     private void constructReactions(Level level){
+        if(level.isClientSide()){
+            ReactiveMod.LOGGER.error("Client tried to construct reactions, ignoring...");
+            return;
+        }
+
         if(initializer_lock)
             return;
+        ReactiveMod.LOGGER.info("ReactionMan is constructing built-in reactions");
         initializer_lock = true;
 
         // Set up the Base Power List.
@@ -199,7 +206,9 @@ public class ReactionMan {
         REACTIONS.add(new WindBombReaction("wind_bomb"));
         REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
+        ReactiveMod.LOGGER.info("ReactionMan is done with built-ins");
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
+        ReactiveMod.LOGGER.info("Reaction construct event posted");
 
         initialized = true;
         initializer_lock = false;
@@ -216,6 +225,7 @@ public class ReactionMan {
 
     public void reset() {
         if(initialized){
+            ReactiveMod.LOGGER.info("Resetting ReactionMan");
             initialized = false;
             REACTIONS.clear();
             BASE_POWER_LIST.clear();

@@ -13,31 +13,23 @@ import dev.latvian.mods.kubejs.plugin.ClassFilter;
 import dev.latvian.mods.kubejs.plugin.KubeJSPlugin;
 import dev.latvian.mods.kubejs.registry.BuilderTypeRegistry;
 import dev.latvian.mods.kubejs.script.BindingRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
-import net.minecraft.server.network.ConfigurationTask;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
-import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public class ReactiveKubeJSPlugin implements KubeJSPlugin {
+    public static final Logger LOGGER = LogManager.getLogger("Reactive/KubeJS Integration");
+
     public static EventHandlerCache REACTION_EFFECT_CACHE = new EventHandlerCache();
     public static Set<String> CUSTOM_REACTION_ALIASES = new HashSet<>();
 
@@ -78,7 +70,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionAliasPayload.TYPE,
                 ReactionAliasPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    ReactiveMod.LOGGER.info("Received KubeJS reactions, registering them to renderer");
+                    ReactiveKubeJSPlugin.LOGGER.info("Received KubeJS reactions, registering them to renderer");
                     REACTION_EFFECT_CACHE.received_renderers = true;
                     for(String alias : payload.aliases()){
                         ReactiveMod.LOGGER.debug("-> {}", alias);
@@ -91,9 +83,9 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionAliasRequestPayload.TYPE,
                 ReactionAliasRequestPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    ReactiveMod.LOGGER.info("A request to send reaction aliases was received");
+                    ReactiveKubeJSPlugin.LOGGER.info("A request to send reaction aliases was received");
                     if(REACTION_EFFECT_CACHE.reaction_construct_done){
-                        ReactiveMod.LOGGER.info("Sending KubeJS reaction aliases as requested");
+                        ReactiveKubeJSPlugin.LOGGER.info("Sending KubeJS reaction aliases as requested");
                         PacketDistributor.sendToAllPlayers(new ReactionAliasPayload(CUSTOM_REACTION_ALIASES));
                     }
                 }

@@ -40,7 +40,7 @@ public class KubeReactionConstructEvent implements KubeEvent {
 
     @Override
     public void afterPosted(EventResult result) {
-        ReactiveMod.LOGGER.info("Finished constructing KubeJS reactions");
+        ReactiveKubeJSPlugin.LOGGER.info("Finished constructing KubeJS reactions");
         ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.ingestReactionHandlers();
         PacketDistributor.sendToAllPlayers(new ReactiveKubeJSPlugin.ReactionAliasPayload(ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES));
     }

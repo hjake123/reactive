@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEvent;
+import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -90,7 +91,7 @@ public class CustomReaction extends Reaction {
 
     public static ReactionRenderer getRenderFunction(String alias) {
         return (reactor) -> {
-            ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.processRenderEvent(new CustomReactionTickEvent(alias, reactor));
+            EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(new CustomReactionTickEvent(alias, reactor));
         };
     }
 

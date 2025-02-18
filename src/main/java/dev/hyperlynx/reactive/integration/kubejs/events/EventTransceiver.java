@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.DissolveEvent;
 import dev.hyperlynx.reactive.alchemy.special.EmptyEvent;
@@ -31,6 +32,7 @@ public class EventTransceiver {
     @SubscribeEvent
     private static void translateConstructReactionEvent(ReactionMan.ReactionConstructEvent event){
         if(!event.level.isClientSide()){
+            ReactiveKubeJSPlugin.LOGGER.info("Received Reaction Construct Event");
             ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES.clear();
             REACTION_BUILD_EVENT.post(ScriptType.SERVER, new KubeReactionConstructEvent(event));
         }

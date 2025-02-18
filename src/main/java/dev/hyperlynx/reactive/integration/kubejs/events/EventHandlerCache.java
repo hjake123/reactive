@@ -19,15 +19,11 @@ import java.util.List;
 // as well as running those event handlers.
 public class EventHandlerCache {
     private final List<IEventHandler> reaction_runners = new ArrayList<>();
-    private final List<IEventHandler> reaction_renderers = new ArrayList<>();
     private final List<IEventHandler> server_reaction_tests = new ArrayList<>();
 
     public void ingestReactionHandlers(){
         EventTransceiver.CUSTOM_REACTION_RUN_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             reaction_runners.add(container.handler);
-        });
-        EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.forEachListener(ScriptType.CLIENT, (container) -> {
-            reaction_renderers.add(container.handler);
         });
         EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             server_reaction_tests.add(container.handler);
@@ -36,7 +32,6 @@ public class EventHandlerCache {
     }
 
     public void resetReactionHandlers(){
-        reaction_renderers.clear();
         reaction_runners.clear();
         server_reaction_tests.clear();
     }
@@ -66,10 +61,6 @@ public class EventHandlerCache {
         return processEvent(event, reaction_runners);
     }
 
-    public EventResult processRenderEvent(CustomReactionTickEvent event){
-        return processEvent(event, reaction_renderers);
-    }
-
     // SERVER ONLY
     public boolean reaction_construct_done = false;
 
@@ -83,7 +74,7 @@ public class EventHandlerCache {
         }
 
         if(last_request_timestamp == null || last_request_timestamp.isBefore(Instant.now().minus(10, ChronoUnit.SECONDS))){
-            ReactiveMod.LOGGER.info("Requesting KubeJS reaction aliases");
+            ReactiveKubeJSPlugin.LOGGER.info("Requesting KubeJS reaction aliases");
             PacketDistributor.sendToServer(new ReactiveKubeJSPlugin.ReactionAliasRequestPayload());
             last_request_timestamp = Instant.now();
         }
