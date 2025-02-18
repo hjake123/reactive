@@ -207,7 +207,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
         } catch (Exception e) {
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.ANGRY_VILLAGER, crucible.getBlockPos());
-            ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}: {}", crucible.getBlockPos(), e);
+            ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}:", crucible.getBlockPos(), e);
             empty(level, pos, state, crucible);
         }
     }
