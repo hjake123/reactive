@@ -29,7 +29,7 @@ public class ReactionPageFetcher {
         }
 
         // Block until we get a response. If we already have one, this should just go.
-        var success = REQUEST_BLOCKERS.get(alias).tryAcquire(10000000, TimeUnit.SECONDS);
+        var success = REQUEST_BLOCKERS.get(alias).tryAcquire(1, TimeUnit.SECONDS);
         if(!success){
             ReactiveMod.LOGGER.error("Timeout loading contents for the reaction formula for {}", alias);
             return "$(4) Timeout while loading";

@@ -6,9 +6,11 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.net.rxn.ReactionStatusMessage;
 import dev.hyperlynx.reactive.util.Color;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -23,13 +25,17 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.network.NetworkEvent;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import dev.hyperlynx.reactive.ConfigMan;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity> {
 
@@ -146,5 +152,27 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         consumer.vertex(pose, 0.81f, 0.81f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
         consumer.vertex(pose, 0.81f, 0.19f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
         consumer.vertex(pose, 0.19f, 0.19f, 0).overlayCoords(overlay).uv2(light).normal(0, 0, 1).endVertex();
+    }
+
+    // CLIENT ONLY
+    // Used to update reactionsToRender
+    public static void handleReactionStatusMessage(ReactionStatusMessage message) {
+        Level level = Minecraft.getInstance().level;
+        ReactiveMod.LOGGER.debug("Received {}", message);
+        if(level == null) {
+            ReactiveMod.LOGGER.error("Received a reaction status message before the level loaded. Ignoring.");
+            return;
+        }
+        BlockEntity be = level.getBlockEntity(message.pos());
+        if(!(be instanceof CrucibleBlockEntity crucible)){
+            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
+            return;
+        }
+        crucible.reactions_to_render.clear();
+        for(ReactionStatusEntry entry : message.statuses()){
+            if(entry.status() == Reaction.Status.REACTING){
+                crucible.reactions_to_render.add(entry.reaction_alias());
+            }
+        }
     }
 }

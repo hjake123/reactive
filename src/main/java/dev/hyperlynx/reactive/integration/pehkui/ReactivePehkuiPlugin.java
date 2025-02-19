@@ -46,8 +46,8 @@ public class ReactivePehkuiPlugin {
         ReactionMan.addReactions(
             new FreeEffectReaction("size_shrink_effect", ResizeReactionEffects::shrink, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
             new FreeEffectReaction("size_grow_effect", ResizeReactionEffects::grow, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC),
-            new FreeEffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC),
-            new FreeEffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large, null, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC)
+            new FreeEffectReaction("size_revert_effect", ResizeReactionEffects::revert_from_small, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC),
+            new FreeEffectReaction("size_revert_effect_2", ResizeReactionEffects::revert_from_large,Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC)
         );
     }
 

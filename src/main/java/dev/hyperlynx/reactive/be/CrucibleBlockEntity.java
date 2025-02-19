@@ -429,23 +429,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
     }
 
-    // CLIENT ONLY
-    // Used to update reactionsToRender
-    public static void handleReactionStatusMessage(ReactionStatusMessage message, Supplier<NetworkEvent.Context> context) {
-        Level level = context.get().getSender().level();
-        BlockEntity be = level.getBlockEntity(message.pos());
-        if(!(be instanceof CrucibleBlockEntity crucible)){
-            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
-            return;
-        }
-        crucible.reactions_to_render.clear();
-        for(ReactionStatusEntry entry : message.statuses()){
-            if(entry.status() == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(entry.reaction_alias());
-            }
-        }
-    }
-
     // Used to gather and operate on items sitting inside the crucible.
     private static boolean processItemsInside(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible){
         if(!state.getValue(CrucibleBlock.FULL)){

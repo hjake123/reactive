@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.net.rxn;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -32,7 +33,7 @@ public record ReactionStatusMessage(BlockPos pos, List<ReactionStatusEntry> stat
 
     public void handler(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            CrucibleBlockEntity.handleReactionStatusMessage(this, context);
+            CrucibleRenderer.handleReactionStatusMessage(this);
         });
     }
 }
