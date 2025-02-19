@@ -18,11 +18,12 @@ public record LitmusScreenMessage(UnresolvedLitmusData udata)  {
         return new LitmusScreenMessage(new UnresolvedLitmusData(paper));
     }
 
-    public void handler(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
+    public void handler(Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
             if(FMLLoader.getDist().isClient()){
                 LitmusScreenOpener.open(this.udata);
             }
         });
+        context.get().setPacketHandled(true);
     }
 }

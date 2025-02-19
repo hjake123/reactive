@@ -158,7 +158,6 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     // Used to update reactionsToRender
     public static void handleReactionStatusMessage(ReactionStatusMessage message) {
         Level level = Minecraft.getInstance().level;
-        ReactiveMod.LOGGER.debug("Received {}", message);
         if(level == null) {
             ReactiveMod.LOGGER.error("Received a reaction status message before the level loaded. Ignoring.");
             return;

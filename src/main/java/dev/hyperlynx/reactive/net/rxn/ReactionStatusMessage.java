@@ -34,6 +34,7 @@ public record ReactionStatusMessage(BlockPos pos, List<ReactionStatusEntry> stat
     public void handler(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             CrucibleRenderer.handleReactionStatusMessage(this);
+            context.get().setPacketHandled(true);
         });
     }
 }

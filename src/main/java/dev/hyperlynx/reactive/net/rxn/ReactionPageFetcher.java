@@ -44,6 +44,7 @@ public class ReactionPageFetcher {
             REQUEST_BLOCKERS.put(payload.alias(), new Semaphore(0, false));
         }
         REQUEST_BLOCKERS.get(payload.alias()).release();
+        context.get().setPacketHandled(true);
     }
 
     public record ReactionFormulaRequest(String alias) {

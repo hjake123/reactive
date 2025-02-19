@@ -21,6 +21,7 @@ public class ReactionPageServer {
         Registration.REACTION_SYNC_CHANNEL.send(
                 PacketDistributor.PLAYER.with(() -> context.get().getSender()),
                 new ReactionFormulaResponse(request.alias(), page));
+        context.get().setPacketHandled(true);
     }
 
     public static String makePageFor(Level level, String alias){
