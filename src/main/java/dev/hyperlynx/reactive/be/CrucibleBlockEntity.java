@@ -305,6 +305,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         crucible.sculkSpreader.clear();
         crucible.reaction_status.clear();
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
+
+        Registration.REACTION_SYNC_CHANNEL.send(
+                PacketDistributor.ALL.noArg(),
+                new ReactionStatusMessage(pos, crucible.reaction_status));
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
@@ -412,6 +416,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
         }
 
+        ReactiveMod.LOGGER.debug("Sending reaction status update"); // TODO temp
         // Update clients each reaction tick about what to display.
         BlockPos pos = crucible.getBlockPos();
         Registration.REACTION_SYNC_CHANNEL.send(

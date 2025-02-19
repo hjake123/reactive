@@ -163,6 +163,9 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             ReactiveMod.LOGGER.error("Received a reaction status message before the level loaded. Ignoring.");
             return;
         }
+        if(!level.isLoaded(message.pos())){
+            return;
+        }
         BlockEntity be = level.getBlockEntity(message.pos());
         if(!(be instanceof CrucibleBlockEntity crucible)){
             ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
