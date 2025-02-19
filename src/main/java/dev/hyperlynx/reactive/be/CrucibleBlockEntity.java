@@ -196,6 +196,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                         // Deal with integrity violations.
                         checkIntegrity(level, pos, state, crucible);
 
+                        // Clean level 0 powers
+                        clearEmptyPowers(crucible);
+
                         // Synchronize the client and server.
                         crucible.setDirty();
                         crucible.process_stage = -1;
@@ -209,6 +212,15 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.ANGRY_VILLAGER, crucible.getBlockPos());
             ReactiveMod.LOGGER.error("Encountered an unexpected error when ticking the crucible at {}:", crucible.getBlockPos(), e);
             empty(level, pos, state, crucible);
+        }
+    }
+
+    private static void clearEmptyPowers(CrucibleBlockEntity crucible) {
+        Iterable<Power> powers = Set.copyOf(crucible.powers.keySet());
+        for(Power p : powers){
+            if(crucible.powers.get(p) == 0){
+                crucible.powers.remove(p);
+            }
         }
     }
 
