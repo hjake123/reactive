@@ -306,9 +306,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         crucible.reaction_status.clear();
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
 
-        Registration.REACTION_SYNC_CHANNEL.send(
-                PacketDistributor.ALL.noArg(),
-                new ReactionStatusMessage(pos, crucible.reaction_status));
+        if(!level.isClientSide){
+            Registration.REACTION_SYNC_CHANNEL.send(
+                    PacketDistributor.ALL.noArg(),
+                    new ReactionStatusMessage(pos, crucible.reaction_status));
+        }
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
