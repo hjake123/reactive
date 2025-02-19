@@ -77,9 +77,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     }
 
     private void renderReactions(CrucibleBlockEntity crucible){
-        for(String alias : crucible.reactions_to_render){
-            ClientRegistration.REACTION_RENDERERS.RENDERERS.get(alias).render(crucible);
-        }
+        ClientRegistration.REACTION_RENDERERS.getRenderers(crucible.reactions_to_render).forEach((renderer) -> renderer.render(crucible));
     }
 
     private void renderElectricity(CrucibleBlockEntity crucible){

@@ -71,7 +71,7 @@ public class EventHandlerCache {
 
         if(last_request_timestamp == null || last_request_timestamp.isBefore(Instant.now().minus(10, ChronoUnit.SECONDS))){
             ReactiveKubeJSPlugin.LOGGER.info("Requesting KubeJS reaction aliases");
-            Registration.REACTION_SYNC_CHANNEL.send(PacketDistributor.SERVER.noArg(), new CustomReactionAliasRequest());
+            ReactiveKubeJSPlugin.KUBEJS_INTEGRATION_CHANNEL.send(PacketDistributor.SERVER.noArg(), new CustomReactionAliasRequest());
             last_request_timestamp = Instant.now();
         }
     }

@@ -416,7 +416,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
             }
         }
 
-        ReactiveMod.LOGGER.debug("Sending reaction status update"); // TODO temp
         // Update clients each reaction tick about what to display.
         BlockPos pos = crucible.getBlockPos();
         Registration.REACTION_SYNC_CHANNEL.send(

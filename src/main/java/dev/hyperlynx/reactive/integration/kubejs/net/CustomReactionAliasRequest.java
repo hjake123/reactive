@@ -23,9 +23,10 @@ public record CustomReactionAliasRequest() {
             ReactiveKubeJSPlugin.LOGGER.info("A request to send reaction aliases was received");
             if(REACTION_EFFECT_CACHE.reaction_construct_done){
                 ReactiveKubeJSPlugin.LOGGER.info("Sending KubeJS reaction aliases as requested");
-                Registration.REACTION_SYNC_CHANNEL.send(PacketDistributor.PLAYER.with(() -> context.get().getSender()),
+                ReactiveKubeJSPlugin.KUBEJS_INTEGRATION_CHANNEL.send(PacketDistributor.PLAYER.with(() -> context.get().getSender()),
                         new CustomReactionAliasResponse(ReactiveKubeJSPlugin.CUSTOM_REACTION_ALIASES));
             }
+            context.get().setPacketHandled(true);
         });
     }
 }

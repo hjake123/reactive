@@ -11,6 +11,7 @@ import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.net.litmus.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
@@ -542,6 +543,7 @@ public class Registration {
         ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
         if(ModList.get().isLoaded("kubejs")){
             MinecraftForge.EVENT_BUS.register(EventTransceiver.class);
+            ReactiveKubeJSPlugin.registerMessages();
         }
         CriteriaTriggers.enqueue(evt);
         LITMUS_CHANNEL.registerMessage(42, LitmusScreenMessage.class,

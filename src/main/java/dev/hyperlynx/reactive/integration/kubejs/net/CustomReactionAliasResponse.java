@@ -33,6 +33,7 @@ public record CustomReactionAliasResponse(Set<String> aliases) {
                 ReactiveMod.LOGGER.debug("-> {}", alias);
                 ClientRegistration.REACTION_RENDERERS.RENDERERS.put(alias, CustomReaction.getRenderFunction(alias));
             }
+            context.get().setPacketHandled(true);
         });
     }
 }
