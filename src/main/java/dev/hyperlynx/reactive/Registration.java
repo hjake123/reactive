@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.net.*;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
@@ -116,6 +117,9 @@ public class Registration {
         bus.register(Registration.class);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
+        }
+        if(ModList.get().isLoaded("create")){
+            ReactiveCreatePlugin.init(bus);
         }
     }
 
@@ -690,9 +694,6 @@ public class Registration {
         GOLD_SYMBOL.get().setSymbolItem(GOLD_SYMBOL_ITEM.get());
         OCCULT_SYMBOL.get().setSymbolItem(OCCULT_SYMBOL_ITEM.get());
         DIVINE_SYMBOL.get().setSymbolItem(DIVINE_SYMBOL_ITEM.get());
-//        if(ModList.get().isLoaded("create")){
-//            ReactiveCreatePlugin.init();
-//        }
         if(ModList.get().isLoaded("kubejs")){
             NeoForge.EVENT_BUS.register(EventTransceiver.class);
         }

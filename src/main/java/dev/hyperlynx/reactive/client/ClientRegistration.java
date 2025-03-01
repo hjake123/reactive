@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
+import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -49,9 +50,9 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void onClientSetupEvent(FMLClientSetupEvent evt){
-//        if(ModList.get().isLoaded("create")){
-//            ReactiveCreatePlugin.initClient();
-//        }
+        if(ModList.get().isLoaded("ponder")){
+            ReactivePonderPlugin.clientInit();
+        }
     }
 
 }
