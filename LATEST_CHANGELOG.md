@@ -1,2 +1,2 @@
-- Reestablished Create support for 1.21
+- Reestablished Create support for its version `6.0.0`
 - Fixed overly long cooldown on reaction journal page request system. This prevents a theoretical hang on world load
