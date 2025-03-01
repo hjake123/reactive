@@ -103,6 +103,9 @@ public class Registration {
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
         }
+        if(ModList.get().isLoaded("create")){
+            ReactiveCreatePlugin.init(bus);
+        }
     }
 
     // ----------------------- REGISTRATION ------------------------
@@ -537,9 +540,6 @@ public class Registration {
         ComposterBlock.COMPOSTABLES.put(Registration.VERDANT_BOTTLE.get(), 1.0F);
         ComposterBlock.COMPOSTABLES.put(Registration.FLOWER_VINES_ITEM.get(), 0.4F);
         registerPotions(evt);
-        if(ModList.get().isLoaded("create")){
-            ReactiveCreatePlugin.init();
-        }
         ReactivePehkuiPlugin.init(evt, ModList.get().isLoaded("pehkui"));
         if(ModList.get().isLoaded("kubejs")){
             MinecraftForge.EVENT_BUS.register(EventTransceiver.class);

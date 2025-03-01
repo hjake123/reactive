@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.fx.renderers.SymbolRenderer;
 import dev.hyperlynx.reactive.fx.renderers.rxn.ReactionRenderers;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -51,7 +52,7 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void onClientSetupEvent(FMLClientSetupEvent evt){
         if(ModList.get().isLoaded("create")){
-            ReactiveCreatePlugin.initClient();
+            ReactivePonderPlugin.clientInit();
         }
     }
 

@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.integration.create;
 
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.content.redstone.displayLink.source.PercentOrProgressBarDisplaySource;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class CrucibleIntegrityDisplaySource extends PercentOrProgressBarDisplaySource {

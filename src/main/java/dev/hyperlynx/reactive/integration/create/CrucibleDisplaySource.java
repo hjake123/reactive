@@ -1,12 +1,11 @@
 package dev.hyperlynx.reactive.integration.create;
 
+import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
+import com.simibubi.create.content.redstone.displayLink.source.ValueListDisplaySource;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
-import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
-import com.simibubi.create.content.redstone.displayLink.source.ValueListDisplaySource;
-import com.simibubi.create.foundation.utility.Components;
-import com.simibubi.create.foundation.utility.IntAttached;
+import net.createmod.catnip.data.IntAttached;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -42,12 +41,11 @@ public class CrucibleDisplaySource extends ValueListDisplaySource {
 
         if (shortenNumbers(context)) {
             String percent = LitmusPaperItem.getPercent(number);
-            MutableComponent shortened = Components.literal(percent.equals("TRACE") ? "<1%" : percent);
+            MutableComponent shortened = Component.literal(percent.equals("TRACE") ? "<1%" : percent);
             return Arrays.asList(name, shortened);
         }
 
-        MutableComponent formattedNumber = Components.literal(String.valueOf(number)).append(WHITESPACE);
+        MutableComponent formattedNumber = Component.literal(String.valueOf(number)).append(WHITESPACE);
         return valueFirst() ? Arrays.asList(formattedNumber, name) : Arrays.asList(name, formattedNumber);
     }
-
 }
