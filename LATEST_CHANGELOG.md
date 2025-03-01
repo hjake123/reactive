@@ -1,8 +1,2 @@
-- **Added support for Json Things to make custom Powers**
-    - This is in addition to existing KubeJS support, and works alongside it
-    - Json Powers can be used in KubeJS reactions, as well as recipes
-    - Custom power bottles can also be defined using thingpacks
-- (KubeJS) Fixed an issue that caused custom reactions to not render in multiplayer
-- (KubeJS) Made it no longer necessary to test reaction criteria on the client side
-  - This raises the KubeJS Integration Version to `3.1`
-- (Internal) Reactions now are only created on the server. There should be no outward change in behavior as a result of this
+- Reestablished Create support for 1.21
+- Fixed overly long cooldown on reaction journal page request system. This prevents a theoretical hang on world load

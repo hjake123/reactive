@@ -116,6 +116,7 @@ repositories {
         }
     }
 
+
     exclusiveContent {
         forRepository {
             maven {
@@ -127,6 +128,10 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+
+    maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
+    maven { url = "https://mvn.devos.one/snapshots" } // Registrate
+    maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/" } // ForgeConfigAPIPort
 }
 
 dependencies {
@@ -141,13 +146,13 @@ dependencies {
     runtimeOnly "vazkii.patchouli:Patchouli:${patchouli_version}-${patchouli_version_kind}"
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     // at runtime, use the full JEI jar for Forge
-    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
-    runtimeOnly("maven.modrinth:sodium:mc1.21.1-0.6.5-neoforge")
-    implementation("maven.modrinth:iris:1.8.6+1.21.1-neoforge")
+    //runtimeOnly("maven.modrinth:sodium:mc1.21.1-0.6.9-neoforge")
+    compileOnly("maven.modrinth:iris:1.8.6+1.21.1-neoforge")
 
     implementation("dev.latvian.mods:kubejs-neoforge:${kubejs_version}")
 
@@ -155,10 +160,11 @@ dependencies {
 
     implementation "curse.maven:json-things-541617:6100178"
 
-//
-//    implementation fg.deobf("com.simibubi.create:create-${create_minecraft_version}:${create_version}:slim") { transitive = false }
-//    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}")
-//    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+    implementation("com.simibubi.create:create-${minecraft_version}:${create_version}") { transitive = false }
+    implementation("net.createmod.ponder:Ponder-NeoForge-${minecraft_version}:${ponder_version}")
+    compileOnly("dev.engine-room.flywheel:flywheel-neoforge-api-${minecraft_version}:${flywheel_version}")
+    runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
+    implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
