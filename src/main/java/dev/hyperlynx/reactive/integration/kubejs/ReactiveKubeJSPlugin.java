@@ -70,7 +70,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionAliasPayload.TYPE,
                 ReactionAliasPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    ReactiveKubeJSPlugin.LOGGER.info("Received KubeJS reactions, registering them to renderer");
+                    ReactiveKubeJSPlugin.LOGGER.debug("Received KubeJS reactions, registering them to renderer");
                     REACTION_EFFECT_CACHE.received_renderers = true;
                     for(String alias : payload.aliases()){
                         ReactiveMod.LOGGER.debug("-> {}", alias);
@@ -83,11 +83,8 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
                 ReactionAliasRequestPayload.TYPE,
                 ReactionAliasRequestPayload.STREAM_CODEC,
                 (payload, _context) -> {
-                    ReactiveKubeJSPlugin.LOGGER.info("A request to send reaction aliases was received");
-                    if(REACTION_EFFECT_CACHE.reaction_construct_done){
-                        ReactiveKubeJSPlugin.LOGGER.info("Sending KubeJS reaction aliases as requested");
-                        PacketDistributor.sendToAllPlayers(new ReactionAliasPayload(CUSTOM_REACTION_ALIASES));
-                    }
+                    ReactiveKubeJSPlugin.LOGGER.info("Sending KubeJS reaction aliases as requested");
+                    PacketDistributor.sendToAllPlayers(new ReactionAliasPayload(CUSTOM_REACTION_ALIASES));
                 }
         );
     }

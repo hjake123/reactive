@@ -1,2 +1,1 @@
-- Reestablished Create support for its version `6.0.0`
-- Fixed overly long cooldown on reaction journal page request system. This prevents a theoretical hang on world load
+- Fixed repeated requests for KubeJS reaction aliases when KubeJS installed but there are no custom reactions

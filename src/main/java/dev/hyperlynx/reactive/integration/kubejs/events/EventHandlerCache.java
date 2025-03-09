@@ -28,7 +28,6 @@ public class EventHandlerCache {
         EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
             server_reaction_tests.add(container.handler);
         });
-        this.reaction_construct_done = true;
     }
 
     public void resetReactionHandlers(){
@@ -60,9 +59,6 @@ public class EventHandlerCache {
     public EventResult processRunEvent(CustomReactionTickEvent event){
         return processEvent(event, reaction_runners);
     }
-
-    // SERVER ONLY
-    public boolean reaction_construct_done = false;
 
     // CLIENT ONLY
     public boolean received_renderers = false;
