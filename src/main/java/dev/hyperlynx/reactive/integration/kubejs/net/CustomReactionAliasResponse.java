@@ -27,7 +27,7 @@ public record CustomReactionAliasResponse(Set<String> aliases) {
 
     public void handler(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
-            ReactiveKubeJSPlugin.LOGGER.info("Received KubeJS reactions, registering them to renderer");
+            ReactiveKubeJSPlugin.LOGGER.debug("Received KubeJS reactions, registering them to renderer");
             REACTION_EFFECT_CACHE.received_renderers = true;
             for(String alias : aliases){
                 ReactiveMod.LOGGER.debug("-> {}", alias);

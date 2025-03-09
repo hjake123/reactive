@@ -1,2 +1,1 @@
-- Updated Create support for its version `6.0.0`
-- This removes support for versions prior to `6.0.0`
+- Fix endlessly requesting KubeJS reaction aliases if there are no KubeJS reactions but KubeJS is installed
