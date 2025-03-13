@@ -108,15 +108,17 @@ public class ReactionEffects {
         }else{
             if(reactor instanceof CrucibleBlockEntity crucible){
                 CrucibleBlockEntity.empty(reactor.getLevel(), reactor.getBlockPos(), reactor.getBlockState(), crucible);
+                if(reactor.getBlockState().getBlock() instanceof ShulkerCrucibleBlock) {
+                    ItemEntity shell_drop = new ItemEntity(reactor.getLevel(), reactor.getBlockPos().getX() + 0.5,
+                            reactor.getBlockPos().getY() + 0.5,
+                            reactor.getBlockPos().getZ() + 0.6, Items.SHULKER_SHELL.getDefaultInstance());
+                    reactor.getLevel().addFreshEntity(shell_drop);
+
+                }
+                reactor.getLevel().setBlock(reactor.getBlockPos(), Registration.SALTY_CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.GLASS_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+
             }
-            if(reactor.getBlockState().getBlock() instanceof ShulkerCrucibleBlock) {
-                ItemEntity shell_drop = new ItemEntity(reactor.getLevel(), reactor.getBlockPos().getX() + 0.5,
-                        reactor.getBlockPos().getY() + 0.5,
-                        reactor.getBlockPos().getZ() + 0.6, Items.SHULKER_SHELL.getDefaultInstance());
-                reactor.getLevel().addFreshEntity(shell_drop);
-            }
-            reactor.getLevel().setBlock(reactor.getBlockPos(), Registration.SALTY_CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-            reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.GLASS_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 

@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.AlchemyTags;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +50,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
         BlockEntity be = level.getBlockEntity(pos);
-        if(!new_state.is(Registration.SHULKER_CRUCIBLE)){
+        if(!new_state.is(Registration.SHULKER_CRUCIBLE) && !new_state.is(AlchemyTags.crucibleCanBecome)){
             if (be instanceof CrucibleBlockEntity crucible) {
                 if (!level.isClientSide) {
                     ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, getDropStack(level, pos, state, crucible));

@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:cauldron",
+    "minecraft:water_cauldron",
+    "reactive:salty_crucible",
+    "reactive:crucible",
+    "reactive:shulker_crucible"
+  ]
+}
