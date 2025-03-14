@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.AlchemyTags;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.items.ShulkerCrucibleItem;
@@ -52,7 +53,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
-        if(new_state.is(Registration.SHULKER_CRUCIBLE.get())){
+        if(new_state.is(Registration.SHULKER_CRUCIBLE.get()) || new_state.is(AlchemyTags.crucibleCanBecome)){
             return;
         }
         BlockEntity be = level.getBlockEntity(pos);

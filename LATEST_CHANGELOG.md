@@ -1,1 +1,1 @@
-- Fix endlessly requesting KubeJS reaction aliases if there are no KubeJS reactions but KubeJS is installed
+- Fixed Shulker Crucibles duplicating when self-destructing through various means
