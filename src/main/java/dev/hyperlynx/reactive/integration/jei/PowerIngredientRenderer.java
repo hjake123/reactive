@@ -38,7 +38,7 @@ public class PowerIngredientRenderer implements IIngredientRenderer<Power>  {
         List<Component> ret = new ArrayList<>();
         ret.add(Component.literal(ingredient.getName()).append(Component.translatable("text.reactive.power")));
         if(tooltipFlag.isAdvanced()){
-            ret.add(Component.literal(ingredient.getResourceLocation().toString()).withStyle(ChatFormatting.GRAY));
+            ret.add(Component.literal(ingredient.location().toString()).withStyle(ChatFormatting.GRAY));
         }
         return ret;
     }

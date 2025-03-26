@@ -8,12 +8,10 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
-import dev.hyperlynx.reactive.client.gui.LitmusScreen;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenPayload;
 import dev.hyperlynx.reactive.components.LitmusMeasurement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -148,7 +146,7 @@ public class LitmusPaperItem extends Item {
             if(power_level == 0)
                 continue;
 
-            lines.add(new LitmusMeasurement.Line(ResourceKey.create(Powers.POWER_REGISTRY_KEY, power.getResourceLocation()),
+            lines.add(new LitmusMeasurement.Line(ResourceKey.create(Powers.POWER_REGISTRY_KEY, power.location()),
                     power.getName().toUpperCase() + " - " + getPercent(power_level)
             ));
         }

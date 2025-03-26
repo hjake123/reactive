@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,20 +24,22 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
     private final Color color;
-    private final ResourceLocation location;
-    private final String name;
+    private ResourceLocation location = null;
+    private final Supplier<String> name;
     private final Item bottle;
     private final Block render_water_block;
-    private final PrimedWSV percent_reactivity;
+    private final Supplier<PrimedWSV> percent_reactivity;
     public boolean invisible = false;
     public MutableComponent name_override = null;
 
@@ -45,7 +48,6 @@ public class Power {
 
     public static final Codec<Power> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
-                    ResourceLocation.CODEC.fieldOf("location").forGetter(Power::getResourceLocation),
                     Color.CODEC.fieldOf("color").forGetter(Power::getColor),
                     BuiltInRegistries.BLOCK.byNameCodec().fieldOf("water_render_block").forGetter(Power::getWaterRenderBlock),
                     BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("bottle").forGetter(Power::getBottleItem),
@@ -55,13 +57,12 @@ public class Power {
     );
 
     // From Data constructor
-    public Power(ResourceLocation location, Color color, Block render_water_block, Optional<Item> possible_bottle_holder, Optional<Boolean> is_invisible, Optional<String> custom_name) {
-        this.location = location;
+    public Power(Color color, Block render_water_block, Optional<Item> possible_bottle_holder, Optional<Boolean> is_invisible, Optional<String> custom_name) {
         this.render_water_block = render_water_block;
         this.color = color;
         this.bottle = possible_bottle_holder.orElse(null);
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+        this.name = () -> Util.makeDescriptionId("power", location());
+        this.percent_reactivity = () -> new PrimedWSV(location() + "_reactivity", 50, 200);
         this.invisible = is_invisible.isPresent() && is_invisible.get();
         custom_name.ifPresent(name_override -> this.name_override = Component.literal(name_override));
     }
@@ -72,36 +73,21 @@ public class Power {
         this.render_water_block = render_water_block;
         this.color = new Color(color);
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
+        this.name = () -> Util.makeDescriptionId("power", location());
+        this.percent_reactivity = () -> new PrimedWSV(location() + "_reactivity", 50, 200);
     }
-
-    public Power(String id, Color color, Block render_water_block, Item bottle){
-        this.location = ReactiveMod.location(id);
-        this.render_water_block = render_water_block;
-        this.color = color;
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(id + "_reactivity", 50, 200);
-    }
-
 
     public Power(ResourceLocation location, Color color, Block render_water_block, Item bottle){
         this.location = location;
         this.color = color;
         this.render_water_block = render_water_block;
         this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
+        this.name = () -> Util.makeDescriptionId("power", location());
+        this.percent_reactivity = () -> new PrimedWSV(location() + "_reactivity", 50, 200);
     }
 
-    public Power(ResourceLocation location, int color, Block render_water_block, Item bottle){
+    void setLocation(ResourceLocation location){
         this.location = location;
-        this.render_water_block = render_water_block;
-        this.color = new Color(color);
-        this.bottle = bottle;
-        this.name = Util.makeDescriptionId("power", this.location);
-        this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
     public TagKey<Item> getSourceTag(){
@@ -137,10 +123,12 @@ public class Power {
         if(name_override != null){
             return name_override.getString();
         }
-        return Component.translatable(name).getString();
+        return Component.translatable(name.get()).getString();
     }
 
-    public ResourceLocation getResourceLocation() { return location; }
+    public ResourceLocation location() {
+        return location;
+    }
     public Block getWaterRenderBlock(){
         return render_water_block;
     }
@@ -161,7 +149,7 @@ public class Power {
 
     // Returns whether the given power level is sufficient to cause a reaction with this power.
     public boolean checkReactivity(int power_level, int threshold){
-        float strength = percent_reactivity.get() / 100F;
+        float strength = percent_reactivity.get().get() / 100F;
         int adjusted_power_level = (int) (power_level * strength);
         return adjusted_power_level >= threshold;
     }
@@ -207,7 +195,7 @@ public class Power {
 
     @Override
     public String toString(){
-        return name;
+        return name.get();
     }
 
     @Override

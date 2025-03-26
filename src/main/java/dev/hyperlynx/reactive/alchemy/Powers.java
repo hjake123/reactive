@@ -4,8 +4,13 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.registries.*;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.stream.Stream;
 
 // Registers the Alchemical Powers.
@@ -110,13 +117,6 @@ public class Powers {
         return stream(access).toList();
     }
 
-    // We know JSON is loaded by the time the world loads, and that nothing needs these power holders before then,
-    // so binding them at level load makes sense.
-    // TODO: Test /reload!
-    public static void bindOnLoad(LevelEvent.Load event){
-        PowerHolder.bindAllInstances(event.getLevel().registryAccess());
-    }
-
     public static class PowerHolder extends Holder.Reference<Power> {
         private static final List<PowerHolder> INSTANCE_LIST = new ArrayList<>();
 
@@ -125,15 +125,43 @@ public class Powers {
             INSTANCE_LIST.add(this);
         }
 
-        public Power get(){
+        public Power get() {
             return this.value();
         }
 
         // Fine, I'll defer the holder myself!
         public static void bindAllInstances(RegistryAccess access) {
-            for(PowerHolder holder : INSTANCE_LIST){
+            for (PowerHolder holder : INSTANCE_LIST) {
                 holder.bindValue(Powers.get(holder.key(), access));
+                holder.value().setLocation(holder.key().location());
             }
+        }
+    }
+
+    public static void addReloadListener(final AddReloadListenerEvent event){
+        event.addListener(new Powers.PowerReloadListener(event.getRegistryAccess()));
+    }
+
+    public static class PowerReloadListener extends SimplePreparableReloadListener<Object> {
+        RegistryAccess access;
+
+        public PowerReloadListener(RegistryAccess access){
+            this.access = access;
+        }
+
+        @Override
+        protected Object prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+            return "No prep needed";
+        }
+
+        @Override
+        protected void apply(Object object, ResourceManager resourceManager, ProfilerFiller profiler) {
+            PowerHolder.bindAllInstances(access);
+        }
+
+        @Override
+        public String getName() {
+            return "Reactive/PowerReloadListener";
         }
     }
 
