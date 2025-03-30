@@ -13,6 +13,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,11 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
     }
 
     public static ReactorData fromTag(CompoundTag tag){
-        return CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst();
+        var result =  CODEC.decode(NbtOps.INSTANCE, tag);
+        if (result.isError()) {
+            return new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+        }
+        return result.getOrThrow().getFirst();
     }
 
     public static class Serializer implements EntityDataSerializer<ReactorData> {

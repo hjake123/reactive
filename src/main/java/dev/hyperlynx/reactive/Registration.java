@@ -124,6 +124,7 @@ public class Registration {
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
         COMMAND_ARGUMENTS.register(bus);
+        ENTITY_DATA_SERIALIZERS.register(bus);
         bus.register(Registration.class);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
@@ -688,8 +689,8 @@ public class Registration {
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
     // Register the Reactor entity's data serializer.
-    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<ReactorData>> REACTOR_SERIALIZER =
-            ENTITY_DATA_SERIALIZERS.register("reactor", ReactorData.Serializer::new);
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<ReactorData>> REACTOR_DATA_SERIALIZER =
+            ENTITY_DATA_SERIALIZERS.register("reactor_data", ReactorData.Serializer::new);
 
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",

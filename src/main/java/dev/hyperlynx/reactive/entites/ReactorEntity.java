@@ -25,21 +25,21 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class ReactorEntity extends Entity implements Reactor {
-    EntityDataAccessor<ReactorData> REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_SERIALIZER.get());
-    private final String REACTOR_DATA_KEY = "reactor_data";
+    private static final EntityDataAccessor<ReactorData> REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
+    private static final String REACTOR_DATA_KEY = "reactor_data";
 
-    EntityDataAccessor<Boolean> USED_CRYSTAL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
-    private final String USED_CRYSTAL_KEY = "has_used_crystal";
+    private static final EntityDataAccessor<Boolean> USED_CRYSTAL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final String USED_CRYSTAL_KEY = "has_used_crystal";
 
-    EntityDataAccessor<Integer> ELECTRIC_CHARGE = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
-    private final String ELECTRIC_CHARGE_KEY = "charge";
+    private static final EntityDataAccessor<Integer> ELECTRIC_CHARGE = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
+    private static final String ELECTRIC_CHARGE_KEY = "charge";
 
     // Only needs to be used on the server, so no syncing.
-    EndCrystal linked_crystal;
-    private final String LINKED_CRYSTAL_KEY = "crystal";
+    private EndCrystal linked_crystal;
+    private static final String LINKED_CRYSTAL_KEY = "crystal";
 
     // Don't need to save this either.
-    AreaMemory area_memory;
+    private AreaMemory area_memory;
 
     public ReactorEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
