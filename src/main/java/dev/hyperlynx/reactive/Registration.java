@@ -75,6 +75,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -453,7 +454,9 @@ public class Registration {
     // Register entities
     public static final Supplier<EntityType<ReactorEntity>> REACTOR_ENTITY_TYPE = ENTITY_TYPES.register("reactor", () ->
             EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).build("reactor"));
+                    .sized(0.5F, 0.5F)
+                    .fireImmune()
+                    .build("reactor"));
 
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
