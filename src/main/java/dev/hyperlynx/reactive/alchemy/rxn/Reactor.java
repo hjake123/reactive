@@ -61,15 +61,11 @@ public interface Reactor extends PowerBearer {
 
     void setDirty();
 
-    int getPowerLevel(Power p);
-
     AreaMemory getAreaMemory();
 
     Level getLevel();
 
     int getElectricCharge();
-
-    int getSacrificeCount();
 
     EndCrystal getLinkedCrystal();
 

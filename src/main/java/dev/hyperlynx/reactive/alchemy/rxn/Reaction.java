@@ -141,7 +141,6 @@ public abstract class Reaction {
             case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
-            case SACRIFICE -> reactor.getSacrificeCount() >= 10;
             default -> true;
         };
     }
@@ -194,7 +193,6 @@ public abstract class Reaction {
         GOLD_SYMBOL,
         ELECTRIC,
         NO_ELECTRIC,
-        SACRIFICE,
         END_CRYSTAL,
         NO_END_CRYSTAL
     }

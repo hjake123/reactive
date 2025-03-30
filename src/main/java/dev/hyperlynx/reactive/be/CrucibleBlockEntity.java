@@ -4,10 +4,7 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
@@ -92,7 +89,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
     public boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
-    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
@@ -574,7 +570,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
-        sacrificeCount++;
         FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), Registration.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
@@ -655,43 +650,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     // These methods manage power in the Crucible. They might be extracted to an interface later.
 
     @Override
-    public boolean addPower(Power p, int amount) {
-        if(p == null){
-            return false;
-        }
-        if(getPowerLevel(p) == CRUCIBLE_MAX_POWER){
-            return false;
-        }
-        if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
-            int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            if(excess > 0) {
-                amount -= excess;
-            }
-        }
-
-        int prev = powers.getOrDefault(p, 0);
-        if(prev > 0)
-            powers.replace(p, amount + prev);
-        else
-            powers.put(p, amount);
-
-//        if(this.getLevel() != null && !this.getLevel().isClientSide)
-//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
-
-        return true;
-    }
-
-    @Override
-    public int getPowerLevel(Power t) {
-        if(powers.isEmpty() || powers.get(t) == null){
-            return 0;
-        }
-        return powers.get(t);
-    }
-
-    @Override
     public AreaMemory getAreaMemory() {
         return areaMemory;
     }
@@ -699,11 +657,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public int getElectricCharge() {
         return electricCharge;
-    }
-
-    @Override
-    public int getSacrificeCount() {
-        return sacrificeCount;
     }
 
     @Override
@@ -727,55 +680,12 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     @Override
-    public boolean expendPower(Power t, int amount) {
-        if(powers.isEmpty() || !powers.containsKey(t)){
-            return false;
-        }
-        int level = powers.get(t);
-        if(level > amount){
-            powers.put(t, level-amount);
-            return true;
-        }
-        if (level == amount) {
-            powers.put(t, 0);
-            return true;
-        }
-
-        // This implies that all power t wasn't enough to meet amount.
-        powers.put(t, 0);
-        return false;
-    }
-
-
-    public void expendAnyPowerExcept(Power immune_power, int amount) {
-        boolean expended = false;
-        for(Power p : powers.keySet()){
-            if(p != immune_power && p != Powers.CURSE_POWER.get()){
-                expended = expendPower(p, amount);
-            }
-            if(expended) return;
-        }
-    }
-
     public void expendPower() {
-        powers.clear();
+        getPowerMap().clear();
         color_changed = true;
         mix_color.reset();
         next_mix_color.reset();
         color_initialized = false;
-    }
-
-    public int getTotalPowerLevel(){
-        int totalpp = 0;
-        for (Power p : powers.keySet()) {
-            totalpp += powers.get(p);
-        }
-        return totalpp;
-    }
-
-    @Override
-    public int getPowerCount(){
-        return powers.keySet().size();
     }
 
     @Override
