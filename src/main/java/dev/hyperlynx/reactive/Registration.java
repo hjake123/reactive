@@ -751,7 +751,7 @@ public class Registration {
         registrar.commonToClient(
                 ReactionStatusPayload.TYPE,
                 ReactionStatusPayload.STREAM_CODEC,
-                CrucibleBlockEntity::acceptReactionStatusPayload
+                ReactionStatusPayload::handle
         );
         registrar.playToServer(
                 ReactionPageRequestPayload.TYPE,

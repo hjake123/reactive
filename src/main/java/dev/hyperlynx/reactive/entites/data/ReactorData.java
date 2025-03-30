@@ -17,17 +17,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> statuses) {
+public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> statuses, List<String> render_aliases) {
     public static final StreamCodec<FriendlyByteBuf, ReactorData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, Power.STREAM_CODEC, ByteBufCodecs.INT), ReactorData::powers,
             ReactionStatusEntry.STREAM_CODEC.apply(ByteBufCodecs.list()), ReactorData::statuses,
+            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), ReactorData::render_aliases,
             ReactorData::new
     );
 
     public static final Codec<ReactorData> CODEC = RecordCodecBuilder.create((instance) ->
         instance.group(
                 Codec.unboundedMap(Power.CODEC, Codec.INT).fieldOf("powers").forGetter(ReactorData::powers),
-                Codec.list(ReactionStatusEntry.CODEC).fieldOf("statuses").forGetter(ReactorData::statuses)
+                Codec.list(ReactionStatusEntry.CODEC).fieldOf("statuses").forGetter(ReactorData::statuses),
+                Codec.list(Codec.STRING).fieldOf("render_aliases").forGetter(ReactorData::render_aliases)
         ).apply(instance, ReactorData::new)
     );
 
@@ -47,7 +49,7 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
 
         @Override
         public ReactorData copy(ReactorData value) {
-            return new ReactorData(value.powers(), value.statuses());
+            return new ReactorData(value.powers(), value.statuses(), value.render_aliases());
         }
     }
 }

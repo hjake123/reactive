@@ -515,20 +515,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // CLIENT ONLY
     // Used to update reactionsToRender
-    public static void acceptReactionStatusPayload(ReactionStatusPayload payload, IPayloadContext context) {
-        Level level = context.player().level();
-        BlockEntity be = level.getBlockEntity(payload.pos());
-        if(!(be instanceof CrucibleBlockEntity crucible)){
-            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
-            return;
-        }
-        crucible.reactions_to_render.clear();
-        for(ReactionStatusEntry entry : payload.statuses()){
-            if(entry.status() == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(entry.reaction_alias());
-            }
-        }
-    }
+
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
@@ -677,6 +664,16 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public void setElectricCharge(int i) {
         electricCharge = i;
+    }
+
+    @Override
+    public void clearRenderReactions() {
+        this.reactions_to_render.clear();
+    }
+
+    @Override
+    public void addRenderReaction(String s) {
+        this.reactions_to_render.add(s);
     }
 
     @Override
