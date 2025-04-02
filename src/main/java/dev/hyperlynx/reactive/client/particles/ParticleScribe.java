@@ -132,6 +132,10 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
+        drawExactParticleSphere(level, opt, new Vec3(center_x, pos.getY(), center_z), height, radius, frequency);
+    }
+
+    public static void drawExactParticleSphere(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency) {
         for(int i = 0; i < frequency; i++){
             double x = level.random.nextGaussian();
             double y = level.random.nextGaussian();
@@ -142,9 +146,8 @@ public class ParticleScribe {
             y = y * normalizer * radius;
             z = z * normalizer * radius;
 
-            drawParticle(level, opt, center_x + x, pos.getY() + height + y, center_z + z);
+            drawParticle(level, opt, pos.x + x, pos.y + height + y, pos.z + z);
         }
-
     }
 
     public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos){

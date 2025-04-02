@@ -4,11 +4,9 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
-import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -52,7 +50,6 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     public void tick() {
         super.tick();
-        ParticleScribe.drawParticle(level(), ParticleTypes.HAPPY_VILLAGER, this.getX(), this.getY(), this.getZ());
     }
 
     @Override
@@ -194,5 +191,4 @@ public class ReactorEntity extends Entity implements Reactor {
         linked_crystal.setBeamTarget(null);
         linked_crystal = null;
     }
-
 }

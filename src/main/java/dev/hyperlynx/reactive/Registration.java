@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
@@ -9,6 +10,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
@@ -34,6 +36,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -513,6 +516,10 @@ public class Registration {
     public static final SimpleParticleType ACID_BUBBLE_PARTICLE = new SimpleParticleType(false);
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
             () -> ACID_BUBBLE_PARTICLE);
+
+    public static final ParticleType<EnergyParticle.Options> ENERGY_PARTICLE = new EnergyParticle.Type();
+    public static final DeferredHolder<ParticleType<?>, ParticleType<EnergyParticle.Options>> ENERGY_PARTICLE_TYPE = PARTICLES.register("energy",
+            () -> ENERGY_PARTICLE);
 
     // Register sound events.
     public static final DeferredHolder<SoundEvent, SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
