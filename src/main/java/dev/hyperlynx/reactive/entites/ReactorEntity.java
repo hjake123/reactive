@@ -41,25 +41,28 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
     // Don't need to save this either.
-    private final AreaMemory area_memory;
+    private AreaMemory area_memory = null;
 
     private int sync_timer = 10;
 
     public ReactorEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = true;
-        area_memory = new AreaMemory(this.getBlockPos());
     }
 
     @Override
     public void tick() {
+        super.tick();
+        if(this.level().isClientSide){
+            return;
+        }
         if(sync_timer <= 0) {
             update(data());
             sync_timer = 10;
         } else {
             sync_timer--;
         }
-        super.tick();
+        react((ServerLevel) level());
     }
 
     @Override
@@ -153,6 +156,9 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public AreaMemory getAreaMemory() {
+        if(this.area_memory == null){
+            this.area_memory = new AreaMemory(this.getBlockPos());
+        }
         return area_memory;
     }
 

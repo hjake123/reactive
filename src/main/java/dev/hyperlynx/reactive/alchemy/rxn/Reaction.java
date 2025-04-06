@@ -209,7 +209,7 @@ public abstract class Reaction {
 
     @Override
     public String toString(){
-        return reagents.toString();
+        return alias;
     }
 
 }

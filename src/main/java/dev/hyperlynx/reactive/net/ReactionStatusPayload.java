@@ -41,7 +41,7 @@ public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, BlockPos
         if(be instanceof Reactor){
             reactor = (Reactor) be;
         } else {
-            var reactor_entities = level.getEntitiesOfClass(ReactorEntity.class, AABB.ofSize(payload.pos().getCenter(), 1, 1, 1));
+            var reactor_entities = level.getEntitiesOfClass(ReactorEntity.class, new AABB(payload.pos));
             if(reactor_entities.isEmpty()){
                 ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
                 return;
