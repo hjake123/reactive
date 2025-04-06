@@ -10,13 +10,13 @@ public interface PowerBearer {
         if(p == null){
             return false;
         }
-        if(getPowerLevel(p) == CrucibleBlockEntity.CRUCIBLE_MAX_POWER){
+        if(getPowerLevel(p) == this.maxPower()){
             return false;
         }
-        if(getTotalPowerLevel() + amount > CrucibleBlockEntity.CRUCIBLE_MAX_POWER) {
-            int excess = getTotalPowerLevel() + amount - CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
+        if(getTotalPowerLevel() + amount > this.maxPower()) {
+            int excess = getTotalPowerLevel() + amount - this.maxPower();
             expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - CrucibleBlockEntity.CRUCIBLE_MAX_POWER;
+            excess = getTotalPowerLevel() + amount - this.maxPower();
             if(excess > 0) {
                 amount -= excess;
             }
@@ -27,9 +27,6 @@ public interface PowerBearer {
             getPowerMap().replace(p, amount + prev);
         else
             getPowerMap().put(p, amount);
-
-//        if(this.getLevel() != null && !this.getLevel().isClientSide)
-//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
 
         return true;
     }

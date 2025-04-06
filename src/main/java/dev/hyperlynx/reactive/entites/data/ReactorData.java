@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive.entites.data;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
+import dev.hyperlynx.reactive.util.ReactiveVanillaCodecs;
 import net.minecraft.nbt.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,9 +27,12 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
 
     public static final Codec<ReactorData> CODEC = RecordCodecBuilder.create((instance) ->
         instance.group(
-                Codec.unboundedMap(Power.CODEC, Codec.INT).fieldOf("powers").forGetter(ReactorData::powers),
-                Codec.list(ReactionStatusEntry.CODEC).fieldOf("statuses").forGetter(ReactorData::statuses),
-                Codec.list(Codec.STRING).fieldOf("render_aliases").forGetter(ReactorData::render_aliases)
+                Codec.unboundedMap(Power.CODEC, Codec.INT).xmap(ReactiveVanillaCodecs::makeMapMutable, ReactiveVanillaCodecs::doNothing)
+                        .fieldOf("powers").forGetter(ReactorData::powers),
+                Codec.list(ReactionStatusEntry.CODEC).xmap(ReactiveVanillaCodecs::makeListMutable, ReactiveVanillaCodecs::doNothing)
+                        .fieldOf("statuses").forGetter(ReactorData::statuses),
+                Codec.list(Codec.STRING).xmap(ReactiveVanillaCodecs::makeListMutable, ReactiveVanillaCodecs::doNothing)
+                        .fieldOf("render_aliases").forGetter(ReactorData::render_aliases)
         ).apply(instance, ReactorData::new)
     );
 
