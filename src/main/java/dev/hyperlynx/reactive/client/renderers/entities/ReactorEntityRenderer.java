@@ -2,8 +2,11 @@ package dev.hyperlynx.reactive.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.Minecraft;
@@ -14,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> {
+public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> implements ReactorRenderer {
     public ReactorEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
@@ -36,6 +39,8 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> {
                         reactor.position(), 0.0, 0.4, 1);
             }
         }
+
+        renderReactions(reactor);
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -43,4 +48,5 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> {
     public ResourceLocation getTextureLocation(ReactorEntity entity) {
         return null;
     }
+
 }
