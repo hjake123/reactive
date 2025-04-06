@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.net;
 
+import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
@@ -15,16 +16,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, BlockPos pos) implements CustomPacketPayload {
+public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, Target target) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ReactionStatusPayload> TYPE = new CustomPacketPayload.Type<>(ReactiveMod.location("reaction_sync_payload"));
 
     public static final StreamCodec<FriendlyByteBuf, ReactionStatusPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.collection(ArrayList::new, ReactionStatusEntry.STREAM_CODEC), ReactionStatusPayload::statuses,
-            BlockPos.STREAM_CODEC, ReactionStatusPayload::pos,
+            Target.STREAM_CODEC, ReactionStatusPayload::target,
             ReactionStatusPayload::new
     );
 
@@ -35,18 +38,9 @@ public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, BlockPos
 
     public static void handle(ReactionStatusPayload payload, IPayloadContext context) {
         Level level = context.player().level();
-        BlockEntity be = level.getBlockEntity(payload.pos());
-        Reactor reactor;
-
-        if(be instanceof Reactor){
-            reactor = (Reactor) be;
-        } else {
-            var reactor_entities = level.getEntitiesOfClass(ReactorEntity.class, new AABB(payload.pos));
-            if(reactor_entities.isEmpty()){
-                ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
-                return;
-            }
-            reactor = reactor_entities.getFirst();
+        Reactor reactor = payload.target().getReactor(level);
+        if(reactor == null){
+            return;
         }
 
         reactor.clearRenderReactions();
@@ -54,6 +48,42 @@ public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, BlockPos
             if(entry.status() == Reaction.Status.REACTING){
                 reactor.addRenderReaction(entry.reaction_alias());
             }
+        }
+    }
+
+    public static ReactionStatusPayload forReactor(List<ReactionStatusEntry> entries, Reactor reactor){
+        if(reactor instanceof BlockEntity){
+            return new ReactionStatusPayload(entries, new Target(Either.left(reactor.getBlockPos())));
+        }
+        if(reactor instanceof ReactorEntity entity){
+            return new ReactionStatusPayload(entries, new Target(Either.right(entity.getId())));
+        }
+        throw new UnsupportedOperationException("Tried to send status payload to an invalid reactor type.");
+    }
+
+    public record Target(Either<BlockPos, Integer> target) {
+        public static final StreamCodec<FriendlyByteBuf, Target> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.either(BlockPos.STREAM_CODEC, ByteBufCodecs.INT), Target::target,
+                Target::new
+        );
+
+        public @Nullable Reactor getReactor(Level level) {
+            if(target().left().isPresent()){
+                BlockEntity be = level.getBlockEntity(target.left().get());
+                if(!(be instanceof Reactor reactor)){
+                    ReactiveMod.LOGGER.error("Sent reaction status to invalid reactor block entity. Ignoring.");
+                    return null;
+                }
+                return reactor;
+            }else if(target().right().isPresent()){
+                if(!(level.getEntity(target.right().get()) instanceof Reactor reactor)){
+                    ReactiveMod.LOGGER.error("Sent reaction status to invalid entity. Ignoring.");
+                    return null;
+                }
+                return reactor;
+            }
+            ReactiveMod.LOGGER.error("Sent malformed reaction status. Ignoring.");
+            return null;
         }
     }
 }

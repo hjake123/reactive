@@ -42,7 +42,7 @@ public interface Reactor extends PowerBearer {
         // Update clients each reaction tick about what to display.
         BlockPos pos = this.getBlockPos();
         PacketDistributor.sendToPlayersNear(level, null, pos.getX(), pos.getY(), pos.getZ(), 32,
-                new ReactionStatusPayload(getReactionStatus(), pos));
+                ReactionStatusPayload.forReactor(getReactionStatus(), this));
 
         if (this.getReactionStatus().isEmpty()) {
             this.getReactionStatus().add(ReactionStatusEntry.stable());
