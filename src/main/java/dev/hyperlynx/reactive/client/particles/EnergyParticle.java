@@ -59,6 +59,9 @@ public class EnergyParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
+        if(this.getPos().closerThan(this.target, 0.01)){
+            this.remove();
+        }
     }
 
     @Override
