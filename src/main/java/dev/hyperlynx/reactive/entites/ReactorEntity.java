@@ -27,7 +27,7 @@ import java.util.*;
 public class ReactorEntity extends Entity implements Reactor {
     public static int MAX_POWER = 10000;
 
-    private static final EntityDataAccessor<ReactorData> REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
+    private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
     private static final String REACTOR_DATA_KEY = "reactor_data";
 
     private static final EntityDataAccessor<Boolean> USED_CRYSTAL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
@@ -37,6 +37,8 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final String ELECTRIC_CHARGE_KEY = "charge";
 
     // Only needs to be used on the server, so no syncing.
+    private ReactorData server_reactor_data = new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+
     private EndCrystal linked_crystal;
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
@@ -57,7 +59,7 @@ public class ReactorEntity extends Entity implements Reactor {
             return;
         }
         if(sync_timer <= 0) {
-            update(data());
+            update();
             sync_timer = 10;
         } else {
             sync_timer--;
@@ -67,17 +69,28 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>()));
+        builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>()));
         builder.define(USED_CRYSTAL, false);
         builder.define(ELECTRIC_CHARGE, 0);
     }
 
     public ReactorData data(){
-        return this.getEntityData().get(REACTOR_DATA);
+        if(this.level().isClientSide){
+            return this.getEntityData().get(SYNCED_REACTOR_DATA);
+        }
+        return server_reactor_data;
+    }
+
+    private void update(){
+        if(this.level().isClientSide){
+            throw new UnsupportedOperationException("Can't modify the state of the reaction data on the client!");
+        }
+        this.getEntityData().set(SYNCED_REACTOR_DATA, server_reactor_data.copy(), true);
     }
 
     private void update(ReactorData changed){
-        this.getEntityData().set(REACTOR_DATA, changed, true);
+        this.server_reactor_data = changed;
+        update();
     }
 
     @Override

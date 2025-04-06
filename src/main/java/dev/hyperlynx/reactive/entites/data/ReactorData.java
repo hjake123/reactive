@@ -48,6 +48,10 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
         return result.getOrThrow().getFirst();
     }
 
+    public ReactorData copy() {
+        return new ReactorData(new HashMap<>(this.powers), new ArrayList<>(this.statuses), new ArrayList<>(this.render_aliases));
+    }
+
     public static class Serializer implements EntityDataSerializer<ReactorData> {
         @Override
         public StreamCodec<? super RegistryFriendlyByteBuf, ReactorData> codec() {
