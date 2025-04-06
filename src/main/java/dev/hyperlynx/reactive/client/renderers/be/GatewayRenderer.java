@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.client.renderers;
+package dev.hyperlynx.reactive.client.renderers.be;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 // Adapted from TheEndPortalRenderer
 public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntityRenderer<T> {

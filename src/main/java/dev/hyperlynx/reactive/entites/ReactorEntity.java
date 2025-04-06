@@ -25,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class ReactorEntity extends Entity implements Reactor {
+    public static int MAX_POWER = 10000;
+
     private static final EntityDataAccessor<ReactorData> REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
     private static final String REACTOR_DATA_KEY = "reactor_data";
 
@@ -59,7 +61,7 @@ public class ReactorEntity extends Entity implements Reactor {
         builder.define(ELECTRIC_CHARGE, 0);
     }
 
-    private ReactorData data(){
+    public ReactorData data(){
         return this.getEntityData().get(REACTOR_DATA);
     }
 
@@ -133,7 +135,7 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public int maxPower() {
-        return 1000;
+        return MAX_POWER;
     }
 
     @Override

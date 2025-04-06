@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.client.renderers;
+package dev.hyperlynx.reactive.client.renderers.be;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
