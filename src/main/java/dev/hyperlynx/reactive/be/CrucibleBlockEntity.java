@@ -320,6 +320,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         used_crystal_this_cycle = used;
     }
 
+    @Override
+    public Vec3 getPos() {
+        return this.getBlockPos().getBottomCenter().add(0, 0.5625, 0);
+    }
+
     // Only call this method when linked_crystal isn't null please and thank you.
     @Override
     public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {

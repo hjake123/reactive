@@ -1,7 +1,9 @@
 package dev.hyperlynx.reactive.entites;
 
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -28,7 +31,6 @@ public class ReactorEntity extends Entity implements Reactor {
     public static int MAX_POWER = 10000;
 
     private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
-    private static final String REACTOR_DATA_KEY = "reactor_data";
 
     private static final EntityDataAccessor<Boolean> USED_CRYSTAL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
     private static final String USED_CRYSTAL_KEY = "has_used_crystal";
@@ -36,16 +38,23 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final EntityDataAccessor<Integer> ELECTRIC_CHARGE = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
     private static final String ELECTRIC_CHARGE_KEY = "charge";
 
+    private static final EntityDataAccessor<Integer> TIMEOUT = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
+    private static final String TIMEOUT_KEY = "timeout";
+
     // Only needs to be used on the server, so no syncing.
     private ReactorData server_reactor_data = new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+    private static final String REACTOR_DATA_KEY = "reactor_data";
+
+    private int no_reaction_timeout = 6000;
+    private static final String NO_REACTION_TIMEOUT_KEY = "no_reaction_timeout";
 
     private EndCrystal linked_crystal;
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
-    // Don't need to save this either.
+    // Don't need to save either.
     private AreaMemory area_memory = null;
-
     private int sync_timer = 10;
+    private int react_timer = 0;
 
     public ReactorEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -58,13 +67,30 @@ public class ReactorEntity extends Entity implements Reactor {
         if(this.level().isClientSide){
             return;
         }
-        if(sync_timer <= 0) {
+        if(sync_timer <= 0){
             update();
             sync_timer = 10;
         } else {
             sync_timer--;
         }
-        react((ServerLevel) level());
+
+        if(react_timer <= 0){
+            react((ServerLevel) level());
+            react_timer = ConfigMan.COMMON.crucibleTickDelay.get() * 5;
+        } else {
+            react_timer--;
+        }
+
+        for(ReactionStatusEntry entry : data().statuses()){
+            if(entry.status().equals(Reaction.Status.REACTING)){
+                getEntityData().set(TIMEOUT, 6000);
+                break;
+            }
+        }
+        if(getEntityData().get(TIMEOUT) <= 0){
+            kill();
+        }
+        getEntityData().set(TIMEOUT, getEntityData().get(TIMEOUT) - 1);
     }
 
     @Override
@@ -72,6 +98,7 @@ public class ReactorEntity extends Entity implements Reactor {
         builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>()));
         builder.define(USED_CRYSTAL, false);
         builder.define(ELECTRIC_CHARGE, 0);
+        builder.define(TIMEOUT, 6000);
     }
 
     public ReactorData data(){
@@ -96,13 +123,22 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         var data = this.getEntityData();
-        update(ReactorData.fromTag(compound.getCompound(REACTOR_DATA_KEY)));
-        data.set(USED_CRYSTAL, compound.getBoolean(USED_CRYSTAL_KEY));
-        data.set(ELECTRIC_CHARGE, compound.getInt(ELECTRIC_CHARGE_KEY));
+        if(compound.contains(REACTOR_DATA_KEY)){
+            update(ReactorData.fromTag(compound.getCompound(REACTOR_DATA_KEY)));
+        }
+        if(compound.contains(USED_CRYSTAL_KEY)){
+            data.set(USED_CRYSTAL, compound.getBoolean(USED_CRYSTAL_KEY));
+        }
+        if(compound.contains(ELECTRIC_CHARGE_KEY)){
+            data.set(ELECTRIC_CHARGE, compound.getInt(ELECTRIC_CHARGE_KEY));
+        }
+        if(compound.contains(TIMEOUT_KEY)){
+            data.set(TIMEOUT, compound.getInt(TIMEOUT_KEY));
+        }
         if(this.level() instanceof ServerLevel server) {
-            if(compound.contains(LINKED_CRYSTAL_KEY)) {
+            if (compound.contains(LINKED_CRYSTAL_KEY)) {
                 UUID uuid = compound.getUUID(LINKED_CRYSTAL_KEY);
-                if(server.getEntity(uuid) instanceof EndCrystal crystal) {
+                if (server.getEntity(uuid) instanceof EndCrystal crystal) {
                     this.linked_crystal = crystal;
                 }
             }
@@ -115,9 +151,11 @@ public class ReactorEntity extends Entity implements Reactor {
         compound.put(REACTOR_DATA_KEY, data().toTag());
         compound.put(USED_CRYSTAL_KEY, ByteTag.valueOf(data.get(USED_CRYSTAL)));
         compound.put(ELECTRIC_CHARGE_KEY, IntTag.valueOf(data.get(ELECTRIC_CHARGE)));
+        compound.put(TIMEOUT_KEY, IntTag.valueOf(data.get(TIMEOUT)));
         if(this.linked_crystal != null) {
             compound.put(LINKED_CRYSTAL_KEY, NbtUtils.createUUID(linked_crystal.getUUID()));
         }
+
     }
 
     @Override
@@ -150,6 +188,11 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     public BlockPos getBlockPos() {
         return this.blockPosition();
+    }
+
+    @Override
+    public Vec3 getPos() {
+        return this.position();
     }
 
     @Override

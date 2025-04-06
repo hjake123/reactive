@@ -134,7 +134,7 @@ public class ReactionEffects {
                 if (!reactor.getLevel().isClientSide) {
                     ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(reactor.getLevel().getBlockState(potential_rod), level, potential_rod);
                     ParticleScribe.drawParticleZigZag(level, ParticleTypes.ELECTRIC_SPARK,
-                            reactor.getBlockPos().getX() + 0.5F, reactor.getBlockPos().getY() + 0.5625F, reactor.getBlockPos().getZ() + 0.5F,
+                            reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
                     reactor.getLevel().playSound(null, potential_rod, Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 1F);
                 }
@@ -159,7 +159,7 @@ public class ReactionEffects {
                     if(CrystalIronItem.effectNotBlocked(victim, 2))
                         victim.hurt(reactor.getLevel().damageSources().magic(), 5);
                     ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
-                            reactor.getBlockPos().getX() + 0.5F, reactor.getBlockPos().getY() + 0.5625F, reactor.getBlockPos().getZ() + 0.5F,
+                            reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
                     reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 0.98F + reactor.getLevel().random.nextFloat()*0.05F);
                 }
@@ -185,7 +185,7 @@ public class ReactionEffects {
                 }
             }
             ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.END_ROD,
-                    origin_pos.getX() + 0.5, origin_pos.getY() + 0.5625, origin_pos.getZ() + 0.5,
+                    reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                     victim.getX(),victim.getEyeY()-0.2, victim.getZ(), 8, 7, 0.74);
             float pitch = 0.80F + reactor.getLevel().random.nextFloat()*0.1F;
             reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.NOTE_BLOCK_CHIME.value(), SoundSource.BLOCKS, 0.3F, pitch);
@@ -206,7 +206,7 @@ public class ReactionEffects {
                     Registration.BE_SLOWFALLED_TRIGGER.get().trigger(player);
                 }
             }
-            ParticleScribe.drawParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getBlockPos(), 0.5, 0.6, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos(), 0.6, 1);
             reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.CONDUIT_AMBIENT_SHORT, SoundSource.BLOCKS, 0.1F, 1.2F);
 
         }
@@ -277,7 +277,7 @@ public class ReactionEffects {
             }
         }
 
-        ParticleScribe.drawParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getBlockPos(), 0.6F, 12F, 20);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos().add(0, 0.1, 0), 12F, 20);
     }
 
     // Cause blocks to fall down near the Symbol.
@@ -416,7 +416,7 @@ public class ReactionEffects {
                         Objects.requireNonNull(victim.getAttribute(Attributes.SCALE)).setBaseValue(new_scale);
                         Objects.requireNonNull(victim.getAttribute(Attributes.STEP_HEIGHT)).setBaseValue(new_step_height);
                         ParticleScribe.drawParticleZigZag(reactor.getLevel(), particle,
-                                reactor.getBlockPos().getX()+0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ()+0.5,
+                                reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                                 victim.getEyePosition().x, victim.getEyePosition().y, victim.getEyePosition().z, 20, 5, 0.9);
                         reactor.getLevel().playSound(null, reactor.getBlockPos(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS);
                         reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.getLevel().random.nextFloat()*0.2F);

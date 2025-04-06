@@ -54,7 +54,7 @@ public class ReactionRenderers {
     }
 
     public void curseRing(Reactor reactor) {
-        ParticleScribe.drawParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getBlockPos(), 0.45, 0.7, 1);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getPos(), 0.7, 1);
     }
 
     public void growth(Reactor reactor) {
@@ -98,6 +98,6 @@ public class ReactionRenderers {
 
     public void astral(Reactor reactor) {
         if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
-            ParticleScribe.drawParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getPos(), 0.7, 1);
     }
 }

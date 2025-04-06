@@ -112,13 +112,13 @@ public class ParticleScribe {
     }
 
     public static void drawParticleRing(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
-        drawExactParticleRing(level, opt, Vec3.atBottomCenterOf(pos), height, radius, frequency);
+        drawExactParticleRing(level, opt, Vec3.atBottomCenterOf(pos).add(0, height, 0), radius, frequency);
     }
 
-    public static void drawExactParticleRing(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency){
+    public static void drawExactParticleRing(Level level, ParticleOptions opt, Vec3 pos, double radius, int frequency){
         for(int i = 0; i < frequency; i++){
             int deflection_angle = level.random.nextInt(1, 360);
-            drawDeflectedParticle(level, opt, pos, height, radius, deflection_angle);
+            drawDeflectedParticle(level, opt, pos, 0, radius, deflection_angle);
         }
     }
 

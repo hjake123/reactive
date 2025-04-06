@@ -13,6 +13,7 @@ import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -58,6 +59,8 @@ public interface Reactor extends PowerBearer {
     BlockState getBlockState();
 
     BlockPos getBlockPos();
+
+    Vec3 getPos();
 
     // Only call this method when linked_crystal isn't null please and thank you.
     void unlinkCrystal(Level level, BlockPos pos, BlockState state);
