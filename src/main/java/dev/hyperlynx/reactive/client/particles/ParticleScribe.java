@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.client.particles;
 
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.entites.ReactorEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +18,16 @@ public class ParticleScribe {
             level.addParticle(opt, x, y, z, 0, 0, 0);
         } else {
             ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+        }
+    }
+
+    public static void drawParticle(Level level, ParticleOptions opt, double x, double y, double z, float odds, double xspeed, double yspeed, double zspeed) {
+        if(level.random.nextFloat() < odds){
+            if (level.isClientSide()) {
+                level.addParticle(opt, x, y, z, xspeed, yspeed, zspeed);
+            } else {
+                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, xspeed, yspeed, zspeed, 0.0);
+            }
         }
     }
 
@@ -154,23 +167,27 @@ public class ParticleScribe {
         drawParticleCrucibleTop(level, opt, pos, 1, 0, 0, 0);
     }
 
-    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds){
-        drawParticleCrucibleTop(level, opt, pos, odds, 0, 0, 0);
+    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds, double xspeed, double yspeed, double zspeed){
+        double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+        double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+        drawParticle(level, opt, x, pos.getY() + 0.6, z, odds, xspeed, yspeed, zspeed);
     }
 
-    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds, double xspeed, double yspeed, double zspeed){
-        if(level.isClientSide()){
-            if(level.random.nextFloat() < odds){
-                double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                level.addParticle(opt, x, pos.getY() + 0.6, z, xspeed, yspeed, zspeed);
-            }
-        }else{
-            if(level.random.nextFloat() < odds){
-                double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                ((ServerLevel) level).sendParticles(opt, x, pos.getY() + 0.6, z, 1, xspeed, yspeed, zspeed, 0.0);
-            }
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor){
+        drawParticleReactionSurface(level, opt, reactor, 1, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds){
+        drawParticleReactionSurface(level, opt, reactor, odds, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds, double xspeed, double yspeed, double zspeed){
+        if(reactor instanceof CrucibleBlockEntity) {
+            drawParticleCrucibleTop(level, opt, reactor.getBlockPos(), odds, xspeed, yspeed, zspeed);
+        } else if(reactor instanceof ReactorEntity) {
+            drawParticle(level, opt, reactor.getPos().x, reactor.getPos().y, reactor.getPos().z, odds, xspeed, yspeed, zspeed);
+        } else {
+            throw new UnsupportedOperationException("No reaction surface defined for reactor type '" + reactor.getClass() + "' !");
         }
     }
 

@@ -312,7 +312,7 @@ public class ReactionEffects {
         List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
 
         for(LivingEntity living : nearby){
-            ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.REVERSE_PORTAL, reactor.getBlockPos());
+            ParticleScribe.drawParticleReactionSurface(level, ParticleTypes.REVERSE_PORTAL, reactor);
             if(CrystalIronItem.effectNotBlocked(living, 1)) {
                 if(living instanceof Player player && player.isShiftKeyDown()){
                     MobEffectInstance stop = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50);
