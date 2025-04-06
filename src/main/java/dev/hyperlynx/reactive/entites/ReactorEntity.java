@@ -42,16 +42,14 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final String TIMEOUT_KEY = "timeout";
 
     // Only needs to be used on the server, so no syncing.
-    private ReactorData server_reactor_data = new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+    private ReactorData server_reactor_data = new ReactorData(new HashMap<>(), new ArrayList<>());
     private static final String REACTOR_DATA_KEY = "reactor_data";
-
-    private int no_reaction_timeout = 6000;
-    private static final String NO_REACTION_TIMEOUT_KEY = "no_reaction_timeout";
 
     private EndCrystal linked_crystal;
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
     // Don't need to save either.
+    private List<String> render_aliases = new ArrayList<>();
     private AreaMemory area_memory = null;
     private int sync_timer = 10;
     private int react_timer = 0;
@@ -83,7 +81,7 @@ public class ReactorEntity extends Entity implements Reactor {
 
         for(ReactionStatusEntry entry : data().statuses()){
             if(entry.status().equals(Reaction.Status.REACTING)){
-                getEntityData().set(TIMEOUT, 6000);
+                getEntityData().set(TIMEOUT, 1250);
                 break;
             }
         }
@@ -95,10 +93,10 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>()));
+        builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>()));
         builder.define(USED_CRYSTAL, false);
         builder.define(ELECTRIC_CHARGE, 0);
-        builder.define(TIMEOUT, 6000);
+        builder.define(TIMEOUT, 1250);
     }
 
     public ReactorData data(){
@@ -135,12 +133,10 @@ public class ReactorEntity extends Entity implements Reactor {
         if(compound.contains(TIMEOUT_KEY)){
             data.set(TIMEOUT, compound.getInt(TIMEOUT_KEY));
         }
-        if(this.level() instanceof ServerLevel server) {
-            if (compound.contains(LINKED_CRYSTAL_KEY)) {
-                UUID uuid = compound.getUUID(LINKED_CRYSTAL_KEY);
-                if (server.getEntity(uuid) instanceof EndCrystal crystal) {
-                    this.linked_crystal = crystal;
-                }
+        if(this.level() instanceof ServerLevel server && compound.contains(LINKED_CRYSTAL_KEY)) {
+            UUID uuid = compound.getUUID(LINKED_CRYSTAL_KEY);
+            if (server.getEntity(uuid) instanceof EndCrystal crystal) {
+                this.linked_crystal = crystal;
             }
         }
     }
@@ -235,17 +231,17 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public void clearRenderReactions() {
-        data().render_aliases().clear();
+        this.render_aliases.clear();
     }
 
     @Override
     public void addRenderReaction(String s) {
-        data().render_aliases().add(s);
+        this.render_aliases.add(s);
     }
 
     @Override
     public Iterable<String> getRenderReactions() {
-        return data().render_aliases();
+        return this.render_aliases;
     }
 
     @Override

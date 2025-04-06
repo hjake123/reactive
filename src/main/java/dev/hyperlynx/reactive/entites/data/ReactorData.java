@@ -17,11 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> statuses, List<String> render_aliases) {
+public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> statuses) {
     public static final StreamCodec<FriendlyByteBuf, ReactorData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, Power.STREAM_CODEC, ByteBufCodecs.INT), ReactorData::powers,
             ReactionStatusEntry.STREAM_CODEC.apply(ByteBufCodecs.list()), ReactorData::statuses,
-            ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), ReactorData::render_aliases,
             ReactorData::new
     );
 
@@ -30,9 +29,7 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
                 Codec.unboundedMap(Power.CODEC, Codec.INT).xmap(ReactiveVanillaCodecs::makeMapMutable, ReactiveVanillaCodecs::doNothing)
                         .fieldOf("powers").forGetter(ReactorData::powers),
                 Codec.list(ReactionStatusEntry.CODEC).xmap(ReactiveVanillaCodecs::makeListMutable, ReactiveVanillaCodecs::doNothing)
-                        .fieldOf("statuses").forGetter(ReactorData::statuses),
-                Codec.list(Codec.STRING).xmap(ReactiveVanillaCodecs::makeListMutable, ReactiveVanillaCodecs::doNothing)
-                        .fieldOf("render_aliases").forGetter(ReactorData::render_aliases)
+                        .fieldOf("statuses").forGetter(ReactorData::statuses)
         ).apply(instance, ReactorData::new)
     );
 
@@ -41,15 +38,15 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
     }
 
     public static ReactorData fromTag(CompoundTag tag){
-        var result =  CODEC.decode(NbtOps.INSTANCE, tag);
+        var result = CODEC.decode(NbtOps.INSTANCE, tag);
         if (result.isError()) {
-            return new ReactorData(new HashMap<>(), new ArrayList<>(), new ArrayList<>());
+            return new ReactorData(new HashMap<>(), new ArrayList<>());
         }
         return result.getOrThrow().getFirst();
     }
 
     public ReactorData copy() {
-        return new ReactorData(new HashMap<>(this.powers), new ArrayList<>(this.statuses), new ArrayList<>(this.render_aliases));
+        return new ReactorData(new HashMap<>(this.powers), new ArrayList<>(this.statuses));
     }
 
     public static class Serializer implements EntityDataSerializer<ReactorData> {
@@ -60,7 +57,7 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
 
         @Override
         public ReactorData copy(ReactorData value) {
-            return new ReactorData(value.powers(), value.statuses(), value.render_aliases());
+            return new ReactorData(value.powers(), value.statuses());
         }
     }
 }
