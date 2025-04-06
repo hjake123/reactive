@@ -41,7 +41,9 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
     // Don't need to save this either.
-    private AreaMemory area_memory;
+    private final AreaMemory area_memory;
+
+    private int sync_timer = 10;
 
     public ReactorEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -51,6 +53,12 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public void tick() {
+        if(sync_timer <= 0) {
+            update(data());
+            sync_timer = 10;
+        } else {
+            sync_timer--;
+        }
         super.tick();
     }
 
@@ -66,7 +74,7 @@ public class ReactorEntity extends Entity implements Reactor {
     }
 
     private void update(ReactorData changed){
-        this.getEntityData().set(REACTOR_DATA, changed);
+        this.getEntityData().set(REACTOR_DATA, changed, true);
     }
 
     @Override
