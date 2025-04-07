@@ -93,4 +93,8 @@ public interface Reactor extends PowerBearer {
     void clearRenderReactions();
 
     void addRenderReaction(String s);
+
+    default boolean areReactionsPaused() {
+        return false;
+    }
 }

@@ -90,7 +90,7 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>()));
-        builder.define(FORCE_GOLD_SYMBOL, true);
+        builder.define(FORCE_GOLD_SYMBOL, false);
         builder.define(USED_CRYSTAL, false);
         builder.define(ELECTRIC_CHARGE, 0);
         builder.define(LIFESPAN, 6000);
@@ -271,5 +271,12 @@ public class ReactorEntity extends Entity implements Reactor {
     public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
         linked_crystal.setBeamTarget(null);
         linked_crystal = null;
+    }
+
+    public void setPowers(@NotNull Map<Power, Integer> power_map_to_copy) {
+        server_reactor_data.powers().clear();
+        for(Power power : power_map_to_copy.keySet()){
+            server_reactor_data.powers().put(power, power_map_to_copy.get(power));
+        }
     }
 }
