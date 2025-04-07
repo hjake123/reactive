@@ -62,6 +62,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.block.Block;
@@ -568,6 +569,8 @@ public class Registration {
     public static final DeferredHolder<RecipeType<?>, RecipeType<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_TYPE = RECIPE_TYPES.register("power_bottle", () -> getRecipeType("power_bottle"));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("power_bottle", PowerBottleRecipeSerializer::new);
 
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask", () -> getRecipeType("crafting_special_reaction_flask"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskCraftingRecipe::new));
 
     // Register the data components.
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> TUTORIAL_DONE =
