@@ -29,10 +29,10 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
 
         Map<Power, Integer> powers = reactor.reactorData().powers();
         for(Power power : powers.keySet()) {
-            float chance = powers.get(power) / ((float)reactor.maxPower() * 2);
+            float chance = powers.get(power) * 2.0F / reactor.maxPower();
             if(Minecraft.getInstance().level.random.nextFloat() < chance) {
                 ParticleScribe.drawExactParticleSphere(reactor.level(),
-                        new EnergyParticle.Options(0.1F, power.getColor(), reactor.position()),
+                        new EnergyParticle.Options(power.getColor(), reactor.position()),
                         reactor.position(), 0.0, 0.4, 1);
             }
         }

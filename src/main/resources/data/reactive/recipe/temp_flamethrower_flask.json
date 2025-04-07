@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "i": {
+      "item": "reactive:inert_crystal"
+    },
+    "b": {
+      "item": "reactive:blaze_bottle"
+    },
+    "t": {
+      "item": "reactive:gold_thread"
+    }
+  },
+  "pattern": [
+    " i ",
+    " b ",
+    " t "
+  ],
+  "result": {
+    "id": "reactive:reaction_flask",
+    "components": {
+      "reactive:reactor_data": {
+        "powers": {
+          "reactive:blaze": 4000
+        },
+        "statuses": []
+      }
+    }
+  }
+}

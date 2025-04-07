@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.client.renderers.be.SymbolRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -48,6 +49,7 @@ public class ClientRegistration {
             event.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), GatewayRenderer::new);
         }
         event.registerEntityRenderer(Registration.REACTOR_ENTITY_TYPE.get(), ReactorEntityRenderer::new);
+        event.registerEntityRenderer(Registration.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent

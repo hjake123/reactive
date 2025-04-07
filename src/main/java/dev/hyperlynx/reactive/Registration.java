@@ -12,6 +12,7 @@ import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
+import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.net.*;
@@ -460,12 +461,22 @@ public class Registration {
     public static final DeferredHolder<Item, Item> GOLD_THREAD = ITEMS.register("gold_thread",
             () -> new Item(new Item.Properties()));
 
+    public static final DeferredHolder<Item, ReactionFlaskItem> REACTION_FLASK = ITEMS.register("reaction_flask",
+            () -> new ReactionFlaskItem(new Item.Properties().stacksTo(16)));
+
     // Register entities
     public static final Supplier<EntityType<ReactorEntity>> REACTOR_ENTITY_TYPE = ENTITY_TYPES.register("reactor", () ->
             EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
+                    .sized(0.2F, 0.2F)
                     .fireImmune()
                     .build("reactor"));
+
+    public static final Supplier<EntityType<ThrownReactionFlask>> THROWN_REACTION_FLASK = ENTITY_TYPES.register("thrown_reaction_flask", () ->
+            EntityType.Builder.of(ThrownReactionFlask::new, MobCategory.MISC)
+                    .sized(0.4F, 0.4F)
+                    .fireImmune()
+                    .build("thrown_reaction_flask"));
+
 
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
@@ -586,6 +597,14 @@ public class Registration {
                     () -> DataComponentType.<WarpBottleTarget>builder()
                             .persistent(WarpBottleTarget.CODEC)
                             .networkSynchronized(WarpBottleTarget.STREAM_CODEC)
+                            .build()
+            );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactorData>> REACTOR_DATA =
+            COMPONENT_TYPES.register("reactor_data",
+                    () -> DataComponentType.<ReactorData>builder()
+                            .persistent(ReactorData.CODEC)
+                            .networkSynchronized(ReactorData.STREAM_CODEC)
                             .build()
             );
 

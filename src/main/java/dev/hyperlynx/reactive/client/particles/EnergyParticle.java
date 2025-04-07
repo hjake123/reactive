@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
+    private float speed = 0.05F;
 
     protected EnergyParticle(ClientLevel level, double x, double y, double z, Options options, SpriteSet sprites) {
         super(level, x, y, z);
@@ -59,7 +60,7 @@ public class EnergyParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
-        if(this.getPos().closerThan(this.target, 0.01)){
+        if(this.getPos().closerThan(this.target, speed + 0.01F)){
             this.remove();
         }
     }
@@ -68,30 +69,38 @@ public class EnergyParticle extends TextureSheetParticle {
     public void move(double x, double y, double z) {
         Vec3 pos = this.getPos();
         Vec3 to_target = this.target.subtract(pos);
-        Vec3 move_step = to_target.normalize().scale(0.05);
+        Vec3 move_step = to_target.normalize().scale(speed);
         super.move(move_step.x, move_step.y, move_step.z);
     }
 
     public static class Options extends ScalableParticleOptionsBase {
+        float speed = 0.05F;
         Color color;
         Vec3 target;
 
         protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-                    Codec.FLOAT.fieldOf("scale").forGetter(Options::getScale),
+                    Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
                     Color.CODEC.fieldOf("color").forGetter(Options::getColor),
                     Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget)
                 ).apply(instance, Options::new)
         );
 
         protected static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLOAT, Options::getScale,
+                ByteBufCodecs.FLOAT, Options::getSpeed,
                 Color.STREAM_CODEC, Options::getColor,
                 ReactiveVanillaCodecs.VEC3_STREAM_CODEC, Options::getTarget,
                 Options::new
         );
 
-        public Options(float scale, Color color, Vec3 target) {
-            super(scale);
+        public Options(Color color, Vec3 target) {
+            super(0.1F);
+            this.color = color;
+            this.target = target;
+        }
+
+        public Options(float speed, Color color, Vec3 target) {
+            super(0.1F);
+            this.speed = speed;
             this.color = color;
             this.target = target;
         }
@@ -99,6 +108,10 @@ public class EnergyParticle extends TextureSheetParticle {
         @Override
         public @NotNull ParticleType<?> getType() {
             return Registration.ENERGY_PARTICLE_TYPE.get();
+        }
+
+        public float getSpeed() {
+            return this.speed;
         }
 
         public Color getColor() {
@@ -136,7 +149,8 @@ public class EnergyParticle extends TextureSheetParticle {
         @Override
         public @Nullable Particle createParticle(@NotNull Options options, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             EnergyParticle particle = new EnergyParticle(level, x, y, z, options, sprites);
-            particle.setLifetime(20);
+            particle.speed = options.getSpeed();
+            particle.setLifetime(200);
             return particle;
         }
     }
