@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReactionFlaskCraftingRecipe extends CustomRecipe {
-    TagKey<Item> POWER_BOTTLE_TAG = ItemTags.create(ReactiveMod.location("power_bottles"));
+    public static TagKey<Item> POWER_BOTTLE_TAG = ItemTags.create(ReactiveMod.location("power_bottles"));
 
     public ReactionFlaskCraftingRecipe(CraftingBookCategory category) {
         super(category);
