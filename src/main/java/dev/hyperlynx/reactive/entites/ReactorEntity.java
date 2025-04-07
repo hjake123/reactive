@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.entites;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
@@ -32,14 +31,17 @@ public class ReactorEntity extends Entity implements Reactor {
 
     private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
 
+    private static final EntityDataAccessor<Boolean> FORCE_GOLD_SYMBOL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final String FORCE_GOLD_SYMBOL_KEY = "force_gold_symbol_key";
+
     private static final EntityDataAccessor<Boolean> USED_CRYSTAL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
     private static final String USED_CRYSTAL_KEY = "has_used_crystal";
 
     private static final EntityDataAccessor<Integer> ELECTRIC_CHARGE = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
     private static final String ELECTRIC_CHARGE_KEY = "charge";
 
-    private static final EntityDataAccessor<Integer> TIMEOUT = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
-    private static final String TIMEOUT_KEY = "timeout";
+    private static final EntityDataAccessor<Integer> LIFESPAN = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.INT);
+    private static final String LIFESPAN_KEY = "lifespan";
 
     // Only needs to be used on the server, so no syncing.
     private ReactorData server_reactor_data = new ReactorData(new HashMap<>(), new ArrayList<>());
@@ -79,43 +81,46 @@ public class ReactorEntity extends Entity implements Reactor {
             react_timer--;
         }
 
-        for(ReactionStatusEntry entry : data().statuses()){
-            if(entry.status().equals(Reaction.Status.REACTING)){
-                getEntityData().set(TIMEOUT, 1250);
-                break;
-            }
-        }
-        if(getEntityData().get(TIMEOUT) <= 0){
+        if(getEntityData().get(LIFESPAN) <= 0){
             kill();
         }
-        getEntityData().set(TIMEOUT, getEntityData().get(TIMEOUT) - 1);
+        getEntityData().set(LIFESPAN, getEntityData().get(LIFESPAN) - 1);
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(SYNCED_REACTOR_DATA, new ReactorData(new HashMap<>(), new ArrayList<>()));
+        builder.define(FORCE_GOLD_SYMBOL, true);
         builder.define(USED_CRYSTAL, false);
         builder.define(ELECTRIC_CHARGE, 0);
-        builder.define(TIMEOUT, 1250);
+        builder.define(LIFESPAN, 6000);
     }
 
-    public ReactorData data(){
+    public ReactorData reactorData() {
         if(this.level().isClientSide){
             return this.getEntityData().get(SYNCED_REACTOR_DATA);
         }
         return server_reactor_data;
     }
 
-    private void update(){
+    private void update() {
         if(this.level().isClientSide){
             throw new UnsupportedOperationException("Can't modify the state of the reaction data on the client!");
         }
         this.getEntityData().set(SYNCED_REACTOR_DATA, server_reactor_data.copy(), true);
     }
 
-    private void update(ReactorData changed){
+    private void update(ReactorData changed) {
         this.server_reactor_data = changed;
         update();
+    }
+
+    public void setLifespan(int lifespan) {
+        this.getEntityData().set(LIFESPAN, lifespan);
+    }
+
+    public void forceGoldSymbol() {
+        this.getEntityData().set(FORCE_GOLD_SYMBOL, true);
     }
 
     @Override
@@ -124,14 +129,17 @@ public class ReactorEntity extends Entity implements Reactor {
         if(compound.contains(REACTOR_DATA_KEY)){
             update(ReactorData.fromTag(compound.getCompound(REACTOR_DATA_KEY)));
         }
+        if(compound.contains(FORCE_GOLD_SYMBOL_KEY)){
+            data.set(FORCE_GOLD_SYMBOL, compound.getBoolean(FORCE_GOLD_SYMBOL_KEY));
+        }
         if(compound.contains(USED_CRYSTAL_KEY)){
             data.set(USED_CRYSTAL, compound.getBoolean(USED_CRYSTAL_KEY));
         }
         if(compound.contains(ELECTRIC_CHARGE_KEY)){
             data.set(ELECTRIC_CHARGE, compound.getInt(ELECTRIC_CHARGE_KEY));
         }
-        if(compound.contains(TIMEOUT_KEY)){
-            data.set(TIMEOUT, compound.getInt(TIMEOUT_KEY));
+        if(compound.contains(LIFESPAN_KEY)){
+            data.set(LIFESPAN, compound.getInt(LIFESPAN_KEY));
         }
         if(this.level() instanceof ServerLevel server && compound.contains(LINKED_CRYSTAL_KEY)) {
             UUID uuid = compound.getUUID(LINKED_CRYSTAL_KEY);
@@ -144,24 +152,29 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
         var data = this.getEntityData();
-        compound.put(REACTOR_DATA_KEY, data().toTag());
+        compound.put(REACTOR_DATA_KEY, reactorData().toTag());
+        compound.put(FORCE_GOLD_SYMBOL_KEY, ByteTag.valueOf(data.get(FORCE_GOLD_SYMBOL)));
         compound.put(USED_CRYSTAL_KEY, ByteTag.valueOf(data.get(USED_CRYSTAL)));
         compound.put(ELECTRIC_CHARGE_KEY, IntTag.valueOf(data.get(ELECTRIC_CHARGE)));
-        compound.put(TIMEOUT_KEY, IntTag.valueOf(data.get(TIMEOUT)));
+        compound.put(LIFESPAN_KEY, IntTag.valueOf(data.get(LIFESPAN)));
         if(this.linked_crystal != null) {
             compound.put(LINKED_CRYSTAL_KEY, NbtUtils.createUUID(linked_crystal.getUUID()));
         }
+    }
 
+    @Override
+    public boolean checkGoldSymbol() {
+        return this.getEntityData().get(FORCE_GOLD_SYMBOL) || Reactor.super.checkGoldSymbol();
     }
 
     @Override
     public List<ReactionStatusEntry> getReactionStatus() {
-        return data().statuses();
+        return reactorData().statuses();
     }
 
     @Override
     public void resetReactionStatus() {
-        var data = data();
+        var data = reactorData();
         data.statuses().clear();
         update(data);
     }
@@ -203,7 +216,7 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public @NotNull Map<Power, Integer> getPowerMap() {
-        return data().powers();
+        return reactorData().powers();
     }
 
     @Override

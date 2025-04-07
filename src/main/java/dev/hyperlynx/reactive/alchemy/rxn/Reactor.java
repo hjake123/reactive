@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -50,6 +51,10 @@ public interface Reactor extends PowerBearer {
 
         if (!this.hasUsedCrystalThisCycle() && this.getLinkedCrystal() != null)
             this.unlinkCrystal(level, this.getBlockPos(), this.getBlockState());
+    }
+
+    default boolean checkGoldSymbol(){
+        return this.getAreaMemory().exists(this.getLevel(), Registration.GOLD_SYMBOL.get());
     }
 
     boolean hasUsedCrystalThisCycle();

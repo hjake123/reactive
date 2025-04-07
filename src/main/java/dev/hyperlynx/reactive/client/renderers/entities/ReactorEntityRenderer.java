@@ -2,13 +2,10 @@ package dev.hyperlynx.reactive.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
-import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -30,7 +27,7 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
         }
         assert Minecraft.getInstance().level != null;
 
-        Map<Power, Integer> powers = reactor.data().powers();
+        Map<Power, Integer> powers = reactor.reactorData().powers();
         for(Power power : powers.keySet()) {
             float chance = powers.get(power) / ((float)reactor.maxPower() * 2);
             if(Minecraft.getInstance().level.random.nextFloat() < chance) {

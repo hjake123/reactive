@@ -138,7 +138,7 @@ public abstract class Reaction {
     private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
             case END_CRYSTAL -> checkEndCrystal(reactor);
-            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case GOLD_SYMBOL -> reactor.checkGoldSymbol();
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
             default -> true;
