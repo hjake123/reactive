@@ -454,6 +454,12 @@ public class Registration {
                     .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
                     .build())));
 
+    public static final DeferredHolder<Item, Item> INERT_CRYSTAL = ITEMS.register("inert_crystal",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> GOLD_THREAD = ITEMS.register("gold_thread",
+            () -> new Item(new Item.Properties()));
+
     // Register entities
     public static final Supplier<EntityType<ReactorEntity>> REACTOR_ENTITY_TYPE = ENTITY_TYPES.register("reactor", () ->
             EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
