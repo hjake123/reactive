@@ -51,15 +51,6 @@ public record ReactionStatusPayload(List<ReactionStatusEntry> statuses, Target t
         }
     }
 
-    public static ReactionStatusPayload forReactor(List<ReactionStatusEntry> entries, Reactor reactor){
-        if(reactor instanceof BlockEntity){
-            return new ReactionStatusPayload(entries, new Target(Either.left(reactor.getBlockPos())));
-        }
-        if(reactor instanceof ReactorEntity entity){
-            return new ReactionStatusPayload(entries, new Target(Either.right(entity.getId())));
-        }
-        throw new UnsupportedOperationException("Tried to send status payload to an invalid reactor type.");
-    }
 
     public record Target(Either<BlockPos, Integer> target) {
         public static final StreamCodec<FriendlyByteBuf, Target> STREAM_CODEC = StreamCodec.composite(

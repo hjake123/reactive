@@ -1,11 +1,13 @@
 package dev.hyperlynx.reactive.entites;
 
+import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
+import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.ByteTag;
@@ -278,5 +280,10 @@ public class ReactorEntity extends Entity implements Reactor {
         for(Power power : power_map_to_copy.keySet()){
             server_reactor_data.powers().put(power, power_map_to_copy.get(power));
         }
+    }
+
+    @Override
+    public ReactionStatusPayload getPayload() {
+        return new ReactionStatusPayload(getReactionStatus(), new ReactionStatusPayload.Target(Either.right(getId())));
     }
 }

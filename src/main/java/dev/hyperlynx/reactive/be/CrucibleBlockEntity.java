@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
+import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
@@ -613,6 +614,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public boolean areReactionsPaused() {
         return reactions_paused;
+    }
+
+    @Override
+    public ReactionStatusPayload getPayload() {
+        return new ReactionStatusPayload(getReactionStatus(), new ReactionStatusPayload.Target(Either.left(getBlockPos())));
     }
 
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
