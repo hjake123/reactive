@@ -120,6 +120,9 @@ public abstract class Reaction {
         }
         boolean met_conditions = checkStimulus(reactor);
         if(met_conditions) {
+            if(reactor.areReactionsPaused()){
+                return Status.INHIBITED;
+            }
             if(reactor.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
             && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
@@ -138,10 +141,9 @@ public abstract class Reaction {
     private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
             case END_CRYSTAL -> checkEndCrystal(reactor);
-            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case GOLD_SYMBOL -> reactor.checkGoldSymbol();
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
-            case SACRIFICE -> reactor.getSacrificeCount() >= 10;
             default -> true;
         };
     }
@@ -194,7 +196,6 @@ public abstract class Reaction {
         GOLD_SYMBOL,
         ELECTRIC,
         NO_ELECTRIC,
-        SACRIFICE,
         END_CRYSTAL,
         NO_END_CRYSTAL
     }
@@ -211,7 +212,7 @@ public abstract class Reaction {
 
     @Override
     public String toString(){
-        return reagents.toString();
+        return alias;
     }
 
 }

@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
@@ -9,6 +10,10 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
+import dev.hyperlynx.reactive.entites.ReactorEntity;
+import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
+import dev.hyperlynx.reactive.entites.data.ReactorData;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.net.*;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
@@ -32,8 +37,10 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -42,6 +49,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
@@ -53,6 +62,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.block.Block;
@@ -70,6 +80,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -77,8 +88,10 @@ import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -86,6 +99,7 @@ public class Registration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, ReactiveMod.MODID);
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ReactiveMod.MODID);
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ReactiveMod.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.ENTITY_TYPE, ReactiveMod.MODID);
     public static final DeferredRegister<MobEffect> MOB_EFFECTS = DeferredRegister.create(BuiltInRegistries.MOB_EFFECT, ReactiveMod.MODID);
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION, ReactiveMod.MODID);
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(BuiltInRegistries.PARTICLE_TYPE, ReactiveMod.MODID);
@@ -97,11 +111,13 @@ public class Registration {
     public static final DeferredRegister<DataComponentType<?>> ENCHANTMENT_COMPONENT_TYPES = DeferredRegister.create(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, ReactiveMod.MODID);
     public static final DeferredRegister<CriterionTrigger<?>> CRITERIA_TRIGGERS = DeferredRegister.create(BuiltInRegistries.TRIGGER_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(BuiltInRegistries.COMMAND_ARGUMENT_TYPE, ReactiveMod.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(NeoForgeRegistries.ENTITY_DATA_SERIALIZERS, ReactiveMod.MODID);
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
+        ENTITY_TYPES.register(bus);
         MOB_EFFECTS.register(bus);
         POTIONS.register(bus);
         PARTICLES.register(bus);
@@ -114,6 +130,7 @@ public class Registration {
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
         COMMAND_ARGUMENTS.register(bus);
+        ENTITY_DATA_SERIALIZERS.register(bus);
         bus.register(Registration.class);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
@@ -439,6 +456,29 @@ public class Registration {
                     .effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, -1, 4, true, false), 1F)
                     .build())));
 
+    public static final DeferredHolder<Item, Item> INERT_CRYSTAL = ITEMS.register("inert_crystal",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> GOLD_THREAD = ITEMS.register("gold_thread",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, ReactionFlaskItem> REACTION_FLASK = ITEMS.register("reaction_flask",
+            () -> new ReactionFlaskItem(new Item.Properties().stacksTo(16)));
+
+    // Register entities
+    public static final Supplier<EntityType<ReactorEntity>> REACTOR_ENTITY_TYPE = ENTITY_TYPES.register("reactor", () ->
+            EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)
+                    .fireImmune()
+                    .build("reactor"));
+
+    public static final Supplier<EntityType<ThrownReactionFlask>> THROWN_REACTION_FLASK = ENTITY_TYPES.register("thrown_reaction_flask", () ->
+            EntityType.Builder.of(ThrownReactionFlask::new, MobCategory.MISC)
+                    .sized(0.4F, 0.4F)
+                    .fireImmune()
+                    .build("thrown_reaction_flask"));
+
+
     // Register mob effects
     public static final DeferredHolder<MobEffect, MobEffect> NULL_GRAVITY = MOB_EFFECTS.register("no_gravity",
             () -> new HyperMobEffect(MobEffectCategory.NEUTRAL, 0xC0BF77)
@@ -495,6 +535,10 @@ public class Registration {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ACID_BUBBLE_PARTICLE_TYPE = PARTICLES.register("acid_bubble",
             () -> ACID_BUBBLE_PARTICLE);
 
+    public static final ParticleType<EnergyParticle.Options> ENERGY_PARTICLE = new EnergyParticle.Type();
+    public static final DeferredHolder<ParticleType<?>, ParticleType<EnergyParticle.Options>> ENERGY_PARTICLE_TYPE = PARTICLES.register("energy",
+            () -> ENERGY_PARTICLE);
+
     // Register sound events.
     public static final DeferredHolder<SoundEvent, SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.parse("reactive:zap")));
@@ -525,6 +569,8 @@ public class Registration {
     public static final DeferredHolder<RecipeType<?>, RecipeType<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_TYPE = RECIPE_TYPES.register("power_bottle", () -> getRecipeType("power_bottle"));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PowerBottleRecipe>> JEI_BOTTLE_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("power_bottle", PowerBottleRecipeSerializer::new);
 
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask", () -> getRecipeType("crafting_special_reaction_flask"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskCraftingRecipe::new));
 
     // Register the data components.
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> TUTORIAL_DONE =
@@ -554,6 +600,14 @@ public class Registration {
                     () -> DataComponentType.<WarpBottleTarget>builder()
                             .persistent(WarpBottleTarget.CODEC)
                             .networkSynchronized(WarpBottleTarget.STREAM_CODEC)
+                            .build()
+            );
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactorData>> REACTOR_DATA =
+            COMPONENT_TYPES.register("reactor_data",
+                    () -> DataComponentType.<ReactorData>builder()
+                            .persistent(ReactorData.CODEC)
+                            .networkSynchronized(ReactorData.STREAM_CODEC)
                             .build()
             );
 
@@ -672,6 +726,10 @@ public class Registration {
     public static final DeferredHolder<ArgumentTypeInfo<?, ?>, ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
+    // Register the Reactor entity's data serializer.
+    public static final DeferredHolder<EntityDataSerializer<?>, EntityDataSerializer<ReactorData>> REACTOR_DATA_SERIALIZER =
+            ENTITY_DATA_SERIALIZERS.register("reactor_data", ReactorData.Serializer::new);
+
     // Register the creative mode tab.
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
@@ -732,7 +790,7 @@ public class Registration {
         registrar.commonToClient(
                 ReactionStatusPayload.TYPE,
                 ReactionStatusPayload.STREAM_CODEC,
-                CrucibleBlockEntity::acceptReactionStatusPayload
+                ReactionStatusPayload::handle
         );
         registrar.playToServer(
                 ReactionPageRequestPayload.TYPE,

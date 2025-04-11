@@ -5,10 +5,14 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.DisplacedBlock;
 import dev.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
@@ -167,6 +171,20 @@ public class SpecialCaseMan {
             if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
                     && c.electricCharge > 0) {
                 displaceNearby(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(Registration.INERT_CRYSTAL.get()))) {
+                preventReactions(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(Registration.GOLD_THREAD.get()))) {
+                expelReaction(c, e);
                 return true;
             }
             return false;
@@ -658,6 +676,37 @@ public class SpecialCaseMan {
             portal.createSolidPortalBlocks();
             if(!l.isClientSide)
                 FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.PORTAL_FREEZE_TRIGGER.get(), p, 9);
+        }
+    }
+
+    private static void preventReactions(CrucibleBlockEntity crucible){
+        crucible.reactions_paused = true;
+    }
+
+    private static void expelReaction(CrucibleBlockEntity crucible, ItemEntity thread){
+        boolean is_reactive = false;
+        for(ReactionStatusEntry entry : crucible.getReactionStatus()){
+            if(entry.status().equals(Reaction.Status.REACTING)){
+                is_reactive = true;
+                break;
+            }
+        }
+        if(!is_reactive){
+            return;
+        }
+
+        ReactorEntity entity = new ReactorEntity(Registration.REACTOR_ENTITY_TYPE.get(), crucible.getLevel());
+        entity.setPos(crucible.getPos().add(0, 1.0, 0));
+        entity.setPowers(crucible.getPowerMap());
+        entity.setLifespan(600);
+        crucible.expendPower();
+        crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+        crucible.getLevel().addFreshEntity(entity);
+        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS);
+        crucible.getLevel().playSound((Entity) null, crucible.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 0.7F);
+        thread.getItem().shrink(1);
+        if(thread.getItem().getCount() == 0){
+            thread.kill();
         }
     }
 

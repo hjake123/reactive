@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -24,11 +25,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
@@ -38,7 +44,6 @@ public class ReactiveCommand {
     private static final SimpleCommandExceptionType ERROR_NO_PLAYER = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_player"));
     private static final SimpleCommandExceptionType ERROR_NO_CRUCIBLE = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_crucible"));
     private static final SimpleCommandExceptionType ERROR_FAKE_POWER = new SimpleCommandExceptionType(Component.translatable("commands.reactive.fake_power"));
-
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> command_builder = Commands.literal("reactive")
@@ -56,7 +61,7 @@ public class ReactiveCommand {
                         .then(Commands.literal("add")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
                                 .then(Commands.argument("power_id", PowerArgumentType.power())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 10000))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
                                         context.getArgument("power_id", ResourceLocation.class),
@@ -65,7 +70,7 @@ public class ReactiveCommand {
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("crucible_location", BlockPosArgument.blockPos())
                                 .then(Commands.argument("power_id", PowerArgumentType.power())
-                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1600))
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 10000))
                                 .executes((context) -> modifyPower(context.getSource(),
                                         context.getArgument("crucible_location", WorldCoordinates.class),
                                         context.getArgument("power_id", ResourceLocation.class),
@@ -89,22 +94,35 @@ public class ReactiveCommand {
             throw ERROR_NOT_LOADED.create();
         }
 
-        if(!(level.getBlockEntity(pos) instanceof CrucibleBlockEntity crucible)){
+        List<PowerBearer> bearers = new ArrayList<>();
+
+        if(level.getBlockEntity(pos) instanceof PowerBearer be_bearer){
+            bearers.add(be_bearer);
+        }
+
+        var bearer_entities = level.getEntities((Entity) null, new AABB(pos), (entity) -> entity instanceof PowerBearer);
+        for(Entity entity : bearer_entities){
+            bearers.add((PowerBearer) entity);
+        }
+
+        if(bearers.isEmpty()){
             throw ERROR_NO_CRUCIBLE.create();
         }
 
-        Power power = Powers.POWER_REGISTRY.get(power_location);
-        if(power == null){
-            throw ERROR_FAKE_POWER.create();
+        for(PowerBearer bearer : bearers) {
+            Power power = Powers.POWER_REGISTRY.get(power_location);
+            if(power == null){
+                throw ERROR_FAKE_POWER.create();
+            }
+
+            if(remove){
+                bearer.expendPower(power, amount);
+            }else{
+                bearer.addPower(power, amount);
+            }
         }
 
-        if(remove){
-            crucible.expendPower(power, amount);
-        }else{
-            crucible.addPower(power, amount);
-        }
-
-        crucible.setDirty();
+        // TODO do we need this? : bearer.setDirty();
         return 1;
     }
 

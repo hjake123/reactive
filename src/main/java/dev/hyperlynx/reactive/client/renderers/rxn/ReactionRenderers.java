@@ -46,19 +46,19 @@ public class ReactionRenderers {
     }
 
     public void smoke(Reactor reactor) {
-        ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.LARGE_SMOKE, reactor.getBlockPos(), 0.3F);
+        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.LARGE_SMOKE, reactor, 0.3F);
     }
 
     public void annihilationSmoke(Reactor reactor) {
-        ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.SMOKE, reactor.getBlockPos(), 0.2F);
+        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.SMOKE, reactor, 0.2F);
     }
 
     public void curseRing(Reactor reactor) {
-        ParticleScribe.drawParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getBlockPos(), 0.45, 0.7, 1);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getPos(), 0.7, 1);
     }
 
     public void growth(Reactor reactor) {
-        ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.HAPPY_VILLAGER, reactor.getBlockPos(), 0.1F);
+        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.HAPPY_VILLAGER, reactor, 0.1F);
     }
 
     // Shoot flames from the crucible!
@@ -66,9 +66,9 @@ public class ReactionRenderers {
         if(reactor.getLevel() == null) return;
 
         if(reactor.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
-            ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, reactor.getBlockPos(), 0.1F, 0, 0.1, 0);
+            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, reactor, 0.1F, 0, 0.1, 0);
         }else{
-            ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.FLAME, reactor.getBlockPos(), 0.1F, 0, 0.1, 0);
+            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.FLAME, reactor, 0.1F, 0, 0.1, 0);
         }
     }
 
@@ -81,23 +81,23 @@ public class ReactionRenderers {
     }
 
     public void ominous(Reactor reactor) {
-        ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), ParticleTypes.OMINOUS_SPAWNING, reactor.getBlockPos(), 0.005F);
+        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.OMINOUS_SPAWNING, reactor, 0.005F);
     }
 
     public void acid_based(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level.random.nextFloat() < 0.1F)
-            ParticleScribe.drawParticleCrucibleTop(reactor.getLevel(), Registration.ACID_BUBBLE_PARTICLE.getType(), reactor.getBlockPos());
+            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), Registration.ACID_BUBBLE_PARTICLE.getType(), reactor);
     }
 
     public void verdant_based(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level.random.nextFloat() < 0.1F)
-            ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.HAPPY_VILLAGER, reactor.getBlockPos());
+            ParticleScribe.drawParticleReactionSurface(level, ParticleTypes.HAPPY_VILLAGER, reactor);
     }
 
     public void astral(Reactor reactor) {
         if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
-            ParticleScribe.drawParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getBlockPos(), 0.45, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getPos(), 0.7, 1);
     }
 }

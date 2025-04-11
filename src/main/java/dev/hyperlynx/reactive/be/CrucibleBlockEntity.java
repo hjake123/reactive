@@ -1,13 +1,11 @@
 package dev.hyperlynx.reactive.be;
 
+import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
@@ -92,7 +90,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
     public boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
-    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
@@ -100,6 +97,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Synced to the client.
     public List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to render reactions, and is updated in response to the aforementioned packet.
+    public boolean reactions_paused = false; // Set by the Inert Crystal special case. Inhibits all Reactions when true.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE.get(), pos, state);
@@ -195,6 +193,9 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                         // Spread Sculk, if applicable
                         crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
+
+                        // Reset reaction pause mechanic.
+                        crucible.reactions_paused = false;
                     }
 
                     case 4 -> {
@@ -227,10 +228,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 crucible.powers.remove(p);
             }
         }
-    }
-
-    public int getTickCount(){
-        return tick_counter;
     }
 
     private static void checkIntegrity(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
@@ -322,6 +319,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public void setUsedCrystalThisCycle(boolean used) {
         used_crystal_this_cycle = used;
+    }
+
+    @Override
+    public Vec3 getPos() {
+        return this.getBlockPos().getBottomCenter().add(0, 0.5625, 0);
     }
 
     // Only call this method when linked_crystal isn't null please and thank you.
@@ -519,20 +521,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // CLIENT ONLY
     // Used to update reactionsToRender
-    public static void acceptReactionStatusPayload(ReactionStatusPayload payload, IPayloadContext context) {
-        Level level = context.player().level();
-        BlockEntity be = level.getBlockEntity(payload.pos());
-        if(!(be instanceof CrucibleBlockEntity crucible)){
-            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
-            return;
-        }
-        crucible.reactions_to_render.clear();
-        for(ReactionStatusEntry entry : payload.statuses()){
-            if(entry.status() == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(entry.reaction_alias());
-            }
-        }
-    }
+
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
@@ -574,7 +563,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
-        sacrificeCount++;
         FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), Registration.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
@@ -623,6 +611,16 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         return powers;
     }
 
+    @Override
+    public boolean areReactionsPaused() {
+        return reactions_paused;
+    }
+
+    @Override
+    public ReactionStatusPayload getPayload() {
+        return new ReactionStatusPayload(getReactionStatus(), new ReactionStatusPayload.Target(Either.left(getBlockPos())));
+    }
+
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
         boolean changed = false;
         for(Power p : Powers.POWERS.getRegistry().get()){
@@ -655,43 +653,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     // These methods manage power in the Crucible. They might be extracted to an interface later.
 
     @Override
-    public boolean addPower(Power p, int amount) {
-        if(p == null){
-            return false;
-        }
-        if(getPowerLevel(p) == CRUCIBLE_MAX_POWER){
-            return false;
-        }
-        if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
-            int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            if(excess > 0) {
-                amount -= excess;
-            }
-        }
-
-        int prev = powers.getOrDefault(p, 0);
-        if(prev > 0)
-            powers.replace(p, amount + prev);
-        else
-            powers.put(p, amount);
-
-//        if(this.getLevel() != null && !this.getLevel().isClientSide)
-//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
-
-        return true;
-    }
-
-    @Override
-    public int getPowerLevel(Power t) {
-        if(powers.isEmpty() || powers.get(t) == null){
-            return 0;
-        }
-        return powers.get(t);
-    }
-
-    @Override
     public AreaMemory getAreaMemory() {
         return areaMemory;
     }
@@ -699,11 +660,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public int getElectricCharge() {
         return electricCharge;
-    }
-
-    @Override
-    public int getSacrificeCount() {
-        return sacrificeCount;
     }
 
     @Override
@@ -727,55 +683,22 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     @Override
-    public boolean expendPower(Power t, int amount) {
-        if(powers.isEmpty() || !powers.containsKey(t)){
-            return false;
-        }
-        int level = powers.get(t);
-        if(level > amount){
-            powers.put(t, level-amount);
-            return true;
-        }
-        if (level == amount) {
-            powers.put(t, 0);
-            return true;
-        }
-
-        // This implies that all power t wasn't enough to meet amount.
-        powers.put(t, 0);
-        return false;
+    public void clearRenderReactions() {
+        this.reactions_to_render.clear();
     }
 
-
-    public void expendAnyPowerExcept(Power immune_power, int amount) {
-        boolean expended = false;
-        for(Power p : powers.keySet()){
-            if(p != immune_power && p != Powers.CURSE_POWER.get()){
-                expended = expendPower(p, amount);
-            }
-            if(expended) return;
-        }
+    @Override
+    public void addRenderReaction(String s) {
+        this.reactions_to_render.add(s);
     }
 
+    @Override
     public void expendPower() {
-        powers.clear();
+        getPowerMap().clear();
         color_changed = true;
         mix_color.reset();
         next_mix_color.reset();
         color_initialized = false;
-    }
-
-    public int getTotalPowerLevel(){
-        int totalpp = 0;
-        for (Power p : powers.keySet()) {
-            totalpp += powers.get(p);
-        }
-        return totalpp;
-    }
-
-    @Override
-    public int getPowerCount(){
-        return powers.keySet().size();
     }
 
     @Override

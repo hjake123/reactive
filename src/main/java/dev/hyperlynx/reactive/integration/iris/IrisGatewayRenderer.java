@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.integration.iris;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
-import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
+import dev.hyperlynx.reactive.client.renderers.be.GatewayRenderer;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.uniforms.SystemTimeUniforms;
 import net.minecraft.client.renderer.MultiBufferSource;

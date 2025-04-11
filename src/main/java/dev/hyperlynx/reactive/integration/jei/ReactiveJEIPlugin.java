@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.integration.jei;
 
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
@@ -9,6 +12,7 @@ import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
 import dev.hyperlynx.reactive.items.StaffItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.recipes.ReactionFlaskCraftingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -24,18 +28,18 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.*;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @JeiPlugin
 public class ReactiveJEIPlugin implements IModPlugin {
@@ -90,7 +94,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addPowerBottleRecipes(registration);
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
-
+        addReactionFlaskRecipes(registration);
     }
 
     private void addPowerBottleRecipes(IRecipeRegistration registration){
@@ -178,6 +182,33 @@ public class ReactiveJEIPlugin implements IModPlugin {
         IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(Registration.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability), ReactiveMod.location("displacer_salt_repair"));
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
+    }
+
+    private void addReactionFlaskRecipes(IRecipeRegistration registration) {
+        Map<Character, Ingredient> alphabet = Map.of(
+                'c', Ingredient.of(Registration.INERT_CRYSTAL.get()),
+                'b', Ingredient.of(ReactionFlaskCraftingRecipe.POWER_BOTTLE_TAG),
+                't', Ingredient.of(Registration.GOLD_THREAD.get())
+                );
+        String top = " c ";
+        String bottom = " t ";
+
+        registration.addRecipes(RecipeTypes.CRAFTING, List.of(
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_small"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, " b ", bottom)),
+                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_medium"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, "b b", bottom)),
+                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_large"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, "bbb", bottom)),
+                                Registration.REACTION_FLASK.get().getDefaultInstance()))
+        ));
     }
 
     @Override
