@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -38,6 +39,14 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
         }
 
         renderReactions(reactor);
+        renderCharge(reactor);
+    }
+
+    private void renderCharge(ReactorEntity reactor) {
+        if(reactor.getElectricCharge() > 0 && reactor.level().random.nextFloat() < 0.03F) {
+            ParticleScribe.drawExactParticleSphere(reactor.level(), ParticleTypes.ELECTRIC_SPARK,
+                    reactor.position(), 0.0, 0.1, 1);
+        }
     }
 
     @SuppressWarnings("DataFlowIssue")

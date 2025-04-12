@@ -5,8 +5,9 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.entites.data.ReactorData;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -17,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     public static TagKey<Item> POWER_BOTTLE_TAG = ItemTags.create(ReactiveMod.location("power_bottles"));
@@ -85,8 +88,23 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
         var powers = getPowerBalance(input);
         ItemStack result = Registration.REACTION_FLASK.get().getDefaultInstance();
-        result.set(Registration.REACTOR_DATA.get(), new ReactorData(powers, new ArrayList<>()));
+        result.set(Registration.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(powers, false));
         return result;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingInput input) {
+        boolean already_removed_one_bottle = false;
+        NonNullList<ItemStack> filtered_remaining_items = NonNullList.create();
+        for(ItemStack stack : super.getRemainingItems(input)) {
+            if(!already_removed_one_bottle && stack.is(Registration.QUARTZ_BOTTLE.get())) {
+                already_removed_one_bottle = true;
+                filtered_remaining_items.add(ItemStack.EMPTY);
+            } else {
+                filtered_remaining_items.add(stack);
+            }
+        }
+        return filtered_remaining_items;
     }
 
     @Override

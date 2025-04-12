@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -23,16 +24,19 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
     protected void onHit(HitResult result) {
         super.onHit(result);
         level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.SPLASH_POTION_BREAK, SoundSource.PLAYERS);
-        if(!getItem().has(Registration.REACTOR_DATA)){
+        if(!getItem().has(Registration.REACTION_FLASK_CONTENTS)){
             this.kill();
             return;
         }
 
+        ReactionFlaskContents contents = getItem().get(Registration.REACTION_FLASK_CONTENTS);
+
         ReactorEntity entity = new ReactorEntity(Registration.REACTOR_ENTITY_TYPE.get(), level());
         entity.setPos(result.getLocation().add(0, 1.0, 0));
-        Map<Power, Integer> powers = getItem().get(Registration.REACTOR_DATA).powers();
+        Map<Power, Integer> powers = contents.powers();
         entity.setLifespan(600);
         entity.setPowers(powers);
+        entity.setElectricCharge(contents.electric_charge() ? 100 : 0);
         level().addFreshEntity(entity);
 
         for(Power power : powers.keySet()){

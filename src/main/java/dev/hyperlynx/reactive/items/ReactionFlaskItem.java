@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
@@ -59,12 +60,13 @@ public class ReactionFlaskItem extends Item implements ProjectileItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> hover_text, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, hover_text, tooltipFlag);
-        if(!stack.has(Registration.REACTOR_DATA.get())){
+        if(!stack.has(Registration.REACTION_FLASK_CONTENTS.get())){
             return;
         }
+        ReactionFlaskContents contents = stack.get(Registration.REACTION_FLASK_CONTENTS.get());
         MutableComponent power_readout = Component.empty();
         int counter = 0;
-        var powers = stack.get(Registration.REACTOR_DATA.get()).powers().keySet();
+        var powers = contents.powers().keySet();
         for(Power power : powers){
             power_readout.append(Component.literal(power.getName()).withColor(power.getColor().hex()));
             counter++;
@@ -74,5 +76,8 @@ public class ReactionFlaskItem extends Item implements ProjectileItem {
         }
 
         hover_text.add(power_readout);
+        if(contents.electric_charge()) {
+            hover_text.add(Component.translatable("text.reactive.charged"));
+        }
     }
 }

@@ -1,8 +1,5 @@
 package dev.hyperlynx.reactive.integration.jei;
 
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
@@ -18,7 +15,6 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.IModIngredientRegistration;
@@ -28,15 +24,12 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -207,7 +200,14 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_large"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
                                 ShapedRecipePattern.of(alphabet, List.of(top, "bbb", bottom)),
-                                Registration.REACTION_FLASK.get().getDefaultInstance()))
+                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+
+        new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_charge"),
+                new ShapelessRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                        Registration.REACTION_FLASK.get().getDefaultInstance(),
+                        NonNullList.of(Ingredient.EMPTY,
+                                Ingredient.of(Registration.REACTION_FLASK.get()),
+                                Ingredient.of(Registration.VOLT_CELL_ITEM.get()))))
         ));
     }
 

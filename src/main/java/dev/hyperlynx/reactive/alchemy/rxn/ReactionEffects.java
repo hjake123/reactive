@@ -61,11 +61,11 @@ public class ReactionEffects {
                     Registration.GOLD_SYMBOL.get()), reactor.getAreaMemory().fetch(reactor.getLevel(),
                     Registration.IRON_SYMBOL.get()), 20, 7, 0.8F);
         }else{
+            reactor.expendPower();
             if(reactor instanceof CrucibleBlockEntity crucible){
                 SpecialCaseMan.checkEmptySpecialCases(crucible);
+                reactor.getLevel().setBlock(pos, reactor.getLevel().getBlockState(pos).setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
             }
-            reactor.expendPower();
-            reactor.getLevel().setBlock(pos, reactor.getLevel().getBlockState(pos).setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
             reactor.getLevel().explode(null, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, 1.0F, Level.ExplosionInteraction.NONE);
 
             if(reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get()))

@@ -11,6 +11,7 @@ import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
@@ -572,6 +573,9 @@ public class Registration {
     public static final DeferredHolder<RecipeType<?>, RecipeType<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask", () -> getRecipeType("crafting_special_reaction_flask"));
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskCraftingRecipe::new));
 
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ReactionFlaskModifyRecipe>> REACTION_FLASK_MODIFY_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask_modify", () -> getRecipeType("crafting_special_reaction_flask_modify"));
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ReactionFlaskModifyRecipe>> REACTION_FLASK_MODIFY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask_modify", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskModifyRecipe::new));
+
     // Register the data components.
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> TUTORIAL_DONE =
             COMPONENT_TYPES.register("tutorial",
@@ -603,11 +607,11 @@ public class Registration {
                             .build()
             );
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactorData>> REACTOR_DATA =
-            COMPONENT_TYPES.register("reactor_data",
-                    () -> DataComponentType.<ReactorData>builder()
-                            .persistent(ReactorData.CODEC)
-                            .networkSynchronized(ReactorData.STREAM_CODEC)
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ReactionFlaskContents>> REACTION_FLASK_CONTENTS =
+            COMPONENT_TYPES.register("reaction_flask_contents",
+                    () -> DataComponentType.<ReactionFlaskContents>builder()
+                            .persistent(ReactionFlaskContents.CODEC)
+                            .networkSynchronized(ReactionFlaskContents.STREAM_CODEC)
                             .build()
             );
 
