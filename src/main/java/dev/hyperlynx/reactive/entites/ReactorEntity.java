@@ -20,6 +20,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -87,6 +89,30 @@ public class ReactorEntity extends Entity implements Reactor {
             kill();
         }
         getEntityData().set(LIFESPAN, getEntityData().get(LIFESPAN) - 1);
+        tryMergeWithNeighbor();
+    }
+
+    // Adjacent Reactor Entities may merge into one.
+    private void tryMergeWithNeighbor() {
+        List<ReactorEntity> nearby_others = this.level().getEntitiesOfClass(ReactorEntity.class,
+                this.getBoundingBox().inflate(4.0));
+        nearby_others.remove(this);
+        for(ReactorEntity neighbor : nearby_others) {
+            Vec3 neighbor_pos = neighbor.getPos();
+            Vec3 displacement = neighbor_pos.subtract(this.getPos());
+            Vec3 step = displacement.normalize().multiply(0.01, 0.01, 0.01);
+            this.move(MoverType.SELF, step);
+        }
+
+        List<ReactorEntity> touching_others = this.level().getEntitiesOfClass(ReactorEntity.class, this.getBoundingBox());
+        touching_others.remove(this);
+        for(ReactorEntity touching : touching_others) {
+            for(Power power : touching.getPowerMap().keySet()) {
+                this.addPower(power, touching.getPowerLevel(power));
+            }
+            this.setLifespan(Math.max(touching.getLifespan(), this.getLifespan()));
+            touching.kill();
+        }
     }
 
     @Override
@@ -119,6 +145,10 @@ public class ReactorEntity extends Entity implements Reactor {
 
     public void setLifespan(int lifespan) {
         this.getEntityData().set(LIFESPAN, lifespan);
+    }
+
+    public int getLifespan() {
+        return this.getEntityData().get(LIFESPAN);
     }
 
     public void forceGoldSymbol() {
