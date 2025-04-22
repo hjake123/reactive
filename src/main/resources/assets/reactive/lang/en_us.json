@@ -163,6 +163,7 @@
   "text.reactive.litmus_integrity_failure": "CRUCIBLE INTEGRITY VIOLATION",
   "text.reactive.power": " Power",
   "text.reactive.charged": "Charged",
+  "text.reactive.random": "Random Contents",
   "docs.reactive.reagent_label": "$(4)Reagents: ",
   "docs.reactive.powers_label": "Powers: $(br)",
   "docs.reactive.curse_label": "Curse$(br)",

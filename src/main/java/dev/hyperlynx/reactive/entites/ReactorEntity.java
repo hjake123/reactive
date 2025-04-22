@@ -100,7 +100,7 @@ public class ReactorEntity extends Entity implements Reactor {
         for(ReactorEntity neighbor : nearby_others) {
             Vec3 neighbor_pos = neighbor.getPos();
             Vec3 displacement = neighbor_pos.subtract(this.getPos());
-            Vec3 step = displacement.normalize().multiply(0.01, 0.01, 0.01);
+            Vec3 step = displacement.normalize().multiply(0.015, 0.015, 0.015);
             this.move(MoverType.SELF, step);
         }
 

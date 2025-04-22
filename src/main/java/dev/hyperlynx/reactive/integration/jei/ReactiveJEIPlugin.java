@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
 import dev.hyperlynx.reactive.items.StaffItem;
@@ -186,25 +187,28 @@ public class ReactiveJEIPlugin implements IModPlugin {
         String top = " c ";
         String bottom = " t ";
 
+        ItemStack result_flask = Registration.REACTION_FLASK.get().getDefaultInstance();
+        result_flask.set(Registration.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), false));
+
         registration.addRecipes(RecipeTypes.CRAFTING, List.of(
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_small"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
                                 ShapedRecipePattern.of(alphabet, List.of(top, " b ", bottom)),
-                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+                                result_flask)),
 
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_medium"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
                                 ShapedRecipePattern.of(alphabet, List.of(top, "bb ", bottom)),
-                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+                                result_flask)),
 
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_large"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
                                 ShapedRecipePattern.of(alphabet, List.of(top, "bbb", bottom)),
-                                Registration.REACTION_FLASK.get().getDefaultInstance())),
+                                result_flask)),
 
         new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_charge"),
                 new ShapelessRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
-                        Registration.REACTION_FLASK.get().getDefaultInstance(),
+                        result_flask,
                         NonNullList.of(Ingredient.EMPTY,
                                 Ingredient.of(Registration.REACTION_FLASK.get()),
                                 Ingredient.of(Registration.VOLT_CELL_ITEM.get()))))

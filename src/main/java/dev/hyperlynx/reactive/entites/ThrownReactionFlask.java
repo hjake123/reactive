@@ -2,17 +2,20 @@ package dev.hyperlynx.reactive.entites;
 
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ThrownReactionFlask extends ThrowableItemProjectile {
@@ -24,12 +27,13 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
     protected void onHit(HitResult result) {
         super.onHit(result);
         level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.SPLASH_POTION_BREAK, SoundSource.PLAYERS);
-        if(!getItem().has(Registration.REACTION_FLASK_CONTENTS)){
-            this.kill();
-            return;
-        }
+        ReactionFlaskContents contents;
 
-        ReactionFlaskContents contents = getItem().get(Registration.REACTION_FLASK_CONTENTS);
+        if (getItem().has(Registration.REACTION_FLASK_CONTENTS)) {
+            contents = getItem().get(Registration.REACTION_FLASK_CONTENTS);
+        } else {
+            contents = new ReactionFlaskContents(generateRandomPowerCombo(), false);
+        }
 
         ReactorEntity entity = new ReactorEntity(Registration.REACTOR_ENTITY_TYPE.get(), level());
         entity.setPos(result.getLocation().add(0, 1.0, 0));
@@ -44,6 +48,19 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
                     result.getLocation(), 0.2, 5);
         }
         this.kill();
+    }
+
+    private Map<Power, Integer> generateRandomPowerCombo() {
+        Map<Power, Integer> powers = new HashMap<>();
+        RandomSource random = level().random;
+        for(int i = 0; i < random.nextIntBetweenInclusive(1, 3); i++) {
+            Power power = Powers.POWER_REGISTRY.getRandom(random).get().value();
+            while(powers.equals(Powers.ASTRAL_POWER)) {
+                power = Powers.POWER_REGISTRY.getRandom(random).get().value();
+            }
+            powers.put(power, random.nextInt(200, 500));
+        }
+        return powers;
     }
 
     @Override
