@@ -10,11 +10,12 @@ import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModList;
 
 import java.util.*;
 
-// This class mananges the renderers for reactions.
+// This class manages the renderers for reactions.
 // This is important, since reaction rendering is no longer even known on the server side!
 public class ReactionRenderers {
     public Map<String, ReactionRenderer> RENDERERS = new HashMap<>();
@@ -29,6 +30,7 @@ public class ReactionRenderers {
         RENDERERS.put("size_grow_effect", this::verdant_based);
         RENDERERS.put("ominous_transformation", this::ominous);
         RENDERERS.put("astral_curse_annihilation", this::creation);
+        RENDERERS.put("cryo", this::snow);
     }
 
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
@@ -99,5 +101,11 @@ public class ReactionRenderers {
     public void astral(Reactor reactor) {
         if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
             ParticleScribe.drawExactParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getPos(), 0.7, 1);
+    }
+
+    public void snow(Reactor reactor) {
+        AABB aoe = new AABB(reactor.getBlockPos());
+        aoe = aoe.inflate(5);
+        ParticleScribe.drawParticleBox(reactor.getLevel(), ParticleTypes.SNOWFLAKE, aoe, 1);
     }
 }

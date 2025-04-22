@@ -14,12 +14,14 @@ import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -37,10 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.LightningRodBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -451,5 +450,32 @@ public class ReactionEffects {
         level.addFreshEntity(bolt);
         reactor.expendPower(Powers.LIGHT_POWER.get(), reactor.maxPower());
         reactor.setDirty();
+    }
+
+    public static void cryo(Reactor reactor) {
+        Level level = reactor.getLevel();
+        if(level == null)
+            return;
+
+        AABB aoe = new AABB(reactor.getBlockPos());
+        aoe = aoe.inflate(5);
+        List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
+
+        for(LivingEntity living : nearby) {
+            if(CrystalIronItem.effectNotBlocked(living, 1)) {
+                living.setTicksFrozen(200);
+            }
+        }
+
+        BlockPos.betweenClosedStream(aoe).forEach((pos) -> {
+            if(level.getBlockState(pos).is(Blocks.FROSTED_ICE)) {
+                // Refresh the frosted ice
+                level.setBlock(pos, Blocks.FROSTED_ICE.defaultBlockState(), Block.UPDATE_CLIENTS);
+            }
+            if(level.getBlockState(pos).is(Blocks.WATER) && level.getBlockState(pos.above()).isAir()) {
+                level.setBlock(pos, Blocks.FROSTED_ICE.defaultBlockState(), Block.UPDATE_CLIENTS);
+                reactor.addPower(Powers.BLAZE_POWER.get(), 3);
+            }
+        });
     }
 }
