@@ -41,6 +41,8 @@ public class ReactionPageServer {
                         formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("text.reactive.electric_charge").getString());
                 case NO_END_CRYSTAL ->
                         formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("item.minecraft.end_crystal").getString());
+                case NO_IRON_SYMBOL ->
+                        formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("block.reactive.iron_symbol").getString());
             }
             if (reaction instanceof CatalystEffectReaction catre) {
                 formula.append(Component.translatable("docs.reactive.catalyst_label").getString());

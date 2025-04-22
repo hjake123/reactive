@@ -144,6 +144,7 @@ public abstract class Reaction {
             case GOLD_SYMBOL -> reactor.checkGoldSymbol();
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
+            case NO_IRON_SYMBOL -> !reactor.getAreaMemory().exists(reactor.getLevel(), Registration.IRON_SYMBOL.get());
             default -> true;
         };
     }
@@ -197,7 +198,8 @@ public abstract class Reaction {
         ELECTRIC,
         NO_ELECTRIC,
         END_CRYSTAL,
-        NO_END_CRYSTAL
+        NO_END_CRYSTAL,
+        NO_IRON_SYMBOL
     }
 
     public enum Status {

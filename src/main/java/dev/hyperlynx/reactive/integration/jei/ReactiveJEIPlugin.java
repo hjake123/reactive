@@ -194,7 +194,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_medium"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
-                                ShapedRecipePattern.of(alphabet, List.of(top, "b b", bottom)),
+                                ShapedRecipePattern.of(alphabet, List.of(top, "bb ", bottom)),
                                 Registration.REACTION_FLASK.get().getDefaultInstance())),
 
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_large"),
