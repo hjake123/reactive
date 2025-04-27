@@ -9,6 +9,7 @@ import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.ReactiveVanillaCodecs;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ScalableParticleOptionsBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -43,17 +44,7 @@ public class EnergyParticle extends TextureSheetParticle {
     // Copied from net.minecraft.client.particle.GlowParticle
     @Override
     public int getLightColor(float p_172146_) {
-        float f = ((float)this.age + p_172146_) / (float)this.lifetime;
-        f = Mth.clamp(f, 0.0F, 1.0F);
-        int i = super.getLightColor(p_172146_);
-        int j = i & 255;
-        int k = i >> 16 & 255;
-        j += (int)(f * 15.0F * 16.0F);
-        if (j > 240) {
-            j = 240;
-        }
-
-        return j | k << 16;
+        return LightTexture.pack(15, 15);
     }
 
     @Override
