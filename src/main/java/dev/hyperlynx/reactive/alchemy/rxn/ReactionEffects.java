@@ -174,8 +174,6 @@ public class ReactionEffects {
         aoe = aoe.inflate(12); // Inflate the AOE to be 6x the size of the crucible.
         List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
 
-        BlockPos origin_pos = reactor.getBlockPos();
-
         for(LivingEntity victim : nearby_ents){
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
@@ -257,7 +255,6 @@ public class ReactionEffects {
             if(!BeamHelper.hasLineOfSight(reactor.getLevel(), reactor.getBlockPos().getCenter(), e.getEyePosition(0), ClipContext.Fluid.NONE, ClipContext.Block.COLLIDER, reactor.getBlockState().getBlock())) {
                 continue;
             }
-            e.hurt(reactor.getLevel().damageSources().inFire(), 4);
             e.setRemainingFireTicks(140);
         }
     }

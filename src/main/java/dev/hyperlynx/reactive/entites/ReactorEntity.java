@@ -111,6 +111,7 @@ public class ReactorEntity extends Entity implements Reactor {
                 this.addPower(power, touching.getPowerLevel(power));
             }
             this.setLifespan(Math.max(touching.getLifespan(), this.getLifespan()));
+            this.setElectricCharge(touching.getElectricCharge() + this.getElectricCharge());
             touching.kill();
         }
     }

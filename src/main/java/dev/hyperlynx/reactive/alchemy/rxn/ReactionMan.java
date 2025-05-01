@@ -159,7 +159,7 @@ public class ReactionMan {
         // Add effect reactions to do crazy things.
         REACTIONS.add(new EffectReaction("growth", ReactionEffects::growth, Powers.VERDANT_POWER.get(), Powers.MIND_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new FreeEffectReaction("flames", ReactionEffects::flamethrower, Powers.BLAZE_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
-        REACTIONS.add(new FreeEffectReaction("levitation", ReactionEffects::levitation, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.END_CRYSTAL));
+        REACTIONS.add(new EffectReaction("levitation", ReactionEffects::levitation, Powers.LIGHT_POWER.get()).setCost(2).setStimulus(Reaction.Stimulus.END_CRYSTAL));
         REACTIONS.add(new EffectReaction("sunlight", ReactionEffects::sunlight, Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL));
         REACTIONS.add(new EffectReaction("immobilize", ReactionEffects::immobilize, Powers.WARP_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
 
