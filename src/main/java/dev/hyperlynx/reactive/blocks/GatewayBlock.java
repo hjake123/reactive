@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.items.WarpBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -108,6 +109,7 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
             ItemStack rift_bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
             WarpBottleItem.setTeleportTarget(rift_bottle, gateway.target);
             player.addItem(rift_bottle);
+            player.displayClientMessage(Component.translatable("message.reactive.make_warp_to_there"), true);
             return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

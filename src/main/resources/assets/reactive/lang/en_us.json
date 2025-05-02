@@ -138,6 +138,8 @@
   "message.reactive.activate_plinth_failed": "Something is preventing this rift from opening.",
   "message.reactive.reject_warp_knowledgeable": "Try using a Linked Bottle of Warp.",
   "message.reactive.reject_warp_naive": "Strangely, nothing happened...",
+  "message.reactive.make_warp_to_here": "The bottle is now linked to your current location.",
+  "message.reactive.make_warp_to_there": "The bottle is now linked to this Gateway's destination.",
   "commands.reactive.no_player": "This command can only be run by a player",
   "commands.reactive.no_crucible": "There's no crucible at that location",
   "commands.reactive.fake_power": "Invalid power",

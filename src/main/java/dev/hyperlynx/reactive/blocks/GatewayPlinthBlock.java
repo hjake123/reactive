@@ -91,6 +91,14 @@ public class GatewayPlinthBlock extends Block {
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if(level.getBlockState(pos.above()).is(Registration.GATEWAY_BLOCK.get())) {
+            if(stack.is(Registration.WARP_BOTTLE.get()) && !WarpBottleItem.isRiftBottle(stack)) {
+                stack.shrink(1);
+                ItemStack rift_bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
+                WarpBottleItem.setTeleportTarget(rift_bottle, new GlobalPos(player.level().dimension(), player.blockPosition()));
+                player.addItem(rift_bottle);
+                player.displayClientMessage(Component.translatable("message.reactive.make_warp_to_here"), true);
+                return ItemInteractionResult.SUCCESS;
+            }
             return ItemInteractionResult.CONSUME;
         }
         if (Powers.WARP_POWER.get().matchesBottle(stack)) {
