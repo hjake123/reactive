@@ -4,12 +4,16 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -101,15 +105,13 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(!(level.getBlockEntity(pos) instanceof GatewayBlockEntity gateway)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
         if(stack.is(Registration.WARP_BOTTLE.get()) && !WarpBottleItem.isRiftBottle(stack)) {
             stack.shrink(1);
             ItemStack rift_bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
-            WarpBottleItem.setTeleportTarget(rift_bottle, gateway.target);
+            WarpBottleItem.setTeleportTarget(rift_bottle, new GlobalPos(level.dimension(), player.blockPosition()));
             player.addItem(rift_bottle);
-            player.displayClientMessage(Component.translatable("message.reactive.make_warp_to_there"), true);
+            level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.5F);
+            ParticleScribe.drawExactParticleRing(level, ParticleTypes.PORTAL, player.position(),0.5F, 10);
             return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
