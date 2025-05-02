@@ -33,6 +33,7 @@ public class EnergyParticle extends TextureSheetParticle {
         this.rCol = options.getColor().red / 255.0F;
         this.gCol = options.getColor().green / 255.0F;
         this.bCol = options.getColor().blue / 255.0F;
+        this.hasPhysics = false;
         setSpriteFromAge(sprites);
     }
 

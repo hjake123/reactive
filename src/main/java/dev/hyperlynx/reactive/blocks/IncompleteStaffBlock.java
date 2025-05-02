@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -35,7 +36,7 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
         for(Power p : c.getPowerMap().keySet()){
             if(c.getPowerLevel(p) > 800){
-                tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
+                tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p, c);
             }
         }
     }
@@ -45,9 +46,13 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
         builder.add(PROGRESS);
     }
 
-    public static void tryMakeProgress(Level level, BlockState state, BlockPos pos, Power exposed_power) {
+    public static void tryMakeProgress(Level level, BlockState state, BlockPos pos, Power exposed_power, CrucibleBlockEntity crucible) {
         if (level.isClientSide)
             return;
+
+        for(int i = 0; i < 8; i++) {
+            ParticleScribe.drawParticleReactionSurface(level, new EnergyParticle.Options(exposed_power.getColor(), pos.above().getCenter().add(0, -0.15, 0)), crucible);
+        }
 
         int order = WorldSpecificValues.EFFECT_ORDER.get();
         Power[] order1 = {Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()};
