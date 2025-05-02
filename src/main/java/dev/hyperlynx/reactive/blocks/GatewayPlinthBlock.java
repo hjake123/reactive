@@ -90,6 +90,9 @@ public class GatewayPlinthBlock extends Block {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if(level.getBlockState(pos.above()).is(Registration.GATEWAY_BLOCK.get())) {
+            return ItemInteractionResult.CONSUME;
+        }
         if (Powers.WARP_POWER.get().matchesBottle(stack)) {
             if (WarpBottleItem.isRiftBottle(stack)) {
                 GlobalPos warp_target = WarpBottleItem.getTeleportPosition(stack);
@@ -98,9 +101,9 @@ public class GatewayPlinthBlock extends Block {
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
                 setGateway(level, pos.above(), warp_target, state);
-                level.playSound((Player) null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
-                level.playSound((Player) null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
-                level.playSound((Player) null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
+                level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                level.playSound(null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
+                level.playSound(null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
                 player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
                 return ItemInteractionResult.SUCCESS;
             }
