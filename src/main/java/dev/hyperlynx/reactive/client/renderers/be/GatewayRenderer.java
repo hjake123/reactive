@@ -21,6 +21,11 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
         this.renderVolume(gateway, new GatewayRenderContext(bufferSource.getBuffer(RenderType.END_GATEWAY), poseStack.last()), partialTick);
     }
 
+    @Override
+    public int getViewDistance() {
+        return 256;
+    }
+
     protected void renderVolume(T gateway, GatewayRenderContext context, float partialTick) {
         double time = gateway.totalTick(partialTick);
         float amplitude = 0.12F;
