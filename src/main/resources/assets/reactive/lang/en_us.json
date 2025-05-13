@@ -97,6 +97,8 @@
   "block.reactive.breeze_rod": "Mounted Breeze Rod",
   "block.reactive.rending_plinth": "Rending Plinth",
   "block.reactive.gateway": "Gateway Rift",
+  "block.reactive.ungrown_nodule": "Ungrown Nodule",
+  "block.reactive.nodule": "Nodule",
   "entity.reactive.reactor": "Reaction Cloud",
   "effect.reactive.no_gravity": "Weightless",
   "effect.reactive.immobility": "Immobilized",

@@ -290,6 +290,14 @@ public class Registration {
             BLOCK_ENTITY_TYPES.register("gravity_beam_be",
                     () -> BlockEntityType.Builder.of(GravityBeamBlockEntity::new, GRAVITY_BEAM.get()).build(null));
 
+    public static final DeferredHolder<Block, NoduleBlock> UNGROWN_NODULE = BLOCKS.register("ungrown_nodule",
+            () -> new NoduleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TUFF), true));
+    public static final DeferredHolder<Item, BlockItem> UNGROWN_NODULE_ITEM = ITEMS.registerSimpleBlockItem(UNGROWN_NODULE);
+
+    public static final DeferredHolder<Block, NoduleBlock> NODULE = BLOCKS.register("nodule",
+            () -> new NoduleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TUFF).lightLevel((state) -> 8), false));
+    public static final DeferredHolder<Item, BlockItem> NODULE_ITEM = ITEMS.registerSimpleBlockItem(NODULE);
+
     // Register Power bottles
     public static final DeferredHolder<Block, PowerBottleBlock> ACID_BOTTLE_BLOCK = BLOCKS.register("acid_bottle",
             () -> new PowerBottleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT).sound(SoundType.LANTERN)));

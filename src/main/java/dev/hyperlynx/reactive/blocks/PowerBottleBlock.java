@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 public class PowerBottleBlock extends WaterloggableBlock {
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     public static final IntegerProperty BOTTLES = IntegerProperty.create("bottles", 1, 3);
-    protected static final VoxelShape ONE_BOTTLE_BOUNDS = box(6, 0, 6, 10, 8, 10);
 
     public PowerBottleBlock(Properties props) {
         super(props);
