@@ -24,6 +24,7 @@ public class EnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
     private float speed = 0.05F;
+    private boolean reversed = false;
 
     protected EnergyParticle(ClientLevel level, double x, double y, double z, Options options, SpriteSet sprites) {
         super(level, x, y, z);
@@ -34,6 +35,10 @@ public class EnergyParticle extends TextureSheetParticle {
         this.gCol = options.getColor().green / 255.0F;
         this.bCol = options.getColor().blue / 255.0F;
         this.hasPhysics = false;
+        this.reversed = options.reverse_motion;
+        if(options.isReversed()) {
+            this.setLifetime(1);
+        }
         setSpriteFromAge(sprites);
     }
 
@@ -52,7 +57,7 @@ public class EnergyParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         this.setSpriteFromAge(this.sprites);
-        if(this.getPos().closerThan(this.target, speed + 0.01F)){
+        if(!this.reversed && this.getPos().closerThan(this.target, speed + 0.01F)){
             this.remove();
         }
     }
@@ -61,7 +66,7 @@ public class EnergyParticle extends TextureSheetParticle {
     public void move(double x, double y, double z) {
         Vec3 pos = this.getPos();
         Vec3 to_target = this.target.subtract(pos);
-        Vec3 move_step = to_target.normalize().scale(speed);
+        Vec3 move_step = this.reversed ? to_target.normalize().scale(speed).reverse() : to_target.normalize().scale(speed);
         super.move(move_step.x, move_step.y, move_step.z);
     }
 
@@ -69,11 +74,13 @@ public class EnergyParticle extends TextureSheetParticle {
         float speed = 0.05F;
         Color color;
         Vec3 target;
+        boolean reverse_motion;
 
         protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                     Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
                     Color.CODEC.fieldOf("color").forGetter(Options::getColor),
-                    Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget)
+                    Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
+                    Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed)
                 ).apply(instance, Options::new)
         );
 
@@ -81,6 +88,7 @@ public class EnergyParticle extends TextureSheetParticle {
                 ByteBufCodecs.FLOAT, Options::getSpeed,
                 Color.STREAM_CODEC, Options::getColor,
                 ReactiveVanillaCodecs.VEC3_STREAM_CODEC, Options::getTarget,
+
                 Options::new
         );
 
@@ -88,6 +96,7 @@ public class EnergyParticle extends TextureSheetParticle {
             super(0.1F);
             this.color = color;
             this.target = target;
+            this.reverse_motion = false;
         }
 
         public Options(float speed, Color color, Vec3 target) {
@@ -95,6 +104,15 @@ public class EnergyParticle extends TextureSheetParticle {
             this.speed = speed;
             this.color = color;
             this.target = target;
+            this.reverse_motion = false;
+        }
+
+        public Options(float speed, Color color, Vec3 target, boolean reverse) {
+            super(0.1F);
+            this.speed = speed;
+            this.color = color;
+            this.target = target;
+            this.reverse_motion = reverse;
         }
 
         @Override
@@ -113,6 +131,8 @@ public class EnergyParticle extends TextureSheetParticle {
         public Vec3 getTarget() {
             return this.target;
         }
+
+        public boolean isReversed() { return this.reverse_motion; }
     }
 
     public static class Type extends ParticleType<Options> {
