@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 
 public class HoverQuilt extends Entity {
     public final AnimationState hovering = new AnimationState();
+    public long animation_timer = 0;
 
     public HoverQuilt(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -28,5 +29,13 @@ public class HoverQuilt extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
 
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(this.level().isClientSide()) {
+            animation_timer++;
+        }
     }
 }
