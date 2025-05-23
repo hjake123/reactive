@@ -39,6 +39,7 @@ public class HoverQuiltRenderer extends EntityRenderer<HoverQuilt> implements Re
         model.setupAnim(quilt, quilt.animation_timer + partialTick);
         poseStack.pushPose();
         poseStack.mulPose(Axis.XP.rotationDegrees(180)); // Model was upside down?
+        poseStack.translate(0, -1.35, 0); // Model is far from the hitbox?
         model.renderToBuffer(poseStack, bufferSource.getBuffer(RenderType.entitySolid(TEXTURE_LOCATION)), packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }

@@ -17,6 +17,16 @@ public class HoverQuilt extends Entity {
     }
 
     @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
+    @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
 
     }

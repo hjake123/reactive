@@ -496,7 +496,7 @@ public class Registration {
 
     public static final Supplier<EntityType<HoverQuilt>> HOVER_QUILT = ENTITY_TYPES.register("hover_quilt", () ->
             EntityType.Builder.of(HoverQuilt::new, MobCategory.MISC)
-                    .sized(1.0F, 0.2F)
+                    .sized(1.0F, 0.1F)
                     .fireImmune()
                     .build("hover_quilt"));
 
