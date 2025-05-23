@@ -12,6 +12,7 @@ import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
+import dev.hyperlynx.reactive.entites.HoverQuilt;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
 import dev.hyperlynx.reactive.entites.data.ReactorData;
@@ -417,6 +418,12 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GatewayBlockEntity>> GATEWAY_BE = BLOCK_ENTITY_TYPES.register("gateway_be",
             () -> BlockEntityType.Builder.of(GatewayBlockEntity::new, GATEWAY_BLOCK.get()).build(null));
 
+    public static final DeferredHolder<Block, PhantomQuiltBlock> PHANTOM_QUILT = BLOCKS.register("phantom_quilt", () ->
+            new PhantomQuiltBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)));
+
+    public static final DeferredHolder<Item, BlockItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+            new PhantomQuiltItem(new Item.Properties()));
+
     // Register items.
     public static final DeferredHolder<Item, VortexStoneItem> VORTEX_STONE = ITEMS.register("vortex_stone",
             () -> new VortexStoneItem(new Item.Properties()
@@ -486,6 +493,12 @@ public class Registration {
                     .sized(0.4F, 0.4F)
                     .fireImmune()
                     .build("thrown_reaction_flask"));
+
+    public static final Supplier<EntityType<HoverQuilt>> HOVER_QUILT = ENTITY_TYPES.register("hover_quilt", () ->
+            EntityType.Builder.of(HoverQuilt::new, MobCategory.MISC)
+                    .sized(1.0F, 0.2F)
+                    .fireImmune()
+                    .build("hover_quilt"));
 
 
     // Register mob effects

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "reactive:phantom_quilt"
+        }
+      ],
+      "name": "phantom_quilt",
+      "rolls": 1.0
+    }
+  ]
+}
