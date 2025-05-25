@@ -2,9 +2,9 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
@@ -72,15 +72,15 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         setHelpers(registration.getJeiHelpers());
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()));
-        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()));
+        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get()));
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.TRANS_RECIPE_TYPE.get()));
         addDescriptions(registration);
-        addStaffRepairRecipe(Registration.STAFF_OF_BLAZE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_LIFE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_LIGHT_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_BLAZE.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_LIFE.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_LIGHT.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_MIND.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_WARP.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_SOUL.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
         if(!ConfigMan.CLIENT.listPowersAsIngredients.get())
             registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList());
@@ -100,7 +100,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
     private void addPowerSourceRecipes(IRecipeRegistration registration){
         Set<Item> excluded = new HashSet<>();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
         for (RecipeHolder<DissolveRecipe> r : purify_recipes) {
             for(ItemStack stack: r.value().getReactant().getItems())
                 excluded.add(stack.getItem());
@@ -118,17 +118,17 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addDescriptions(IRecipeRegistration registration) {
-        registration.addItemStackInfo(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.crucible"));
-        registration.addItemStackInfo(Registration.SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.GOLD_FOAM_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.MOTION_SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.SECRET_SCALE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.PHANTOM_RESIDUE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_input"));
-        addGenericDescriptions(registration, Registration.STAFF_OF_WARP_ITEM.get(), Registration.STAFF_OF_MIND_ITEM.get(),
-                Registration.STAFF_OF_BLAZE_ITEM.get(), Registration.STAFF_OF_LIFE_ITEM.get(), Registration.STAFF_OF_LIGHT_ITEM.get(),
-                Registration.STAFF_OF_SOUL_ITEM.get(), Registration.SOLID_PORTAL_ITEM.get(), Registration.LIGHT_BOTTLE.get(),
-                Registration.MIND_BOTTLE.get(), Registration.BODY_BOTTLE.get(), Registration.WARP_BOTTLE.get(), Registration.BLAZE_BOTTLE.get(),
-                Registration.ACID_BOTTLE.get(), Registration.VERDANT_BOTTLE.get(), Registration.SOUL_BOTTLE.get(), Registration.VITAL_BOTTLE.get());
+        registration.addItemStackInfo(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), Component.translatable("jei.reactive.crucible"));
+        registration.addItemStackInfo(ReactiveItems.SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.GOLD_FOAM.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.MOTION_SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.SECRET_SCALE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.PHANTOM_RESIDUE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_input"));
+        addGenericDescriptions(registration, ReactiveItems.STAFF_OF_WARP.get(), ReactiveItems.STAFF_OF_MIND.get(),
+                ReactiveItems.STAFF_OF_BLAZE.get(), ReactiveItems.STAFF_OF_LIFE.get(), ReactiveItems.STAFF_OF_LIGHT.get(),
+                ReactiveItems.STAFF_OF_SOUL.get(), ReactiveItems.SOLID_PORTAL_ITEM.get(), ReactiveItems.LIGHT_BOTTLE.get(),
+                ReactiveItems.MIND_BOTTLE.get(), ReactiveItems.BODY_BOTTLE.get(), ReactiveItems.WARP_BOTTLE.get(), ReactiveItems.BLAZE_BOTTLE.get(),
+                ReactiveItems.ACID_BOTTLE.get(), ReactiveItems.VERDANT_BOTTLE.get(), ReactiveItems.SOUL_BOTTLE.get(), ReactiveItems.VITAL_BOTTLE.get());
         addPowerDescriptions(registration);
     }
 
@@ -159,13 +159,13 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     private void addComposterRecipes(IRecipeRegistration registration){
         registration.addRecipes(RecipeTypes.COMPOSTING, List.of(
-                new HyperComposterRecipe(Registration.VERDANT_BOTTLE),
-                new HyperComposterRecipe(Registration.FLOWER_VINES_ITEM)
+                new HyperComposterRecipe(ReactiveItems.VERDANT_BOTTLE),
+                new HyperComposterRecipe(ReactiveItems.FLOWER_VINES)
         ));
     }
 
     private void addDisplacerRepairRecipe(IRecipeRegistration registration, IVanillaRecipeFactory factory){
-        Item displacer = Registration.DISPLACER.get();
+        Item displacer = ReactiveItems.DISPLACER.get();
         ItemStack full_durability = new ItemStack(displacer);
         ItemStack three_quarters_durability = new ItemStack(displacer);
         three_quarters_durability.setDamageValue(full_durability.getMaxDamage() / 4);
@@ -173,22 +173,22 @@ public class ReactiveJEIPlugin implements IModPlugin {
         half_durability.setDamageValue(full_durability.getMaxDamage() / 2);
 
         IJeiAnvilRecipe sacrifice_repair_recipe = factory.createAnvilRecipe(half_durability, List.of(half_durability),  List.of(full_durability), ReactiveMod.location("displacer_sacrifice_repair"));
-        IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(Registration.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability), ReactiveMod.location("displacer_salt_repair"));
+        IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(ReactiveItems.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability), ReactiveMod.location("displacer_salt_repair"));
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
     }
 
     private void addReactionFlaskRecipes(IRecipeRegistration registration) {
         Map<Character, Ingredient> alphabet = Map.of(
-                'c', Ingredient.of(Registration.INERT_CRYSTAL.get()),
+                'c', Ingredient.of(ReactiveItems.INERT_CRYSTAL.get()),
                 'b', Ingredient.of(ReactionFlaskCraftingRecipe.POWER_BOTTLE_TAG),
-                't', Ingredient.of(Registration.GOLD_THREAD.get())
+                't', Ingredient.of(ReactiveItems.GOLD_THREAD.get())
                 );
         String top = " c ";
         String bottom = " t ";
 
-        ItemStack result_flask = Registration.REACTION_FLASK.get().getDefaultInstance();
-        result_flask.set(Registration.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), false));
+        ItemStack result_flask = ReactiveItems.REACTION_FLASK.get().getDefaultInstance();
+        result_flask.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), false));
 
         registration.addRecipes(RecipeTypes.CRAFTING, List.of(
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_small"),
@@ -210,8 +210,8 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 new ShapelessRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
                         result_flask,
                         NonNullList.of(Ingredient.EMPTY,
-                                Ingredient.of(Registration.REACTION_FLASK.get()),
-                                Ingredient.of(Registration.VOLT_CELL_ITEM.get()))))
+                                Ingredient.of(ReactiveItems.REACTION_FLASK.get()),
+                                Ingredient.of(ReactiveItems.VOLT_CELL.get()))))
         ));
     }
 
@@ -223,7 +223,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), DISSOLVE_CATEGORY.getRecipeType());
-        registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), TRANSMUTE_CATEGORY.getRecipeType());
+        registration.addRecipeCatalyst(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), DISSOLVE_CATEGORY.getRecipeType());
+        registration.addRecipeCatalyst(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), TRANSMUTE_CATEGORY.getRecipeType());
     }
 }

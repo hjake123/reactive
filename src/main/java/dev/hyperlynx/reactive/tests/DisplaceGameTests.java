@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.tests;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -19,7 +19,7 @@ public class DisplaceGameTests {
                 helper.succeedWhen(() ->
                 helper.assertBlock(
                 new BlockPos(0, 3, 1),
-                (block -> block.equals(Registration.DISPLACED_BLOCK.get())),
+                (block -> block.equals(ReactiveBlocks.DISPLACED_BLOCK.get())),
                 "Not displaced!")));
     }
 
@@ -30,13 +30,13 @@ public class DisplaceGameTests {
         helper.runAfterDelay(10, () ->
                 helper.assertBlock(
                         new BlockPos(4, 5, 4),
-                        (block -> block.equals(Registration.DISPLACED_BLOCK.get())),
+                        (block -> block.equals(ReactiveBlocks.DISPLACED_BLOCK.get())),
                         "Not displaced!"));
         helper.runAfterDelay(14, () ->
                 helper.succeedWhen(() ->
                 helper.assertBlock(
                         new BlockPos(4, 5, 4),
-                        (block -> block.equals(Registration.FRAMED_MOTION_SALT_BLOCK.get())),
+                        (block -> block.equals(ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get())),
                         "Did not return!")));
     }
 }

@@ -1,22 +1,17 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.net.ReactionStatusPayload;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
@@ -53,7 +48,7 @@ public interface Reactor extends PowerBearer {
     }
 
     default boolean checkGoldSymbol(){
-        return this.getAreaMemory().exists(this.getLevel(), Registration.GOLD_SYMBOL.get());
+        return this.getAreaMemory().exists(this.getLevel(), ReactiveBlocks.GOLD_SYMBOL.get());
     }
 
     boolean hasUsedCrystalThisCycle();

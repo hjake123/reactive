@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.util;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -19,11 +19,11 @@ public class HyperPortalShape {
 
     // The only edits.
     private static boolean isEmpty(BlockState state) {
-        return state.isAir() || state.is(BlockTags.FIRE) || state.is(Blocks.NETHER_PORTAL) || state.is(Registration.SOLID_PORTAL.get());
+        return state.isAir() || state.is(BlockTags.FIRE) || state.is(Blocks.NETHER_PORTAL) || state.is(ReactiveBlocks.SOLID_PORTAL.get());
     }
 
     public void createSolidPortalBlocks() {
-        BlockState blockstate = Registration.SOLID_PORTAL.get().defaultBlockState().setValue(NetherPortalBlock.AXIS, this.axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
+        BlockState blockstate = ReactiveBlocks.SOLID_PORTAL.get().defaultBlockState().setValue(NetherPortalBlock.AXIS, this.axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
         BlockPos.betweenClosed(this.bottomLeft, this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((p_77725_) -> {
             this.level.setBlock(p_77725_, blockstate, 18);
         });

@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -144,7 +143,7 @@ public abstract class Reaction {
             case GOLD_SYMBOL -> reactor.checkGoldSymbol();
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
-            case NO_IRON_SYMBOL -> !reactor.getAreaMemory().exists(reactor.getLevel(), Registration.IRON_SYMBOL.get());
+            case NO_IRON_SYMBOL -> !reactor.getAreaMemory().exists(reactor.getLevel(), ReactiveBlocks.IRON_SYMBOL.get());
             default -> true;
         };
     }

@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
 import com.mojang.serialization.MapCodec;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.GravityBeamBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -58,7 +58,7 @@ public class GravityBeamBlock extends DirectionalBlock implements EntityBlock {
     @Nullable
     @Override
     public <GravityBeamBlockEntity extends BlockEntity> BlockEntityTicker<GravityBeamBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityBeamBlockEntity> t) {
-        if(t == Registration.GRAVITY_BEAM_BE_TYPE.get()){
+        if(t == ReactiveBlockEntityTypes.GRAVITY_BEAM_BE_TYPE.get()){
             return (l, p, s, a) -> dev.hyperlynx.reactive.be.GravityBeamBlockEntity.tick(l, p, s);
         }
         return null;

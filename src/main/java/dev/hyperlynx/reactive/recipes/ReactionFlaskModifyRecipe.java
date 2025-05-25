@@ -1,17 +1,11 @@
 package dev.hyperlynx.reactive.recipes;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -19,9 +13,6 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ReactionFlaskModifyRecipe extends CustomRecipe {
     public ReactionFlaskModifyRecipe(CraftingBookCategory category) {
@@ -34,7 +25,7 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
         boolean has_volt_cell = false;
         boolean has_duplicate_items = false;
         for(ItemStack stack : input.items()) {
-            if(stack.is(Registration.REACTION_FLASK.get()) && stack.has(Registration.REACTION_FLASK_CONTENTS.get())) {
+            if(stack.is(ReactiveItems.REACTION_FLASK.get()) && stack.has(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get())) {
                 if(has_reaction_flask) {
                     has_duplicate_items = true;
                 } else {
@@ -42,7 +33,7 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
 
                 }
             }
-            if(stack.is(Registration.VOLT_CELL_ITEM.get())) {
+            if(stack.is(ReactiveItems.VOLT_CELL.get())) {
                 if(has_volt_cell) {
                     has_duplicate_items = true;
                 } else {
@@ -58,12 +49,12 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
     public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
         ReactionFlaskContents contents = null;
         for(ItemStack stack : input.items()) {
-            if(stack.is(Registration.REACTION_FLASK.get())) {
-                contents = stack.get(Registration.REACTION_FLASK_CONTENTS.get());
+            if(stack.is(ReactiveItems.REACTION_FLASK.get())) {
+                contents = stack.get(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get());
             }
         }
-        ItemStack flask = Registration.REACTION_FLASK.get().getDefaultInstance();
-        flask.set(Registration.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(contents.powers(), true));
+        ItemStack flask = ReactiveItems.REACTION_FLASK.get().getDefaultInstance();
+        flask.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(contents.powers(), true));
         return flask;
     }
 
@@ -73,7 +64,7 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
 
         for (int i = 0; i < remaining_items.size(); i++) {
             ItemStack stack = input.getItem(i);
-            if (stack.is(Registration.VOLT_CELL_ITEM.get())) {
+            if (stack.is(ReactiveItems.VOLT_CELL.get())) {
                 remaining_items.set(i, stack.getItem().getDefaultInstance());
             }
         }
@@ -88,6 +79,6 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
 
     @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
-        return Registration.REACTION_FLASK_MODIFY_RECIPE_SERIALIZER.get();
+        return ReactiveRecipes.REACTION_FLASK_MODIFY_RECIPE_SERIALIZER.get();
     }
 }

@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -30,14 +30,14 @@ public class ReactionAdvancementGenerator implements AdvancementProvider.Advance
         String REACTION_ADVANCEMENT_PREFIX = ":reactions/";
         for(String alias : aliases){
             Advancement.Builder builder = Advancement.Builder.advancement();
-            builder.addCriterion("criterion", Registration.REACTION_TRIGGER.get().instance(alias));
+            builder.addCriterion("criterion", ReactiveCriterionTriggers.REACTION_TRIGGER.get().instance(alias));
             builder.requirements(AdvancementRequirements.Strategy.AND);
             builder.rewards(AdvancementRewards.EMPTY);
             builder.save(consumer, ReactiveMod.MODID + REACTION_ADVANCEMENT_PREFIX + alias);
 
             // Generate the "perfection" advancements for getting the requirements exactly right
             Advancement.Builder perfect_builder = Advancement.Builder.advancement();
-            perfect_builder.addCriterion("criterion", Registration.PERFECT_REACTION_TRIGGER.get().instance(alias));
+            perfect_builder.addCriterion("criterion", ReactiveCriterionTriggers.PERFECT_REACTION_TRIGGER.get().instance(alias));
             perfect_builder.requirements(AdvancementRequirements.Strategy.AND);
             perfect_builder.rewards(AdvancementRewards.EMPTY);
             perfect_builder.save(consumer, ReactiveMod.MODID +REACTION_ADVANCEMENT_PREFIX + alias +"_perfect");

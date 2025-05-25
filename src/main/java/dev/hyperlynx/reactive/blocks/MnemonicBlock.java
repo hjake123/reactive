@@ -1,8 +1,10 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.MnemonicBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -49,7 +51,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        if(context.getLevel().getBlockState(context.getClickedPos().below()).is(Registration.VOLT_CELL.get())){
+        if(context.getLevel().getBlockState(context.getClickedPos().below()).is(ReactiveBlocks.VOLT_CELL.get())){
             return defaultBlockState().setValue(CHARGED, true);
         }
         return defaultBlockState();
@@ -61,7 +63,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
         if (be instanceof MnemonicBlockEntity m) {
             if (!level.isClientSide && !(player.isCreative() && !m.hasMemory())) {
                 m.stopRecording();
-                ItemStack stack = Registration.MNEMONIC_BULB_ITEM.get().getDefaultInstance();
+                ItemStack stack = ReactiveItems.MNEMONIC_BULB.get().getDefaultInstance();
                 m.saveToItem(stack, level.registryAccess());
                 ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, stack);
                 drop.setDefaultPickUpDelay();
@@ -85,9 +87,9 @@ public class MnemonicBlock extends Block implements EntityBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor_block, BlockPos neighbor_pos, boolean moved_by_piston) {
         super.neighborChanged(state, level, pos, neighbor_block, neighbor_pos, moved_by_piston);
-        if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && !state.getValue(CHARGED)){
+        if(level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get()) && !state.getValue(CHARGED)){
             level.setBlock(pos, state.setValue(CHARGED, true), Block.UPDATE_CLIENTS);
-        } else if(!(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())) && state.getValue(CHARGED)){
+        } else if(!(level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get())) && state.getValue(CHARGED)){
             level.setBlock(pos, state.setValue(CHARGED, false), Block.UPDATE_CLIENTS);
         }
     }
@@ -103,7 +105,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <MnemonicBlockEntity extends BlockEntity> BlockEntityTicker<MnemonicBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<MnemonicBlockEntity> type) {
-        if(type == Registration.MNEMONIC_BULB_BE_TYPE.get() && !level.isClientSide){
+        if(type == ReactiveBlockEntityTypes.MNEMONIC_BULB_BE_TYPE.get() && !level.isClientSide){
             return (l, p, s, b) -> dev.hyperlynx.reactive.be.MnemonicBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.MnemonicBlockEntity) b);
         }
         return null;

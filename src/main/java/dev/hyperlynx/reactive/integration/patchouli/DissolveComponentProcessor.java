@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.integration.patchouli;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +21,7 @@ public class DissolveComponentProcessor implements IComponentProcessor {
     @Override
     public void setup(Level level, IVariableProvider variables) {
         String reactant = variables.get("reactant", level.registryAccess()).asString();
-        List<RecipeHolder<DissolveRecipe>> recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        List<RecipeHolder<DissolveRecipe>> recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
         for(RecipeHolder<DissolveRecipe> r : recipes){
             for(ItemStack i : r.value().getReactant().getItems()){
                 if (i.getItem().equals(BuiltInRegistries.ITEM.get(ResourceLocation.parse(reactant))))

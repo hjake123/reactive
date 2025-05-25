@@ -1,7 +1,8 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -40,7 +41,7 @@ public class StardustItem extends Item {
     }
 
     private static void place(Level level, Player player, BlockPos pos, @NotNull InteractionHand hand) {
-        level.setBlock(pos, Registration.STARDUST.get().defaultBlockState(), 2);
+        level.setBlock(pos, ReactiveBlocks.STARDUST.get().defaultBlockState(), 2);
         if(!player.isCreative())
             player.getItemInHand(hand).setCount(player.getItemInHand(hand).getCount() - 1);
     }
@@ -49,17 +50,17 @@ public class StardustItem extends Item {
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if(!level.getBlockState(pos).is(Registration.STARDUST.get())){
+        if(!level.getBlockState(pos).is(ReactiveBlocks.STARDUST.get())){
             return InteractionResult.PASS;
         }
 
         for(int i = 0; i < MAX_CHAIN_DEPTH; i++){
-            if(level.getBlockState(pos).is(Registration.STARDUST.get())){
+            if(level.getBlockState(pos).is(ReactiveBlocks.STARDUST.get())){
                 int x_displacement = WorldSpecificValue.get(pos +"x_displace", -5, 5);
                 int y_displacement = WorldSpecificValue.get(pos +"y_displace", -3, 4);
                 int z_displacement = WorldSpecificValue.get(pos +"z_displace", -5, 5);
                 BlockPos new_pos = pos.offset(x_displacement, y_displacement, z_displacement);
-                ParticleScribe.drawParticleLine(level, Registration.STARDUST_PARTICLE, pos, new_pos, 5, 0.1);
+                ParticleScribe.drawParticleLine(level, ReactiveParticles.STARDUST_PARTICLE, pos, new_pos, 5, 0.1);
                 pos = new_pos;
             }else if(level.getBlockState(pos).isAir()){
                 place(level, Objects.requireNonNull(context.getPlayer()), pos, context.getHand());

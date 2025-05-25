@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
@@ -65,17 +65,17 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
             Block staff_to_become = Blocks.AIR;
 
             if (exposed_power == Powers.LIGHT_POWER.get())
-                staff_to_become = Registration.STAFF_OF_LIGHT.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_LIGHT.get();
             else if (exposed_power == Powers.WARP_POWER.get())
-                staff_to_become = Registration.STAFF_OF_WARP.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_WARP.get();
             else if (exposed_power == Powers.BLAZE_POWER.get())
-                staff_to_become = Registration.STAFF_OF_BLAZE.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_BLAZE.get();
             else if (exposed_power == Powers.MIND_POWER.get())
-                staff_to_become = Registration.STAFF_OF_MIND.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_MIND.get();
             else if (exposed_power == Powers.VITAL_POWER.get())
-                staff_to_become = Registration.STAFF_OF_LIFE.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_LIFE.get();
             else if (exposed_power == Powers.SOUL_POWER.get())
-                staff_to_become = Registration.STAFF_OF_SOUL.get();
+                staff_to_become = ReactiveBlocks.STAFF_OF_SOUL.get();
 
             if (staff_to_become == Blocks.AIR) {
                 return;
@@ -103,7 +103,7 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
 
     private static void failCrafting(Level l, BlockPos pos){
         l.removeBlock(pos, true);
-        ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, Registration.INCOMPLETE_STAFF_ITEM.get().getDefaultInstance());
+        ItemEntity dropped_staff = new ItemEntity(l, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, ReactiveItems.INCOMPLETE_STAFF.get().getDefaultInstance());
         l.addFreshEntity(dropped_staff);
         l.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.BLOCKS, 1.0F, 1.1F);
     }
@@ -111,14 +111,14 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
         if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_1, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_1, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
             level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 1.1F);
         }
         if(state.getValue(PROGRESS) > 1 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_2, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_2, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
         }
         if(state.getValue(PROGRESS) > 2 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, RING_HEIGHT_3, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_3, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
         }
     }
 }

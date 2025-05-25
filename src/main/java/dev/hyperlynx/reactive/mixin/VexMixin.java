@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.mixin;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.Vex;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,7 @@ public class VexMixin {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
             symbol_maybe = BlockPos.findClosestMatch(((Vex)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Vex)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+                    blockPos -> ((Vex)(Object)this).level().getBlockState(blockPos).is(ReactiveBlocks.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 

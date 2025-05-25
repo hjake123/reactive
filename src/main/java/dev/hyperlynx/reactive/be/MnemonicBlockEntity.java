@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.blocks.MnemonicBlock;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
@@ -27,7 +27,7 @@ public class MnemonicBlockEntity extends BlockEntity {
 
 
     public MnemonicBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.MNEMONIC_BULB_BE_TYPE.value(), pPos, pBlockState);
+        super(ReactiveBlockEntityTypes.MNEMONIC_BULB_BE_TYPE.value(), pPos, pBlockState);
     }
 
     public void performTick(Level level, BlockPos pos, BlockState state){

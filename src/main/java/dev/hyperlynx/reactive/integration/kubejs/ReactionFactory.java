@@ -8,11 +8,9 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class ReactionFactory {
     CustomReaction rxn;

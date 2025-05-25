@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.recipes;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -54,12 +54,12 @@ public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Registration.DISSOLVE_SERIALIZER.get();
+        return ReactiveRecipes.DISSOLVE_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Registration.DISSOLVE_RECIPE_TYPE.get();
+        return ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

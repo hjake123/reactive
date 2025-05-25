@@ -1,8 +1,9 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveMobEffects;
 import dev.hyperlynx.reactive.blocks.GravityBeamBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class GravityBeamBlockEntity extends BlockEntity {
     public GravityBeamBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.GRAVITY_BEAM_BE_TYPE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.GRAVITY_BEAM_BE_TYPE.get(), pos, state);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state) {
@@ -41,7 +42,7 @@ public class GravityBeamBlockEntity extends BlockEntity {
                 Vec3.atCenterOf(hit.getBlockPos()).add(0.1, 0.1, 0.1));
         for(Entity target : level.getEntitiesOfClass(Entity.class, effect_region)){
             if(target instanceof LivingEntity victim){
-                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY, 5));
+                victim.addEffect(new MobEffectInstance(ReactiveMobEffects.NULL_GRAVITY, 5));
                 victim.resetFallDistance();
             }else if(target instanceof ItemEntity item) {
                 item.setNoGravity(true);

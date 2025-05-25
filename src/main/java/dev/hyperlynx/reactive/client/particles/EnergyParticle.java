@@ -1,10 +1,9 @@
 package dev.hyperlynx.reactive.client.particles;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.ReactiveVanillaCodecs;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -15,7 +14,6 @@ import net.minecraft.core.particles.ScalableParticleOptionsBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -117,7 +115,7 @@ public class EnergyParticle extends TextureSheetParticle {
 
         @Override
         public @NotNull ParticleType<?> getType() {
-            return Registration.ENERGY_PARTICLE_TYPE.get();
+            return ReactiveParticles.ENERGY_PARTICLE_TYPE.get();
         }
 
         public float getSpeed() {

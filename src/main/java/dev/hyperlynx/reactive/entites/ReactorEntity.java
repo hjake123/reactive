@@ -2,7 +2,7 @@ package dev.hyperlynx.reactive.entites;
 
 import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveEntityDataSerializers;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -21,7 +21,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +32,7 @@ import java.util.*;
 public class ReactorEntity extends Entity implements Reactor {
     public static int MAX_POWER = 10000;
 
-    private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
+    private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, ReactiveEntityDataSerializers.REACTOR_DATA_SERIALIZER.get());
 
     private static final EntityDataAccessor<Boolean> FORCE_GOLD_SYMBOL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
     private static final String FORCE_GOLD_SYMBOL_KEY = "force_gold_symbol_key";

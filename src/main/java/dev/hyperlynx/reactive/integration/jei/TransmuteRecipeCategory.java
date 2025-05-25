@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -42,7 +42,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
 
     @Override
     public RecipeType<RecipeHolder<TransmuteRecipe>> getRecipeType() {
-        return RecipeType.createFromVanilla(Registration.TRANS_RECIPE_TYPE.get());
+        return RecipeType.createFromVanilla(ReactiveRecipes.TRANS_RECIPE_TYPE.get());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
 
     @Override
     public IDrawable getIcon() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ReactiveItems.CRUCIBLE.get().getDefaultInstance());
     }
 
     @Override

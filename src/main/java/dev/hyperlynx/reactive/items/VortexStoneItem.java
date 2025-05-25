@@ -1,8 +1,9 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveMobEffects;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -29,7 +30,7 @@ public class VortexStoneItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Vec3 impulse = player.getLookAngle().scale(STRENGTH);
         var new_movement = player.getDeltaMovement().add(impulse);
-        if(player.hasEffect(Registration.NULL_GRAVITY) && new_movement.length() > TOP_SPEED){
+        if(player.hasEffect(ReactiveMobEffects.NULL_GRAVITY) && new_movement.length() > TOP_SPEED){
             return InteractionResultHolder.fail(player.getItemInHand(hand));
         }
         player.setDeltaMovement(new_movement);
@@ -37,7 +38,7 @@ public class VortexStoneItem extends Item {
         level.playSound(null, player.blockPosition(), SoundEvents.BREEZE_CHARGE, SoundSource.PLAYERS, 1.0F, 0.95F + (level.random.nextFloat()*0.1F));
         level.gameEvent(GameEvent.PROJECTILE_SHOOT, player.getEyePosition(), GameEvent.Context.of(player));
         ParticleScribe.drawParticle(level, ParticleTypes.GUST_EMITTER_SMALL, player.getX(), player.getY(), player.getZ());
-        player.getCooldowns().addCooldown(Registration.VORTEX_STONE.get(), ConfigMan.SERVER.vortexStoneCooldown.get());
+        player.getCooldowns().addCooldown(ReactiveItems.VORTEX_STONE.get(), ConfigMan.SERVER.vortexStoneCooldown.get());
 
         if(!player.hasInfiniteMaterials()){
             var stack = player.getItemInHand(hand);

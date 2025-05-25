@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +19,7 @@ public class StaffBlockEntity extends BlockEntity {
     private final String ITEM_STACK_TAG = "Stack";
 
     public StaffBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.STAFF_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.STAFF_BE.get(), pos, state);
         stack = state.getBlock().asItem().getDefaultInstance();
     }
 

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -28,19 +28,19 @@ public class CrystalIronItem extends Item {
     // Return whether the given entity should be subjected to an effect (i.e. if there was no Crystal Iron blocking it.
     // Also damages the item if necessary.
     public static boolean effectNotBlocked(LivingEntity entity, int cost) {
-        if(entity.isHolding(Registration.CRYSTAL_IRON.get())) {
+        if(entity.isHolding(ReactiveItems.CRYSTAL_IRON.get())) {
             if(cost > 0) {
-                if (entity.getOffhandItem().is(Registration.CRYSTAL_IRON.get())) {
+                if (entity.getOffhandItem().is(ReactiveItems.CRYSTAL_IRON.get())) {
                     entity.getOffhandItem().hurtAndBreak(cost, entity, entity.getOffhandItem().getEquipmentSlot());
                 } else {
                     entity.getMainHandItem().hurtAndBreak(cost, entity, entity.getMainHandItem().getEquipmentSlot());
                 }
             }
             return false;
-        }else if(entity instanceof Player player && player.getInventory().hasAnyMatching((ItemStack stack) -> stack.is(Registration.CRYSTAL_IRON.get()))){
+        }else if(entity instanceof Player player && player.getInventory().hasAnyMatching((ItemStack stack) -> stack.is(ReactiveItems.CRYSTAL_IRON.get()))){
             if(cost > 0){
                 for(ItemStack stack : player.getInventory().items){
-                    if(stack.is(Registration.CRYSTAL_IRON.get())){
+                    if(stack.is(ReactiveItems.CRYSTAL_IRON.get())){
                         if(player instanceof ServerPlayer){
                             stack.hurtAndBreak(cost, (ServerLevel) player.level(), player, (i) -> {});
                         }

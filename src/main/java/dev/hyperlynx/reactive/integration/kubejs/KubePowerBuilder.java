@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBuilder;
 import dev.latvian.mods.kubejs.registry.BuilderBase;
@@ -39,19 +39,19 @@ public class KubePowerBuilder extends BuilderBase<Power> {
     }
 
     public KubePowerBuilder setMagicWater(){
-        builder.water(Registration.DUMMY_MAGIC_WATER.get());
+        builder.water(ReactiveBlocks.DUMMY_MAGIC_WATER.get());
         return this;
     }
     public KubePowerBuilder setFastWater(){
-        builder.water(Registration.DUMMY_FAST_WATER.get());
+        builder.water(ReactiveBlocks.DUMMY_FAST_WATER.get());
         return this;
     }
     public KubePowerBuilder setNoiseWater(){
-        builder.water(Registration.DUMMY_NOISE_WATER.get());
+        builder.water(ReactiveBlocks.DUMMY_NOISE_WATER.get());
         return this;
     }
     public KubePowerBuilder setSlowWater(){
-        builder.water(Registration.DUMMY_SLOW_WATER.get());
+        builder.water(ReactiveBlocks.DUMMY_SLOW_WATER.get());
         return this;
     }
 

@@ -1,11 +1,11 @@
 package dev.hyperlynx.reactive.tests;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestAssertException;
@@ -77,7 +77,7 @@ public class CrucibleGameTests {
             helper.assertTrue(!helper.getEntities(EntityType.ITEM).isEmpty(), "No residual item");
             boolean could_fail = true;
             for(ItemEntity entity : helper.getEntities(EntityType.ITEM)){
-                if(entity.getItem().is(Registration.LITMUS_PAPER.get())){
+                if(entity.getItem().is(ReactiveItems.LITMUS_PAPER.get())){
                     helper.succeed();
                     could_fail = false;
                 }

@@ -2,7 +2,8 @@ package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
@@ -76,7 +77,7 @@ public class LitmusPaperItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> hover_text, TooltipFlag tooltip_flag) {
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
-        if(stack.has(Registration.LITMUS_MEASUREMENT)) {
+        if(stack.has(ReactiveComponentTypes.LITMUS_MEASUREMENT)) {
             if(ConfigMan.COMMON.litmusScreen.get()) {
                 hover_text.add(Component.translatable("text.reactive.litmus_instructions"));
             } else {
@@ -90,11 +91,11 @@ public class LitmusPaperItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if(!stack.has(Registration.LITMUS_MEASUREMENT))
+        if(!stack.has(ReactiveComponentTypes.LITMUS_MEASUREMENT))
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
         if(ConfigMan.COMMON.litmusScreen.get()) {
-            LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT);
+            LitmusMeasurement measurement = stack.get(ReactiveComponentTypes.LITMUS_MEASUREMENT);
             showScreen(player, measurement);
         } else {
             for(Component line : buildMeasurementText(player.getItemInHand(hand), player)) {
@@ -118,7 +119,7 @@ public class LitmusPaperItem extends Item {
 
         takeMeasurement(context.getItemInHand(), crucible);
         if(ConfigMan.COMMON.litmusScreen.get()){
-            LitmusMeasurement measurement = context.getItemInHand().get(Registration.LITMUS_MEASUREMENT);
+            LitmusMeasurement measurement = context.getItemInHand().get(ReactiveComponentTypes.LITMUS_MEASUREMENT);
             showScreen(context.getPlayer(), measurement);
         }
 
@@ -129,7 +130,7 @@ public class LitmusPaperItem extends Item {
         if(player instanceof ServerPlayer splayer) {
             if(measurement.measurements().stream().anyMatch(line ->
                     Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
-                Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                ReactiveCriterionTriggers.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
             }
             List<Component> reaction_text = new ArrayList<>();
             appendReactionText(player, reaction_text, measurement);
@@ -150,7 +151,7 @@ public class LitmusPaperItem extends Item {
             ));
         }
 
-        paper.set(Registration.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
+        paper.set(ReactiveComponentTypes.LITMUS_MEASUREMENT.get(), new LitmusMeasurement(
                 lines,
                 crucible.reaction_status,
                 crucible.integrity < 85
@@ -166,7 +167,7 @@ public class LitmusPaperItem extends Item {
     // Only for legacy behavior.
     private List<Component> buildMeasurementText(ItemStack stack, Player player){
         List<Component> text = new ArrayList<>();
-        LitmusMeasurement measurement = stack.get(Registration.LITMUS_MEASUREMENT.get());
+        LitmusMeasurement measurement = stack.get(ReactiveComponentTypes.LITMUS_MEASUREMENT.get());
         if(measurement == null){
             return text;
         }
@@ -185,7 +186,7 @@ public class LitmusPaperItem extends Item {
                             color = power.getTextColor();
                         }
                         if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-                            Registration.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                            ReactiveCriterionTriggers.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
                         }
                     }
                     text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));

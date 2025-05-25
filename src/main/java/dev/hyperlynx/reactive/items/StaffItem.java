@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.be.StaffBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -97,7 +97,7 @@ public class StaffItem extends BlockItem {
         MutableInt frequency = new MutableInt(this.frequency.get());
 
         EnchantmentHelper.runIterationOnItem(stack, (enchant, enchant_level) -> {
-            for(var effect : enchant.value().getEffects(Registration.STAFF_RATE.value())){
+            for(var effect : enchant.value().getEffects(ReactiveComponentTypes.STAFF_RATE.value())){
                 frequency.setValue(effect.effect().process(enchant_level, RandomSource.create(), frequency.getValue()));
             }
         });
@@ -116,7 +116,7 @@ public class StaffItem extends BlockItem {
     private static float getModifiedDamageOutput(ServerLevel server, @NotNull ItemStack stack, Entity target, DamageSource damage_source, float unmodified_damage){
         MutableFloat strength = new MutableFloat(unmodified_damage);
         EnchantmentHelper.runIterationOnItem(stack, (enchant, enchant_level) -> Enchantment.applyEffects(
-            enchant.value().getEffects(Registration.STAFF_DAMAGE.value()),
+            enchant.value().getEffects(ReactiveComponentTypes.STAFF_DAMAGE.value()),
             Enchantment.damageContext(server, enchant_level, target, damage_source),
             (effect) -> strength.setValue(effect.process(enchant_level, server.random, strength.getValue()))
         ));

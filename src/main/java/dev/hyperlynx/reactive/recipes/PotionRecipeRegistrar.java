@@ -1,7 +1,8 @@
 package dev.hyperlynx.reactive.recipes;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactivePotions;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.Potions;
@@ -17,14 +18,14 @@ public class PotionRecipeRegistrar {
 
         builder.addMix(
                 Potions.THICK,
-                Registration.SECRET_SCALE.get(),
-                Registration.NULL_GRAVITY_POTION
+                ReactiveItems.SECRET_SCALE.get(),
+                ReactivePotions.NULL_GRAVITY_POTION
         );
 
         builder.addMix(
-                Registration.NULL_GRAVITY_POTION,
+                ReactivePotions.NULL_GRAVITY_POTION,
                 Items.REDSTONE,
-                Registration.LONG_NULL_GRAVITY_POTION
+                ReactivePotions.LONG_NULL_GRAVITY_POTION
         );
     }
 }
