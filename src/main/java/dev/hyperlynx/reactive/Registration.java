@@ -418,10 +418,7 @@ public class Registration {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GatewayBlockEntity>> GATEWAY_BE = BLOCK_ENTITY_TYPES.register("gateway_be",
             () -> BlockEntityType.Builder.of(GatewayBlockEntity::new, GATEWAY_BLOCK.get()).build(null));
 
-    public static final DeferredHolder<Block, PhantomQuiltBlock> PHANTOM_QUILT = BLOCKS.register("phantom_quilt", () ->
-            new PhantomQuiltBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL)));
-
-    public static final DeferredHolder<Item, BlockItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+    public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
             new PhantomQuiltItem(new Item.Properties()));
 
     // Register items.
