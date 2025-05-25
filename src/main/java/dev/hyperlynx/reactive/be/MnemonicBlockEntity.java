@@ -27,7 +27,7 @@ public class MnemonicBlockEntity extends BlockEntity {
 
 
     public MnemonicBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ReactiveBlockEntityTypes.MNEMONIC_BULB_BE_TYPE.value(), pPos, pBlockState);
+        super(ReactiveBlockEntityTypes.MNEMONIC_BULB.value(), pPos, pBlockState);
     }
 
     public void performTick(Level level, BlockPos pos, BlockState state){

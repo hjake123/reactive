@@ -35,7 +35,7 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
             contents = new ReactionFlaskContents(generateRandomPowerCombo(), false);
         }
 
-        ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR_ENTITY_TYPE.get(), level());
+        ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR.get(), level());
         entity.setPos(result.getLocation().add(0, 1.0, 0));
         Map<Power, Integer> powers = contents.powers();
         entity.setLifespan(600);

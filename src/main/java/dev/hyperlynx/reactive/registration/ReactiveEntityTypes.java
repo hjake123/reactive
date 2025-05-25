@@ -19,7 +19,7 @@ public class ReactiveEntityTypes {
                     .fireImmune()
                     .build("thrown_reaction_flask"));
 
-    public static final Supplier<EntityType<ReactorEntity>> REACTOR_ENTITY_TYPE = ENTITY_TYPES.register("reactor", () ->
+    public static final Supplier<EntityType<ReactorEntity>> REACTOR = ENTITY_TYPES.register("reactor", () ->
             EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
                     .sized(0.2F, 0.2F)
                     .fireImmune()

@@ -60,7 +60,7 @@ public class StardustItem extends Item {
                 int y_displacement = WorldSpecificValue.get(pos +"y_displace", -3, 4);
                 int z_displacement = WorldSpecificValue.get(pos +"z_displace", -5, 5);
                 BlockPos new_pos = pos.offset(x_displacement, y_displacement, z_displacement);
-                ParticleScribe.drawParticleLine(level, ReactiveParticles.STARDUST_PARTICLE, pos, new_pos, 5, 0.1);
+                ParticleScribe.drawParticleLine(level, ReactiveParticles.STARDUST, pos, new_pos, 5, 0.1);
                 pos = new_pos;
             }else if(level.getBlockState(pos).isAir()){
                 place(level, Objects.requireNonNull(context.getPlayer()), pos, context.getHand());

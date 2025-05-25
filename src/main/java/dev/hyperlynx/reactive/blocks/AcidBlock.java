@@ -148,7 +148,7 @@ public class AcidBlock extends Block implements BucketPickup {
                 double x = pos.getX() + rng.nextFloat();
                 double y = pos.getY() + 1.0F;
                 double z = pos.getZ() + rng.nextFloat();
-                level.addParticle(ReactiveParticles.ACID_BUBBLE_PARTICLE, x, y, z, 0, 0, 0);
+                level.addParticle(ReactiveParticles.ACID_BUBBLE, x, y, z, 0, 0, 0);
             }
         }
     }

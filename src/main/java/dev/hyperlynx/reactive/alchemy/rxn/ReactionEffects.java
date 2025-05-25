@@ -133,7 +133,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(level, ParticleTypes.ELECTRIC_SPARK,
                             reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
-                    reactor.getLevel().playSound(null, potential_rod, ReactiveSoundEvents.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 1F);
+                    reactor.getLevel().playSound(null, potential_rod, ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS, 0.5F, 1F);
                 }
             } else {
                 AABB aoe = new AABB(reactor.getBlockPos());
@@ -158,7 +158,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
-                    reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), ReactiveSoundEvents.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 0.98F + reactor.getLevel().random.nextFloat()*0.05F);
+                    reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS, 0.5F, 0.98F + reactor.getLevel().random.nextFloat()*0.05F);
                 }
             }
             reactor.setElectricCharge(0);
@@ -176,7 +176,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    ReactiveCriterionTriggers.BE_LEVITATED_TRIGGER.get().trigger(player);
+                    ReactiveCriterionTriggers.BE_LEVITATED.get().trigger(player);
                 }
             }
             ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.END_ROD,
@@ -198,7 +198,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    ReactiveCriterionTriggers.BE_SLOWFALLED_TRIGGER.get().trigger(player);
+                    ReactiveCriterionTriggers.BE_SLOWFALLED.get().trigger(player);
                 }
             }
             ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos(), 0.6, 1);
@@ -326,7 +326,7 @@ public class ReactionEffects {
                 if(level.getBlockState(creation_point).isAir() && level.isLoaded(creation_point)){
                     level.setBlock(creation_point, ReactiveBlocks.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                     level.updateNeighborsAt(creation_point, ReactiveBlocks.UNFORMED_MATTER.get());
-                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST_PARTICLE, reactor.getBlockPos(), creation_point, 10, 5, 0.5F);
+                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, reactor.getBlockPos(), creation_point, 10, 5, 0.5F);
                     break;
                 }
             }
@@ -382,7 +382,7 @@ public class ReactionEffects {
     }
 
     public static void shrink(Reactor reactor) {
-        resizeNearby(reactor, ConfigMan.SERVER.shrinkSmallSize.get(), ConfigMan.SERVER.shrinkSmallStep.get(), ResizeMode.REDUCE, ReactiveParticles.ACID_BUBBLE_PARTICLE);
+        resizeNearby(reactor, ConfigMan.SERVER.shrinkSmallSize.get(), ConfigMan.SERVER.shrinkSmallStep.get(), ResizeMode.REDUCE, ReactiveParticles.ACID_BUBBLE);
     }
 
     public static void grow(Reactor reactor) {
@@ -412,14 +412,14 @@ public class ReactionEffects {
                         ParticleScribe.drawParticleZigZag(reactor.getLevel(), particle,
                                 reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                                 victim.getEyePosition().x, victim.getEyePosition().y, victim.getEyePosition().z, 20, 5, 0.9);
-                        reactor.getLevel().playSound(null, reactor.getBlockPos(), ReactiveSoundEvents.ZAP_SOUND.get(), SoundSource.BLOCKS);
+                        reactor.getLevel().playSound(null, reactor.getBlockPos(), ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS);
                         reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.getLevel().random.nextFloat()*0.2F);
                         victim.hurt(reactor.getLevel().damageSources().magic(), 1);
                         if(victim instanceof ServerPlayer splayer){
                             if (new_scale == 1.0) {
-                                ReactiveCriterionTriggers.SIZE_REVERTED_TRIGGER.get().trigger(splayer);
+                                ReactiveCriterionTriggers.SIZE_REVERTED.get().trigger(splayer);
                             } else {
-                                ReactiveCriterionTriggers.SIZE_CHANGED_TRIGGER.get().trigger(splayer);
+                                ReactiveCriterionTriggers.SIZE_CHANGED.get().trigger(splayer);
                             }
                         }
                     }

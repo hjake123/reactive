@@ -111,14 +111,14 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
         if(state.getValue(PROGRESS) > 0 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_1, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, RING_HEIGHT_1, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
             level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 1.1F);
         }
         if(state.getValue(PROGRESS) > 1 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_2, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, RING_HEIGHT_2, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
         }
         if(state.getValue(PROGRESS) > 2 && rng.nextFloat() < 0.05 + state.getValue(PROGRESS) * 0.1){
-            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, RING_HEIGHT_3, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, RING_HEIGHT_3, state.getValue(PROGRESS) * 0.2 + 0.2, state.getValue(PROGRESS));
         }
     }
 }

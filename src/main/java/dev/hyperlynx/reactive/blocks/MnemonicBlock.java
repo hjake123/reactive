@@ -105,7 +105,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <MnemonicBlockEntity extends BlockEntity> BlockEntityTicker<MnemonicBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<MnemonicBlockEntity> type) {
-        if(type == ReactiveBlockEntityTypes.MNEMONIC_BULB_BE_TYPE.get() && !level.isClientSide){
+        if(type == ReactiveBlockEntityTypes.MNEMONIC_BULB.get() && !level.isClientSide){
             return (l, p, s, b) -> dev.hyperlynx.reactive.be.MnemonicBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.MnemonicBlockEntity) b);
         }
         return null;

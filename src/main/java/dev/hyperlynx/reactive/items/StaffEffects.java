@@ -179,7 +179,7 @@ public class StaffEffects {
 
             for(LivingEntity victim : hit_counts.keySet()) {
                 for(int i = 0; i < hit_counts.get(victim); i++) {
-                    ParticleScribe.drawParticleZigZag(user.level(), ReactiveParticles.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                    ParticleScribe.drawParticleZigZag(user.level(), ReactiveParticles.SMALL_RUNE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                             victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                     user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
                             user.level().random.nextFloat()*0.1f + 0.8f);

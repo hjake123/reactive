@@ -19,13 +19,13 @@ public class PotionRecipeRegistrar {
         builder.addMix(
                 Potions.THICK,
                 ReactiveItems.SECRET_SCALE.get(),
-                ReactivePotions.NULL_GRAVITY_POTION
+                ReactivePotions.NULL_GRAVITY
         );
 
         builder.addMix(
-                ReactivePotions.NULL_GRAVITY_POTION,
+                ReactivePotions.NULL_GRAVITY,
                 Items.REDSTONE,
-                ReactivePotions.LONG_NULL_GRAVITY_POTION
+                ReactivePotions.LONG_NULL_GRAVITY
         );
     }
 }

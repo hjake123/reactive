@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-import static dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers.HARVEST_TRIGGER;
+import static dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers.HARVEST;
 
 public class OccultSymbolBlock extends SymbolBlock{
     public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
@@ -45,7 +45,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if(entity instanceof ServerPlayer){
-            ReactiveCriterionTriggers.PLACE_OCCULT_TRIGGER.get().trigger((ServerPlayer) entity);
+            ReactiveCriterionTriggers.PLACE_OCCULT.get().trigger((ServerPlayer) entity);
         }
     }
 
@@ -66,7 +66,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         double d0 = source.nextDouble() * 8 - 4;
         double d1 = source.nextDouble() * 8 - 4;
         double d2 = source.nextDouble() * 8 - 4;
-        level.addParticle(ReactiveParticles.SMALL_BLACK_RUNE_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
+        level.addParticle(ReactiveParticles.SMALL_BLACK_RUNE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             case 5 -> {
                 // A Bottle of Mind was extracted.
                 if(player instanceof ServerPlayer splayer){
-                    HARVEST_TRIGGER.get().trigger(splayer);
+                    HARVEST.get().trigger(splayer);
                 }
                 if(player.experienceLevel > 1) {
                     player.giveExperienceLevels(-1);
@@ -142,7 +142,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             default -> bottle_broke = true;
         }
 
-        ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE_PARTICLE, pos, player.blockPosition().above(), 5, 4, 0.7);
+        ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE, pos, player.blockPosition().above(), 5, 4, 0.7);
         player.getItemInHand(hand).shrink(1);
 
         if(bottle_broke) {

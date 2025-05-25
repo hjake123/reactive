@@ -18,7 +18,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
     int spreads_left = 16;
 
     public ActiveFoamBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.ACTIVE_GOLD_FOAM_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.ACTIVE_GOLD_FOAM.get(), pos, state);
     }
 
     private static void trySpread(Level level, BlockPos target, BlockPos spreader, int spreads_left){

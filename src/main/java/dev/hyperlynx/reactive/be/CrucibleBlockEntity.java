@@ -98,7 +98,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public boolean reactions_paused = false; // Set by the Inert Crystal special case. Inhibits all Reactions when true.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.CRUCIBLE_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.CRUCIBLE.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }
@@ -233,7 +233,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             crucible.expendAnyPowerExcept(null, 1);
         }
         if(crucible.integrity < 50 && crucible.integrity > 10){
-            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, 0.7, 0.9, 1);
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 1);
         }
         if(crucible.integrity < 20 && crucible.integrity > 12){
             level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3f, 0.9f);
@@ -260,7 +260,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     public static void integrityFail(Level level, BlockPos pos, BlockState state) {
-        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
+        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 20);
         level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.15f, 0.8f);
         level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Level.ExplosionInteraction.NONE);
         if(state.getBlock().equals(ReactiveBlocks.SHULKER_CRUCIBLE.get())){
@@ -268,7 +268,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             level.addFreshEntity(dropped_shell);
         }
         if(level instanceof ServerLevel slevel)
-            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_CRUCIBLE_FAIL_TRIGGER.get(), pos, 24);
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_CRUCIBLE_FAIL.get(), pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
             level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
         else
@@ -347,7 +347,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.PORTAL_TRADE.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -355,7 +355,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                     // Blaze Rods add blaze.
                     if(crucible.areaMemory.exists(level, ReactiveBlocks.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.SEE_BLAZE_GATHER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -561,7 +561,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
-        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), ReactiveCriterionTriggers.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), ReactiveCriterionTriggers.SEE_SACRIFICE.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();

@@ -137,9 +137,9 @@ public class GatewayPlinthBlock extends Block {
                 level.removeBlock(pos.above(), false);
                 Vec3 rift_pos  = Vec3.atCenterOf(pos.above());
                 for(BlockPos point : ReactionEffects.getCreationPoints(pos)){
-                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST_PARTICLE, pos.above(), point, 10, 7, 0.8);
+                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, pos.above(), point, 10, 7, 0.8);
                 }
-                level.explode(null, (DamageSource)null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, ReactiveParticles.STARDUST_PARTICLE, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
+                level.explode(null, (DamageSource)null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, ReactiveParticles.STARDUST, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
             }
         }
         super.onRemove(state, level, pos, new_state, moved_by_piston);

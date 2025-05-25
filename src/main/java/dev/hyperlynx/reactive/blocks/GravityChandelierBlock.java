@@ -60,7 +60,7 @@ public class GravityChandelierBlock extends WaterloggableBlock implements Entity
     @Nullable
     @Override
     public <GravityChandelierBlockEntity extends BlockEntity> BlockEntityTicker<GravityChandelierBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityChandelierBlockEntity> t) {
-        if(t == ReactiveBlockEntityTypes.GRAVITY_CHANDELIER_BE_TYPE.get()){
+        if(t == ReactiveBlockEntityTypes.GRAVITY_CHANDELIER.get()){
             return (l, p, s, a) -> dev.hyperlynx.reactive.be.GravityChandelierBlockEntity.tick(l, p);
         }
         return null;

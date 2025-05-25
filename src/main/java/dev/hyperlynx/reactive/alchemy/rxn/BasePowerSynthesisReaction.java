@@ -16,6 +16,6 @@ public class BasePowerSynthesisReaction extends SynthesisReaction {
     public void run(Reactor reactor) {
         super.run(reactor);
         if (!Objects.requireNonNull(reactor.getLevel()).isClientSide)
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) reactor.getLevel(), ReactiveCriterionTriggers.SEE_SYNTHESIS_TRIGGER.get(), reactor.getBlockPos(), 8);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) reactor.getLevel(), ReactiveCriterionTriggers.SEE_SYNTHESIS.get(), reactor.getBlockPos(), 8);
     }
 }

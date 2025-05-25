@@ -126,7 +126,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         registration.addItemStackInfo(ReactiveItems.PHANTOM_RESIDUE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_input"));
         addGenericDescriptions(registration, ReactiveItems.STAFF_OF_WARP.get(), ReactiveItems.STAFF_OF_MIND.get(),
                 ReactiveItems.STAFF_OF_BLAZE.get(), ReactiveItems.STAFF_OF_LIFE.get(), ReactiveItems.STAFF_OF_LIGHT.get(),
-                ReactiveItems.STAFF_OF_SOUL.get(), ReactiveItems.SOLID_PORTAL_ITEM.get(), ReactiveItems.LIGHT_BOTTLE.get(),
+                ReactiveItems.STAFF_OF_SOUL.get(), ReactiveItems.SOLID_PORTAL.get(), ReactiveItems.LIGHT_BOTTLE.get(),
                 ReactiveItems.MIND_BOTTLE.get(), ReactiveItems.BODY_BOTTLE.get(), ReactiveItems.WARP_BOTTLE.get(), ReactiveItems.BLAZE_BOTTLE.get(),
                 ReactiveItems.ACID_BOTTLE.get(), ReactiveItems.VERDANT_BOTTLE.get(), ReactiveItems.SOUL_BOTTLE.get(), ReactiveItems.VITAL_BOTTLE.get());
         addPowerDescriptions(registration);

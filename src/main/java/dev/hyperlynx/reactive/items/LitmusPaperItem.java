@@ -130,7 +130,7 @@ public class LitmusPaperItem extends Item {
         if(player instanceof ServerPlayer splayer) {
             if(measurement.measurements().stream().anyMatch(line ->
                     Objects.equals(line.power(), Powers.OMEN_POWER.getKey()))){
-                ReactiveCriterionTriggers.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                ReactiveCriterionTriggers.ISOLATE_OMEN.get().trigger(splayer);
             }
             List<Component> reaction_text = new ArrayList<>();
             appendReactionText(player, reaction_text, measurement);
@@ -186,7 +186,7 @@ public class LitmusPaperItem extends Item {
                             color = power.getTextColor();
                         }
                         if(power == Powers.OMEN_POWER.get() && player instanceof ServerPlayer splayer){
-                            ReactiveCriterionTriggers.ISOLATE_OMEN_TRIGGER.get().trigger(splayer);
+                            ReactiveCriterionTriggers.ISOLATE_OMEN.get().trigger(splayer);
                         }
                     }
                     text.add(Component.literal(line.line()).withStyle(Style.EMPTY.withColor(color)));

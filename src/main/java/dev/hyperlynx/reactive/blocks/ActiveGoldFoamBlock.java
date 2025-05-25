@@ -25,7 +25,7 @@ public class ActiveGoldFoamBlock extends GoldFoamBlock implements EntityBlock {
     @Nullable
     @Override
     public <ActiveFoamBlockEntity extends BlockEntity> BlockEntityTicker<ActiveFoamBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<ActiveFoamBlockEntity> t) {
-        if(t == ReactiveBlockEntityTypes.ACTIVE_GOLD_FOAM_BE.get()){
+        if(t == ReactiveBlockEntityTypes.ACTIVE_GOLD_FOAM.get()){
             return (l, p, s, a) -> dev.hyperlynx.reactive.be.ActiveFoamBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.ActiveFoamBlockEntity) a);
         }
         return null;

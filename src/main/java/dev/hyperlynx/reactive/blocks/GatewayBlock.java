@@ -45,7 +45,7 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == ReactiveBlockEntityTypes.GATEWAY_BE.get() ? GatewayBlockEntity::tick : null;
+        return type == ReactiveBlockEntityTypes.GATEWAY.get() ? GatewayBlockEntity::tick : null;
     }
 
     @Override

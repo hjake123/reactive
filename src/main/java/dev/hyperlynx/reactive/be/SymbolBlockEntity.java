@@ -32,13 +32,13 @@ public class SymbolBlockEntity extends BlockEntity {
     public Item symbol_item = Items.BARRIER;
 
     public SymbolBlockEntity(BlockPos pos, BlockState state, Item item) {
-        super(ReactiveBlockEntityTypes.SYMBOL_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.SYMBOL.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         setItem(item);
     }
 
     public SymbolBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.SYMBOL_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.SYMBOL.get(), pos, state);
     }
 
     public void setFacing(Direction facing) {
@@ -81,6 +81,6 @@ public class SymbolBlockEntity extends BlockEntity {
         }
 
         for(int i = 0; i < 4; i++)
-            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE_PARTICLE, this.getBlockPos(), event.getEntity().blockPosition().above(), 5, 4, 0.7);
+            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE, this.getBlockPos(), event.getEntity().blockPosition().above(), 5, 4, 0.7);
     }
 }

@@ -15,13 +15,13 @@ public class ReactiveCreatePlugin {
         REGISTRATE.displaySource("crucible_powers", CrucibleDisplaySource::new)
                 .onRegisterAfter(Registries.BLOCK_ENTITY_TYPE,
                         source ->
-                                DisplaySource.BY_BLOCK_ENTITY.add(ReactiveBlockEntityTypes.CRUCIBLE_BE.get(), source)
+                                DisplaySource.BY_BLOCK_ENTITY.add(ReactiveBlockEntityTypes.CRUCIBLE.get(), source)
                 )
                 .register();
         REGISTRATE.displaySource("crucible_integrity", CrucibleIntegrityDisplaySource::new)
                 .onRegisterAfter(Registries.BLOCK_ENTITY_TYPE,
                         source ->
-                                DisplaySource.BY_BLOCK_ENTITY.add(ReactiveBlockEntityTypes.CRUCIBLE_BE.get(), source)
+                                DisplaySource.BY_BLOCK_ENTITY.add(ReactiveBlockEntityTypes.CRUCIBLE.get(), source)
                 )
                 .register();
     }

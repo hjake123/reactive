@@ -19,7 +19,7 @@ public class StaffBlockEntity extends BlockEntity {
     private final String ITEM_STACK_TAG = "Stack";
 
     public StaffBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.STAFF_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.STAFF.get(), pos, state);
         stack = state.getBlock().asItem().getDefaultInstance();
     }
 

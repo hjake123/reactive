@@ -10,9 +10,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ReactiveSoundEvents {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, ReactiveMod.MODID);
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> RUMBLE_SOUND = SOUND_EVENTS.register("rumble",
+    public static final DeferredHolder<SoundEvent, SoundEvent> RUMBLE = SOUND_EVENTS.register("rumble",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.parse("reactive:rumble")));
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> ZAP_SOUND = SOUND_EVENTS.register("zap",
+    public static final DeferredHolder<SoundEvent, SoundEvent> ZAP = SOUND_EVENTS.register("zap",
             () -> SoundEvent.createVariableRangeEvent(ResourceLocation.parse("reactive:zap")));
 }

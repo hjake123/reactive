@@ -20,7 +20,7 @@ import java.util.List;
 public class GravityChandelierBlockEntity extends BlockEntity {
     public static final double RANGE = 10.0;
     public GravityChandelierBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.GRAVITY_CHANDELIER_BE_TYPE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.GRAVITY_CHANDELIER.get(), pos, state);
     }
 
     public static void tick(Level level, BlockPos pos) {

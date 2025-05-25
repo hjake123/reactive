@@ -24,7 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 
 public class GravityBeamBlockEntity extends BlockEntity {
     public GravityBeamBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.GRAVITY_BEAM_BE_TYPE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.GRAVITY_BEAM.get(), pos, state);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state) {

@@ -25,14 +25,14 @@ public class ReactionTrigger extends SimpleCriterionTrigger<ReactionTrigger.Reac
     public static void triggerForNearbyPlayers(ServerLevel l, String alias, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
-            ReactiveCriterionTriggers.REACTION_TRIGGER.get().trigger((ServerPlayer) p, alias);
+            ReactiveCriterionTriggers.REACTION.get().trigger((ServerPlayer) p, alias);
         }
     }
 
     public static void triggerPerfectForNearbyPlayers(ServerLevel l, String alias, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
-            ReactiveCriterionTriggers.PERFECT_REACTION_TRIGGER.get().trigger((ServerPlayer) p, alias);
+            ReactiveCriterionTriggers.PERFECT_REACTION.get().trigger((ServerPlayer) p, alias);
         }
     }
 

@@ -58,7 +58,7 @@ public class GravityBeamBlock extends DirectionalBlock implements EntityBlock {
     @Nullable
     @Override
     public <GravityBeamBlockEntity extends BlockEntity> BlockEntityTicker<GravityBeamBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityBeamBlockEntity> t) {
-        if(t == ReactiveBlockEntityTypes.GRAVITY_BEAM_BE_TYPE.get()){
+        if(t == ReactiveBlockEntityTypes.GRAVITY_BEAM.get()){
             return (l, p, s, a) -> dev.hyperlynx.reactive.be.GravityBeamBlockEntity.tick(l, p, s);
         }
         return null;

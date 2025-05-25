@@ -22,8 +22,8 @@ public class AstralSynthesisReaction extends SynthesisReaction{
         super.run(reactor);
         reactor.addPower(Powers.ASTRAL_POWER.get(), reactor.maxPower());
         Objects.requireNonNull(reactor.getLevel()).playSound(null, reactor.getBlockPos(), SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 0.5F, 1.2F);
-        ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), ReactiveParticles.STARDUST_PARTICLE, reactor.getBlockPos(), 0.5, 1.0, 20);
-        Objects.requireNonNull(reactor.getLevel()).playSound(null, reactor.getBlockPos(), ReactiveSoundEvents.RUMBLE_SOUND.get(), SoundSource.BLOCKS);
+        ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), ReactiveParticles.STARDUST, reactor.getBlockPos(), 0.5, 1.0, 20);
+        Objects.requireNonNull(reactor.getLevel()).playSound(null, reactor.getBlockPos(), ReactiveSoundEvents.RUMBLE.get(), SoundSource.BLOCKS);
         if(reactor instanceof CrucibleBlockEntity crucible){
             crucible.integrity = 12;
         }

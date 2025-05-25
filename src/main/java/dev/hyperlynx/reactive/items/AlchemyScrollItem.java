@@ -28,12 +28,12 @@ public class AlchemyScrollItem extends Item {
         Level level = context.getLevel();
         if(level.getBlockState(context.getClickedPos()).is(Blocks.CAULDRON)){
             if(level.isClientSide){
-                ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, context.getClickedPos(), 0.7, 0.9, 50);
+                ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, context.getClickedPos(), 0.7, 0.9, 50);
             }else{
                 level.setBlock(context.getClickedPos(), ReactiveBlocks.CRUCIBLE.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.8F);
-                ReactiveCriterionTriggers.MAKE_CRUCIBLE_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
+                ReactiveCriterionTriggers.MAKE_CRUCIBLE.get().trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())
@@ -43,7 +43,7 @@ public class AlchemyScrollItem extends Item {
         if(level.getBlockState(context.getClickedPos()).is(ReactiveBlocks.OCCULT_SYMBOL.get()) && !level.getBlockState(context.getClickedPos()).getValue(OccultSymbolBlock.ACTIVE)){
             if(level.isClientSide){
                 for(int i = 0; i < 10; i++){
-                    level.addParticle(ReactiveParticles.SMALL_BLACK_RUNE_PARTICLE,
+                    level.addParticle(ReactiveParticles.SMALL_BLACK_RUNE,
                             context.getClickLocation().x + level.random.nextDouble()*0.5-0.25,
                             context.getClickLocation().y + level.random.nextDouble()*0.5-0.25,
                             context.getClickLocation().z + level.random.nextDouble()*0.5-0.25,
@@ -53,7 +53,7 @@ public class AlchemyScrollItem extends Item {
                 level.setBlock(context.getClickedPos(), level.getBlockState(context.getClickedPos()).setValue(OccultSymbolBlock.ACTIVE, true), Block.UPDATE_CLIENTS);
                 level.playSound(null, context.getClickedPos(), SoundEvents.ENCHANTMENT_TABLE_USE,
                         SoundSource.PLAYERS, 1.0F, 0.74F);
-                ReactiveCriterionTriggers.OCCULT_AWAKENING_TRIGGER.get().trigger((ServerPlayer) context.getPlayer());
+                ReactiveCriterionTriggers.OCCULT_AWAKENING.get().trigger((ServerPlayer) context.getPlayer());
             }
 
             if(!context.getPlayer().isCreative())

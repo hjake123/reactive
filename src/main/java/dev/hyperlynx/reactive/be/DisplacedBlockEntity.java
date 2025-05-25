@@ -33,7 +33,7 @@ public class DisplacedBlockEntity extends BlockEntity {
 
 
     public DisplacedBlockEntity(BlockPos pos, BlockState state) {
-        super(ReactiveBlockEntityTypes.DISPLACED_BLOCK_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.DISPLACED_BLOCK.get(), pos, state);
     }
 
     @Override

@@ -43,14 +43,14 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.CRUCIBLE_BE.get(), CrucibleRenderer::new);
-        event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.SYMBOL_BE.get(), SymbolRenderer::new);
+        event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.CRUCIBLE.get(), CrucibleRenderer::new);
+        event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.SYMBOL.get(), SymbolRenderer::new);
         if(IRIS_MODE && ConfigMan.CLIENT.irisCompat.get()){
-            event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.GATEWAY_BE.get(), IrisGatewayRenderer::new);
+            event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.GATEWAY.get(), IrisGatewayRenderer::new);
         } else {
-            event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.GATEWAY_BE.get(), GatewayRenderer::new);
+            event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.GATEWAY.get(), GatewayRenderer::new);
         }
-        event.registerEntityRenderer(ReactiveEntityTypes.REACTOR_ENTITY_TYPE.get(), ReactorEntityRenderer::new);
+        event.registerEntityRenderer(ReactiveEntityTypes.REACTOR.get(), ReactorEntityRenderer::new);
         event.registerEntityRenderer(ReactiveEntityTypes.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
     }
 

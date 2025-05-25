@@ -249,17 +249,17 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 1.0F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
-        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE_PARTICLE, pos, 0.7, 0.9, 7);
+        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 7);
         level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
-        ReactiveCriterionTriggers.TRY_LAVA_CRUCIBLE_TRIGGER.get().trigger(player);
+        ReactiveCriterionTriggers.TRY_LAVA_CRUCIBLE.get().trigger(player);
     }
 
     private static void netherCrucibleFill(Level level, BlockPos pos, ServerPlayer player) {
         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
-        ReactiveCriterionTriggers.TRY_NETHER_CRUCIBLE_TRIGGER.get().trigger(player);
+        ReactiveCriterionTriggers.TRY_NETHER_CRUCIBLE.get().trigger(player);
     }
 
     @Override
@@ -318,7 +318,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     @Nullable
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
-       if(type == ReactiveBlockEntityTypes.CRUCIBLE_BE.get()){
+       if(type == ReactiveBlockEntityTypes.CRUCIBLE.get()){
            return (l, p, s, c) -> dev.hyperlynx.reactive.be.CrucibleBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.CrucibleBlockEntity) c);
        }
        return null;

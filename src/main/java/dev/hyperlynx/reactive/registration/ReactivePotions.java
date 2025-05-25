@@ -10,9 +10,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ReactivePotions {
     public static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(BuiltInRegistries.POTION, ReactiveMod.MODID);
 
-    public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY_POTION = POTIONS.register("no_gravity_long",
+    public static final DeferredHolder<Potion, Potion> LONG_NULL_GRAVITY = POTIONS.register("no_gravity_long",
             () -> new Potion("no_gravity_long", new MobEffectInstance(ReactiveMobEffects.NULL_GRAVITY, 8000)));
 
-    public static final DeferredHolder<Potion, Potion> NULL_GRAVITY_POTION = POTIONS.register("no_gravity",
+    public static final DeferredHolder<Potion, Potion> NULL_GRAVITY = POTIONS.register("no_gravity",
             () -> new Potion("no_gravity", new MobEffectInstance(ReactiveMobEffects.NULL_GRAVITY, 3000)));
 }

@@ -26,7 +26,7 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     private final String TARGET_DIMENSION_TAG = "Dimension";
 
     public GatewayBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ReactiveBlockEntityTypes.GATEWAY_BE.get(), pos, blockState);
+        super(ReactiveBlockEntityTypes.GATEWAY.get(), pos, blockState);
         Random random = new Random(pos.hashCode());
         tick_count = random.nextInt(0, 12000);
     }

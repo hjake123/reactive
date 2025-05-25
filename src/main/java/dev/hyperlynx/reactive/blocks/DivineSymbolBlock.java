@@ -27,7 +27,7 @@ public class DivineSymbolBlock extends SymbolBlock{
         double d0 = source.nextDouble() * 8 - 4;
         double d1 = source.nextDouble() * 8 - 4;
         double d2 = source.nextDouble() * 8 - 4;
-        level.addParticle(ReactiveParticles.STARDUST_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
+        level.addParticle(ReactiveParticles.STARDUST, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class DivineSymbolBlock extends SymbolBlock{
         }
 
         if(accepted){
-            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST_PARTICLE, pos, player_start_pos, 4, 5, 0.4);
+            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, pos, player_start_pos, 4, 5, 0.4);
             player.getCooldowns().addCooldown(stack.getItem(), 100);
         }
 

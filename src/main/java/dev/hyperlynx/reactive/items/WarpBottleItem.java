@@ -76,7 +76,7 @@ public class WarpBottleItem extends PowerBottleItem{
                     level.playSound(null, destination.pos(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                     warp_occurred = true;
                     if(player instanceof ServerPlayer splayer)
-                        ReactiveCriterionTriggers.BE_TELEPORTED_TRIGGER.get().trigger(splayer);
+                        ReactiveCriterionTriggers.BE_TELEPORTED.get().trigger(splayer);
                 }else if(!(level instanceof ServerLevel)){
                     player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
                 }
