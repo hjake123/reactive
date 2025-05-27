@@ -1,14 +1,20 @@
 package dev.hyperlynx.reactive.blocks;
 
+import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -19,19 +25,37 @@ public class MaterialBlock extends Block {
         super(BlockBehaviour.Properties.of());
     }
 
+    private Material material(BlockGetter level, BlockPos pos) {
+        BlockEntity entity = level.getBlockEntity(pos);
+        if(!(entity instanceof MaterialBlockEntity material_entity)) {
+            throw new RuntimeException("Missing material entity for block at " + pos.toShortString() + "!");
+        }
+        return material_entity.getMaterial();
+    }
+
     @Override
-    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        super.stepOn(level, pos, state, entity);
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity victim) {
+        if(material(level, pos).has(MaterialProperties.MAGMA_STEP.get())) {
+            if (!victim.isSteppingCarefully() && victim instanceof LivingEntity) {
+                victim.hurt(level.damageSources().hotFloor(), 1.0F);
+            }
+        }
     }
 
     @Override
     public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
-        return super.isFireSource(state, level, pos, direction);
+        return super.isFireSource(state, level, pos, direction) || material(level, pos).has(MaterialProperties.FIRE_SOURCE.get());
     }
 
     @Override
-    public boolean isStickyBlock(BlockState state) {
-        return super.isStickyBlock(state);
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        float speed = material(level, pos).getOrDefault(MaterialProperties.BREAK_SPEED.get(), 1.0F);
+        if (speed == -1.0F) {
+            return 0.0F;
+        } else {
+            int neo_check = net.neoforged.neoforge.event.EventHooks.doPlayerHarvestCheck(player, state, level, pos) ? 30 : 100;
+            return player.getDigSpeed(state, pos) / speed / (float)neo_check;
+        }
     }
 
     @Override
@@ -60,16 +84,6 @@ public class MaterialBlock extends Block {
     }
 
     @Override
-    public float getSpeedFactor() {
-        return super.getSpeedFactor();
-    }
-
-    @Override
-    public float getJumpFactor() {
-        return super.getJumpFactor();
-    }
-
-    @Override
     public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return super.getFriction(state, level, pos, entity);
     }
@@ -82,11 +96,30 @@ public class MaterialBlock extends Block {
     @Override
     protected boolean isSignalSource(BlockState state) {
         return super.isSignalSource(state);
+        // TODO -- can't override normally, so maybe some block state stuff or mixins?
     }
 
     @Override
     public @Nullable PushReaction getPistonPushReaction(BlockState state) {
         return super.getPistonPushReaction(state);
+        // TODO -- can't override normally, so maybe some block state stuff or mixins?
     }
 
+    @Override
+    public boolean isStickyBlock(BlockState state) {
+        return super.isStickyBlock(state);
+        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+    }
+
+    @Override
+    public float getSpeedFactor() {
+        return super.getSpeedFactor();
+        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+    }
+
+    @Override
+    public float getJumpFactor() {
+        return super.getJumpFactor();
+        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+    }
 }

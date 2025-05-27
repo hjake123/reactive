@@ -1,0 +1,25 @@
+package dev.hyperlynx.reactive.alchemy.material;
+
+import dev.hyperlynx.reactive.ReactiveMod;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+
+@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+public class MaterialProperties {
+    public static final ResourceKey<Registry<MaterialProperty<?>>> MATERIAL_PROPERTY_REGISTRY_KEY = ResourceKey.createRegistryKey(ReactiveMod.location( "material_properties"));
+    public static final Registry<MaterialProperty<?>> PROPERTY_REGISTRY = new RegistryBuilder<>(MATERIAL_PROPERTY_REGISTRY_KEY)
+            .sync(true)
+            .defaultKey(ReactiveMod.location( "nothing"))
+            .create();
+    public static final DeferredRegister<MaterialProperty<?>> PROPERTIES = DeferredRegister.create(PROPERTY_REGISTRY, ReactiveMod.MODID);
+
+    public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> MAGMA_STEP = PROPERTIES.register("magma_step", FlagMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> FIRE_SOURCE = PROPERTIES.register("fire_source", FlagMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> REDSTONE_CONDUCTOR = PROPERTIES.register("redstone_conductor", FlagMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> BREAK_SPEED = PROPERTIES.register("break_speed", FloatMaterialProperty::new);
+
+}
