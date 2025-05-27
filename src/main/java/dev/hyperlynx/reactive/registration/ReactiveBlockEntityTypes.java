@@ -45,4 +45,8 @@ public class ReactiveBlockEntityTypes {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MnemonicBlockEntity>> MNEMONIC_BULB =
             BLOCK_ENTITY_TYPES.register("mnemonic_bulb_be",
             () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, ReactiveBlocks.MNEMONIC_BULB.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaterialBlockEntity>> MATERIAL =
+            BLOCK_ENTITY_TYPES.register("material",
+            () -> BlockEntityType.Builder.of(MaterialBlockEntity::new, ReactiveBlocks.MATERIAL_BLOCK.get()).build(null));
 }

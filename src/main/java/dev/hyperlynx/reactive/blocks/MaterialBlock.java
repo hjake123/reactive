@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.blocks;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -22,9 +24,14 @@ import org.jetbrains.annotations.Nullable;
 
 /// A block whose properties are determines by its associated BlockEntity and the Material it is attached to.
 /// See [dev.hyperlynx.reactive.alchemy.material]
-public class MaterialBlock extends Block {
+public class MaterialBlock extends Block implements EntityBlock {
     public MaterialBlock() {
         super(BlockBehaviour.Properties.of());
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new MaterialBlockEntity(pos, state);
     }
 
     private Material material(BlockGetter level, BlockPos pos) {
