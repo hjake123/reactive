@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 
+/// A block whose properties are determines by its associated BlockEntity and the Material it is attached to.
+/// See [dev.hyperlynx.reactive.alchemy.material]
 public class MaterialBlock extends Block {
     public MaterialBlock() {
         super(BlockBehaviour.Properties.of());
@@ -60,43 +62,42 @@ public class MaterialBlock extends Block {
 
     @Override
     public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, Explosion explosion) {
-        return super.getExplosionResistance(state, level, pos, explosion);
+        return material(level, pos).getOrDefault(MaterialProperties.BLAST_RESISTANCE.get(), 1.0F);
     }
 
     @Override
     public float getEnchantPowerBonus(BlockState state, LevelReader level, BlockPos pos) {
-        return super.getEnchantPowerBonus(state, level, pos);
-    }
-
-    @Override
-    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return super.getFlammability(state, level, pos, direction);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        return super.getLightEmission(state, level, pos);
-    }
-
-    @Override
-    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
-        return super.getSoundType(state, level, pos, entity);
+        return material(level, pos).getOrDefault(MaterialProperties.ENCHANT_POWER.get(), 0.0F);
     }
 
     @Override
     public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
-        return super.getFriction(state, level, pos, entity);
+        return material(level, pos).getOrDefault(MaterialProperties.FRICTION.get(), 1.0F);
+    }
+
+    @Override
+    public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return material(level, pos).getOrDefault(MaterialProperties.FLAMMABILITY.get(), 0);
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
     }
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return super.getSignal(state, level, pos, direction);
+        return material(level, pos).getOrDefault(MaterialProperties.REDSTONE.get(), 0);
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+        return material(level, pos).getOrDefault(MaterialProperties.SOUND_TYPE.get(), SoundType.SLIME_BLOCK);
     }
 
     @Override
     protected boolean isSignalSource(BlockState state) {
-        return super.isSignalSource(state);
-        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+        return true; // TODO: sometimes false?
     }
 
     @Override
@@ -114,12 +115,12 @@ public class MaterialBlock extends Block {
     @Override
     public float getSpeedFactor() {
         return super.getSpeedFactor();
-        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+        // TODO -- can't override normally, so maybe mixins?
     }
 
     @Override
     public float getJumpFactor() {
         return super.getJumpFactor();
-        // TODO -- can't override normally, so maybe some block state stuff or mixins?
+        // TODO -- can't override normally, so maybe mixins?
     }
 }

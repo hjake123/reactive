@@ -19,7 +19,13 @@ public class MaterialProperties {
 
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> MAGMA_STEP = PROPERTIES.register("magma_step", FlagMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> FIRE_SOURCE = PROPERTIES.register("fire_source", FlagMaterialProperty::new);
-    public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> REDSTONE_CONDUCTOR = PROPERTIES.register("redstone_conductor", FlagMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> BREAK_SPEED = PROPERTIES.register("break_speed", FloatMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> BLAST_RESISTANCE = PROPERTIES.register("blast_resistance", FloatMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> ENCHANT_POWER = PROPERTIES.register("enchant_power", FloatMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> FRICTION = PROPERTIES.register("friction", FloatMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> FLAMMABILITY = PROPERTIES.register("flammability", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> LIGHT = PROPERTIES.register("light", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> REDSTONE = PROPERTIES.register("redstone", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, SoundTypeProperty> SOUND_TYPE = PROPERTIES.register("redstone", SoundTypeProperty::new);
 
 }

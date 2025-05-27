@@ -1,18 +1,17 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import net.minecraft.util.Unit;
 
 import java.util.Map;
 
-public class FlagMaterialProperty extends MaterialProperty<Unit> {
+public class IntMaterialProperty extends MaterialProperty<Integer>{
     @Override
     public boolean requirementsMet(Map<Power, Integer> formula) {
         return false;
     }
 
     @Override
-    public Instance<Unit> instance(Map<Power, Integer> formula) {
+    public Instance<Integer> instance(Map<Power, Integer> formula) {
         return null;
     }
 }
