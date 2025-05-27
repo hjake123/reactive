@@ -1,12 +1,70 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
+import dev.hyperlynx.reactive.ReactiveMod;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /// It's MaterialMan's time to shine!
 /// Manages the world's Materials.
 /// Materials are stored in a Level capability and created by crafting a Material Block.
 /// Each Material has an associated integer ID, which is its position in the list.
 public class MaterialMan {
-    public static Material fetch(int materialId) {
-        throw new RuntimeException("Not yet implemented.");
-        // TODO -- Some kind of list capability on the Overworld.
+    public static Material fetch(ServerLevel level, int materialId) {
+        MaterialData data = level.getServer().getLevel(ServerLevel.OVERWORLD).getDataStorage().computeIfAbsent(new SavedData.Factory<MaterialData>(MaterialData::empty, MaterialData::load),
+                "reactive:materials");
+        return data.materials.get(materialId);
+    }
+
+    private static class MaterialData extends SavedData {
+        private final List<Material> materials;
+
+        public static MaterialData empty(){
+            return new MaterialData(new ArrayList<>());
+        }
+
+        MaterialData(List<Material> materials) {
+            this.materials = materials;
+        }
+
+        public Material get(int index) {
+            if(index >= materials.size()) {
+                ReactiveMod.LOGGER.error("Invalid material index {}", index);
+                return Material.empty();
+            }
+            return materials.get(index);
+        }
+
+        @Override
+        public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+            ListTag list = new ListTag();
+            for(Material material : materials) {
+                list.add(Material.CODEC.encode(material, NbtOps.INSTANCE, null).getOrThrow(error -> new RuntimeException("Failed to save material type: " + error)));
+            }
+            tag.put("materials", list);
+            return tag;
+        }
+
+        public static MaterialData load(CompoundTag full_tag, HolderLookup.Provider registries) {
+            var list = full_tag.getList("materials", ListTag.TAG_COMPOUND);
+            List<Material> materials = new ArrayList<>();
+            for(Tag tag : list) {
+                materials.add(Material.CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst());
+            }
+            return new MaterialData(materials);
+        }
+
+        public void addMaterial(Material material) {
+            materials.add(material);
+            setDirty();
+        }
     }
 }

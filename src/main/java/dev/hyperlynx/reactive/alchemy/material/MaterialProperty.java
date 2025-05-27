@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
+import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.util.Unit;
 
@@ -10,6 +11,7 @@ import java.util.Map;
 public abstract class MaterialProperty<T> {
     public abstract boolean requirementsMet(Map<Power, Integer> formula);
     public abstract Instance<T> instance(Map<Power, Integer> formula);
+    public abstract Codec<T> codec();
 
     /// A specific instance of a Property that a certain Material has.
     /// Wrapper for a data object of type T, along with some extra data.

@@ -99,7 +99,7 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
-        return material(level, pos).getOrDefault(MaterialProperties.SOUND_TYPE.get(), SoundType.SLIME_BLOCK);
+        return SoundType.SLIME_BLOCK; // TODO figure out serialization
     }
 
     @Override
