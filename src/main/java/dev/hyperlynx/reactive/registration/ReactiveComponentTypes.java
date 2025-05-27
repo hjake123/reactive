@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
@@ -59,6 +60,13 @@ public class ReactiveComponentTypes {
                     () -> DataComponentType.<Unit>builder()
                             .persistent(Codec.unit(Unit.INSTANCE))
                             .networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
+                            .build());
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MATERIAL_ID =
+            COMPONENT_TYPES.register("material_id",
+                    () -> DataComponentType.<Integer>builder()
+                            .persistent(Codec.INT)
+                            .networkSynchronized(ByteBufCodecs.INT)
                             .build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WORLD_PIERCER =

@@ -140,6 +140,7 @@ public class ConfigMan {
         public ModConfigSpec.DoubleValue growLargeStep;
         public ModConfigSpec.IntValue vortexStoneCooldown;
         public ModConfigSpec.ConfigValue<List<String>> disabledReactions;
+        public ModConfigSpec.BooleanValue allowMaterialDeletion;
 
         Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
@@ -163,6 +164,8 @@ public class ConfigMan {
                     .defineInRange("vortexStoneCooldown", 9, 0, 64);
             disabledReactions = builder.comment("A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]")
                             .define("disabledReactions", Lists.newArrayList());
+            allowMaterialDeletion = builder.comment("If set to true, will permit the use of the /reactive material remove and reset commands, which permanently erase materials from the world. THIS CANNOT BE REVERSED without a backup, use only if necessary! [Default: false]")
+                            .define("allowMaterialDeletion", false);
             builder.pop();
         }
     }

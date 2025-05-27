@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MaterialBlockEntity extends BlockEntity {
-    int material_id;
+    int material_id = -1;
 
     public MaterialBlockEntity(BlockPos pos, BlockState blockState) {
         super(ReactiveBlockEntityTypes.MATERIAL.get(), pos, blockState);
@@ -22,5 +22,13 @@ public class MaterialBlockEntity extends BlockEntity {
             return Material.empty();
         }
         return MaterialMan.fetch(slevel, material_id);
+    }
+
+    public void setMaterial(ServerLevel slevel, int id) {
+        if(MaterialMan.occupied(slevel, id)) {
+            this.material_id = id;
+        } else {
+            ReactiveMod.LOGGER.error("Material block tried to take an invalid id {}, which is not yet occupied.", id);
+        }
     }
 }

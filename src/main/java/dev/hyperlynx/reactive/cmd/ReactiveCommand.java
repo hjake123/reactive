@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.hyperlynx.reactive.ConfigMan;
@@ -16,10 +17,12 @@ import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -60,7 +63,8 @@ public class ReactiveCommand {
                         .then(Commands.literal("list")
                             .executes((context) -> listReactions(context.getSource())))
                         .then(Commands.literal("reload")
-                            .executes((context) -> reloadReactions())))
+                            .executes((context) -> reloadReactions())
+                        ))
 
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
@@ -81,13 +85,30 @@ public class ReactiveCommand {
                                         context.getArgument("power_id", ResourceLocation.class),
                                         context.getArgument("amount", Integer.class), true)
                                 ))))))
+
                 .then(Commands.literal("material")
                         .then(Commands.literal("define")
                                 .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
                                 .executes(context ->
                                         createMaterial(context.getSource(), context.getArgument("nbt", CompoundTag.class)))))
+                        .then(Commands.literal("give")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("material_id", IntegerArgumentType.integer())
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                .executes(context -> giveMaterialBlockItem(context,
+                                        IntegerArgumentType.getInteger(context, "material_id"),
+                                        IntegerArgumentType.getInteger(context, "amount"),
+                                        EntityArgument.getPlayer(context, "player")))))))
                         .then(Commands.literal("list")
-                                .executes(context -> printMaterials(context.getSource()))));
+                                .executes(context -> printMaterials(context.getSource())))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("index", IntegerArgumentType.integer())
+                                .then(Commands.literal("confirm-delete")
+                                .executes(context -> removeMaterial(context, context.getArgument("index", Integer.class))))))
+                        .then(Commands.literal("remove-everything")
+                                .then(Commands.literal("confirm-delete")
+                                .executes(ReactiveCommand::removeAllMaterials)
+                        )));
 
         dispatcher.register(command_builder);
     }
@@ -178,6 +199,39 @@ public class ReactiveCommand {
             source.sendSuccess(() -> Component.literal(ref.i + " - " + material.toString()), true);
             ref.i++;
         }
+        return 1;
+    }
+
+    private static int removeMaterial(CommandContext<CommandSourceStack> context, Integer index) {
+        if(!ConfigMan.SERVER.allowMaterialDeletion.get()) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_removal_disabled"));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> Component.translatable("message.reactive.material_removed"), true);
+        MaterialMan.remove(context.getSource().getLevel(), index);
+        return 1;
+    }
+
+    private static int removeAllMaterials(CommandContext<CommandSourceStack> context) {
+        if(!ConfigMan.SERVER.allowMaterialDeletion.get()) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_removal_disabled"));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> Component.translatable("message.reactive.materials_reset"), true);
+        MaterialMan.reset(context.getSource().getLevel());
+        return 1;
+    }
+
+    private static int giveMaterialBlockItem(CommandContext<CommandSourceStack> context, int material_id, int amount, ServerPlayer player) {
+        ServerLevel level = context.getSource().getLevel();
+        if(!MaterialMan.occupied(level, material_id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_id_invalid"));
+            return 0;
+        }
+        ItemStack stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
+        stack.setCount(amount);
+        player.addItem(stack);
         return 1;
     }
 

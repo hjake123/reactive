@@ -24,7 +24,7 @@ public class MaterialMan {
     }
 
     public static Material fetch(ServerLevel level, int materialId) {
-        return data(level).materials.get(materialId);
+        return data(level).get(materialId);
     }
 
     public static void addMaterial(ServerLevel level, Material material) {
@@ -33,6 +33,18 @@ public class MaterialMan {
 
     public static List<Material> getAll(ServerLevel level) {
         return data(level).materials;
+    }
+
+    public static void remove(ServerLevel level, int index) {
+        data(level).setToEmpty(index);
+    }
+
+    public static void reset(ServerLevel level) {
+        data(level).reset();
+    }
+
+    public static boolean occupied(ServerLevel level, int id) {
+        return data(level).materials.size() > id;
     }
 
     private static class MaterialData extends SavedData {
@@ -47,7 +59,7 @@ public class MaterialMan {
         }
 
         public Material get(int index) {
-            if(index >= materials.size()) {
+            if(index >= materials.size() || index < 0) {
                 ReactiveMod.LOGGER.error("Invalid material index {}", index);
                 return Material.empty();
             }
@@ -75,6 +87,16 @@ public class MaterialMan {
 
         public void addMaterial(Material material) {
             materials.add(material);
+            setDirty();
+        }
+
+        public void setToEmpty(int index) {
+            materials.set(index, Material.empty());
+            setDirty();
+        }
+
+        public void reset() {
+            materials.clear();
             setDirty();
         }
     }
