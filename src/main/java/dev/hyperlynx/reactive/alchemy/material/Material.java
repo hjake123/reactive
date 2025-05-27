@@ -1,9 +1,11 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import net.minecraft.nbt.NbtOps;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class Material {
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties)
             ).apply(instance, Material::new));
 
-    private Material(Map<MaterialProperty<?>, Object> properties) {
+    public Material(Map<MaterialProperty<?>, Object> properties) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
     }
 
@@ -51,5 +53,10 @@ public class Material {
 
     private Map<MaterialProperty<?>, Object> properties() {
         return properties;
+    }
+
+    public String toString() {
+        var result = CODEC.encode(this, NbtOps.INSTANCE, null);
+        return result.getOrThrow().getAsString();
     }
 }

@@ -7,6 +7,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
@@ -16,11 +19,14 @@ import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -34,6 +40,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
@@ -73,8 +80,14 @@ public class ReactiveCommand {
                                         context.getArgument("crucible_location", WorldCoordinates.class),
                                         context.getArgument("power_id", ResourceLocation.class),
                                         context.getArgument("amount", Integer.class), true)
-                                )))))
-                );
+                                ))))))
+                .then(Commands.literal("material")
+                        .then(Commands.literal("define")
+                                .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
+                                .executes(context ->
+                                        createMaterial(context.getSource(), context.getArgument("nbt", CompoundTag.class)))))
+                        .then(Commands.literal("list")
+                                .executes(context -> printMaterials(context.getSource()))));
 
         dispatcher.register(command_builder);
     }
@@ -120,7 +133,6 @@ public class ReactiveCommand {
             }
         }
 
-        // TODO do we need this? : bearer.setDirty();
         return 1;
     }
 
@@ -144,6 +156,28 @@ public class ReactiveCommand {
             Reaction reaction = ReactiveMod.REACTION_MAN.get(source.getLevel(), alias);
             source.sendSuccess(() -> Component.literal(alias + " : " + reaction.getName().getString()), true);
         });
+        return 1;
+    }
+
+    private static int createMaterial(CommandSourceStack source, CompoundTag tag) {
+        var result = Material.CODEC.decode(NbtOps.INSTANCE, tag);
+        if(result.isError()) {
+            source.sendFailure(Component.translatable("message.reactive.invalid_material_definition").append(result.error().get().message()));
+            return 0;
+        }
+        MaterialMan.addMaterial(source.getLevel(), result.getOrThrow().getFirst());
+        return 1;
+    }
+
+    private static int printMaterials(CommandSourceStack source) {
+        var ref = new Object() {
+            // Necessary to allow the lambda to take the index count each time.
+            int i = 0;
+        };
+        for(Material material : MaterialMan.getAll(source.getLevel())) {
+            source.sendSuccess(() -> Component.literal(ref.i + " - " + material.toString()), true);
+            ref.i++;
+        }
         return 1;
     }
 

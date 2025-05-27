@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
@@ -66,6 +67,7 @@ public class ReactiveMod
         ReactiveParticles.PARTICLES.register(bus);
         ReactiveBlockEntityTypes.BLOCK_ENTITY_TYPES.register(bus);
         Powers.POWERS.register(bus);
+        MaterialProperties.PROPERTIES.register(bus);
         ReactiveComponentTypes.COMPONENT_TYPES.register(bus);
         ReactiveComponentTypes.ENCHANTMENT_COMPONENT_TYPES.register(bus);
         ReactiveCriterionTriggers.CRITERIA_TRIGGERS.register(bus);

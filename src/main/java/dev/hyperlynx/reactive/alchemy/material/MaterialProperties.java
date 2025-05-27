@@ -3,9 +3,11 @@ package dev.hyperlynx.reactive.alchemy.material;
 import dev.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 @EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
@@ -28,4 +30,8 @@ public class MaterialProperties {
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> REDSTONE = PROPERTIES.register("redstone", IntMaterialProperty::new);
     //public static final DeferredHolder<MaterialProperty<?>, SoundTypeMaterialProperty> SOUND_TYPE = PROPERTIES.register("redstone", SoundTypeMaterialProperty::new);
 
+    @SubscribeEvent
+    public static void registerRegistries(NewRegistryEvent event) {
+        event.register(PROPERTY_REGISTRY);
+    }
 }
