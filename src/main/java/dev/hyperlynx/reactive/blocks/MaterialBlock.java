@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 /// A block whose properties are determines by its associated BlockEntity and the Material it is attached to.
@@ -41,14 +42,11 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if(!(level instanceof ServerLevel slevel)) {
-            return;
-        }
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             @SuppressWarnings("DataFlowIssue") // It's confirmed to exist already so there is no issue.
             int material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
-                mbe.setMaterial(slevel, material_id);
+                mbe.setMaterial(level, material_id);
             }
         }
     }
@@ -56,13 +54,20 @@ public class MaterialBlock extends Block implements EntityBlock {
     private Material material(BlockGetter level, BlockPos pos) {
         BlockEntity entity = level.getBlockEntity(pos);
         if(!(entity instanceof MaterialBlockEntity material_entity)) {
-            ReactiveMod.LOGGER.error("Missing material entity for block at " + pos.toShortString() + ".");
+            // ReactiveMod.LOGGER.error("Missing material entity for block at " + pos.toShortString() + ".");
             return Material.empty();
         }
         return material_entity.getMaterial();
     }
 
-    // TODO debugging notes are present
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
+        MaterialBlockEntity mbe = (MaterialBlockEntity) level.getBlockEntity(pos);
+        stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), mbe.getId());
+        return stack;
+    }
+// TODO debugging notes are present
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity victim) { // Working!
@@ -111,7 +116,11 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) { // TODO Not working, more client-server stuff
-        return material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
+        if(level.getBlockEntity(pos) instanceof MaterialBlockEntity) {
+            return material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
+        } else {
+            return MaterialBlockEntity.lights.getLightAt(pos);
+        }
     }
 
     @Override

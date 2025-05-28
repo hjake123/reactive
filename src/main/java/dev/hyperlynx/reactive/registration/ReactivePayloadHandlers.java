@@ -46,12 +46,23 @@ public class ReactivePayloadHandlers {
                 ReactionPageRequestPayload.STREAM_CODEC,
                 ReactionPageServer::handlePageRequest
         );
+        registrar.playToServer(
+                MaterialDataSyncRequestPayload.TYPE,
+                MaterialDataSyncRequestPayload.STREAM_CODEC,
+                MaterialDataSyncRequestPayload::handle
+        );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
         async_registrar.commonToClient(
                 ReactionPagePayload.TYPE,
                 ReactionPagePayload.STREAM_CODEC,
                 ReactionPageFetcher::handlePageResponse
+        );
+
+        async_registrar.playToClient(
+                MaterialDataSyncPayload.TYPE,
+                MaterialDataSyncPayload.STREAM_CODEC,
+                MaterialDataSyncPayload::handle
         );
 
         if(ModList.get().isLoaded("kubejs")){

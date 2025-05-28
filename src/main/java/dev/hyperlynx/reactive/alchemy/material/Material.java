@@ -1,13 +1,15 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.ReactiveMod;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /// A particular Material that MaterialBlocks can have the properties of.
@@ -25,10 +27,11 @@ public class Material {
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties)
             ).apply(instance, Material::new));
 
+    public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
+
     public Material(Map<MaterialProperty<?>, Object> properties) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
     }
-
     public static Material empty() {
         return new Material(Map.of());
     }

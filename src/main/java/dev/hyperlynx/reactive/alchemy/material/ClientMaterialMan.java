@@ -1,0 +1,47 @@
+package dev.hyperlynx.reactive.alchemy.material;
+
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class ClientMaterialMan {
+    public static AtomicReference<MaterialData> clientside_data = new AtomicReference<>(new MaterialData(List.of()));
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+    private static final Semaphore response_ready = new Semaphore(0, false);
+
+    public static MaterialData data() {
+        if(initialized.get()) {
+            return clientside_data.get();
+        }
+        ReactiveMod.LOGGER.debug("Requesting material definitions from server");
+        try {
+            PacketDistributor.sendToServer(new MaterialDataSyncRequestPayload(-1));
+            boolean got_result = response_ready.tryAcquire(1, 1, TimeUnit.SECONDS);
+            if (got_result) {
+                ReactiveMod.LOGGER.debug("Received material definitions from server");
+                return clientside_data.get();
+            }
+            ReactiveMod.LOGGER.error("Timeout while fetching material definitions from the server. Custom materials will not work properly!");
+            return new MaterialData(List.of());
+        } catch (NullPointerException exception) {
+            // Might be fetching before a connection is available. Just return empty material for now.
+            return new MaterialData(List.of());
+        } catch (InterruptedException exception) {
+            ReactiveMod.LOGGER.fatal("Client material fetch was interrupted by an outside force. Data will not sync.");
+            return new MaterialData(List.of());
+        }
+
+    }
+
+    public static void receiveDataAsync(MaterialData data) {
+        clientside_data.set(data);
+        initialized.set(true);
+        response_ready.release();
+    }
+}
