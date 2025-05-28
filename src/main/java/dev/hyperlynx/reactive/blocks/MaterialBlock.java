@@ -67,7 +67,6 @@ public class MaterialBlock extends Block implements EntityBlock {
         stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), mbe.getId());
         return stack;
     }
-// TODO debugging notes are present
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity victim) { // Working!
@@ -84,7 +83,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) { // TODO causes bug
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) { // Working!
         float speed = material(level, pos).getOrDefault(MaterialProperties.BREAK_SPEED.get(), 1.0F);
         if (speed == -1.0F) {
             return 0.0F;
@@ -105,8 +104,8 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) { // TODO does not work, probably because of client-server
-        return material(level, pos).getOrDefault(MaterialProperties.FRICTION.get(), 1.0F);
+    public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) { // Seems to work?
+        return super.getFriction(state, level, pos, entity) * material(level, pos).getOrDefault(MaterialProperties.FRICTION.get(), 1.0F);
     }
 
     @Override
@@ -115,7 +114,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) { // TODO Not working, more client-server stuff
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) { // Working... finally!
         if(level.getBlockEntity(pos) instanceof MaterialBlockEntity) {
             return material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
         } else {
