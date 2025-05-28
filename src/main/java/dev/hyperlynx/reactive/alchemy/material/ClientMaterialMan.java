@@ -2,6 +2,8 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -28,20 +30,28 @@ public class ClientMaterialMan {
                 return clientside_data.get();
             }
             ReactiveMod.LOGGER.error("Timeout while fetching material definitions from the server. Custom materials will not work properly!");
-            return new MaterialData(List.of());
+            return MaterialData.empty();
         } catch (NullPointerException exception) {
             // Might be fetching before a connection is available. Just return empty material for now.
-            return new MaterialData(List.of());
+            ReactiveMod.LOGGER.debug("Connection wasn't available, this request failed");
+            return MaterialData.empty();
         } catch (InterruptedException exception) {
             ReactiveMod.LOGGER.fatal("Client material fetch was interrupted by an outside force. Data will not sync.");
-            return new MaterialData(List.of());
+            return MaterialData.empty();
         }
-
     }
 
     public static void receiveDataAsync(MaterialData data) {
         clientside_data.set(data);
         initialized.set(true);
         response_ready.release();
+    }
+
+    // Sets the seed in the config to your world seed if that option is selected.
+    public static void worldLoad(LevelEvent.Load event){
+        if(event.getLevel().isClientSide()){
+            ClientMaterialMan.initialized.set(false);
+            ClientMaterialMan.clientside_data.set(new MaterialData(List.of()));
+        }
     }
 }

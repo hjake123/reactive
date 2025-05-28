@@ -17,8 +17,11 @@ public class MaterialMan {
             return slevel.getServer().getLevel(ServerLevel.OVERWORLD).getDataStorage()
                     .computeIfAbsent(new SavedData.Factory<>(MaterialData::empty, MaterialData::load),
                             "reactive_materials");
+        } else if(level != null && level.isClientSide()) {
+            return ClientMaterialMan.data();
         }
-        return ClientMaterialMan.data();
+        ReactiveMod.LOGGER.debug("Tried to fetch data before ServerLevel was available. Level is {}", level.toString());
+        return MaterialData.empty();
     }
 
     public static Material fetch(Level level, int materialId) {

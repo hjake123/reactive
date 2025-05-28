@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
@@ -13,10 +14,11 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class MaterialBlockEntity extends BlockEntity {
     public static final LightingMan lights = new LightingMan();
-    int material_id = 0;
+    int material_id = -1;
 
     public MaterialBlockEntity(BlockPos pos, BlockState blockState) {
         super(ReactiveBlockEntityTypes.MATERIAL.get(), pos, blockState);
@@ -37,18 +39,17 @@ public class MaterialBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        material_id = tag.getInt("id");
-        lights.setLightAt(getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
+        material_id = tag.getInt("material_id");
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put("id", IntTag.valueOf(material_id));
+        tag.put("material_id", IntTag.valueOf(material_id));
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag tag = new CompoundTag();
         saveAdditional(tag, registries);
         return tag;
@@ -57,6 +58,7 @@ public class MaterialBlockEntity extends BlockEntity {
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
         super.handleUpdateTag(tag, registries);
+        MaterialBlockEntity.lights.setLightAt(this.getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
     }
 
     public int getId() {
