@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -10,7 +11,6 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
@@ -43,7 +43,6 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
@@ -99,6 +98,12 @@ public class ReactiveCommand {
                                         IntegerArgumentType.getInteger(context, "material_id"),
                                         IntegerArgumentType.getInteger(context, "amount"),
                                         EntityArgument.getPlayer(context, "player")))))))
+                        .then(Commands.literal("rename")
+                                .then(Commands.argument("material_id", IntegerArgumentType.integer())
+                                .then(Commands.argument("name", StringArgumentType.word())
+                                .executes(context -> renameMaterial(context,
+                                        IntegerArgumentType.getInteger(context, "material_id"),
+                                        StringArgumentType.getString(context, "name"))))))
                         .then(Commands.literal("list")
                                 .executes(context -> printMaterials(context.getSource())))
                         .then(Commands.literal("remove")
@@ -196,7 +201,7 @@ public class ReactiveCommand {
             int i = 0;
         };
         for(Material material : MaterialMan.getAll(source.getLevel())) {
-            source.sendSuccess(() -> Component.literal(ref.i + " - " + material.toString()), true);
+            source.sendSuccess(() -> Component.literal(ref.i + " - " + material.getNameComponent().getString()), true);
             ref.i++;
         }
         return 1;
@@ -232,6 +237,16 @@ public class ReactiveCommand {
         stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
         stack.setCount(amount);
         player.addItem(stack);
+        return 1;
+    }
+
+    private static int renameMaterial(CommandContext<CommandSourceStack> context, int material_id, String name) {
+        ServerLevel level = context.getSource().getLevel();
+        if(!MaterialMan.occupied(level, material_id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_id_invalid"));
+            return 0;
+        }
+        MaterialMan.rename(level, material_id, name);
         return 1;
     }
 

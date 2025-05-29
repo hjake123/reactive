@@ -2,7 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
-import net.minecraft.world.level.Level;
+import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -53,5 +53,12 @@ public class ClientMaterialMan {
             ClientMaterialMan.initialized.set(false);
             ClientMaterialMan.clientside_data.set(new MaterialData(List.of()));
         }
+    }
+
+    public static Component getName(int id) {
+        if(clientside_data.get().materials.size() > id && id >= 0) {
+            return clientside_data.get().get(id).getNameComponent();
+        }
+        return Component.translatable("block.reactive.invalid_material");
     }
 }

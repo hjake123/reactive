@@ -133,19 +133,13 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
+    protected boolean isSignalSource(BlockState state) {
+        return true;
+    }
+
+    @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
         return SoundType.SLIME_BLOCK; // TODO figure out serialization
-    }
-
-    @Override
-    protected boolean isSignalSource(BlockState state) {
-        return true; // TODO: sometimes false?
-    }
-
-    @Override
-    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
-        return super.getPistonPushReaction(state);
-        // TODO -- can't override normally, so maybe some block state stuff or mixins?
     }
 
     @Override

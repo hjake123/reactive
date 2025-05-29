@@ -2,11 +2,11 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.hyperlynx.reactive.ReactiveMod;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -18,22 +18,29 @@ import java.util.Map;
 /// When a MaterialBlock queries its material, it can ask it for various block properties.
 public class Material {
     Reference2ObjectMap<MaterialProperty<?>, Object> properties;
+    String custom_name = "";
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
 
     public static final Codec<Material> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties)
+                    PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
+                    Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
+        this.custom_name = custom_name;
     }
     public static Material empty() {
-        return new Material(Map.of());
+        return new Material(Map.of(), "");
+    }
+
+    private String customNameRaw() {
+        return custom_name;
     }
 
     public boolean has(MaterialProperty<?> type) {
@@ -61,5 +68,16 @@ public class Material {
     public String toString() {
         var result = CODEC.encode(this, NbtOps.INSTANCE, null);
         return result.getOrThrow().getAsString();
+    }
+
+    public Component getNameComponent() {
+        if(custom_name.isEmpty()) {
+            return Component.translatable("block.reactive.unnamed");
+        }
+        return Component.literal(custom_name);
+    }
+
+    public void setName(String name) {
+        this.custom_name = name;
     }
 }

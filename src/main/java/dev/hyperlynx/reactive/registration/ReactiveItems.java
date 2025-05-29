@@ -186,5 +186,6 @@ public class ReactiveItems {
 
     public static final DeferredHolder<Item, BlockItem> NODULE = ITEMS.registerSimpleBlockItem(ReactiveBlocks.NODULE);
 
-    public static final DeferredHolder<Item, BlockItem> MATERIAL = ITEMS.registerSimpleBlockItem(ReactiveBlocks.MATERIAL_BLOCK);
+    public static final DeferredHolder<Item, MaterialItem> MATERIAL = ITEMS.register("material",
+            () -> new MaterialItem(ReactiveBlocks.MATERIAL_BLOCK.get(), new Item.Properties()));
 }

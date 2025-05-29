@@ -48,4 +48,8 @@ public class MaterialMan {
         return data(level).materials.size() > id;
     }
 
+    public static void rename(ServerLevel level, int material_id, String name) {
+        data(level).get(material_id).setName(name);
+        data(level).setDirty();
+    }
 }

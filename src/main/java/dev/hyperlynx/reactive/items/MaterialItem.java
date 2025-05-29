@@ -1,0 +1,36 @@
+package dev.hyperlynx.reactive.items;
+
+import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.block.Block;
+
+import java.util.List;
+import java.util.Objects;
+
+public class MaterialItem extends BlockItem {
+    public MaterialItem(Block block, Properties properties) {
+        super(block, properties);
+    }
+
+    @Override
+    public Component getName(ItemStack stack) {
+        if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            return ClientMaterialMan.getName(Objects.requireNonNull(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())));
+        }
+        return Component.translatable("block.reactive.invalid_material");
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
+        super.appendHoverText(stack, context, components, flag);
+        if(flag.isAdvanced() && stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            components.add(Component.literal("Index " + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())));
+        }
+    }
+}
