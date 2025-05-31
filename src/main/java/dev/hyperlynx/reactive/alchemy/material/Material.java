@@ -70,9 +70,9 @@ public class Material {
         return result.getOrThrow().getAsString();
     }
 
-    public Component getNameComponent() {
+    public Component getNameComponent(int id) {
         if(custom_name.isEmpty()) {
-            return Component.translatable("block.reactive.unnamed");
+            return Component.translatable("block.reactive.unnamed").append("#" + id);
         }
         return Component.literal(custom_name);
     }

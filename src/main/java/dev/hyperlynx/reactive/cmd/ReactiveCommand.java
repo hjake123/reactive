@@ -201,7 +201,7 @@ public class ReactiveCommand {
             int i = 0;
         };
         for(Material material : MaterialMan.getAll(source.getLevel())) {
-            source.sendSuccess(() -> Component.literal(ref.i + " - " + material.getNameComponent().getString()), true);
+            source.sendSuccess(() -> Component.literal(ref.i + " - " + material.getNameComponent(ref.i).getString()), true);
             ref.i++;
         }
         return 1;

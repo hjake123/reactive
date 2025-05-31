@@ -57,7 +57,7 @@ public class ClientMaterialMan {
 
     public static Component getName(int id) {
         if(clientside_data.get().materials.size() > id && id >= 0) {
-            return clientside_data.get().get(id).getNameComponent();
+            return clientside_data.get().get(id).getNameComponent(id);
         }
         return Component.translatable("block.reactive.invalid_material");
     }

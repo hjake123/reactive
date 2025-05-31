@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class MaterialItem extends BlockItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, context, components, flag);
         if(flag.isAdvanced() && stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            components.add(Component.literal("Index " + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())));
+            components.add(Component.literal("Index " + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 }
