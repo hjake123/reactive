@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.client;
 
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.registration.*;
@@ -13,6 +14,8 @@ import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -60,6 +63,12 @@ public class ClientRegistration {
         if(ModList.get().isLoaded("ponder")){
             ReactivePonderPlugin.clientInit();
         }
+        //noinspection deprecation
+        ItemProperties.register(
+                ReactiveItems.MATERIAL.get(),
+                ReactiveMod.location("material_model_index"),
+                MaterialItem::getModelOverrideValue
+        );
     }
 
     @SubscribeEvent

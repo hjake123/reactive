@@ -1,16 +1,16 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
-import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
-import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
@@ -37,10 +37,18 @@ public class MaterialItem extends BlockItem {
         }
     }
 
-    public static int getItemColor(ItemStack stack, int i) {
+    public static int getItemColor(ItemStack stack, int index) {
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE).hex();
         }
         return 0;
+    }
+
+    public static float getModelOverrideValue(ItemStack stack, Level level, LivingEntity holder, long seed) {
+        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            return 0.0F;
+        }
+        Material material = MaterialMan.fetch(level, stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
+        return material.getOrDefault(MaterialProperties.MODEL_INDEX.get(), 0);
     }
 }

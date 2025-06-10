@@ -1,3 +1,11 @@
 {
-  "parent": "reactive:block/material/salt"
+  "parent": "reactive:block/material/salt",
+  "overrides": [
+    {
+      "predicate": {
+        "reactive:material_model_index": 1
+      },
+      "model": "reactive:block/material/cracked"
+    }
+  ]
 }

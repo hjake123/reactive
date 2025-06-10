@@ -19,6 +19,8 @@ public class MaterialProperties {
             .create();
     public static final DeferredRegister<MaterialProperty<?>> PROPERTIES = DeferredRegister.create(PROPERTY_REGISTRY, ReactiveMod.MODID);
 
+    public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> MODEL_INDEX = PROPERTIES.register("model", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> MAGMA_STEP = PROPERTIES.register("magma_step", FlagMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> FIRE_SOURCE = PROPERTIES.register("fire_source", FlagMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> BREAK_SPEED = PROPERTIES.register("break_speed", FloatMaterialProperty::new);
@@ -28,7 +30,6 @@ public class MaterialProperties {
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> FLAMMABILITY = PROPERTIES.register("flammability", IntMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> LIGHT = PROPERTIES.register("light", IntMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> REDSTONE = PROPERTIES.register("redstone", IntMaterialProperty::new);
-    public static final DeferredHolder<MaterialProperty<?>, ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);
     //public static final DeferredHolder<MaterialProperty<?>, SoundTypeMaterialProperty> SOUND_TYPE = PROPERTIES.register("redstone", SoundTypeMaterialProperty::new);
 
     @SubscribeEvent

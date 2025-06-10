@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
@@ -8,6 +9,7 @@ import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,24 +21,39 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
-/// A block whose properties are determines by its associated BlockEntity and the Material it is attached to.
+/// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
 /// See [dev.hyperlynx.reactive.alchemy.material]
 public class MaterialBlock extends Block implements EntityBlock {
+    public static final EnumProperty<Model> MODEL = EnumProperty.create("model", Model.class);
+
     public MaterialBlock() {
         super(BlockBehaviour.Properties.of());
+        registerDefaultState(this.defaultBlockState().setValue(MODEL, Model.SALT));
+    }
+
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(MODEL);
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MaterialBlockEntity(pos, state);
+    }
+
+    private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, int material_id) {
+        int model_index = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_INDEX.get(), 0);
+        level.setBlock(pos, state.setValue(MODEL, Arrays.stream(Model.values()).toList().get(model_index)), Block.UPDATE_CLIENTS);
     }
 
     @Override
@@ -47,13 +64,13 @@ public class MaterialBlock extends Block implements EntityBlock {
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
             }
+            setModelByMaterialId(level, pos, state, material_id);
         }
     }
 
     private Material material(BlockGetter level, BlockPos pos) {
         BlockEntity entity = level.getBlockEntity(pos);
         if(!(entity instanceof MaterialBlockEntity material_entity)) {
-            // ReactiveMod.LOGGER.error("Missing material entity for block at " + pos.toShortString() + ".");
             return Material.empty();
         }
         return material_entity.getMaterial();
@@ -177,5 +194,23 @@ public class MaterialBlock extends Block implements EntityBlock {
         }
         Color color = mbe.getMaterial().getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE);
         return color.hex;
+    }
+
+    public enum Model implements StringRepresentable {
+        SALT("salt", 0),
+        CRACKED("cracked", 1);
+
+        private final int index;
+        private final String name;
+
+        Model(String name, int index) {
+            this.name = name;
+            this.index = index;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
     }
 }
