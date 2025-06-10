@@ -29,6 +29,8 @@ public class Color {
         blue = ((color & 0xFF));
     }
 
+    public static Color BLACK = new Color();
+
     public Color(){
 
     }

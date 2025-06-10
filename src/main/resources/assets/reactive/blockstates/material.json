@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "reactive:block/material_placeholder"
+        "model": "reactive:block/material/salt"
       }
     }
   ]

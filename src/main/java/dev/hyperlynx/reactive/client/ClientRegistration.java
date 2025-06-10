@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.client;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.client.renderers.be.MaterialRenderer;
+import dev.hyperlynx.reactive.blocks.MaterialBlock;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.be.CrucibleRenderer;
@@ -14,22 +14,25 @@ import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import dev.hyperlynx.reactive.registration.ReactiveEntityTypes;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import org.jetbrains.annotations.Nullable;
 
 public class ClientRegistration {
     public static boolean IRIS_MODE = false;
 
     public static void init(IEventBus bus) {
         bus.register(ClientRegistration.class);
-        bus.register(MaterialModels.class);
         if(ModList.get().isLoaded("iris") || ModList.get().isLoaded("oculus")){
             // Enable special handling for Iris shaders to draw the Gateway block correctly.
             IRIS_MODE = true;
@@ -57,7 +60,6 @@ public class ClientRegistration {
         }
         event.registerEntityRenderer(ReactiveEntityTypes.REACTOR.get(), ReactorEntityRenderer::new);
         event.registerEntityRenderer(ReactiveEntityTypes.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
-        event.registerBlockEntityRenderer(ReactiveBlockEntityTypes.MATERIAL.get(), MaterialRenderer::new);
     }
 
     @SubscribeEvent
@@ -65,6 +67,11 @@ public class ClientRegistration {
         if(ModList.get().isLoaded("ponder")){
             ReactivePonderPlugin.clientInit();
         }
+    }
+
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register(MaterialBlock::getBlockColor, ReactiveBlocks.MATERIAL_BLOCK.get());
     }
 
 }

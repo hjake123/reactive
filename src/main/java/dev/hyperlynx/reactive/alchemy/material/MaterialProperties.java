@@ -28,6 +28,7 @@ public class MaterialProperties {
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> FLAMMABILITY = PROPERTIES.register("flammability", IntMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> LIGHT = PROPERTIES.register("light", IntMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> REDSTONE = PROPERTIES.register("redstone", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);
     //public static final DeferredHolder<MaterialProperty<?>, SoundTypeMaterialProperty> SOUND_TYPE = PROPERTIES.register("redstone", SoundTypeMaterialProperty::new);
 
     @SubscribeEvent
