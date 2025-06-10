@@ -2,8 +2,10 @@ package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
@@ -33,5 +35,12 @@ public class MaterialItem extends BlockItem {
         if(flag.isAdvanced() && stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             components.add(Component.literal("Index " + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).withStyle(ChatFormatting.DARK_GRAY));
         }
+    }
+
+    public static int getItemColor(ItemStack stack, int i) {
+        if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE).hex();
+        }
+        return 0;
     }
 }

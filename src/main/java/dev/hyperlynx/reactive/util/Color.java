@@ -29,11 +29,8 @@ public class Color {
         blue = ((color & 0xFF));
     }
 
-    public static Color BLACK = new Color();
-
-    public Color(){
-
-    }
+    public static Color BLACK = new Color(0);
+    public static Color WHITE = new Color(0xFFFFFF);
 
     public int hex(){
         return hex;
