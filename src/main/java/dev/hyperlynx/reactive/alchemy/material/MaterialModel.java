@@ -11,10 +11,10 @@ import net.minecraft.world.level.block.SoundType;
 /// - a new entry in `blockstates/material` with the proper string representation
 public enum MaterialModel implements StringRepresentable {
     SALT("salt", 0.0F, SoundType.SAND),
-    CRACKED("cracked", 1, SoundType.DRIPSTONE_BLOCK),
-    BUMPY("bumpy", 2, SoundType.SLIME_BLOCK),
-    STREAKED("streaked", 3, SoundType.DEEPSLATE),
-    SMOOTH("smooth", 4, SoundType.WOOL);
+    CRACKED("cracked", 1.0F, SoundType.DRIPSTONE_BLOCK),
+    BUMPY("bumpy", 2.0F, SoundType.SLIME_BLOCK),
+    STREAKED("streaked", 3.0F, SoundType.DEEPSLATE),
+    SMOOTH("smooth", 4.0F, SoundType.WOOL);
 
     private final String name;
     private final float index;
