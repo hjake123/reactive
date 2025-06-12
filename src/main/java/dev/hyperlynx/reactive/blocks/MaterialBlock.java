@@ -53,8 +53,8 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, int material_id) {
-        String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt").toUpperCase();
-        level.setBlock(pos, state.setValue(MODEL, MaterialModel.valueOf(model_name)), Block.UPDATE_CLIENTS);
+        String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt");
+        level.setBlock(pos, state.setValue(MODEL, MaterialModel.fromName(model_name)), Block.UPDATE_CLIENTS);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
-        return SoundType.SLIME_BLOCK; // TODO figure out serialization
+        return MaterialModel.fromName(material(level, pos).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt")).getSoundType();
     }
 
     @Override

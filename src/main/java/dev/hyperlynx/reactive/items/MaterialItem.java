@@ -48,6 +48,6 @@ public class MaterialItem extends BlockItem {
             return 0.0F;
         }
         Material material = MaterialMan.fetch(level, stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
-        return MaterialModel.valueOf(material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "SALT").toUpperCase()).getModelIndex();
+        return MaterialModel.fromName(material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "SALT")).getModelIndex();
     }
 }
