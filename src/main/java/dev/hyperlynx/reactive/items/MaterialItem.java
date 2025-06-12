@@ -6,7 +6,6 @@ import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -49,6 +48,6 @@ public class MaterialItem extends BlockItem {
             return 0.0F;
         }
         Material material = MaterialMan.fetch(level, stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
-        return material.getOrDefault(MaterialProperties.MODEL_INDEX.get(), 0);
+        return MaterialModel.valueOf(material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "SALT").toUpperCase()).getModelIndex();
     }
 }

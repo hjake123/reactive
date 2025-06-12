@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
@@ -35,11 +36,11 @@ import java.util.List;
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
 /// See [dev.hyperlynx.reactive.alchemy.material]
 public class MaterialBlock extends Block implements EntityBlock {
-    public static final EnumProperty<Model> MODEL = EnumProperty.create("model", Model.class);
+    public static final EnumProperty<MaterialModel> MODEL = EnumProperty.create("model", MaterialModel.class);
 
     public MaterialBlock() {
         super(BlockBehaviour.Properties.of());
-        registerDefaultState(this.defaultBlockState().setValue(MODEL, Model.SALT));
+        registerDefaultState(this.defaultBlockState().setValue(MODEL, MaterialModel.SALT));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -52,15 +53,15 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, int material_id) {
-        int model_index = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_INDEX.get(), 0);
-        level.setBlock(pos, state.setValue(MODEL, Arrays.stream(Model.values()).toList().get(model_index)), Block.UPDATE_CLIENTS);
+        String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt").toUpperCase();
+        level.setBlock(pos, state.setValue(MODEL, MaterialModel.valueOf(model_name)), Block.UPDATE_CLIENTS);
     }
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+        if(stack.has(ReactiveComponentTypes.MATERIAL_ID)) {
             @SuppressWarnings("DataFlowIssue") // It's confirmed to exist already so there is no issue.
-            int material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
+            int material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
             }
@@ -80,7 +81,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         MaterialBlockEntity mbe = (MaterialBlockEntity) level.getBlockEntity(pos);
-        stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), mbe.getId());
+        stack.set(ReactiveComponentTypes.MATERIAL_ID, mbe.getId());
         return stack;
     }
 
@@ -194,23 +195,5 @@ public class MaterialBlock extends Block implements EntityBlock {
         }
         Color color = mbe.getMaterial().getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE);
         return color.hex;
-    }
-
-    public enum Model implements StringRepresentable {
-        SALT("salt", 0),
-        CRACKED("cracked", 1);
-
-        private final int index;
-        private final String name;
-
-        Model(String name, int index) {
-            this.name = name;
-            this.index = index;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
     }
 }

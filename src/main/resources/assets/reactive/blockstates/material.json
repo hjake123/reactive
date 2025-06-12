@@ -5,6 +5,9 @@
     },
     "model=cracked":{
       "model": "reactive:block/material/cracked"
+    },
+    "model=bumpy":{
+      "model": "reactive:block/material/bumpy"
     }
   }
 }

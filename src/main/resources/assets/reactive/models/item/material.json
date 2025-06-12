@@ -6,6 +6,12 @@
         "reactive:material_model_index": 1
       },
       "model": "reactive:block/material/cracked"
+    },
+    {
+      "predicate": {
+        "reactive:material_model_index": 2
+      },
+      "model": "reactive:block/material/bumpy"
     }
   ]
 }

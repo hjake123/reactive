@@ -19,7 +19,7 @@ public class MaterialProperties {
             .create();
     public static final DeferredRegister<MaterialProperty<?>> PROPERTIES = DeferredRegister.create(PROPERTY_REGISTRY, ReactiveMod.MODID);
 
-    public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> MODEL_INDEX = PROPERTIES.register("model", IntMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, StringMaterialProperty> MODEL_NAME = PROPERTIES.register("model_name", StringMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> MAGMA_STEP = PROPERTIES.register("magma_step", FlagMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> FIRE_SOURCE = PROPERTIES.register("fire_source", FlagMaterialProperty::new);
