@@ -8,6 +8,12 @@
     },
     "model=bumpy":{
       "model": "reactive:block/material/bumpy"
+    },
+    "model=streaked":{
+      "model": "reactive:block/material/streaked"
+    },
+    "model=smooth":{
+      "model": "reactive:block/material/smooth"
     }
   }
 }

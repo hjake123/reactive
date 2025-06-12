@@ -3,10 +3,18 @@ package dev.hyperlynx.reactive.alchemy.material;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.SoundType;
 
+/// A model and sound type that a material can have. Basically its "form factor" -- powder, solid, gel, etc.
+/// To add a new material model, add:
+/// - an entry to this enum
+/// - a new block model (see `models/block/material`)
+/// - a new entry in `models/item/material` with an override for the proper float id
+/// - a new entry in `blockstates/material` with the proper string representation
 public enum MaterialModel implements StringRepresentable {
     SALT("salt", 0.0F, SoundType.SAND),
     CRACKED("cracked", 1, SoundType.DRIPSTONE_BLOCK),
-    BUMPY("bumpy", 2, SoundType.SLIME_BLOCK);
+    BUMPY("bumpy", 2, SoundType.SLIME_BLOCK),
+    STREAKED("streaked", 3, SoundType.DEEPSLATE),
+    SMOOTH("smooth", 4, SoundType.WOOL);
 
     private final String name;
     private final float index;
