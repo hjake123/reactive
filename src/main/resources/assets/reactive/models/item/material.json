@@ -11,7 +11,7 @@
       "predicate": {
         "reactive:material_model_index": 2
       },
-      "model": "reactive:block/material/bumpy"
+      "model": "reactive:block/material/gel"
     },
     {
       "predicate": {

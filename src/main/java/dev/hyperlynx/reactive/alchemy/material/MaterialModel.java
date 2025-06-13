@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.SoundType;
 
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.SoundType;
 public enum MaterialModel implements StringRepresentable {
     SALT("salt", 0.0F, SoundType.SAND),
     CRACKED("cracked", 1.0F, SoundType.DRIPSTONE_BLOCK),
-    BUMPY("bumpy", 2.0F, SoundType.SLIME_BLOCK),
+    GEL("gel", 2.0F, SoundType.SLIME_BLOCK),
     STREAKED("streaked", 3.0F, SoundType.DEEPSLATE),
     SMOOTH("smooth", 4.0F, SoundType.WOOL);
 
@@ -39,7 +40,22 @@ public enum MaterialModel implements StringRepresentable {
         return sound_type;
     }
 
+
     public static MaterialModel fromName(String name) {
-        return MaterialModel.valueOf(name.toUpperCase());
+        try {
+            return MaterialModel.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            ReactiveMod.LOGGER.error("Invalid material model name {} was used. This should never happen...", name);
+            return MaterialModel.SALT;
+        }
+    }
+
+    public static boolean isNameValid(String name) {
+        try {
+            MaterialModel.valueOf(name.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

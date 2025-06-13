@@ -58,9 +58,18 @@ public class MaterialData extends SavedData {
         var list = full_tag.getList("materials", ListTag.TAG_COMPOUND);
         List<Material> materials = new ArrayList<>();
         for (Tag tag : list) {
-            materials.add(Material.CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst());
+            Material material = Material.CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst();
+            validate(material);
+            materials.add(material);
         }
         return new MaterialData(materials);
+    }
+
+    private static void validate(Material material) {
+        if(!material.has(MaterialProperties.MODEL_NAME.get()) || !MaterialModel.isNameValid(material.get(MaterialProperties.MODEL_NAME.get()))) {
+            ReactiveMod.LOGGER.error("Material has an invalid or missing model name {}", material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "<null>"));
+            material.set(MaterialProperties.MODEL_NAME.get(), "salt");
+        }
     }
 
     public void addMaterial(Material material) {

@@ -6,8 +6,8 @@
     "model=cracked":{
       "model": "reactive:block/material/cracked"
     },
-    "model=bumpy":{
-      "model": "reactive:block/material/bumpy"
+    "model=gel":{
+      "model": "reactive:block/material/gel"
     },
     "model=streaked":{
       "model": "reactive:block/material/streaked"

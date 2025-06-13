@@ -80,4 +80,9 @@ public class Material {
     public void setName(String name) {
         this.custom_name = name;
     }
+
+    /// Use this only as absolutely necessary.
+    protected <T> void set(MaterialProperty<T> property, T value) {
+        properties.put(property, value);
+    }
 }

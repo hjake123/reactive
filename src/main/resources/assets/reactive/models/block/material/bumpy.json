@@ -1,7 +1,0 @@
-{
-	"parent": "reactive:block/material/base",
-	"textures": {
-		"all": "reactive:block/material/bumpy",
-		"particle": "reactive:block/material/bumpy"
-	}
-}
