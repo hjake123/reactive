@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.advancements.StagedFlagTrigger;
@@ -39,7 +38,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -82,7 +80,6 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -495,6 +492,7 @@ public class Registration {
             EntityType.Builder.of(HoverQuilt::new, MobCategory.MISC)
                     .sized(1.0F, 0.1F)
                     .fireImmune()
+                    .updateInterval(1)
                     .build("hover_quilt"));
 
 
@@ -818,6 +816,11 @@ public class Registration {
                 ReactionPageRequestPayload.TYPE,
                 ReactionPageRequestPayload.STREAM_CODEC,
                 ReactionPageServer::handlePageRequest
+        );
+        registrar.playToServer(
+                HoverQuiltVelocityPayload.TYPE,
+                HoverQuiltVelocityPayload.STREAM_CODEC,
+                HoverQuilt::handleInputPacket
         );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);

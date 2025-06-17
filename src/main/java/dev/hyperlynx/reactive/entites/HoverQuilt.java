@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.entites;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,6 +14,8 @@ import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,6 +85,9 @@ public class HoverQuilt extends VehicleEntity {
 
     private static final double MAX_SPEED = 0.25;
 
+    // TODO: Replace the client-side move logic with logic that sends custom packets to the server,
+    // which then adjust the speed of the movement there
+
     @Override
     public void tick() {
         super.tick();
@@ -90,25 +96,42 @@ public class HoverQuilt extends VehicleEntity {
             if(this.isVehicle() && this.isControlledByLocalInstance()) {
                 LivingEntity riding_entity = this.getControllingPassenger();
                 if(riding_entity instanceof LocalPlayer rider) {
-                    double vertical_speed = this.getDeltaMovement().y;
+                    double velocity = 0.0;
                     if(rider.input.up || rider.input.jumping) {
-                        vertical_speed = Math.min(MAX_SPEED, vertical_speed + 0.03);
+                        velocity = 0.03;
                     }
                     if(rider.input.down) {
-                        vertical_speed = Math.max(-MAX_SPEED, vertical_speed - 0.03);
+                        velocity = -0.03;
                     }
-                    this.setDeltaMovement(0, vertical_speed, 0);
+                    PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
+                    this.setDeltaMovement(0, Math.clamp(velocity + this.getDeltaMovement().y, -MAX_SPEED, MAX_SPEED), 0);
                     this.move(MoverType.PLAYER, this.getDeltaMovement());
-                    ReactiveMod.LOGGER.debug("(Mounted) Client position is {}", position().toString());
                 }
             } else if(!this.isVehicle()) {
                 this.setDeltaMovement(0, 0, 0);
-                ReactiveMod.LOGGER.debug("Client position is {}", position().toString());
             }
+            ReactiveMod.LOGGER.debug("Client movement is {}", getDeltaMovement());
         } else {
-            ReactiveMod.LOGGER.debug("Server position is {}", position().toString());
+            if(!this.isVehicle()){
+                this.setDeltaMovement(0, 0, 0);
+            }
+            ReactiveMod.LOGGER.debug("Server movement is {}", getDeltaMovement());
+            this.move(MoverType.PLAYER, this.getDeltaMovement());
         }
 
+    }
+
+    public static void handleInputPacket(HoverQuiltVelocityPayload payload, IPayloadContext context) {
+        var vehicle = context.player().getVehicle();
+        if(vehicle instanceof HoverQuilt quilt) {
+            quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, -MAX_SPEED, MAX_SPEED), 0);
+        }
+    }
+
+
+    @Override
+    public void setPos(double x, double y, double z) {
+        super.setPos(x, y, z);
     }
 
     @Override
