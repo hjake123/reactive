@@ -1,10 +1,9 @@
 package dev.hyperlynx.reactive.entites;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.ServerboundPacketListener;
-import net.minecraft.network.protocol.game.ServerboundMoveVehiclePacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -100,10 +99,14 @@ public class HoverQuilt extends VehicleEntity {
                     }
                     this.setDeltaMovement(0, vertical_speed, 0);
                     this.move(MoverType.PLAYER, this.getDeltaMovement());
+                    ReactiveMod.LOGGER.debug("(Mounted) Client position is {}", position().toString());
                 }
             } else if(!this.isVehicle()) {
                 this.setDeltaMovement(0, 0, 0);
+                ReactiveMod.LOGGER.debug("Client position is {}", position().toString());
             }
+        } else {
+            ReactiveMod.LOGGER.debug("Server position is {}", position().toString());
         }
 
     }
@@ -118,9 +121,16 @@ public class HoverQuilt extends VehicleEntity {
             return InteractionResult.PASS;
         }
         if (!this.level().isClientSide) {
+            ReactiveMod.LOGGER.debug("Player mounted");
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             return InteractionResult.SUCCESS;
         }
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        ReactiveMod.LOGGER.debug("Player dismounting");
+        return super.getDismountLocationForPassenger(passenger);
     }
 }
