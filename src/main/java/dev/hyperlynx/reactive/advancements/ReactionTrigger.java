@@ -2,11 +2,10 @@ package dev.hyperlynx.reactive.advancements;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CriterionValidator;
-import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -26,14 +25,14 @@ public class ReactionTrigger extends SimpleCriterionTrigger<ReactionTrigger.Reac
     public static void triggerForNearbyPlayers(ServerLevel l, String alias, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
-            Registration.REACTION_TRIGGER.get().trigger((ServerPlayer) p, alias);
+            ReactiveCriterionTriggers.REACTION.get().trigger((ServerPlayer) p, alias);
         }
     }
 
     public static void triggerPerfectForNearbyPlayers(ServerLevel l, String alias, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
-            Registration.PERFECT_REACTION_TRIGGER.get().trigger((ServerPlayer) p, alias);
+            ReactiveCriterionTriggers.PERFECT_REACTION.get().trigger((ServerPlayer) p, alias);
         }
     }
 

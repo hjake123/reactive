@@ -1,7 +1,9 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveMobEffects;
 import dev.hyperlynx.reactive.blocks.GravityChandelierBlock;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -18,11 +20,11 @@ import java.util.List;
 public class GravityChandelierBlockEntity extends BlockEntity {
     public static final double RANGE = 10.0;
     public GravityChandelierBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.GRAVITY_CHANDELIER_BE_TYPE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.GRAVITY_CHANDELIER.get(), pos, state);
     }
 
     public static void tick(Level level, BlockPos pos) {
-        if(!level.getBlockState(pos).is(Registration.GRAVITY_CHANDELIER.get())){
+        if(!level.getBlockState(pos).is(ReactiveBlocks.GRAVITY_CHANDELIER.get())){
             return;
         }
         BlockPos effect_center;
@@ -39,7 +41,7 @@ public class GravityChandelierBlockEntity extends BlockEntity {
             if(target instanceof ItemEntity){
                 target.setNoGravity(true);
             }else if(target instanceof LivingEntity victim){
-                victim.addEffect(new MobEffectInstance(Registration.NULL_GRAVITY, 10));
+                victim.addEffect(new MobEffectInstance(ReactiveMobEffects.NULL_GRAVITY, 10));
                 victim.resetFallDistance();
             }
         }

@@ -1,0 +1,66 @@
+package dev.hyperlynx.reactive.registration;
+
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.hyperlynx.reactive.net.*;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.HandlerThread;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+
+@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+public class ReactivePayloadHandlers {
+
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        // Sets the current network version
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.configurationToClient(
+                WorldSpecificValue.AlchemySeedData.TYPE,
+                WorldSpecificValue.AlchemySeedData.STREAM_CODEC,
+                new WorldSpecificValue.AlchemySeedPayloadHandler()
+        );
+        registrar.commonToClient(
+                LitmusScreenPayload.TYPE,
+                LitmusScreenPayload.STREAM_CODEC,
+                (payload, _context) -> {
+                    if (FMLLoader.getDist() == Dist.CLIENT) {
+                        LitmusScreenOpener.open(payload);
+                    }
+                }
+        );
+        registrar.commonToClient(
+                ReactionStatusPayload.TYPE,
+                ReactionStatusPayload.STREAM_CODEC,
+                ReactionStatusPayload::handle
+        );
+        registrar.playToServer(
+                ReactionPageRequestPayload.TYPE,
+                ReactionPageRequestPayload.STREAM_CODEC,
+                ReactionPageServer::handlePageRequest
+        );
+
+        final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
+        async_registrar.commonToClient(
+                ReactionPagePayload.TYPE,
+                ReactionPagePayload.STREAM_CODEC,
+                ReactionPageFetcher::handlePageResponse
+        );
+
+        if(ModList.get().isLoaded("kubejs")){
+            ReactiveKubeJSPlugin.registerPayloads(registrar);
+        }
+    }
+
+    @SubscribeEvent
+    public static void register(final RegisterConfigurationTasksEvent event) {
+        event.register(new WorldSpecificValue.AlchemySeedConfigurationTask(event.getListener()));
+    }
+}

@@ -3,10 +3,9 @@ package dev.hyperlynx.reactive.be;
 import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.*;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -60,7 +59,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -100,7 +98,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public boolean reactions_paused = false; // Set by the Inert Crystal special case. Inhibits all Reactions when true.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.CRUCIBLE_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.CRUCIBLE.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }
@@ -128,7 +126,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 switch (crucible.process_stage) {
                     case 0 -> {
                         // Deal with electricity.
-                        if (level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15) {
+                        if (level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get()) && crucible.electricCharge < 15) {
                             crucible.electricCharge = 15;
                         } else if (crucible.electricCharge > 0) {
                             crucible.electricCharge--;
@@ -136,7 +134,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                         // Check for Effusive Sponges and fill if there is one.
                         if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
-                            if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
+                            if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), ReactiveBlocks.WARP_SPONGE.get())) {
                                 crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                                 level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                                 level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(state));
@@ -144,7 +142,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                         }
 
                         // Handle the various properties of the Curse Cell and Integrity.
-                        if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
+                        if (level.getBlockState(pos.below()).is(ReactiveBlocks.CURSE_CELL.get())) {
                             boolean hungers = true;
                             for (Power base_power : ReactionMan.BASE_POWER_LIST) {
                                 if (crucible.getPowerLevel(base_power) > 0) {
@@ -235,7 +233,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             crucible.expendAnyPowerExcept(null, 1);
         }
         if(crucible.integrity < 50 && crucible.integrity > 10){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 1);
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 1);
         }
         if(crucible.integrity < 20 && crucible.integrity > 12){
             level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3f, 0.9f);
@@ -262,15 +260,15 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     public static void integrityFail(Level level, BlockPos pos, BlockState state) {
-        ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
+        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 20);
         level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.15f, 0.8f);
         level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Level.ExplosionInteraction.NONE);
-        if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
+        if(state.getBlock().equals(ReactiveBlocks.SHULKER_CRUCIBLE.get())){
             ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
             level.addFreshEntity(dropped_shell);
         }
         if(level instanceof ServerLevel slevel)
-            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_CRUCIBLE_FAIL_TRIGGER.get(), pos, 24);
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_CRUCIBLE_FAIL.get(), pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
             level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
         else
@@ -336,7 +334,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
-        if(crucible.areaMemory.exists(level, Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, Registration.IRON_SYMBOL.get())){
+        if(crucible.areaMemory.exists(level, ReactiveBlocks.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, ReactiveBlocks.IRON_SYMBOL.get())){
             switch(crucible.gather_stage){
                 case 0 -> {
                     // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
@@ -349,15 +347,15 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.PORTAL_TRADE.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
                 case 1 -> {
                     // Blaze Rods add blaze.
-                    if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.SEE_BLAZE_GATHER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -370,10 +368,10 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                 case 3 -> {
                     // Occult Symbols and Wither Skeleton Skulls add curse, while Divine Symbols remove it.
-                    if(crucible.areaMemory.exists(level, Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_WALL_SKULL)){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_WALL_SKULL)){
                         crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
                     }
-                    if(crucible.areaMemory.exists(level, Registration.DIVINE_SYMBOL.get())){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.DIVINE_SYMBOL.get())){
                         crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("divine_cleanse_amount", 200, 400));
                     }
                 }
@@ -467,7 +465,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
     private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
-        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
         for (RecipeHolder<DissolveRecipe> holder : purify_recipes) {
             DissolveRecipe recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
@@ -485,7 +483,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
-        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
+        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.TRANS_RECIPE_TYPE.get());
         for (RecipeHolder<TransmuteRecipe> holder : purify_recipes) {
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
@@ -502,7 +500,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a precipitation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
-        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
+        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.PRECIPITATE_RECIPE_TYPE.get());
         for(var holder : creation_recipes){
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
@@ -548,7 +546,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         LivingEntity entity = event.getEntity();
 
         double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), Registration.IRON_SYMBOL.get())) {
+        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), ReactiveBlocks.IRON_SYMBOL.get())) {
             return;
         }
 
@@ -563,7 +561,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
-        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), Registration.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), ReactiveCriterionTriggers.SEE_SACRIFICE.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();
@@ -626,7 +624,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         for(Power p : Powers.POWERS.getRegistry().get()){
             if(p.matchesBottle(context.getBottle())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                    if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
+                    if(context.getBottle().is(ReactiveItems.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
                         crucible.enderRiftStrength = 2000;
                     }
                     context.reduceByOne();

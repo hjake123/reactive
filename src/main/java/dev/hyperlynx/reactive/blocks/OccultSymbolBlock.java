@@ -1,7 +1,9 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-import static dev.hyperlynx.reactive.Registration.HARVEST_TRIGGER;
+import static dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers.HARVEST;
 
 public class OccultSymbolBlock extends SymbolBlock{
     public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
@@ -43,7 +45,7 @@ public class OccultSymbolBlock extends SymbolBlock{
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if(entity instanceof ServerPlayer){
-            Registration.PLACE_OCCULT_TRIGGER.get().trigger((ServerPlayer) entity);
+            ReactiveCriterionTriggers.PLACE_OCCULT.get().trigger((ServerPlayer) entity);
         }
     }
 
@@ -64,7 +66,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         double d0 = source.nextDouble() * 8 - 4;
         double d1 = source.nextDouble() * 8 - 4;
         double d2 = source.nextDouble() * 8 - 4;
-        level.addParticle(Registration.SMALL_BLACK_RUNE_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
+        level.addParticle(ReactiveParticles.SMALL_BLACK_RUNE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 
     @Override
@@ -75,14 +77,14 @@ public class OccultSymbolBlock extends SymbolBlock{
         if(!state.getValue(ACTIVE))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        if(!player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get()))
+        if(!player.getItemInHand(hand).is(ReactiveItems.QUARTZ_BOTTLE.get()))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        if(player.getCooldowns().isOnCooldown(Registration.QUARTZ_BOTTLE.get()))
+        if(player.getCooldowns().isOnCooldown(ReactiveItems.QUARTZ_BOTTLE.get()))
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 
-        List<Item> bottle_list = List.of(Registration.ACID_BOTTLE.get(), Registration.BODY_BOTTLE.get(), Registration.BLAZE_BOTTLE.get(),
-                Registration.VERDANT_BOTTLE.get(), Registration.LIGHT_BOTTLE.get(), Registration.MIND_BOTTLE.get());
+        List<Item> bottle_list = List.of(ReactiveItems.ACID_BOTTLE.get(), ReactiveItems.BODY_BOTTLE.get(), ReactiveItems.BLAZE_BOTTLE.get(),
+                ReactiveItems.VERDANT_BOTTLE.get(), ReactiveItems.LIGHT_BOTTLE.get(), ReactiveItems.MIND_BOTTLE.get());
 
         // Which bottle will be extracted, from the list above.
         // Rolls beyond the table shatter the bottle.
@@ -125,7 +127,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             case 5 -> {
                 // A Bottle of Mind was extracted.
                 if(player instanceof ServerPlayer splayer){
-                    HARVEST_TRIGGER.get().trigger(splayer);
+                    HARVEST.get().trigger(splayer);
                 }
                 if(player.experienceLevel > 1) {
                     player.giveExperienceLevels(-1);
@@ -140,7 +142,7 @@ public class OccultSymbolBlock extends SymbolBlock{
             default -> bottle_broke = true;
         }
 
-        ParticleScribe.drawParticleZigZag(level, Registration.SMALL_BLACK_RUNE_PARTICLE, pos, player.blockPosition().above(), 5, 4, 0.7);
+        ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE, pos, player.blockPosition().above(), 5, 4, 0.7);
         player.getItemInHand(hand).shrink(1);
 
         if(bottle_broke) {
@@ -155,7 +157,7 @@ public class OccultSymbolBlock extends SymbolBlock{
         }
 
         if(!player.getAbilities().instabuild)
-            player.getCooldowns().addCooldown(Registration.QUARTZ_BOTTLE.get(), 80);
+            player.getCooldowns().addCooldown(ReactiveItems.QUARTZ_BOTTLE.get(), 80);
 
         return ItemInteractionResult.SUCCESS;
     }

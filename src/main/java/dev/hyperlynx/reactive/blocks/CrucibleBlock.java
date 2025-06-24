@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
-import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -114,7 +114,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(level.isClientSide()){
             // Workaround to make sure that acid bucket addition instantly updates the mix color.
-            if (stack.is(Registration.ACID_BUCKET.get())) {
+            if (stack.is(ReactiveItems.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if(!(crucible instanceof CrucibleBlockEntity c)){
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -126,7 +126,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             return ItemInteractionResult.SUCCESS;
         }
 
-        if(stack.is(Registration.LITMUS_PAPER.get())) {
+        if(stack.is(ReactiveItems.LITMUS_PAPER.get())) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
@@ -156,7 +156,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 }
                 return ItemInteractionResult.CONSUME;
             }
-            if (player.getItemInHand(hand).is(Registration.ACID_BUCKET.get())) {
+            if (player.getItemInHand(hand).is(ReactiveItems.ACID_BUCKET.get())) {
                 BlockEntity crucible = level.getBlockEntity(pos);
                 if (!(crucible instanceof CrucibleBlockEntity c)) {
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -187,7 +187,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 extractGlassBottle(state, level, pos, player, hand, c);
             }
             // Collect bottles of mundane Powers.
-            if(player.getItemInHand(hand).is(Registration.QUARTZ_BOTTLE.get())){
+            if(player.getItemInHand(hand).is(ReactiveItems.QUARTZ_BOTTLE.get())){
                 extractQuartzBottle(level, pos, player, hand, c);
             }
             return ItemInteractionResult.SUCCESS;
@@ -249,17 +249,17 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         level.playSound(null, pos, SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 1.0F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
-        ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 7);
+        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 7);
         level.setBlock(pos, Blocks.LAVA_CAULDRON.defaultBlockState(), Block.UPDATE_CLIENTS);
         level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(level.getBlockState(pos)));
-        Registration.TRY_LAVA_CRUCIBLE_TRIGGER.get().trigger(player);
+        ReactiveCriterionTriggers.TRY_LAVA_CRUCIBLE.get().trigger(player);
     }
 
     private static void netherCrucibleFill(Level level, BlockPos pos, ServerPlayer player) {
         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
         for(int i = 0; i < 5; i++)
             ParticleScribe.drawParticleCrucibleTop(level, ParticleTypes.LARGE_SMOKE, pos);
-        Registration.TRY_NETHER_CRUCIBLE_TRIGGER.get().trigger(player);
+        ReactiveCriterionTriggers.TRY_NETHER_CRUCIBLE.get().trigger(player);
     }
 
     @Override
@@ -318,7 +318,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
     @Nullable
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {
-       if(type == Registration.CRUCIBLE_BE.get()){
+       if(type == ReactiveBlockEntityTypes.CRUCIBLE.get()){
            return (l, p, s, c) -> dev.hyperlynx.reactive.be.CrucibleBlockEntity.tick(l, p, s, (dev.hyperlynx.reactive.be.CrucibleBlockEntity) c);
        }
        return null;

@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.DivineSymbolBlock;
 import dev.hyperlynx.reactive.blocks.PowerBottleBlock;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -32,7 +32,7 @@ public class PowerBottleItem extends BlockItem implements BasePowerBottle {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        return Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
+        return ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance();
     }
 
     @Override

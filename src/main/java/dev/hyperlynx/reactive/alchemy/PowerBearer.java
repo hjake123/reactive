@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.alchemy;
 
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

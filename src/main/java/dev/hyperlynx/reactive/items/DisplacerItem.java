@@ -1,8 +1,9 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.blocks.ChainDisplacingBlock;
 import dev.hyperlynx.reactive.blocks.DisplacedBlock;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,7 +47,7 @@ public class DisplacerItem extends Item {
         level.gameEvent(GameEvent.HIT_GROUND, context.getClickedPos(), GameEvent.Context.of(context.getLevel().getBlockState(context.getClickedPos())));
 
         ItemStack stack = context.getItemInHand();
-        boolean hyper_mode = EnchantmentHelper.has(stack, Registration.WORLD_PIERCER.value());
+        boolean hyper_mode = EnchantmentHelper.has(stack, ReactiveComponentTypes.WORLD_PIERCER.value());
         if (hyper_mode) {
             var displaced_center = perform(context, level, pos, state, slot, 32, DISPLACER_BASE_DISPLACE_TIME * 2);
             if(displaced_center.isPresent()){
@@ -136,6 +137,6 @@ public class DisplacerItem extends Item {
     // Check if the item being used to repair is the assigned repair bottle for this staff.
     @Override
     public boolean isValidRepairItem(ItemStack self, ItemStack repair_item_candidate) {
-        return repair_item_candidate.is(Registration.MOTION_SALT.get());
+        return repair_item_candidate.is(ReactiveItems.MOTION_SALT.get());
     }
 }

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -69,8 +69,8 @@ public class MotionSaltBlock extends Block {
     }
 
     private static void checkBecomeElectrified(Level level, BlockPos salt_pos, BlockPos neighbor_pos){
-        if(level.getBlockState(neighbor_pos).is(Registration.VOLT_CELL.get()) && salt_pos.below().equals(neighbor_pos)){
-            level.scheduleTick(salt_pos, Registration.MOTION_SALT_BLOCK.get(), 10);
+        if(level.getBlockState(neighbor_pos).is(ReactiveBlocks.VOLT_CELL.get()) && salt_pos.below().equals(neighbor_pos)){
+            level.scheduleTick(salt_pos, ReactiveBlocks.MOTION_SALT_BLOCK.get(), 10);
         }
     }
 

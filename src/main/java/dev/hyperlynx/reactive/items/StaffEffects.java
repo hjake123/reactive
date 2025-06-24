@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.blocks.AirLightBlock;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
@@ -73,13 +73,13 @@ public class StaffEffects {
                 if(!user.level().isLoaded(light_target)) {
                     return;
                 }
-                if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
+                if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(ReactiveBlocks.GLOWING_AIR.get())) {
                     user.level().setBlock(light_target,
-                            Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
+                            ReactiveBlocks.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
                             Block.UPDATE_ALL_IMMEDIATE);
                 } else if (user.level().getBlockState(light_target).is(Blocks.WATER)) {
                     user.level().setBlock(light_target,
-                            Registration.GLOWING_AIR.get().defaultBlockState()
+                            ReactiveBlocks.GLOWING_AIR.get().defaultBlockState()
                                     .setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get())
                                     .setValue(AirLightBlock.WATERLOGGED, true),
                             Block.UPDATE_ALL_IMMEDIATE);
@@ -130,7 +130,7 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        boolean wide = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
+        boolean wide = EnchantmentHelper.has(stack, ReactiveComponentTypes.WIDE_RANGE.value());
         aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer serveruser) {
@@ -151,7 +151,7 @@ public class StaffEffects {
     public static void missile(Player user, ItemStack stack){
         if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            boolean super_missile = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
+            boolean super_missile = EnchantmentHelper.has(stack, ReactiveComponentTypes.WIDE_RANGE.value());
             int base_range = ConfigMan.COMMON.mindStaffRange.get();
             aoe = aoe.inflate(super_missile ? base_range * 1.67 : base_range);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
@@ -179,7 +179,7 @@ public class StaffEffects {
 
             for(LivingEntity victim : hit_counts.keySet()) {
                 for(int i = 0; i < hit_counts.get(victim); i++) {
-                    ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                    ParticleScribe.drawParticleZigZag(user.level(), ReactiveParticles.SMALL_RUNE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                             victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                     user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
                             user.level().random.nextFloat()*0.1f + 0.8f);

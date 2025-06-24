@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.util;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
@@ -17,7 +17,7 @@ public class OccultSymbolAttractGoal extends MoveToBlockGoal {
 
     @Override
     protected boolean isValidTarget(LevelReader reader, BlockPos pos) {
-        return reader.getBlockState(pos).is(Registration.OCCULT_SYMBOL.get());
+        return reader.getBlockState(pos).is(ReactiveBlocks.OCCULT_SYMBOL.get());
     }
 
 

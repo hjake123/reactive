@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -42,7 +42,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
             return this.blockRenderDispatcher.getBlockModel(Blocks.WATER.defaultBlockState()).getParticleIcon(ModelData.EMPTY);
 
         if(crucible.integrity < 20 && crucible.integrity > 8){
-            return this.blockRenderDispatcher.getBlockModel(Registration.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
+            return this.blockRenderDispatcher.getBlockModel(ReactiveBlocks.DUMMY_NOISE_WATER.get().defaultBlockState()).getParticleIcon(ModelData.EMPTY);
         }
 
         int threshold = CrucibleBlockEntity.CRUCIBLE_MAX_POWER/2;

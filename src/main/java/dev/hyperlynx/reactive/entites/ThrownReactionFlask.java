@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.entites;
 
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
@@ -29,13 +29,13 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
         level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, SoundEvents.SPLASH_POTION_BREAK, SoundSource.PLAYERS);
         ReactionFlaskContents contents;
 
-        if (getItem().has(Registration.REACTION_FLASK_CONTENTS)) {
-            contents = getItem().get(Registration.REACTION_FLASK_CONTENTS);
+        if (getItem().has(ReactiveComponentTypes.REACTION_FLASK_CONTENTS)) {
+            contents = getItem().get(ReactiveComponentTypes.REACTION_FLASK_CONTENTS);
         } else {
             contents = new ReactionFlaskContents(generateRandomPowerCombo(), false);
         }
 
-        ReactorEntity entity = new ReactorEntity(Registration.REACTOR_ENTITY_TYPE.get(), level());
+        ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR.get(), level());
         entity.setPos(result.getLocation().add(0, 1.0, 0));
         Map<Power, Integer> powers = contents.powers();
         entity.setLifespan(600);
@@ -65,6 +65,6 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return Registration.REACTION_FLASK.get();
+        return ReactiveItems.REACTION_FLASK.get();
     }
 }

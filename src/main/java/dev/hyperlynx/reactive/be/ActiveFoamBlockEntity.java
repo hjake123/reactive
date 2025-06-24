@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -17,24 +18,24 @@ public class ActiveFoamBlockEntity extends BlockEntity {
     int spreads_left = 16;
 
     public ActiveFoamBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.ACTIVE_GOLD_FOAM_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.ACTIVE_GOLD_FOAM.get(), pos, state);
     }
 
     private static void trySpread(Level level, BlockPos target, BlockPos spreader, int spreads_left){
-        if(level.getBlockState(target).isAir() || level.getBlockState(target).is(Registration.GOLD_FOAM.get())){
+        if(level.getBlockState(target).isAir() || level.getBlockState(target).is(ReactiveBlocks.GOLD_FOAM.get())){
             if(level.getBlockEntity(spreader) == null){
                 return;
             }
-            level.setBlock(target, Registration.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+            level.setBlock(target, ReactiveBlocks.ACTIVE_GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
             ((ActiveFoamBlockEntity) Objects.requireNonNull(level.getBlockEntity(target))).spreads_left = spreads_left - 1;
-            level.setBlock(spreader, Registration.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+            level.setBlock(spreader, ReactiveBlocks.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
             level.playSound(null, target, SoundEvents.WOOL_HIT, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
     private static void trySpreadInert(Level level, BlockPos pos){
         if(level.getBlockState(pos).isAir()){
-            level.setBlock(pos, Registration.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+            level.setBlock(pos, ReactiveBlocks.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
             level.playSound(null, pos, SoundEvents.WOOL_HIT, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
@@ -78,7 +79,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
         if(foam.tick_counter > 5) {
             foam.tick_counter = 0;
             if (foam.spreads_left == 0){
-                level.setBlock(pos, Registration.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                level.setBlock(pos, ReactiveBlocks.GOLD_FOAM.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                 return;
             }
             spreadAround(level, pos, level.random, foam.spreads_left);

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.components.WarpBottleTarget;
 import net.minecraft.core.GlobalPos;
@@ -47,7 +47,7 @@ public class WarpBottleItem extends PowerBottleItem{
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if(context.getLevel().getBlockState(context.getClickedPos()).is(Registration.DIVINE_SYMBOL.get())){
+        if(context.getLevel().getBlockState(context.getClickedPos()).is(ReactiveBlocks.DIVINE_SYMBOL.get())){
             return InteractionResult.FAIL;
         }else if(isRiftBottle(context.getItemInHand())){
             return InteractionResult.PASS;
@@ -59,7 +59,7 @@ public class WarpBottleItem extends PowerBottleItem{
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         if(isRiftBottle(player.getItemInHand(hand))){
             if(attemptWarp(level, player, hand) && !player.isCreative())
-                player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                player.setItemInHand(hand, ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
             return InteractionResultHolder.success(player.getItemInHand(hand));
         }
         return super.use(level, player, hand);
@@ -76,7 +76,7 @@ public class WarpBottleItem extends PowerBottleItem{
                     level.playSound(null, destination.pos(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                     warp_occurred = true;
                     if(player instanceof ServerPlayer splayer)
-                        Registration.BE_TELEPORTED_TRIGGER.get().trigger(splayer);
+                        ReactiveCriterionTriggers.BE_TELEPORTED.get().trigger(splayer);
                 }else if(!(level instanceof ServerLevel)){
                     player.displayClientMessage(Component.translatable("message.reactive.warp_blocked"), true);
                 }
@@ -93,11 +93,11 @@ public class WarpBottleItem extends PowerBottleItem{
     }
 
     public static void setTeleportTarget(ItemStack stack, GlobalPos target) {
-        stack.set(Registration.WARP_BOTTLE_TARGET.get(), new WarpBottleTarget(target));
+        stack.set(ReactiveComponentTypes.WARP_BOTTLE_TARGET.get(), new WarpBottleTarget(target));
     }
 
     public static boolean isRiftBottle(ItemStack stack){
-        return stack.has(Registration.WARP_BOTTLE_TARGET.value());
+        return stack.has(ReactiveComponentTypes.WARP_BOTTLE_TARGET.value());
     }
 
     @Override
@@ -106,14 +106,14 @@ public class WarpBottleItem extends PowerBottleItem{
     }
 
     private static Optional<ResourceKey<Level>> getTeleportDimension(ItemStack stack) {
-        if (stack.has(Registration.WARP_BOTTLE_TARGET.get())) {
-            return Optional.of(Objects.requireNonNull(stack.get(Registration.WARP_BOTTLE_TARGET.get())).target().dimension());
+        if (stack.has(ReactiveComponentTypes.WARP_BOTTLE_TARGET.get())) {
+            return Optional.of(Objects.requireNonNull(stack.get(ReactiveComponentTypes.WARP_BOTTLE_TARGET.get())).target().dimension());
         }
         return Optional.empty();
     }
 
     public static GlobalPos getTeleportPosition(ItemStack stack) {
-        WarpBottleTarget target = stack.get(Registration.WARP_BOTTLE_TARGET.get());
+        WarpBottleTarget target = stack.get(ReactiveComponentTypes.WARP_BOTTLE_TARGET.get());
         if(target == null){
             return null;
         }

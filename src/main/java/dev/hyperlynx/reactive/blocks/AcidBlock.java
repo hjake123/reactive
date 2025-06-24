@@ -1,8 +1,9 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -37,7 +38,7 @@ public class AcidBlock extends Block implements BucketPickup {
     @Override
     public @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor accessor, BlockPos pos, BlockState state) {
         accessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
-        return Registration.ACID_BUCKET.get().getDefaultInstance();
+        return ReactiveItems.ACID_BUCKET.get().getDefaultInstance();
     }
 
     @Override
@@ -147,7 +148,7 @@ public class AcidBlock extends Block implements BucketPickup {
                 double x = pos.getX() + rng.nextFloat();
                 double y = pos.getY() + 1.0F;
                 double z = pos.getZ() + rng.nextFloat();
-                level.addParticle(Registration.ACID_BUBBLE_PARTICLE, x, y, z, 0, 0, 0);
+                level.addParticle(ReactiveParticles.ACID_BUBBLE, x, y, z, 0, 0, 0);
             }
         }
     }

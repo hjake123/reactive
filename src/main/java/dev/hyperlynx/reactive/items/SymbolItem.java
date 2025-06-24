@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
-import static dev.hyperlynx.reactive.Registration.ITEMS;
+import static dev.hyperlynx.reactive.registration.ReactiveItems.ITEMS;
 
 public class SymbolItem extends BlockItem {
     public SymbolItem(Block block, Properties props) {

@@ -1,8 +1,9 @@
 package dev.hyperlynx.reactive.mixin;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +25,7 @@ public abstract class LivingEntityHarmUndeadMixin {
             symbol_cache_ticker++;
             if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()*5){
                 symbol_maybe = BlockPos.findClosestMatch(((LivingEntity)(Object)this).blockPosition(), 6, 6,
-                        blockPos -> ((LivingEntity)(Object)this).level().getBlockState(blockPos).is(Registration.DIVINE_SYMBOL.get()));
+                        blockPos -> ((LivingEntity)(Object)this).level().getBlockState(blockPos).is(ReactiveBlocks.DIVINE_SYMBOL.get()));
                 symbol_cache_ticker = 0;
             }
 
@@ -32,7 +33,7 @@ public abstract class LivingEntityHarmUndeadMixin {
                 ((LivingEntity)(Object) this).hurt(((LivingEntity) (Object) this).level().damageSources().magic(), 1);
                 if(((LivingEntity)(Object) this) instanceof ServerPlayer player) {
                     player.displayClientMessage(Component.translatable("message.reactive.undead_player_divine_hurt"), true);
-                    Registration.UNDEAD_PLAYER_DIVINE_HURT.get().trigger(player);
+                    ReactiveCriterionTriggers.UNDEAD_PLAYER_DIVINE_HURT.get().trigger(player);
                 }
             } else if (symbol_maybe.isPresent()) {
                 symbol_maybe = Optional.empty();

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.recipes;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -109,12 +109,12 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Registration.PRECIPITATE_SERIALIZER.get();
+        return ReactiveRecipes.PRECIPITATE_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Registration.PRECIPITATE_RECIPE_TYPE.get();
+        return ReactiveRecipes.PRECIPITATE_RECIPE_TYPE.get();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

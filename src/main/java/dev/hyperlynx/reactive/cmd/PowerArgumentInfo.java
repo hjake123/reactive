@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.cmd;
 
 import com.google.gson.JsonObject;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,7 +35,7 @@ public class PowerArgumentInfo implements ArgumentTypeInfo<PowerArgumentType, Po
 
         @Override
         public ArgumentTypeInfo<PowerArgumentType, ?> type() {
-            return Registration.POWER_ARGUMENT.value();
+            return ReactiveCommandArguments.POWER_ARGUMENT.value();
         }
     }
 }

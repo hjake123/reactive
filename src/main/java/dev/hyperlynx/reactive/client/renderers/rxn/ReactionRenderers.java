@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.client.renderers.rxn;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -78,7 +77,7 @@ public class ReactionRenderers {
         Set<BlockPos> points = ReactionEffects.getCreationPoints(reactor.getBlockPos());
         for(BlockPos pos : points){
             if(reactor.getLevel().getBlockState(pos).isAir())
-                ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
+                ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), ReactiveParticles.STARDUST, pos, 0.5, 1.0, 1);
         }
     }
 
@@ -89,7 +88,7 @@ public class ReactionRenderers {
     public void acid_based(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level.random.nextFloat() < 0.1F)
-            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), Registration.ACID_BUBBLE_PARTICLE.getType(), reactor);
+            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ReactiveParticles.ACID_BUBBLE.getType(), reactor);
     }
 
     public void verdant_based(Reactor reactor) {
@@ -100,7 +99,7 @@ public class ReactionRenderers {
 
     public void astral(Reactor reactor) {
         if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), Registration.STARDUST_PARTICLE.getType(), reactor.getPos(), 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), ReactiveParticles.STARDUST.getType(), reactor.getPos(), 0.7, 1);
     }
 
     public void snow(Reactor reactor) {

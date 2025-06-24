@@ -7,13 +7,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
@@ -27,14 +27,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
@@ -131,7 +129,7 @@ public class ReactiveCommand {
         if(commander == null){
             throw ERROR_NO_PLAYER.create();
         }
-        ItemStack bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
+        ItemStack bottle = ReactiveItems.WARP_BOTTLE.get().getDefaultInstance();
         WarpBottleItem.setTeleportTarget(bottle, GlobalPos.of(commander.level().dimension(), target.getBlockPos(source)));
         commander.addItem(bottle);
         return 1;
@@ -152,7 +150,7 @@ public class ReactiveCommand {
     @SubscribeEvent
     public static void onCommandRegister(RegisterCommandsEvent event){
         if(ConfigMan.COMMON.registerCommand.get()){
-            ArgumentTypeInfos.registerByClass(PowerArgumentType.class, Registration.POWER_ARGUMENT.value());
+            ArgumentTypeInfos.registerByClass(PowerArgumentType.class, ReactiveCommandArguments.POWER_ARGUMENT.value());
             ReactiveCommand.register(event.getDispatcher());
         }
     }

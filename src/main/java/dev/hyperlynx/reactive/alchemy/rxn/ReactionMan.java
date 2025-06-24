@@ -2,24 +2,18 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.datagen.ReactionAdvancementGenerator;
-import dev.hyperlynx.reactive.net.ReactionPagePayload;
-import dev.hyperlynx.reactive.net.ReactionPageServer;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -178,21 +172,21 @@ public class ReactionMan {
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.Z_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.Z_POWER.get(), ReactiveItems.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
             case 2 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Y_POWER.get(), BASE_POWER_LIST.get(2), BASE_POWER_LIST.get(3)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion,  Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.X_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.X_POWER.get(), ReactiveItems.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
             case 3 -> {
                 REACTIONS.add(new DecomposeReaction("compound_degradation", Powers.Z_POWER.get(), BASE_POWER_LIST.get(4), BASE_POWER_LIST.get(5)).setStimulus(Reaction.Stimulus.NO_ELECTRIC).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("explosion_effect", ReactionEffects::explosion, Powers.Z_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("formation_effect", ReactionEffects::foaming, Powers.X_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
                 REACTIONS.add(new EffectReaction("block_fall_effect", ReactionEffects::blockfall, Powers.Y_POWER.get()).setStimulus(Reaction.Stimulus.GOLD_SYMBOL).markAlwaysPerfect());
-                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.Y_POWER.get(), Registration.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
+                REACTIONS.add(new CatalystEffectReaction("slowfall_effect", ReactionEffects::slowfall, Powers.Y_POWER.get(), ReactiveItems.PHANTOM_RESIDUE.get()).markAlwaysPerfect());
             }
         }
 

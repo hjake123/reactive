@@ -2,15 +2,14 @@ package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -33,7 +32,6 @@ import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +45,7 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return type == Registration.GATEWAY_BE.get() ? GatewayBlockEntity::tick : null;
+        return type == ReactiveBlockEntityTypes.GATEWAY.get() ? GatewayBlockEntity::tick : null;
     }
 
     @Override
@@ -105,9 +103,9 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(stack.is(Registration.WARP_BOTTLE.get()) && !WarpBottleItem.isRiftBottle(stack)) {
+        if(stack.is(ReactiveItems.WARP_BOTTLE.get()) && !WarpBottleItem.isRiftBottle(stack)) {
             stack.shrink(1);
-            ItemStack rift_bottle = Registration.WARP_BOTTLE.get().getDefaultInstance();
+            ItemStack rift_bottle = ReactiveItems.WARP_BOTTLE.get().getDefaultInstance();
             WarpBottleItem.setTeleportTarget(rift_bottle, new GlobalPos(level.dimension(), player.blockPosition()));
             player.addItem(rift_bottle);
             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS, 1.0F, 0.5F);

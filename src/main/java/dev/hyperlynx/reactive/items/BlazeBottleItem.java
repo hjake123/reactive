@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class BlazeBottleItem extends PowerBottleItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot_number, boolean unknown) {
         super.inventoryTick(stack, level, entity, slot_number, unknown);
         if(!level.isClientSide){
-            if(entity instanceof Player && !((Player) entity).isCreative() && ((Player) entity).isHolding(Registration.BLAZE_BOTTLE.get())){
+            if(entity instanceof Player && !((Player) entity).isCreative() && ((Player) entity).isHolding(ReactiveItems.BLAZE_BOTTLE.get())){
                 tick_count++;
                 if(tick_count > 20){
                     entity.hurt(level.damageSources().inFire(), 2);

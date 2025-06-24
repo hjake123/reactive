@@ -1,12 +1,12 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -39,11 +39,11 @@ public interface BasePowerBottle {
             for(Power p : Powers.POWERS.getRegistry().get()){
                 if(p.matchesBottle(stack)){
                     if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                        if(stack.is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(stack)){
+                        if(stack.is(ReactiveItems.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(stack)){
                             crucible.enderRiftStrength = 2000;
                         }
                         stack.shrink(1);
-                        ItemEntity quartz_bottle_drop = new ItemEntity(source.level(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                        ItemEntity quartz_bottle_drop = new ItemEntity(source.level(), target.getX()+0.5, target.getY()+0.6, target.getZ()+0.5, ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
                         source.level().addFreshEntity(quartz_bottle_drop);
                         changed = true;
                     }

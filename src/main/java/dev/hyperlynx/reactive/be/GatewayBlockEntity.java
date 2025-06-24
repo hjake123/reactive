@@ -1,14 +1,12 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceKey;
@@ -28,7 +26,7 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     private final String TARGET_DIMENSION_TAG = "Dimension";
 
     public GatewayBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.GATEWAY_BE.get(), pos, blockState);
+        super(ReactiveBlockEntityTypes.GATEWAY.get(), pos, blockState);
         Random random = new Random(pos.hashCode());
         tick_count = random.nextInt(0, 12000);
     }

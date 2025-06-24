@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.alchemy;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -42,22 +42,22 @@ public class PowerBottleInsertContext {
     private static void reduceByOneFromEntity(PowerBottleInsertContext context){
         ItemEntity e = context.entity;
         if (e.getItem().getCount() == 1) {
-            e.setItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+            e.setItem(ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
         }
         else {
             e.getItem().shrink(1);
-            ItemEntity empty_bottle = new ItemEntity(e.level(), e.getX(), e.getY(), e.getZ(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+            ItemEntity empty_bottle = new ItemEntity(e.level(), e.getX(), e.getY(), e.getZ(), ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
             e.level().addFreshEntity(empty_bottle);
         }
     }
 
     private static void reduceByOneFromUseOnContext(PowerBottleInsertContext context) {
         if (context.use_on_context.getItemInHand().getCount() == 1) {
-            Objects.requireNonNull(context.use_on_context.getPlayer()).setItemInHand(context.use_on_context.getHand(), Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+            Objects.requireNonNull(context.use_on_context.getPlayer()).setItemInHand(context.use_on_context.getHand(), ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
         }
         else {
             Objects.requireNonNull(context.use_on_context.getPlayer()).getItemInHand(context.use_on_context.getHand()).shrink(1);
-            context.use_on_context.getPlayer().addItem(Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+            context.use_on_context.getPlayer().addItem(ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
         }
     }
 
