@@ -10,53 +10,60 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MaterialData extends SavedData {
-    protected final List<Material> materials;
+    protected final Map<ResourceLocation, Material> materials;
 
     public static StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
-            Material.STREAM_CODEC.apply(ByteBufCodecs.list()), MaterialData::materials,
+            ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, Material.STREAM_CODEC), MaterialData::materials,
             MaterialData::new
     );
 
     public MaterialData addBuiltIns(ServerLevel level) {
-        for(Material built_in_material : level.registryAccess().registry(BuiltInMaterials.KEY).get().stream().toList()) {
-            addMaterial(built_in_material);
+        for(Map.Entry<ResourceKey<Material>, Material> material_entry : level.registryAccess().registry(BuiltInMaterials.KEY).get().entrySet()) {
+            addMaterial(material_entry.getKey().location(), material_entry.getValue());
         }
         return this;
     }
 
     public static MaterialData empty() {
-        return new MaterialData(new ArrayList<>());
+        return new MaterialData(new HashMap<>());
     }
 
-    MaterialData(List<Material> materials) {
+    MaterialData(Map<ResourceLocation, Material>materials) {
         this.materials = materials;
     }
 
-    private List<Material> materials() {
+    private Map<ResourceLocation, Material> materials() {
         return materials;
     }
 
-    public Material get(int index) {
-        if (index >= materials.size() || index < 0) {
-            ReactiveMod.LOGGER.error("Invalid material index {}", index);
-            return Material.empty();
+    public Material get(ResourceLocation id) {
+        if (materials.containsKey(id)) {
+            return materials.get(id);
         }
-        return materials.get(index);
+        ReactiveMod.LOGGER.error("Invalid material identifier {}", id);
+        return Material.empty();
     }
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag list = new ListTag();
-        for (Material material : materials) {
-            list.add(Material.CODEC.encode(material, NbtOps.INSTANCE, null).getOrThrow(error -> new RuntimeException("Failed to save material type: " + error)));
+        for (Map.Entry<ResourceLocation, Material> material_entry : materials.entrySet()) {
+            CompoundTag entry_tag = new CompoundTag();
+            entry_tag.putString("id", material_entry.getKey().toString());
+            entry_tag.put("material", Material.CODEC.encode(material_entry.getValue(), NbtOps.INSTANCE, null).getOrThrow(error -> new RuntimeException("Failed to save material type: " + error)));
+            list.add(entry_tag);
         }
         tag.put("materials", list);
         return tag;
@@ -64,11 +71,13 @@ public class MaterialData extends SavedData {
 
     public static MaterialData load(CompoundTag full_tag, HolderLookup.Provider registries) {
         var list = full_tag.getList("materials", ListTag.TAG_COMPOUND);
-        List<Material> materials = new ArrayList<>();
-        for (Tag tag : list) {
-            Material material = Material.CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst();
+        Map<ResourceLocation, Material> materials = new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag entry_tag = list.getCompound(i);
+            Material material = Material.CODEC.decode(NbtOps.INSTANCE, entry_tag.getCompound("material")).getOrThrow().getFirst();
             validate(material);
-            materials.add(material);
+            ResourceLocation id = ResourceLocation.parse(entry_tag.getString("id"));
+            materials.put(id, material);
         }
         return new MaterialData(materials);
     }
@@ -80,13 +89,13 @@ public class MaterialData extends SavedData {
         }
     }
 
-    public void addMaterial(Material material) {
-        materials.add(material);
+    public void addMaterial(ResourceLocation id, Material material) {
+        materials.put(id, material);
         setDirty();
     }
 
-    public void setToEmpty(int index) {
-        materials.set(index, Material.empty());
+    public void setToEmpty(ResourceLocation id) {
+        materials.put(id, dev.hyperlynx.reactive.alchemy.material.Material.empty());
         setDirty();
     }
 

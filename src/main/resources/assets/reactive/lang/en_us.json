@@ -147,7 +147,7 @@
   "message.reactive.material_removal_disabled": "Material remove commands are not enabled in the server config.",
   "message.reactive.material_removed": "Material erased.",
   "message.reactive.materials_reset": "All materials erased.",
-  "message.reactive.material_id_invalid": "That material id is not yet in use.",
+  "message.reactive.material_not_found": "That material id does not exist!",
   "commands.reactive.no_player": "This command can only be run by a player",
   "commands.reactive.no_crucible": "There's no crucible at that location",
   "commands.reactive.fake_power": "Invalid power",

@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
@@ -70,9 +71,9 @@ public class Material {
         return result.getOrThrow().getAsString();
     }
 
-    public Component getNameComponent(int id) {
+    public Component getNameComponent(ResourceLocation id) {
         if(custom_name.isEmpty()) {
-            return Component.translatable("block.reactive.unnamed").append("#" + id);
+            return Component.literal(id.toString());
         }
         return Component.literal(custom_name);
     }

@@ -10,6 +10,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
@@ -62,11 +63,11 @@ public class ReactiveComponentTypes {
                             .networkSynchronized(StreamCodec.unit(Unit.INSTANCE))
                             .build());
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MATERIAL_ID =
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ResourceLocation>> MATERIAL_ID =
             COMPONENT_TYPES.register("material_id",
-                    () -> DataComponentType.<Integer>builder()
-                            .persistent(Codec.INT)
-                            .networkSynchronized(ByteBufCodecs.INT)
+                    () -> DataComponentType.<ResourceLocation>builder()
+                            .persistent(ResourceLocation.CODEC)
+                            .networkSynchronized(ResourceLocation.STREAM_CODEC)
                             .build());
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Unit>> WORLD_PIERCER =

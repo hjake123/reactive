@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,7 +53,7 @@ public class MaterialBlock extends Block implements EntityBlock {
         return new MaterialBlockEntity(pos, state);
     }
 
-    private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, int material_id) {
+    private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, ResourceLocation material_id) {
         String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt");
         level.setBlock(pos, state.setValue(MODEL, MaterialModel.fromName(model_name)), Block.UPDATE_CLIENTS);
     }
@@ -61,7 +62,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID)) {
             @SuppressWarnings("DataFlowIssue") // It's confirmed to exist already so there is no issue.
-            int material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
+            ResourceLocation material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
             }
