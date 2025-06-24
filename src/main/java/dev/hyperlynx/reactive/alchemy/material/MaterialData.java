@@ -25,12 +25,11 @@ public class MaterialData extends SavedData {
             MaterialData::new
     );
 
-    public static MaterialData fromBuiltIn(ServerLevel level) {
-        MaterialData data = new MaterialData(new ArrayList<>());
+    public MaterialData addBuiltIns(ServerLevel level) {
         for(Material built_in_material : level.registryAccess().registry(BuiltInMaterials.KEY).get().stream().toList()) {
-            data.addMaterial(built_in_material);
+            addMaterial(built_in_material);
         }
-        return data;
+        return this;
     }
 
     public static MaterialData empty() {

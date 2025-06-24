@@ -15,7 +15,7 @@ public class MaterialMan {
     public static MaterialData data(Level level) {
         if(level instanceof ServerLevel slevel) {
             return slevel.getServer().getLevel(ServerLevel.OVERWORLD).getDataStorage()
-                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.fromBuiltIn(slevel), MaterialData::load),
+                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.empty().addBuiltIns(slevel), MaterialData::load),
                             "reactive_materials");
         } else if(level != null && level.isClientSide()) {
             return ClientMaterialMan.data();
@@ -40,8 +40,10 @@ public class MaterialMan {
         data(level).setToEmpty(index);
     }
 
-    public static void reset(Level level) {
-        data(level).reset();
+    public static void reset(ServerLevel level) {
+        var data = data(level);
+        data.reset();
+        data.addBuiltIns(level);
     }
 
     public static boolean occupied(Level level, int id) {
