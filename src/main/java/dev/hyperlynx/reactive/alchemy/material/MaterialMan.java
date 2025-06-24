@@ -15,7 +15,7 @@ public class MaterialMan {
     public static MaterialData data(Level level) {
         if(level instanceof ServerLevel slevel) {
             return slevel.getServer().getLevel(ServerLevel.OVERWORLD).getDataStorage()
-                    .computeIfAbsent(new SavedData.Factory<>(MaterialData::empty, MaterialData::load),
+                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.fromBuiltIn(slevel), MaterialData::load),
                             "reactive_materials");
         } else if(level != null && level.isClientSide()) {
             return ClientMaterialMan.data();

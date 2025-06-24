@@ -10,6 +10,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -23,6 +24,14 @@ public class MaterialData extends SavedData {
             Material.STREAM_CODEC.apply(ByteBufCodecs.list()), MaterialData::materials,
             MaterialData::new
     );
+
+    public static MaterialData fromBuiltIn(ServerLevel level) {
+        MaterialData data = new MaterialData(new ArrayList<>());
+        for(Material built_in_material : level.registryAccess().registry(BuiltInMaterials.KEY).get().stream().toList()) {
+            data.addMaterial(built_in_material);
+        }
+        return data;
+    }
 
     public static MaterialData empty() {
         return new MaterialData(new ArrayList<>());
