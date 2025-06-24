@@ -38,7 +38,7 @@ public class MaterialItem extends BlockItem {
 
     public static int getItemColor(ItemStack stack, int index) {
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE).hex();
+            return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.white()).hex();
         }
         return 0;
     }

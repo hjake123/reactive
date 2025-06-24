@@ -29,8 +29,13 @@ public class Color {
         blue = ((color & 0xFF));
     }
 
-    public static Color BLACK = new Color(0);
-    public static Color WHITE = new Color(0xFFFFFF);
+    public static Color black() {
+        return new Color(0);
+    }
+
+    public static Color white() {
+        return new Color(0xFFFFFF);
+    }
 
     public int hex(){
         return hex;
@@ -40,12 +45,14 @@ public class Color {
         red = 0;
         green = 0;
         blue = 0;
+        hex = 0;
     }
 
     public void set(Color to){
         red = to.red;
         green = to.green;
         blue = to.blue;
+        hex = to.hex;
     }
 
     @Override

@@ -194,7 +194,7 @@ public class MaterialBlock extends Block implements EntityBlock {
         if(!(entity instanceof MaterialBlockEntity mbe)) {
             return 0;
         }
-        Color color = mbe.getMaterial().getOrDefault(MaterialProperties.COLOR.get(), Color.WHITE);
+        Color color = mbe.getMaterial().getOrDefault(MaterialProperties.COLOR.get(), Color.white());
         return color.hex;
     }
 }
