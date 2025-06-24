@@ -54,6 +54,7 @@ public class ClientRegistration {
         }
         event.registerEntityRenderer(ReactiveEntityTypes.REACTOR.get(), ReactorEntityRenderer::new);
         event.registerEntityRenderer(ReactiveEntityTypes.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ReactiveEntityTypes.HOVER_QUILT.get(), HoverQuiltRenderer::new);
     }
 
     @SubscribeEvent

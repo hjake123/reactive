@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.registration;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.entites.HoverQuilt;
 import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -24,4 +25,11 @@ public class ReactiveEntityTypes {
                     .sized(0.2F, 0.2F)
                     .fireImmune()
                     .build("reactor"));
+
+    public static final Supplier<EntityType<HoverQuilt>> HOVER_QUILT = ENTITY_TYPES.register("hover_quilt", () ->
+            EntityType.Builder.of(HoverQuilt::new, MobCategory.MISC)
+                    .sized(1.0F, 0.1F)
+                    .fireImmune()
+                    .updateInterval(1)
+                    .build("hover_quilt"));
 }

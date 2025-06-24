@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.entites.HoverQuilt;
+import dev.hyperlynx.reactive.registration.ReactiveEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -37,7 +37,7 @@ public class PhantomQuiltItem extends Item {
         Level level = context.getLevel();
         Player player = context.getPlayer();
         Vec3 summon_pos = context.getClickedPos().offset(context.getClickedFace().getNormal()).getCenter();
-        HoverQuilt quilt = Registration.HOVER_QUILT.get().create(level);
+        HoverQuilt quilt = ReactiveEntityTypes.HOVER_QUILT.get().create(level);
         quilt.setPos(summon_pos);
         level.addFreshEntity(quilt);
         context.getItemInHand().consume(1, player);
@@ -46,7 +46,7 @@ public class PhantomQuiltItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        HoverQuilt quilt = Registration.HOVER_QUILT.get().create(level);
+        HoverQuilt quilt = ReactiveEntityTypes.HOVER_QUILT.get().create(level);
         quilt.setPos(player.getEyePosition().add(player.getLookAngle().scale(1.5)));
         level.addFreshEntity(quilt);
         player.getItemInHand(hand).consume(1, player);

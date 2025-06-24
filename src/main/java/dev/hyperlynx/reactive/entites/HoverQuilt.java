@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.entites;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -52,7 +52,7 @@ public class HoverQuilt extends VehicleEntity {
 
     @Override
     protected @NotNull Item getDropItem() {
-        return Registration.PHANTOM_QUILT_ITEM.get();
+        return ReactiveItems.PHANTOM_QUILT_ITEM.get();
     }
 
     @Override

@@ -185,4 +185,7 @@ public class ReactiveItems {
     public static final DeferredHolder<Item, BlockItem> UNGROWN_NODULE = ITEMS.registerSimpleBlockItem(ReactiveBlocks.UNGROWN_NODULE);
 
     public static final DeferredHolder<Item, BlockItem> NODULE = ITEMS.registerSimpleBlockItem(ReactiveBlocks.NODULE);
+
+    public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+            new PhantomQuiltItem(new Item.Properties()));
 }
