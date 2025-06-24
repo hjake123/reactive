@@ -19,6 +19,7 @@ public class BuiltInMaterialGenerator {
         return new RegistrySetBuilder().add(
                 BuiltInMaterials.KEY,
                 bootstrap -> {
+                    // TODO: Author some reasonable materials
                     addMaterial(bootstrap, "firestone", "Firestone", Map.of(
                             MaterialProperties.MODEL_NAME.get(), MaterialModel.CRACKED.getSerializedName(),
                             MaterialProperties.COLOR.get(), new Color(0xFF8800),
@@ -27,10 +28,10 @@ public class BuiltInMaterialGenerator {
                             MaterialProperties.MAGMA_STEP.get(), Unit.INSTANCE
                     ));
                     addMaterial(bootstrap, "slipslime", "Slip Slime", Map.of(
-                            MaterialProperties.MODEL_NAME.get(), MaterialModel.GEL.getSerializedName(),
+                            MaterialProperties.MODEL_NAME.get(), MaterialModel.SMOOTH.getSerializedName(),
                             MaterialProperties.COLOR.get(), new Color(0x22cc22),
                             MaterialProperties.REDSTONE.get(), 15,
-                            MaterialProperties.FRICTION.get(), 0.1F
+                            MaterialProperties.FRICTION.get(), 0.9F
                     ));
                 }
         );

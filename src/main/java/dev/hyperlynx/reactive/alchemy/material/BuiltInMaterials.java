@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 public class BuiltInMaterials {
     public static final ResourceKey<Registry<Material>> KEY = ResourceKey.createRegistryKey(ReactiveMod.location("built_in_materials"));
 
-    @SubscribeEvent // on the mod event bus
+    @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(
                 KEY,

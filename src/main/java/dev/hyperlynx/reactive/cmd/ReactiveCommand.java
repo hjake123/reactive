@@ -111,6 +111,8 @@ public class ReactiveCommand {
                                         StringArgumentType.getString(context, "name"))))))
                         .then(Commands.literal("list")
                                 .executes(context -> printMaterials(context.getSource())))
+                        .then(Commands.literal("reload")
+                                .executes(context -> reloadMaterials(context.getSource())))
                         .then(Commands.literal("remove")
                                 .then(Commands.argument("id", ResourceLocationArgument.id())
                                 .then(Commands.literal("confirm-delete")
@@ -241,6 +243,12 @@ public class ReactiveCommand {
         stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
         stack.setCount(amount);
         player.addItem(stack);
+        return 1;
+    }
+
+    private static int reloadMaterials(CommandSourceStack source) {
+        MaterialMan.data(source.getLevel()).addBuiltIns(source.getLevel());
+        MaterialMan.data(source.getLevel()).setDirty();
         return 1;
     }
 
