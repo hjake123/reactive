@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid=ReactiveMod.MODID)
 public class ReactivePayloadHandlers {
 
     @SubscribeEvent
