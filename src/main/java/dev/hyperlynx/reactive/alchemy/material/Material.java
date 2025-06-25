@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.alchemy.Power;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.nbt.NbtOps;
@@ -10,8 +11,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 
 /// A particular Material that MaterialBlocks can have the properties of.
 ///
@@ -20,6 +23,7 @@ import java.util.Map;
 public class Material {
     Reference2ObjectMap<MaterialProperty<?>, Object> properties;
     String custom_name = "";
+    Optional<Map<Power, Integer>> original_formula = Optional.empty();
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
@@ -27,21 +31,34 @@ public class Material {
     public static final Codec<Material> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
-                    Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw)
+                    Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
+                    Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula ) {
+        this.properties = new Reference2ObjectArrayMap<>(properties);
+        this.custom_name = custom_name;
+        this.original_formula = original_formula;
+    }
+
     public Material(Map<MaterialProperty<?>, Object> properties, String custom_name) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
+        this.original_formula = Optional.empty();
     }
+
     public static Material empty() {
         return new Material(Map.of(), "");
     }
 
     private String customNameRaw() {
         return custom_name;
+    }
+
+    private Optional<Map<Power, Integer>> getOriginalFormula() {
+        return original_formula;
     }
 
     public boolean has(MaterialProperty<?> type) {
@@ -73,7 +90,7 @@ public class Material {
 
     public Component getNameComponent(ResourceLocation id) {
         if(custom_name.isEmpty()) {
-            return Component.literal(id.toString());
+            return Component.translatable("block.reactive.undiscovered_material");
         }
         return Component.literal(custom_name);
     }
@@ -85,5 +102,32 @@ public class Material {
     /// Use this only as absolutely necessary.
     protected <T> void set(MaterialProperty<T> property, T value) {
         properties.put(property, value);
+    }
+
+    public void setOriginalFormula(@NotNull Map<Power, Integer> formula) {
+        this.original_formula = Optional.of(formula);
+    }
+
+    private static final int POWER_SAME_THRESHOLD = 300;
+
+    /// Determines whether the formula given matches this Material, and therefore if it should be considered to be the output of the creation process.
+    public boolean formulaMatches(@NotNull Map<Power, Integer> formula) {
+        if(original_formula.isEmpty()) {
+            return false;
+        }
+        for(Power power : formula.keySet()) {
+            if(!original_formula.get().containsKey(power)) {
+                return false;
+            }
+        }
+        for(Power power : original_formula.get().keySet()) {
+            if(!(formula.containsKey(power))) {
+                return false;
+            }
+            if(Math.abs(formula.get(power) - original_formula.get().get(power)) > POWER_SAME_THRESHOLD) {
+                return false;
+            }
+        }
+        return true;
     }
 }

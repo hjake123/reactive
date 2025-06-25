@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class MaterialProperties {
     public static final ResourceKey<Registry<MaterialProperty<?>>> MATERIAL_PROPERTY_REGISTRY_KEY = ResourceKey.createRegistryKey(ReactiveMod.location( "material_properties"));
     public static final Registry<MaterialProperty<?>> PROPERTY_REGISTRY = new RegistryBuilder<>(MATERIAL_PROPERTY_REGISTRY_KEY)

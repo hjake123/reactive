@@ -2,9 +2,12 @@ package dev.hyperlynx.reactive.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.alchemy.Power;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+
+import java.util.Map;
 
 public class Color {
     public int red;
@@ -62,5 +65,30 @@ public class Color {
             return red == ((Color) obj).red && green == ((Color) obj).green && blue == ((Color) obj).blue;
         }
         return obj_equals;
+    }
+
+    public void updateHexFromRGB() {
+        hex = red << 16 | green << 8 | blue;
+    }
+
+    public void setMixColor(Color base_color, Map<Power, Integer> powers, int total_visible_power, int max_power) {
+        reset();
+        for (Power p : powers.keySet()) {
+            if(p == null || p.invisible){
+                continue; // Skip any invalid or invisible powers.
+            }
+            Color pow_color = p.getColor();
+            float pow_weight = powers.get(p) / (float) total_visible_power;
+            red += (int) (pow_color.red * pow_weight);
+            green += (int) (pow_color.green * pow_weight);
+            blue += (int) (pow_color.blue * pow_weight);
+        }
+
+        // Adjust the tint to be proportional to the amount of the maximum currently in use.
+        float tint_alpha = (float) total_visible_power / (float) max_power;
+        red = (int) (base_color.red * (1 - tint_alpha) + red * (tint_alpha));
+        green = (int) (base_color.green * (1 - tint_alpha) + green * (tint_alpha));
+        blue = (int) (base_color.blue * (1 - tint_alpha) + blue * (tint_alpha));
+        updateHexFromRGB();
     }
 }

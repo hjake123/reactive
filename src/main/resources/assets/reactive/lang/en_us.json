@@ -37,7 +37,7 @@
   "item.reactive.litmus_paper": "Litmus Paper",
   "item.reactive.motion_salt": "Motion Salts",
   "item.reactive.unknown_device": "Strange Device",
-  "block.reactive.unnamed": "Material ",
+  "block.reactive.undiscovered_material": "Undiscovered Material",
   "block.reactive.invalid_material": "Invalid Material",
   "item.reactive.stardust": "Star Dust",
   "item.reactive.acid_bucket": "Acid Bucket",

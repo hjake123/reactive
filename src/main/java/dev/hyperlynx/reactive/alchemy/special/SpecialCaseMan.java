@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.alchemy.special;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
@@ -23,6 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
@@ -185,6 +187,13 @@ public class SpecialCaseMan {
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if((e.getItem().is(ReactiveItems.GOLD_THREAD.get()))) {
                 expelReaction(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(ReactiveItems.SALT_BLOCK.get()))) {
+                saltMaterialCraft(c, e);
                 return true;
             }
             return false;
@@ -707,6 +716,19 @@ public class SpecialCaseMan {
         thread.getItem().shrink(1);
         if(thread.getItem().getCount() == 0){
             thread.kill();
+        }
+    }
+
+    private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
+        ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), crucible.getPowerMap());
+        material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
+        Vec3 in_crucible = crucible.getBlockPos().getCenter();
+        ItemEntity drop = new ItemEntity(crucible.getLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
+        crucible.getLevel().addFreshEntity(drop);
+        salt_item_entity.getItem().shrink(1);
+        if(salt_item_entity.getItem().getCount() < 1) {
+            salt_item_entity.kill();
         }
     }
 
