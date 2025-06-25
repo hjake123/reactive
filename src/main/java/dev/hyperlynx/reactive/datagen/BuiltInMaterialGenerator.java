@@ -24,19 +24,19 @@ public class BuiltInMaterialGenerator {
                 BuiltInMaterials.KEY,
                 bootstrap -> {
                     // TODO: Author some reasonable materials
-                    addMaterial(bootstrap, "firestone", "Firestone", Map.of(
-                            MaterialProperties.MODEL_NAME.get(), MaterialModel.CRACKED.getSerializedName(),
-                            MaterialProperties.COLOR.get(), new Color(0xFF5500),
-                            MaterialProperties.LIGHT.get(), 15,
-                            MaterialProperties.FIRE_SOURCE.get(), Unit.INSTANCE,
-                            MaterialProperties.MAGMA_STEP.get(), Unit.INSTANCE
-                    ), Map.of(Powers.BLAZE_POWER.get(), 1600));
-                    addMaterial(bootstrap, "slipslime", "Slip Slime", Map.of(
-                            MaterialProperties.MODEL_NAME.get(), MaterialModel.SMOOTH.getSerializedName(),
-                            MaterialProperties.COLOR.get(), new Color(0x22cc22),
-                            MaterialProperties.REDSTONE.get(), 15,
-                            MaterialProperties.FRICTION.get(), 0.9F
-                    ));
+//                    addMaterial(bootstrap, "firestone", "Firestone", Map.of(
+//                            MaterialProperties.MODEL_NAME.get(), MaterialModel.CRACKED.getSerializedName(),
+//                            MaterialProperties.COLOR.get(), new Color(0xFF5500),
+//                            MaterialProperties.LIGHT.get(), 15,
+//                            MaterialProperties.FIRE_SOURCE.get(), Unit.INSTANCE,
+//                            MaterialProperties.MAGMA_STEP.get(), Unit.INSTANCE
+//                    ), Map.of(Powers.BLAZE_POWER.get(), 1600));
+//                    addMaterial(bootstrap, "slipslime", "Slip Slime", Map.of(
+//                            MaterialProperties.MODEL_NAME.get(), MaterialModel.SMOOTH.getSerializedName(),
+//                            MaterialProperties.COLOR.get(), new Color(0x22cc22),
+//                            MaterialProperties.REDSTONE.get(), 15,
+//                            MaterialProperties.FRICTION.get(), 0.9F
+//                    ));
                 }
         );
     }

@@ -23,11 +23,12 @@ Currently, it can generate:
 public class DataGenerationMan {
     @SubscribeEvent
     public static void gatherData (GatherDataEvent event){
+        var lookup = event.getLookupProvider();
         event.getGenerator().addProvider(
                 event.includeServer(),
                 (DataProvider.Factory<AdvancementProvider>) output -> new AdvancementProvider(
                         output,
-                        event.getLookupProvider(),
+                        lookup,
                         event.getExistingFileHelper(),
                         List.of(new ReactionAdvancementGenerator())
                 )
@@ -37,10 +38,15 @@ public class DataGenerationMan {
                 event.includeServer(),
                 (DataProvider.Factory<DatapackBuiltinEntriesProvider>) output -> new DatapackBuiltinEntriesProvider(
                         output,
-                        event.getLookupProvider(),
+                        lookup,
                         BuiltInMaterialGenerator.get(),
                         Set.of(ReactiveMod.MODID)
                 )
+        );
+
+        event.getGenerator().addProvider(
+                event.includeServer(),
+                new MaterialFormulaRequirementGenerator(event.getGenerator().getPackOutput(), lookup)
         );
     }
 }

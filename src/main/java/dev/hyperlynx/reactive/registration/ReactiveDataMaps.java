@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 public class ReactiveDataMaps {
     // TODO Advanced data map?
     public static final DataMapType<MaterialProperty<?>, PropertyFormulaRequirement> PROPERTY_FORMULA_MAP = DataMapType.builder(
-            ReactiveMod.location("material_property_formula_requirements"),
+            ReactiveMod.location("formula_requirements"),
             MaterialProperties.MATERIAL_PROPERTY_REGISTRY_KEY,
             PropertyFormulaRequirement.CODEC
     ).build();
