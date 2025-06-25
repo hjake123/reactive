@@ -108,7 +108,7 @@ public class Material {
         this.original_formula = Optional.of(formula);
     }
 
-    private static final int POWER_SAME_THRESHOLD = 300;
+    private static final int POWER_SAME_THRESHOLD = 450;
 
     /// Determines whether the formula given matches this Material, and therefore if it should be considered to be the output of the creation process.
     public boolean formulaMatches(@NotNull Map<Power, Integer> formula) {

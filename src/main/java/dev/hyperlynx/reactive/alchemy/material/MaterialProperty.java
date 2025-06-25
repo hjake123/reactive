@@ -1,7 +1,13 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 
 import java.util.Map;
@@ -9,11 +15,39 @@ import java.util.Map;
 /// One of the types of Property a Material may possess
 /// Offers a way to acquire MaterialProperty objects of any type T.
 public abstract class MaterialProperty<T> {
-    public abstract boolean requirementsMet(Map<Power, Integer> formula);
-    public abstract Instance<T> instance(Map<Power, Integer> formula);
-    public abstract Codec<T> codec();
+    public boolean requirementsMet(Map<Power, Integer> formula) {
+        ResourceLocation id = MaterialProperties.PROPERTY_REGISTRY.getKey(this);
+        assert id != null;
+        var holder = MaterialProperties.PROPERTY_REGISTRY.getHolder(id);
+        var requirement_map = holder.get().getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP);
+        if(requirement_map == null) {
+            ReactiveMod.LOGGER.error("No requirement map has been defined for {}", id);
+            return false;
+        }
+        for(PropertyFormulaRequirement.Part requirement : requirement_map.requirements()) {
+            Power power = Powers.POWER_REGISTRY.get(requirement.power_id());
+            if(power == null) {
+                ReactiveMod.LOGGER.error("Invalid power {} in requirement map for {}", requirement.power_id(), id);
+                return false;
+            }
 
-    /// A specific instance of a Property that a certain Material has.
-    /// Wrapper for a data object of type T, along with some extra data.
-    public record Instance<T>(MaterialProperty<T> type, T value, float stability_multiplier){}
+            int low_bound = WorldSpecificValue.get(id + "REQL" + requirement.power_id().toString(),
+                    requirement.low_bound_minimum(), requirement.low_bound_maximum());
+            if(!formula.containsKey(power) || formula.get(power) < low_bound) {
+                return false;
+            }
+
+            if(requirement.high_bound_minimum().isPresent() && requirement.high_bound_maximum().isPresent()) {
+                int high_bound = WorldSpecificValue.get(id + "REQH" + requirement.power_id().toString(),
+                        requirement.high_bound_minimum().get(), requirement.high_bound_maximum().get());
+                if(formula.get(power) > high_bound) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public abstract T instance(Map<Power, Integer> formula);
+    public abstract Codec<T> codec();
 }

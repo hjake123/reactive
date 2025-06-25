@@ -84,8 +84,11 @@ public class MaterialMan {
         // Decide on the properties of the new material
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
         properties.put(MaterialProperties.MODEL_NAME.get(), MaterialModel.SALT.getSerializedName());
-        properties.put(MaterialProperties.COLOR.get(), MaterialProperties.COLOR.get().instance(formula).value());
-        // TODO other properties and more complex crafting rules!
+        for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
+            if(property.requirementsMet(formula)) {
+                properties.put(property, property.instance(formula));
+            }
+        }
 
         // Construct and add the new material
         Material new_material = new Material(properties, "", Optional.of(new HashMap<>(formula)));
