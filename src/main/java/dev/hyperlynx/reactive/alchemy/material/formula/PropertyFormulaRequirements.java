@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.alchemy.material;
+package dev.hyperlynx.reactive.alchemy.material.formula;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 /// A Data Map entry that describes what Powers are needed to obtain a particular `MaterialProperty`.
-public record PropertyFormulaRequirement(List<Part> requirements) {
-    public static final Codec<PropertyFormulaRequirement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Part.CODEC.listOf().fieldOf("requirements").forGetter(PropertyFormulaRequirement::requirements)
-    ).apply(instance, PropertyFormulaRequirement::new));
+public record PropertyFormulaRequirements(List<Part> requirements) {
+    public static final Codec<PropertyFormulaRequirements> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Part.CODEC.listOf().fieldOf("requirements").forGetter(PropertyFormulaRequirements::requirements)
+    ).apply(instance, PropertyFormulaRequirements::new));
 
     /// Defines a particular Power and a pair of ranges, one for the low bound (least Power to get this property) and one for the high bound.
     /// The actual range is world specific within these constraints

@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -46,7 +45,7 @@ public class DataGenerationMan {
 
         event.getGenerator().addProvider(
                 event.includeServer(),
-                new MaterialFormulaRequirementGenerator(event.getGenerator().getPackOutput(), lookup)
+                new MaterialFormulaGenerator(event.getGenerator().getPackOutput(), lookup)
         );
     }
 }

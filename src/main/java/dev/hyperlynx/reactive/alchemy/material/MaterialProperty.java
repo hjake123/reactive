@@ -4,11 +4,10 @@ import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Unit;
 
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public abstract class MaterialProperty<T> {
             ReactiveMod.LOGGER.error("No requirement map has been defined for {}", id);
             return false;
         }
-        for(PropertyFormulaRequirement.Part requirement : requirement_map.requirements()) {
+        for(PropertyFormulaRequirements.Part requirement : requirement_map.requirements()) {
             Power power = Powers.POWER_REGISTRY.get(requirement.power_id());
             if(power == null) {
                 ReactiveMod.LOGGER.error("Invalid power {} in requirement map for {}", requirement.power_id(), id);

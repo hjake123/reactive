@@ -8,8 +8,14 @@ import java.util.Map;
 
 public class StringMaterialProperty extends MaterialProperty<String>{
     @Override
+    public boolean requirementsMet(Map<Power, Integer> formula) {
+        // String properties should never be automatically applied.
+        return false;
+    }
+
+    @Override
     public String instance(Map<Power, Integer> formula) {
-        return null;
+        return "";
     }
 
     @Override
