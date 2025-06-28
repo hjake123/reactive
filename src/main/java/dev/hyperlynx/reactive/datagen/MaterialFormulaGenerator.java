@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.alchemy.material.formula.FloatZeroToMaxFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.IntegerZeroToMaxFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
@@ -46,6 +47,14 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 700, 1200,
                                 Optional.empty(), Optional.empty())
                 )), false)
+                .add(MaterialProperties.ENCHANT_POWER, new PropertyFormulaRequirements(List.of(
+                        new PropertyFormulaRequirements.Part(Powers.SOUL_POWER.getId(),
+                                50, 250,
+                                Optional.of(800), Optional.of(1000)),
+                        new PropertyFormulaRequirements.Part(Powers.MIND_POWER.getId(),
+                                50, 50,
+                                Optional.empty(), Optional.empty())
+                )), false)
         ;
 
 
@@ -67,6 +76,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         700,
                         1600,
                         300
+                ), false)
+                .add(MaterialProperties.ENCHANT_POWER, new FloatZeroToMaxFormulaOutcome(
+                        Powers.MIND_POWER.getId(),
+                        50,
+                        1000,
+                        2.0F
                 ), false)
         ;
     }

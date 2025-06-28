@@ -3,9 +3,13 @@ package dev.hyperlynx.reactive.alchemy.material.formula;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import net.minecraft.resources.ResourceLocation;
 
-public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome {
+import java.util.Map;
+
+public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome implements IntegerFormulaOutcome {
     ResourceLocation power;
     int min_power;
     int max_power;
@@ -44,5 +48,15 @@ public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome {
     @Override
     public MapCodec<? extends FormulaOutcome> type() {
         return FormulaOutcomeTypes.ZERO_TO_MAX_INT.get();
+    }
+
+    public int calculate(Map<Power, Integer> formula) {
+        Power power = Powers.POWER_REGISTRY.get(power());
+        if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
+            int provided_power = Math.min(formula.get(power) - getMinPower(), getMaxPower());
+            double power_proportion = (double) provided_power / (getMaxPower() - getMinPower());
+            return (int) (power_proportion * getMaxValue());
+        }
+        return 0;
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.formula.IntegerFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.IntegerZeroToMaxFormulaOutcome;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.resources.ResourceKey;
@@ -22,17 +23,11 @@ public class IntMaterialProperty extends MaterialProperty<Integer>{
             ReactiveMod.LOGGER.error("No outcome map has been defined for {}, defaulting to 0", id);
             return 0;
         }
-        if(!(outcome_map instanceof IntegerZeroToMaxFormulaOutcome ztm)) {
+        if(!(outcome_map instanceof IntegerFormulaOutcome outcome)) {
             ReactiveMod.LOGGER.error("Outcome map for {} has a non-applicable outcome type set, defaulting to 0", id);
             return 0;
         }
-        Power power = Powers.POWER_REGISTRY.get(ztm.power());
-        if(formula.containsKey(power) && formula.get(power) > ztm.getMinPower()) {
-            int provided_power = Math.min(formula.get(power) - ztm.getMinPower(), ztm.getMaxPower());
-            double power_proportion = (double) provided_power / (ztm.getMaxPower() - ztm.getMinPower());
-            return (int) (power_proportion * ztm.getMaxValue());
-        }
-        return 0;
+        return outcome.calculate(formula);
     }
 
     @Override
