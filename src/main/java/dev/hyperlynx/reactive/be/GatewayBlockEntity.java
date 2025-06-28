@@ -56,7 +56,9 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
             return 1.0F;
         }
         float x = (startup_timer + partialTick) / STARTUP_DURATION;
-        return x < 0.5 ? 4 * x * x * x : (float) (1 - Math.pow(-2 * x + 2, 3) / 2); // https://easings.net/#easeInOutCubic
+        float c1 = 1.70158F;
+        float c3 = c1 + 1;
+        return (float) (1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2)); // https://easings.net/#easeOutBack
     }
 
     @Override

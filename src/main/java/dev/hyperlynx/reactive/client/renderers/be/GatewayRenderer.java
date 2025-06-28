@@ -28,8 +28,9 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
 
     protected void renderVolume(T gateway, GatewayRenderContext context, float partialTick) {
         double time = gateway.totalTick(partialTick);
-        float base_scale = 0.95F * gateway.startupProportion(partialTick);
-        float amplitude = 0.12F;
+        float startup_proportion = gateway.startupProportion(partialTick);
+        float base_scale = 0.95F * startup_proportion;
+        float amplitude = 0.12F * startup_proportion;
         float distortion_1 = (float) (Math.sin(time / 50) * amplitude + base_scale);
         float distortion_2 = (float) (Math.sin(time / 55) * amplitude + base_scale);
         float distortion_3 = (float) (Math.sin(time / 48) * amplitude + base_scale);
