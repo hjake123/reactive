@@ -21,6 +21,8 @@ import java.util.Random;
 
 public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     private int tick_count;
+    private static final int STARTUP_DURATION = 50;
+    private int startup_timer = 0;
     public GlobalPos target;
     private final String TARGET_POS_TAG = "Target";
     private final String TARGET_DIMENSION_TAG = "Dimension";
@@ -39,11 +41,22 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
         if(level.isClientSide() && t instanceof GatewayBlockEntity gateway){
             gateway.tick_count++;
+            if(gateway.startup_timer < STARTUP_DURATION) {
+                gateway.startup_timer++;
+            }
         }
     }
 
     public float totalTick(float partialTick) {
         return (float) tick_count + partialTick;
+    }
+
+    public float startupProportion(float partialTick) {
+        if(startup_timer >= STARTUP_DURATION) {
+            return 1.0F;
+        }
+        float x = (startup_timer + partialTick) / STARTUP_DURATION;
+        return x < 0.5 ? 4 * x * x * x : (float) (1 - Math.pow(-2 * x + 2, 3) / 2); // https://easings.net/#easeInOutCubic
     }
 
     @Override
