@@ -15,6 +15,11 @@ import net.minecraft.world.item.ItemStack;
 public class MaterialRenameScreen extends Screen {
     ResourceLocation material_to_rename;
     EditBox name_box = new EditBox(Minecraft.getInstance().font,200, 20, Component.empty());
+    Button name_set_button = new Button.Builder(Component.translatable("text.reactive.name_material_button"),
+            button -> {
+                ClientMaterialMan.rename(material_to_rename, name_box.getValue());
+                Minecraft.getInstance().setScreen(null);
+            }).build();
 
     protected MaterialRenameScreen(ResourceLocation material_to_rename) {
         super(Component.translatable("title.reactive.name_material_screen"));
@@ -31,8 +36,16 @@ public class MaterialRenameScreen extends Screen {
         super.init();
         name_box.setMaxLength(32);
         name_box.setHint(ClientMaterialMan.getName(material_to_rename));
+        name_set_button.setPosition(this.width / 2 - (name_set_button.getWidth() / 2), this.height / 2 + 25);
         name_box.setPosition(this.width / 2 - (name_box.getWidth() / 2), this.height / 2);
+        name_set_button.active = false;
         this.addRenderableWidget(name_box);
+        this.addRenderableWidget(name_set_button);
+    }
+
+    @Override
+    public void tick() {
+        name_set_button.active = !name_box.getValue().isEmpty();
     }
 
     @Override
@@ -52,6 +65,6 @@ public class MaterialRenameScreen extends Screen {
     @Override
     public void onClose() {
         super.onClose();
-        ClientMaterialMan.rename(material_to_rename, name_box.getValue());
+
     }
 }
