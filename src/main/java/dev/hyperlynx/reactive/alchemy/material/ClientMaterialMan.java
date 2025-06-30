@@ -2,6 +2,8 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
+import dev.hyperlynx.reactive.net.MaterialRenamePayload;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.event.level.LevelEvent;
@@ -61,5 +63,10 @@ public class ClientMaterialMan {
             return clientside_data.get().get(id).getNameComponent(id);
         }
         return Component.translatable("block.reactive.invalid_material");
+    }
+
+    public static void rename(ResourceLocation material_id, String value) {
+        clientside_data.get().get(material_id).setName(value); // Update on the client side.
+        PacketDistributor.sendToServer(new MaterialRenamePayload(material_id, value)); // Tell server to update itself.
     }
 }

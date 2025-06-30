@@ -75,6 +75,7 @@ public class LitmusScreen extends Screen {
         return false;
     }
 
+    @Override
     protected void init() {
         super.init();
         List<LitmusScreenComponent> lines = buildPowerText(measurement);
@@ -104,6 +105,7 @@ public class LitmusScreen extends Screen {
 
     }
 
+    @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         page_forward.visible = page < max_page;

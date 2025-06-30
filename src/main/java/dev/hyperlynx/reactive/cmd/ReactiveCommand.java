@@ -2,7 +2,6 @@ package dev.hyperlynx.reactive.cmd;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -11,6 +10,7 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.net.MaterialRenameScreenPayload;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
@@ -41,6 +41,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,10 +106,8 @@ public class ReactiveCommand {
                                         EntityArgument.getPlayer(context, "player")))))))
                         .then(Commands.literal("rename")
                                 .then(Commands.argument("id", ResourceLocationArgument.id())
-                                .then(Commands.argument("name", StringArgumentType.word())
-                                .executes(context -> renameMaterial(context,
-                                        ResourceLocationArgument.getId(context, "id"),
-                                        StringArgumentType.getString(context, "name"))))))
+                                .executes(context -> openRenameScreen(context,
+                                        ResourceLocationArgument.getId(context, "id")))))
                         .then(Commands.literal("list")
                                 .executes(context -> printMaterials(context.getSource())))
                         .then(Commands.literal("reload")
@@ -252,13 +251,16 @@ public class ReactiveCommand {
         return 1;
     }
 
-    private static int renameMaterial(CommandContext<CommandSourceStack> context, ResourceLocation material_id, String name) {
+    private static int openRenameScreen(CommandContext<CommandSourceStack> context, ResourceLocation material_id) {
         ServerLevel level = context.getSource().getLevel();
         if(!MaterialMan.occupied(level, material_id)) {
             context.getSource().sendFailure(Component.translatable("message.reactive.material_not_found"));
             return 0;
         }
-        MaterialMan.rename(level, material_id, name);
+        if(context.getSource().getPlayer() == null) {
+            return 0;
+        }
+        PacketDistributor.sendToPlayer(context.getSource().getPlayer(), new MaterialRenameScreenPayload(material_id));
         return 1;
     }
 
