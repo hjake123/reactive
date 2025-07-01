@@ -12,7 +12,6 @@ import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +31,6 @@ import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
@@ -114,7 +112,7 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) { // Working!
-        float speed = material(level, pos).getOrDefault(MaterialProperties.BREAK_SPEED.get(), 1.0F);
+        float speed = material(level, pos).getOrDefault(MaterialProperties.BREAK_STRENGTH.get(), 1.0F);
         if (speed == -1.0F) {
             return 0.0F;
         } else {
