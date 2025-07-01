@@ -176,6 +176,7 @@
   "text.reactive.random": "Random Contents",
   "text.reactive.name_material_button": "Select Name",
   "text.reactive.name_material_screen": "Name The Material",
+  "text.reactive.discovered_by": "Discovered by: ",
   "docs.reactive.reagent_label": "$(4)Reagents: ",
   "docs.reactive.powers_label": "Powers: $(br)",
   "docs.reactive.curse_label": "Curse$(br)",

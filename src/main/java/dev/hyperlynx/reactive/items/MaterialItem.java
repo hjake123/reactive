@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -31,7 +32,14 @@ public class MaterialItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, context, components, flag);
-        if(flag.isAdvanced() && stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            return;
+        }
+        Player discoverer = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getDiscoverer(context.level());
+        if(discoverer != null) {
+            components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.GRAY).append(discoverer.getName()));
+        }
+        if(flag.isAdvanced()) {
             components.add(Component.literal("" + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).withStyle(ChatFormatting.DARK_GRAY));
         }
     }

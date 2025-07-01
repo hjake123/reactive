@@ -66,7 +66,7 @@ public class ClientMaterialMan {
     }
 
     public static void rename(ResourceLocation material_id, String value) {
-        clientside_data.get().get(material_id).setName(value); // Update on the client side.
+        // clientside_data.get().get(material_id).setName(value); // Update on the client side.
         PacketDistributor.sendToServer(new MaterialRenamePayload(material_id, value)); // Tell server to update itself.
     }
 }

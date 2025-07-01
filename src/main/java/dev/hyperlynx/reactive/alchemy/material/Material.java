@@ -5,25 +5,31 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 /// A particular Material that MaterialBlocks can have the properties of.
 ///
 /// Each Material has a table of MaterialProperties that define its characteristics.
 /// When a MaterialBlock queries its material, it can ask it for various block properties.
 public class Material {
-    Reference2ObjectMap<MaterialProperty<?>, Object> properties;
-    String custom_name = "";
-    Optional<Map<Power, Integer>> original_formula = Optional.empty();
+    private final Reference2ObjectMap<MaterialProperty<?>, Object> properties;
+    private String custom_name = "";
+    private final Optional<Map<Power, Integer>> original_formula;
+    private Optional<UUID> discoverer = Optional.empty();
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
@@ -32,12 +38,20 @@ public class Material {
             instance.group(
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
                     Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
-                    Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula)
+                    Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
+                    UUIDUtil.CODEC.optionalFieldOf("discoverer").forGetter(Material::discovererUUID)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula ) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<UUID> discoverer) {
+        this.properties = new Reference2ObjectArrayMap<>(properties);
+        this.custom_name = custom_name;
+        this.original_formula = original_formula;
+        this.discoverer = discoverer;
+    }
+
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
@@ -60,6 +74,8 @@ public class Material {
     private Optional<Map<Power, Integer>> getOriginalFormula() {
         return original_formula;
     }
+
+    private Optional<UUID> discovererUUID() { return discoverer; }
 
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);
@@ -99,13 +115,25 @@ public class Material {
         this.custom_name = name;
     }
 
+    public void setDiscoverer(Player player) {
+        this.discoverer = Optional.of(player.getUUID());
+    }
+
+    public boolean wasDiscovered() {
+        return this.discoverer.isPresent();
+    }
+
+    public Player getDiscoverer(Level level) {
+        return this.discoverer.map(level::getPlayerByUUID).orElse(null);
+    }
+
+    public boolean playerDiscoveredThis(Player player) {
+        return this.discoverer.isPresent() && this.discoverer.get().equals(player.getUUID());
+    }
+
     /// Use this only as absolutely necessary.
     protected <T> void set(MaterialProperty<T> property, T value) {
         properties.put(property, value);
-    }
-
-    public void setOriginalFormula(@NotNull Map<Power, Integer> formula) {
-        this.original_formula = Optional.of(formula);
     }
 
     private static final int POWER_SAME_THRESHOLD = 100;

@@ -34,12 +34,14 @@ public class MaterialRenameScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+
         name_box.setMaxLength(32);
         name_box.setHint(ClientMaterialMan.getName(material_to_rename));
-        name_set_button.setPosition(this.width / 2 - (name_set_button.getWidth() / 2), this.height / 2 + 25);
         name_box.setPosition(this.width / 2 - (name_box.getWidth() / 2), this.height / 2);
-        name_set_button.active = false;
         this.addRenderableWidget(name_box);
+
+        name_set_button.setPosition(this.width / 2 - (name_set_button.getWidth() / 2), this.height / 2 + 25);
+        name_set_button.active = false;
         this.addRenderableWidget(name_set_button);
     }
 

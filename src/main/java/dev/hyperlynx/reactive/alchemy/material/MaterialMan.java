@@ -4,9 +4,9 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -56,8 +56,12 @@ public class MaterialMan {
         return data(level).materials.containsKey(id);
     }
 
-    public static void rename(ServerLevel level, ResourceLocation id, String name) {
-        data(level).get(id).setName(name);
+    public static void rename(ServerLevel level, Player player, ResourceLocation id, String name) {
+        Material material = data(level).get(id);
+        material.setName(name);
+        if(!material.wasDiscovered()) {
+            material.setDiscoverer(player);
+        }
         data(level).setDirty();
     }
 

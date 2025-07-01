@@ -37,6 +37,6 @@ public record MaterialRenamePayload(ResourceLocation material_id, String name) i
         if(!(context.player().level() instanceof ServerLevel slevel)) {
             return;
         }
-        MaterialMan.rename(slevel, material_id, name);
+        MaterialMan.rename(slevel, context.player(), material_id, name);
     }
 }
