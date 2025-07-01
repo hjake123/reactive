@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.Color;
@@ -35,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
-/// See [dev.hyperlynx.reactive.alchemy.material]
+/// See [Material] and [MaterialItem]
 public class MaterialBlock extends Block implements EntityBlock {
     public static final EnumProperty<MaterialModel> MODEL = EnumProperty.create("model", MaterialModel.class);
 

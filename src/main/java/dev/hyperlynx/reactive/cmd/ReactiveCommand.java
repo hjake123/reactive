@@ -89,13 +89,6 @@ public class ReactiveCommand {
                                 ))))))
 
                 .then(Commands.literal("material")
-                        .then(Commands.literal("define")
-                                .then(Commands.argument("id", ResourceLocationArgument.id())
-                                .then(Commands.argument("nbt", CompoundTagArgument.compoundTag())
-                                .executes(context ->
-                                        createMaterial(context.getSource(),
-                                                ResourceLocationArgument.getId(context, "id"),
-                                                context.getArgument("nbt", CompoundTag.class))))))
                         .then(Commands.literal("give")
                                 .then(Commands.argument("player", EntityArgument.player())
                                 .then(Commands.argument("id", ResourceLocationArgument.id())

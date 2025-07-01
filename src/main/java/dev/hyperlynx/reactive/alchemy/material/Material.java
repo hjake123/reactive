@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.core.UUIDUtil;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-/// A particular Material that MaterialBlocks can have the properties of.
+/// A particular Material that a [MaterialBlock] can have the properties of.
 ///
 /// Each Material has a table of MaterialProperties that define its characteristics.
 /// When a MaterialBlock queries its material, it can ask it for various block properties.

@@ -143,7 +143,6 @@
   "message.reactive.reject_warp_naive": "Strangely, nothing happened...",
   "message.reactive.make_warp_to_here": "The bottle is now linked to your current location.",
   "message.reactive.make_warp_to_there": "The bottle is now linked to this Gateway's destination.",
-  "message.reactive.invalid_material_definition": "Material definition was invalid: ",
   "message.reactive.material_removal_disabled": "Material remove commands are not enabled in the server config.",
   "message.reactive.material_removed": "Material erased.",
   "message.reactive.materials_reset": "All materials erased.",
