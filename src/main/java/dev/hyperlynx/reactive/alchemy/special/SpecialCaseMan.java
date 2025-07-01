@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.alchemy.special;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
@@ -725,7 +726,7 @@ public class SpecialCaseMan {
             return;
         }
         ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
-        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), crucible.getPowerMap());
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), crucible.getPowerMap(), MaterialModel.SALT);
         material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
         material_stack.setCount(salt_item_entity.getItem().getCount());
         Vec3 in_crucible = crucible.getBlockPos().getCenter();

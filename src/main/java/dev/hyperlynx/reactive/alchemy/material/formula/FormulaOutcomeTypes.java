@@ -30,4 +30,7 @@ public class FormulaOutcomeTypes {
 
     public static final DeferredHolder<MapCodec<? extends FormulaOutcome>, MapCodec<? extends FormulaOutcome>> ZERO_TO_MAX_FLOAT = TYPES
             .register("zero_to_max_float", () -> FloatZeroToMaxFormulaOutcome.CODEC.fieldOf("value"));
+
+    public static final DeferredHolder<MapCodec<? extends FormulaOutcome>, MapCodec<? extends FormulaOutcome>> ONE_TO_VALUE_FLOAT = TYPES
+            .register("one_to_value_float", () -> FloatOneToValueFormulaOutcome.CODEC.fieldOf("value"));
 }

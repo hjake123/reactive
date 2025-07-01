@@ -10,6 +10,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
+import java.util.List;
+
 @EventBusSubscriber
 public class ReactiveDataMaps {
     // TODO Advanced data map?
@@ -19,10 +21,10 @@ public class ReactiveDataMaps {
             PropertyFormulaRequirements.CODEC
     ).build();
 
-    public static final DataMapType<MaterialProperty<?>, FormulaOutcome> FORMULA_OUTCOME_MAP = DataMapType.builder(
+    public static final DataMapType<MaterialProperty<?>, List<FormulaOutcome>> FORMULA_OUTCOME_MAP = DataMapType.builder(
             ReactiveMod.location("formula_outcomes"),
             MaterialProperties.MATERIAL_PROPERTY_REGISTRY_KEY,
-            FormulaOutcome.CODEC
+            FormulaOutcome.CODEC.listOf()
     ).build();
 
     @SubscribeEvent

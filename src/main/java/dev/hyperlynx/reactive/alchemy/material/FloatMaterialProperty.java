@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.formula.FloatFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.FloatZeroToMaxFormulaOutcome;
+import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.IntegerZeroToMaxFormulaOutcome;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.resources.ResourceKey;
@@ -19,16 +20,20 @@ public class FloatMaterialProperty extends MaterialProperty<Float>{
         ResourceLocation id = MaterialProperties.PROPERTY_REGISTRY.getKey(this);
         assert id != null;
         var holder = MaterialProperties.PROPERTY_REGISTRY.getHolder(id);
-        var outcome_map = holder.get().getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP);
-        if(outcome_map == null) {
+        var outcomes = holder.get().getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP);
+        if(outcomes == null) {
             ReactiveMod.LOGGER.error("No outcome map has been defined for {}, defaulting to 0.0", id);
             return 0.0F;
         }
-        if(!(outcome_map instanceof FloatFormulaOutcome outcome)) {
-            ReactiveMod.LOGGER.error("Outcome map for {} has a non-applicable outcome type set, defaulting to 0.0", id);
-            return 0.0F;
+        float value = 1.0F;
+        for(FormulaOutcome outcome : outcomes) {
+            if(!(outcome instanceof FloatFormulaOutcome float_outcome)) {
+                ReactiveMod.LOGGER.error("Outcome map for {} has a non-applicable outcome type set, skipping.", id);
+                continue;
+            }
+            value *= float_outcome.calculate(formula);
         }
-        return outcome.calculate(formula);
+        return value;
     }
 
     @Override

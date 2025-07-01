@@ -67,7 +67,7 @@ public class MaterialMan {
 
     /// Creates or gets a Material based on the formula provided
     /// and returns the ResourceLocation of that material, to be set onto an item or block.
-    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Map<Power, Integer> formula) {
+    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Map<Power, Integer> formula, MaterialModel model) {
         for(Map.Entry<ResourceLocation, Material> existing_material : data(level).materials.entrySet()) {
             if(existing_material.getValue().formulaMatches(formula)) {
                 return existing_material.getKey();
@@ -87,7 +87,7 @@ public class MaterialMan {
 
         // Decide on the properties of the new material
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
-        properties.put(MaterialProperties.MODEL_NAME.get(), MaterialModel.SALT.getSerializedName());
+        properties.put(MaterialProperties.MODEL_NAME.get(), model.getSerializedName());
         for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
             if(property.requirementsMet(formula)) {
                 properties.put(property, property.instance(formula));

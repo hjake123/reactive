@@ -2,9 +2,7 @@ package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
-import dev.hyperlynx.reactive.alchemy.material.formula.FloatZeroToMaxFormulaOutcome;
-import dev.hyperlynx.reactive.alchemy.material.formula.IntegerZeroToMaxFormulaOutcome;
-import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
+import dev.hyperlynx.reactive.alchemy.material.formula.*;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -55,34 +53,66 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 50, 50,
                                 Optional.empty(), Optional.empty())
                 )), false)
+                .add(MaterialProperties.BLAST_RESISTANCE, new PropertyFormulaRequirements(List.of()), false)
         ;
 
 
         builder(ReactiveDataMaps.FORMULA_OUTCOME_MAP)
-                .add(MaterialProperties.LIGHT, new IntegerZeroToMaxFormulaOutcome(
-                        Powers.LIGHT_POWER.getId(),
-                        200,
-                        1600,
-                        15
-                ), false)
-                .add(MaterialProperties.REDSTONE, new IntegerZeroToMaxFormulaOutcome(
-                        Powers.MIND_POWER.getId(),
-                        500,
-                        1200,
-                        15
-                ), false)
-                .add(MaterialProperties.FLAMMABILITY, new IntegerZeroToMaxFormulaOutcome(
-                        Powers.MIND_POWER.getId(),
-                        700,
-                        1600,
-                        300
-                ), false)
-                .add(MaterialProperties.ENCHANT_POWER, new FloatZeroToMaxFormulaOutcome(
-                        Powers.MIND_POWER.getId(),
-                        50,
-                        1000,
-                        2.0F
-                ), false)
+                .add(MaterialProperties.LIGHT, List.of(
+                        new IntegerZeroToMaxFormulaOutcome(
+                            Powers.LIGHT_POWER.getId(),
+                            200,
+                            1600,
+                            15
+                )), false)
+                .add(MaterialProperties.REDSTONE, List.of(
+                        new IntegerZeroToMaxFormulaOutcome(
+                            Powers.MIND_POWER.getId(),
+                            500,
+                            1200,
+                            15
+                )), false)
+                .add(MaterialProperties.FLAMMABILITY, List.of(
+                        new IntegerZeroToMaxFormulaOutcome(
+                            Powers.MIND_POWER.getId(),
+                            700,
+                            1600,
+                            300
+                )), false)
+                .add(MaterialProperties.ENCHANT_POWER, List.of(
+                        new FloatZeroToMaxFormulaOutcome(
+                            Powers.MIND_POWER.getId(),
+                            50,
+                            1000,
+                            2.0F
+                )), false)
+                .add(MaterialProperties.BLAST_RESISTANCE, List.of(
+                        new FloatOneToValueFormulaOutcome(
+                            Powers.VITAL_POWER.getId(),
+                            250,
+                            500,
+                            100.0F),
+                        new FloatOneToValueFormulaOutcome(
+                            Powers.CURSE_POWER.getId(),
+                            0,
+                            20,
+                            0.0F),
+                        new FloatOneToValueFormulaOutcome(
+                            Powers.BODY_POWER.getId(),
+                            0,
+                            1200,
+                            10.0F),
+                        new FloatOneToValueFormulaOutcome(
+                            Powers.SOUL_POWER.getId(),
+                            500,
+                            550,
+                            2.0F),
+                        new FloatOneToValueFormulaOutcome(
+                            Powers.WARP_POWER.getId(),
+                            100,
+                            550,
+                            0.2F)
+                    ), false)
         ;
     }
 }
