@@ -137,7 +137,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Powers.VITAL_POWER.getId(),
                                 100,
                                 110,
-                                2.0F),
+                                1.5F),
                         new FloatOneToValueFormulaOutcome(
                                 Powers.CURSE_POWER.getId(),
                                 0,
@@ -147,7 +147,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Powers.BODY_POWER.getId(),
                                 0,
                                 1600,
-                                5.0F),
+                                3.0F),
                         new FloatOneToValueFormulaOutcome(
                                 Powers.VERDANT_POWER.getId(),
                                 0,

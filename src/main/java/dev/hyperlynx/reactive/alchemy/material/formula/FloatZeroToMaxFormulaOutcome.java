@@ -55,7 +55,7 @@ public class FloatZeroToMaxFormulaOutcome extends FormulaOutcome implements Floa
         Power power = Powers.POWER_REGISTRY.get(power());
         if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
             int provided_power = Math.min(formula.get(power) - getMinPower(), getMaxPower());
-            float power_proportion = (float) provided_power / (getMaxPower() - getMinPower());
+            float power_proportion = (float) provided_power / getMaxPower();
             return power_proportion * getMaxValue();
         }
         return 0.0F;

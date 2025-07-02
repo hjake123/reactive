@@ -54,7 +54,7 @@ public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome implements In
         Power power = Powers.POWER_REGISTRY.get(power());
         if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
             int provided_power = Math.min(formula.get(power) - getMinPower(), getMaxPower());
-            double power_proportion = (double) provided_power / (getMaxPower() - getMinPower());
+            double power_proportion = (double) provided_power / getMaxPower();
             return (int) (power_proportion * getMaxValue());
         }
         return 0;
