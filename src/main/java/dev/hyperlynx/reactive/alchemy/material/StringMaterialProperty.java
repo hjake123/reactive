@@ -1,21 +1,40 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.material.formula.FloatFormulaOutcome;
+import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
+import dev.hyperlynx.reactive.alchemy.material.formula.StringFormulaOutcome;
+import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
 public class StringMaterialProperty extends MaterialProperty<String>{
     @Override
-    public boolean requirementsMet(Map<Power, Integer> formula) {
-        // String properties should never be automatically applied.
-        return false;
-    }
-
-    @Override
     public String instance(Map<Power, Integer> formula) {
-        return "";
+        ResourceLocation id = MaterialProperties.PROPERTY_REGISTRY.getKey(this);
+        assert id != null;
+        var holder = MaterialProperties.PROPERTY_REGISTRY.getHolder(id);
+        var outcomes = holder.get().getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP);
+        if(outcomes == null || outcomes.isEmpty()) {
+            ReactiveMod.LOGGER.error("No outcome map has been defined for {}, defaulting to empty string", id);
+            return "";
+        }
+        String value = "";
+        for(FormulaOutcome outcome : outcomes) {
+            if(!(outcome instanceof StringFormulaOutcome string_outcome)) {
+                ReactiveMod.LOGGER.error("Outcome map for {} has a non-applicable outcome type set, skipping.", id);
+                continue;
+            }
+            String result = string_outcome.calculate(formula);
+            if(!result.isEmpty()) {
+                value = result;
+            }
+        }
+        return value;
     }
 
     @Override
