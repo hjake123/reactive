@@ -55,12 +55,9 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty(), Optional.empty())
                 )), false)
                 .add(MaterialProperties.BLAST_RESISTANCE, new PropertyFormulaRequirements(List.of()), false)
-                .add(MaterialProperties.FRICTION, new PropertyFormulaRequirements(List.of(
-                        new PropertyFormulaRequirements.Part(Powers.WARP_POWER.getId(),
-                                1200, 1600,
-                                Optional.empty(), Optional.empty())
-                )), false)
+                .add(MaterialProperties.FRICTION, new PropertyFormulaRequirements(List.of()), false)
                 .add(MaterialProperties.BREAK_STRENGTH, new PropertyFormulaRequirements(List.of()), false)
+                .add(MaterialProperties.MODEL_NAME, new PropertyFormulaRequirements(List.of()), false)
         ;
 
 
@@ -123,14 +120,14 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 .add(MaterialProperties.FRICTION, List.of(
                         new FloatOneToValueFormulaOutcome(
                                 Powers.WARP_POWER.getId(),
-                                1200,
-                                1600,
-                                0.99F),
+                                800,
+                                1000,
+                                0.9F),
                         new FloatOneToValueFormulaOutcome(
                                 Powers.FLOW_POWER.getId(),
                                 10,
-                                100,
-                                0.98F)
+                                1600,
+                                0.8F)
                 ), false)
                 .add(MaterialProperties.BREAK_STRENGTH, List.of(
                         new FloatOneToValueFormulaOutcome(
@@ -168,6 +165,71 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 777,
                                 877,
                                 1.05F)
+                ), false)
+                .add(MaterialProperties.MODEL_NAME, List.of(
+                        new RangeStringFormulaOutcome(
+                                "gel",
+                                Powers.ACID_POWER.getId(),
+                                1000,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "cracked",
+                                Powers.CURSE_POWER.getId(),
+                                10,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "smooth",
+                                Powers.FLOW_POWER.getId(),
+                                10,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "cracked",
+                                Powers.BODY_POWER.getId(),
+                                500,
+                                Optional.of(1200)
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "streaked",
+                                Powers.BODY_POWER.getId(),
+                                1200,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "smooth",
+                                Powers.WARP_POWER.getId(),
+                                950,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "streaked",
+                                Powers.VERDANT_POWER.getId(),
+                                1000,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "cracked",
+                                Powers.BLAZE_POWER.getId(),
+                                20,
+                                Optional.of(1250)
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "gel",
+                                Powers.BLAZE_POWER.getId(),
+                                1250,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "smooth",
+                                Powers.VITAL_POWER.getId(),
+                                1200,
+                                Optional.empty()
+                        ),
+                        new DefaultStringFormulaOutcome(
+                                "salt"
+                        )
                 ), false)
         ;
     }

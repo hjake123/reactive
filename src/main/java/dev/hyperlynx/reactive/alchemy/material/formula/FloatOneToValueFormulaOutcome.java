@@ -54,8 +54,8 @@ public class FloatOneToValueFormulaOutcome extends FormulaOutcome implements Flo
     public float calculate(Map<Power, Integer> formula) {
         Power power = Powers.POWER_REGISTRY.get(power());
         if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
-            int provided_power = Math.min(formula.get(power) - getMinPower(), getMaxPower());
-            float power_proportion = (float) provided_power / getMaxPower();
+            int provided_power = Math.min((formula.get(power) - min_power), (max_power - min_power));
+            float power_proportion = (float) provided_power / (max_power - min_power);
             return (getValue() - 1) * power_proportion + 1;
         }
         return 1.0F;

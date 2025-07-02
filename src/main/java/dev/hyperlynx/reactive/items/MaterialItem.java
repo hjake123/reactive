@@ -35,9 +35,11 @@ public class MaterialItem extends BlockItem {
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             return;
         }
-        Player discoverer = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getDiscoverer(context.level());
-        if(discoverer != null) {
-            components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.GRAY).append(discoverer.getName()));
+        if(flag.hasShiftDown()) {
+            Player discoverer = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getDiscoverer(context.level());
+            if(discoverer != null) {
+                components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.GRAY).append(discoverer.getName()));
+            }
         }
         if(flag.isAdvanced()) {
             components.add(Component.literal("" + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).withStyle(ChatFormatting.DARK_GRAY));

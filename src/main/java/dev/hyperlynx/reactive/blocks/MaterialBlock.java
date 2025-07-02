@@ -116,6 +116,7 @@ public class MaterialBlock extends Block implements EntityBlock {
         if (speed == -1.0F) {
             return 0.0F;
         } else {
+            speed *= 0.75F;
             int neo_check = net.neoforged.neoforge.event.EventHooks.doPlayerHarvestCheck(player, state, level, pos) ? 30 : 100;
             return player.getDigSpeed(state, pos) / speed / (float)neo_check;
         }

@@ -35,5 +35,8 @@ public class FormulaOutcomeTypes {
             .register("one_to_value_float", () -> FloatOneToValueFormulaOutcome.CODEC.fieldOf("value"));
 
     public static final DeferredHolder<MapCodec<? extends FormulaOutcome>, MapCodec<? extends FormulaOutcome>> STRING_OPTIONS = TYPES
-            .register("string_options", () -> StringFormulaOutcome.CODEC.fieldOf("value"));
+            .register("string_options", () -> RangeStringFormulaOutcome.CODEC.fieldOf("value"));
+
+    public static final DeferredHolder<MapCodec<? extends FormulaOutcome>, MapCodec<? extends FormulaOutcome>> DEFAULT_STRING = TYPES
+            .register("default_string", () -> DefaultStringFormulaOutcome.CODEC.fieldOf("value"));
 }
