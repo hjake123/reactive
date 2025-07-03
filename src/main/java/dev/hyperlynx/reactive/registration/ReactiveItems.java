@@ -13,6 +13,7 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+@SuppressWarnings("unused")
 public class ReactiveItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ReactiveMod.MODID);
 
@@ -188,4 +189,6 @@ public class ReactiveItems {
 
     public static final DeferredHolder<Item, MaterialItem> MATERIAL = ITEMS.register("material",
             () -> new MaterialItem(ReactiveBlocks.MATERIAL_BLOCK.get(), new Item.Properties()));
+
+    public static final DeferredHolder<Item, BlockItem> DESK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.DESK);
 }

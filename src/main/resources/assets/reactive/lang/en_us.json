@@ -147,6 +147,8 @@
   "message.reactive.material_removed": "Material erased.",
   "message.reactive.materials_reset": "All materials erased.",
   "message.reactive.material_not_found": "That material id does not exist!",
+  "message.reactive.click_with_material": "Use a material on the desk to discover it!",
+  "message.reactive.someone_else_discovered": "Someone else already discovered this",
   "commands.reactive.no_player": "This command can only be run by a player",
   "commands.reactive.no_crucible": "There's no crucible at that location",
   "commands.reactive.fake_power": "Invalid power",

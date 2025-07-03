@@ -61,7 +61,7 @@ public class ReactivePayloadHandlers {
                 MaterialRenameScreenPayload.STREAM_CODEC,
                 (payload, _context) -> {
                     if (FMLLoader.getDist() == Dist.CLIENT) {
-                        ScreenOpener.materialRename(payload);
+                        ScreenOpener.materialRename(payload.material_id());
                     }
                 }
         );
