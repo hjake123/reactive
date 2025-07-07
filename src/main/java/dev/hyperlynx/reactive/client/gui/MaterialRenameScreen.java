@@ -1,6 +1,8 @@
 package dev.hyperlynx.reactive.client.gui;
 
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.client.Minecraft;
@@ -15,14 +17,14 @@ import net.minecraft.world.item.ItemStack;
 public class MaterialRenameScreen extends Screen {
     ResourceLocation material_to_rename;
     EditBox name_box = new EditBox(Minecraft.getInstance().font,200, 20, Component.empty());
-    Button name_set_button = new Button.Builder(Component.translatable("text.reactive.name_material_button"),
+    Button name_set_button = new Button.Builder(Component.translatable("ui.reactive.discover_button"),
             button -> {
                 ClientMaterialMan.rename(material_to_rename, name_box.getValue());
-                Minecraft.getInstance().setScreen(null);
+                Minecraft.getInstance().popGuiLayer();
             }).build();
 
     protected MaterialRenameScreen(ResourceLocation material_to_rename) {
-        super(Component.translatable("title.reactive.name_material_screen"));
+        super(Component.translatable("ui.reactive.name_material_screen"));
         this.material_to_rename = material_to_rename;
     }
 
@@ -40,6 +42,10 @@ public class MaterialRenameScreen extends Screen {
         name_box.setPosition(this.width / 2 - (name_box.getWidth() / 2), this.height / 2);
         this.addRenderableWidget(name_box);
 
+        Material material = MaterialMan.fetch(Minecraft.getInstance().level, material_to_rename);
+        if(!(material == null) && material.wasDiscovered()) {
+            name_set_button.setMessage(Component.translatable("ui.reactive.rename_button"));
+        }
         name_set_button.setPosition(this.width / 2 - (name_set_button.getWidth() / 2), this.height / 2 + 25);
         name_set_button.active = false;
         this.addRenderableWidget(name_set_button);

@@ -16,7 +16,6 @@ import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -37,6 +36,7 @@ public class ClientRegistration {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
         Minecraft.getInstance().particleEngine.register(ReactiveParticles.STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);

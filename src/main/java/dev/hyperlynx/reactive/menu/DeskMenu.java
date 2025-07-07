@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.menu;
 
 import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.registration.ReactiveMenus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +28,8 @@ public class DeskMenu extends AbstractContainerMenu {
         super(ReactiveMenus.DESK_MENU.get(), containerId);
         this.player_inventory = player_inventory;
         this.access = access;
-        this.addSlot(new SlotItemHandler(desk_inventory, CONTAINER_SLOT_INDEX, 0, 0));
+        this.addSlot(new SlotItemHandler(desk_inventory, CONTAINER_SLOT_INDEX, 26, 25));
+
         // Copied from BrewingStandMenu.java
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
@@ -51,6 +53,9 @@ public class DeskMenu extends AbstractContainerMenu {
 
         if(from_slot.hasItem()) {
             ItemStack from_stack = from_slot.getItem();
+            if(!from_stack.is(ReactiveItems.MATERIAL.get())) {
+                return ItemStack.EMPTY;
+            }
 
             if(from_slot_index == CONTAINER_SLOT_INDEX) {
                 if(!moveItemStackTo(from_stack, 1, 37, false)) {
