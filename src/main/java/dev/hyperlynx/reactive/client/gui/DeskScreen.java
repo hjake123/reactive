@@ -40,7 +40,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
                 }
             }).build();
 
-    MultiLineEditBox notes_box = new MultiLineEditBox(Minecraft.getInstance().font, 0, 0, 104, 60, Component.translatable("ui.reactive.notes_hint"), Component.empty());
+    NakedMultiLineEditBox notes_box = new NakedMultiLineEditBox(Minecraft.getInstance().font, 0, 0, 104, 60, Component.translatable("ui.reactive.notes_hint"), Component.empty());
     boolean notes_loaded = false;
     boolean notes_changed = false;
 
