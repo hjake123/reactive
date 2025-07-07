@@ -1,19 +1,19 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +25,12 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
     }
 
     @Override
-    protected Component getDefaultName() {
+    protected @NotNull Component getDefaultName() {
         return Component.translatable("block.reactive.desk");
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    protected @NotNull NonNullList<ItemStack> getItems() {
         return NonNullList.of(ItemStack.EMPTY, stack);
     }
 
@@ -40,11 +40,28 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
         if(items.size() > 1) {
             throw new IllegalArgumentException("Desk block entity cannot accept more then one ItemStack.");
         }
+        this.setChanged();
     }
 
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
         return new DeskMenu(containerId, inventory);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if(tag.contains("stack")) {
+            stack = ItemStack.parseOptional(registries, tag.getCompound("stack"));
+        }
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if(!stack.isEmpty()) {
+            tag.put("stack", stack.save(registries));
+        }
     }
 
     @Override
