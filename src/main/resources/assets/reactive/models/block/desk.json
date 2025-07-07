@@ -4,7 +4,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "reactive:block/desk",
-		"particle": "reactive:block/desk"
+		"particle": "minecraft:block/jungle_planks"
 	},
 	"elements": [
 		{
@@ -175,7 +175,8 @@
 			"scale": [0.3, 0.3, 0.3]
 		},
 		"gui": {
-			"rotation": [22.5, 45, 0]
+			"rotation": [22.5, 45, 0],
+			"scale": [0.7, 0.7, 0.7]
 		},
 		"head": {
 			"translation": [0, 1.75, 0]

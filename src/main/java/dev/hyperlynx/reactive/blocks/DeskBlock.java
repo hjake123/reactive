@@ -8,19 +8,43 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class DeskBlock extends Block implements EntityBlock {
+    // Copied from the model. Can't think of a better option...
+    protected static final VoxelShape SHAPE = Shapes.or(
+            Block.box(0, 6, 0, 16, 13, 16),
+            Block.box(0, 0, 0, 4, 6,4),
+            Block.box(0, 0, 12, 4, 6, 16),
+            Block.box(12, 0, 0, 16, 6, 4),
+            Block.box(12, 0, 12, 16, 6, 16),
+            Block.box(4, 3, 2, 12, 5, 14),
+            Block.box(12, 3, 4, 14, 5, 12),
+            Block.box(2, 3, 4, 4, 5, 12),
+            Block.box(2, 13, 3, 7, 15, 13),
+            Block.box(9, 13, 3, 14, 15, 13),
+            Block.box(7, 13, 3, 9, 14, 13)
+    );
+
     public DeskBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
     @Override
