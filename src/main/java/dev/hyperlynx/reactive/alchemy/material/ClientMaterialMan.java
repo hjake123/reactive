@@ -75,7 +75,7 @@ public class ClientMaterialMan {
     public static void syncNotes() {
         for(ResourceLocation id : data().materials.keySet()) {
             Optional<String> notes = data().materials.get(id).getNotes();
-            notes.ifPresent(s -> PacketDistributor.sendToServer(new MaterialNotesPayload(id, s)));
+            PacketDistributor.sendToServer(new MaterialNotesPayload(id, notes.orElse("")));
         }
     }
 }
