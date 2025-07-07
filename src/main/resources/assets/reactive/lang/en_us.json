@@ -39,6 +39,7 @@
   "item.reactive.unknown_device": "Strange Device",
   "block.reactive.undiscovered_material": "Undiscovered Material",
   "block.reactive.invalid_material": "Invalid Material",
+  "block.reactive.desk": "Discovery Desk",
   "item.reactive.stardust": "Star Dust",
   "item.reactive.acid_bucket": "Acid Bucket",
   "item.reactive.salt": "Apprentice's Salts",
