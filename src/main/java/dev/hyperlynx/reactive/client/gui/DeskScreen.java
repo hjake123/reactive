@@ -56,8 +56,8 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
         rename_button.visible = false;
         rename_button.active = false;
-        rename_button.setPosition(slot_x - 17,slot_y + 24);
-        rename_button.setWidth(49);
+        rename_button.setPosition(slot_x - 16,slot_y + 24);
+        rename_button.setWidth(51);
         addRenderableWidget(rename_button);
 
         notes_box.active = false;
