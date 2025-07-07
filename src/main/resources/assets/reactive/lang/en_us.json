@@ -100,6 +100,7 @@
   "block.reactive.gateway": "Gateway Rift",
   "block.reactive.ungrown_nodule": "Ungrown Nodule",
   "block.reactive.nodule": "Nodule",
+  "block.reactive.desk": "Discovery Desk",
   "entity.reactive.reactor": "Reaction Cloud",
   "effect.reactive.no_gravity": "Weightless",
   "effect.reactive.immobility": "Immobilized",
