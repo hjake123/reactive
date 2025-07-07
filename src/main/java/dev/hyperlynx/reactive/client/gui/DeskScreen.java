@@ -5,9 +5,11 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -18,7 +20,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.css.Rect;
 
+import java.util.List;
 import java.util.Objects;
 
 public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
@@ -124,17 +129,18 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(DESK_BACKGROUND_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        renderDecorations(guiGraphics);
     }
 
     @Override
@@ -153,4 +159,30 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
             ClientMaterialMan.syncNotes();
         }
     }
+
+    // -- Square glowing decoration --
+    private record Rect(int x1, int y1, int x2, int y2) {}
+
+    private static final List<Rect> DECORATIONS = List.of(
+            new Rect(21, 20, 46, 20),
+            new Rect(21, 45, 46, 45),
+            new Rect(21, 20, 21, 45),
+            new Rect(46, 20, 46, 45)
+    );
+
+    private void renderDecorations(GuiGraphics graphics) {
+        if(getMaterialId() == null) {
+            return;
+        }
+        Color color = getMaterial().get(MaterialProperties.COLOR.get());
+        if(color == null) {
+            return;
+        }
+        for (Rect rect : DECORATIONS) {
+            graphics.fill(rect.x1 + getGuiLeft(), rect.y1 + getGuiTop(),
+                    rect.x2 + getGuiLeft() + 1, rect.y2 + getGuiTop() + 1,
+                    0xFF000000 | color.hex);
+        }
+    }
+
 }
