@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.client;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
+import dev.hyperlynx.reactive.client.gui.DeskScreen;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.client.particles.*;
@@ -22,6 +23,7 @@ import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class ClientRegistration {
@@ -79,6 +81,11 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         event.register(MaterialItem::getItemColor, ReactiveItems.MATERIAL.get());
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(ReactiveMenus.DESK_MENU.get(), DeskScreen::new);
     }
 
 }

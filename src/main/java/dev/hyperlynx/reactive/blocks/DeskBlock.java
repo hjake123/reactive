@@ -1,50 +1,52 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.alchemy.material.Material;
-import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.client.gui.ScreenOpener;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.be.DeskBlockEntity;
+import dev.hyperlynx.reactive.menu.DeskMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class DeskBlock extends Block {
+public class DeskBlock extends Block implements EntityBlock {
     public DeskBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            ResourceLocation material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
-            Material material = MaterialMan.fetch(level, material_id);
-            if (material.wasDiscovered() && !material.playerDiscoveredThis(player)) {
-                player.displayClientMessage(Component.translatable("message.reactive.someone_else_discovered"), true);
-                return ItemInteractionResult.FAIL;
-            }
-            if(level.isClientSide()) {
-                ScreenOpener.materialRename(Objects.requireNonNull(material_id));
-            }
-            return ItemInteractionResult.SUCCESS;
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+        if(handler != null) {
+            return new SimpleMenuProvider(
+                    ((container_id, player_inventory, player) ->
+                            new DeskMenu(container_id, player_inventory, handler, ContainerLevelAccess.create(level, pos))),
+                    Component.translatable("menu.title.reactive.desk")
+            );
         }
-        player.displayClientMessage(Component.translatable("message.reactive.click_with_material"), true);
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return null;
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        player.displayClientMessage(Component.translatable("message.reactive.click_with_material"), true);
+        if(player instanceof ServerPlayer splayer) {
+            splayer.openMenu(state.getMenuProvider(level, pos));
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new DeskBlockEntity(pos, state);
     }
 }
