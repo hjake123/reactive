@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
+import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.net.MaterialRenamePayload;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -10,6 +11,7 @@ import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,5 +70,12 @@ public class ClientMaterialMan {
     public static void rename(ResourceLocation material_id, String value) {
         // clientside_data.get().get(material_id).setName(value); // Update on the client side.
         PacketDistributor.sendToServer(new MaterialRenamePayload(material_id, value)); // Tell server to update itself.
+    }
+
+    public static void syncNotes() {
+        for(ResourceLocation id : data().materials.keySet()) {
+            Optional<String> notes = data().materials.get(id).getNotes();
+            notes.ifPresent(s -> PacketDistributor.sendToServer(new MaterialNotesPayload(id, s)));
+        }
     }
 }

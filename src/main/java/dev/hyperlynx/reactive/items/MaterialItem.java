@@ -29,16 +29,29 @@ public class MaterialItem extends BlockItem {
         return Component.translatable("block.reactive.invalid_material");
     }
 
+    private static final int MAX_NOTES_TOOLTIP_LINE_LENGTH = 32;
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, context, components, flag);
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             return;
         }
+        Material material = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
+        if(material.getNotes().isPresent()) {
+            String first_notes_line = material.getNotes().get().lines().findFirst().orElse("");
+            if(!first_notes_line.isEmpty()) {
+                if(first_notes_line.length() > MAX_NOTES_TOOLTIP_LINE_LENGTH) {
+                    first_notes_line = first_notes_line.substring(0, MAX_NOTES_TOOLTIP_LINE_LENGTH);
+                    first_notes_line += "...";
+                }
+                components.add(Component.literal(first_notes_line).withStyle(ChatFormatting.GRAY));
+            }
+        }
         if(flag.hasShiftDown()) {
-            Player discoverer = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getDiscoverer(context.level());
+            Player discoverer = material.getDiscoverer(context.level());
             if(discoverer != null) {
-                components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.GRAY).append(discoverer.getName()));
+                components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer.getName()));
             }
         }
         if(flag.isAdvanced()) {

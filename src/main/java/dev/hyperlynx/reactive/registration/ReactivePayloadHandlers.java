@@ -65,6 +65,11 @@ public class ReactivePayloadHandlers {
                     }
                 }
         );
+        registrar.playToServer(
+                MaterialNotesPayload.TYPE,
+                MaterialNotesPayload.STREAM_CODEC,
+                MaterialNotesPayload::handle
+        );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
         async_registrar.commonToClient(

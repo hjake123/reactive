@@ -31,6 +31,7 @@ public class Material {
     private String custom_name = "";
     private final Optional<Map<Power, Integer>> original_formula;
     private Optional<UUID> discoverer = Optional.empty();
+    private Optional<String> notes = Optional.empty();
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
@@ -40,16 +41,18 @@ public class Material {
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
                     Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
                     Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
-                    UUIDUtil.CODEC.optionalFieldOf("discoverer").forGetter(Material::discovererUUID)
+                    UUIDUtil.CODEC.optionalFieldOf("discoverer").forGetter(Material::discovererUUID),
+                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<UUID> discoverer) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<UUID> discoverer, Optional<String> notes) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
         this.discoverer = discoverer;
+        this.notes = notes;
     }
 
     public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula) {
@@ -62,6 +65,10 @@ public class Material {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = Optional.empty();
+    }
+
+    public Optional<String> getNotes() {
+        return notes;
     }
 
     public static Material empty() {
@@ -158,5 +165,13 @@ public class Material {
             }
         }
         return true;
+    }
+
+    public void setNotes(String notes) {
+        if(notes.isEmpty()) {
+            this.notes = Optional.empty();
+            return;
+        }
+        this.notes = Optional.of(notes);
     }
 }
