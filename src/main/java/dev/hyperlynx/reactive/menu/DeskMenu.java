@@ -53,13 +53,11 @@ public class DeskMenu extends AbstractContainerMenu {
             ItemStack from_stack = from_slot.getItem();
 
             if(from_slot_index == CONTAINER_SLOT_INDEX) {
-                if(!moveItemStackTo(from_stack, 1, 37, true)) {
+                if(!moveItemStackTo(from_stack, 1, 37, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if(!moveItemStackTo(from_stack, 0, 1, false)) {
-                if(!moveItemStackTo(from_stack, 27,37, false)) {
-                    return ItemStack.EMPTY;
-                }
+                return ItemStack.EMPTY;
             }
 
             if(from_stack.isEmpty()) {
