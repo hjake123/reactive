@@ -1,7 +1,11 @@
 package dev.hyperlynx.reactive.client;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.registration.ReactiveParticles;
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.blocks.MaterialBlock;
+import dev.hyperlynx.reactive.client.gui.DeskScreen;
+import dev.hyperlynx.reactive.items.MaterialItem;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.be.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.be.GatewayRenderer;
@@ -9,15 +13,16 @@ import dev.hyperlynx.reactive.client.renderers.entities.ReactorEntityRenderer;
 import dev.hyperlynx.reactive.client.renderers.be.SymbolRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
-import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
-import dev.hyperlynx.reactive.registration.ReactiveEntityTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class ClientRegistration {
@@ -31,6 +36,7 @@ public class ClientRegistration {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent evt) {
         Minecraft.getInstance().particleEngine.register(ReactiveParticles.STARDUST_PARTICLE_TYPE.get(), StardustParticle.StardustParticleProvider::new);
@@ -59,6 +65,27 @@ public class ClientRegistration {
         if(ModList.get().isLoaded("ponder")){
             ReactivePonderPlugin.clientInit();
         }
+        //noinspection deprecation
+        ItemProperties.register(
+                ReactiveItems.MATERIAL.get(),
+                ReactiveMod.location("material_model_index"),
+                MaterialItem::getModelOverrideValue
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register(MaterialBlock::getBlockColor, ReactiveBlocks.MATERIAL_BLOCK.get());
+    }
+
+    @SubscribeEvent
+    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register(MaterialItem::getItemColor, ReactiveItems.MATERIAL.get());
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(ReactiveMenus.DESK_MENU.get(), DeskScreen::new);
     }
 
 }

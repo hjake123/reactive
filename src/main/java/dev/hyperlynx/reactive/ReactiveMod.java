@@ -1,6 +1,9 @@
 package dev.hyperlynx.reactive;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcomeTypes;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
@@ -34,6 +37,7 @@ public class ReactiveMod
         reactive_bus.addListener(ReactiveMod::commonSetupHandler);
         NeoForge.EVENT_BUS.register(REACTION_MAN);
         NeoForge.EVENT_BUS.addListener(WorldSpecificValue::worldLoad);
+        NeoForge.EVENT_BUS.addListener(ClientMaterialMan::worldLoad);
         container.registerConfig(ModConfig.Type.COMMON, ConfigMan.commonSpec);
         container.registerConfig(ModConfig.Type.SERVER, ConfigMan.serverSpec);
         container.registerConfig(ModConfig.Type.CLIENT, ConfigMan.clientSpec);
@@ -74,6 +78,9 @@ public class ReactiveMod
         ReactiveSoundEvents.SOUND_EVENTS.register(bus);
         ReactiveCommandArguments.COMMAND_ARGUMENTS.register(bus);
         ReactiveEntityDataSerializers.ENTITY_DATA_SERIALIZERS.register(bus);
+        MaterialProperties.PROPERTIES.register(bus);
+        FormulaOutcomeTypes.TYPES.register(bus);
+        ReactiveMenus.MENUS.register(bus);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
         }

@@ -4,9 +4,14 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.be.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+@EventBusSubscriber
 public class ReactiveBlockEntityTypes {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, ReactiveMod.MODID);
 
@@ -45,4 +50,21 @@ public class ReactiveBlockEntityTypes {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MnemonicBlockEntity>> MNEMONIC_BULB =
             BLOCK_ENTITY_TYPES.register("mnemonic_bulb_be",
             () -> BlockEntityType.Builder.of(MnemonicBlockEntity::new, ReactiveBlocks.MNEMONIC_BULB.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MaterialBlockEntity>> MATERIAL =
+            BLOCK_ENTITY_TYPES.register("material",
+            () -> BlockEntityType.Builder.of(MaterialBlockEntity::new, ReactiveBlocks.MATERIAL_BLOCK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DeskBlockEntity>> DESK =
+            BLOCK_ENTITY_TYPES.register("desk",
+                    () -> BlockEntityType.Builder.of(DeskBlockEntity::new, ReactiveBlocks.DESK.get()).build(null));
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK, // capability to register for
+                DESK.get(), // block entity type to register for
+                (desk, context) -> desk
+        );
+    }
 }

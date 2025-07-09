@@ -186,4 +186,10 @@ public class ReactiveBlocks {
 
     public static final DeferredHolder<Block, FlowerVinePlantBlock> FLOWER_VINES_BODY = BLOCKS.register("flower_vine_plant",
             () -> new FlowerVinePlantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.VINE)));
+
+    public static final DeferredHolder<Block, MaterialBlock> MATERIAL_BLOCK = BLOCKS.register("material",
+            MaterialBlock::new);
+
+    public static final DeferredHolder<Block, DeskBlock> DESK = BLOCKS.register("desk",
+            () -> new DeskBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_PLANKS)));
 }

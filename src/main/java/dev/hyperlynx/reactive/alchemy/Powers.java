@@ -15,7 +15,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 // Registers the Alchemical Powers.
-@EventBusSubscriber(modid=ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid=ReactiveMod.MODID)
 public class Powers {
     // Handles registration of Powers.
     public static final ResourceKey<Registry<Power>> POWER_REGISTRY_KEY = ResourceKey.createRegistryKey(ReactiveMod.location( "powers"));

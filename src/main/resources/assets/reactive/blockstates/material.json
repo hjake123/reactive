@@ -1,0 +1,19 @@
+{
+  "variants":{
+    "model=salt":{
+      "model": "reactive:block/material/salt"
+    },
+    "model=cracked":{
+      "model": "reactive:block/material/cracked"
+    },
+    "model=gel":{
+      "model": "reactive:block/material/gel"
+    },
+    "model=streaked":{
+      "model": "reactive:block/material/streaked"
+    },
+    "model=smooth":{
+      "model": "reactive:block/material/smooth"
+    }
+  }
+}

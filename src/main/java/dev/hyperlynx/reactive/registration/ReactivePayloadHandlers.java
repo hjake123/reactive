@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.registration;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.client.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.client.gui.ScreenOpener;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.net.*;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.HandlerThread;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid=ReactiveMod.MODID)
 public class ReactivePayloadHandlers {
 
     @SubscribeEvent
@@ -32,7 +32,7 @@ public class ReactivePayloadHandlers {
                 LitmusScreenPayload.STREAM_CODEC,
                 (payload, _context) -> {
                     if (FMLLoader.getDist() == Dist.CLIENT) {
-                        LitmusScreenOpener.open(payload);
+                        ScreenOpener.litmus(payload);
                     }
                 }
         );
@@ -46,12 +46,42 @@ public class ReactivePayloadHandlers {
                 ReactionPageRequestPayload.STREAM_CODEC,
                 ReactionPageServer::handlePageRequest
         );
+        registrar.playToServer(
+                MaterialDataSyncRequestPayload.TYPE,
+                MaterialDataSyncRequestPayload.STREAM_CODEC,
+                MaterialDataSyncRequestPayload::handle
+        );
+        registrar.playToServer(
+                MaterialRenamePayload.TYPE,
+                MaterialRenamePayload.STREAM_CODEC,
+                MaterialRenamePayload::handle
+        );
+        registrar.commonToClient(
+                MaterialRenameScreenPayload.TYPE,
+                MaterialRenameScreenPayload.STREAM_CODEC,
+                (payload, _context) -> {
+                    if (FMLLoader.getDist() == Dist.CLIENT) {
+                        ScreenOpener.materialRename(payload.material_id());
+                    }
+                }
+        );
+        registrar.playToServer(
+                MaterialNotesPayload.TYPE,
+                MaterialNotesPayload.STREAM_CODEC,
+                MaterialNotesPayload::handle
+        );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
         async_registrar.commonToClient(
                 ReactionPagePayload.TYPE,
                 ReactionPagePayload.STREAM_CODEC,
                 ReactionPageFetcher::handlePageResponse
+        );
+
+        async_registrar.playToClient(
+                MaterialDataSyncPayload.TYPE,
+                MaterialDataSyncPayload.STREAM_CODEC,
+                MaterialDataSyncPayload::handle
         );
 
         if(ModList.get().isLoaded("kubejs")){

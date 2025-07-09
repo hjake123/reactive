@@ -3,24 +3,34 @@ package dev.hyperlynx.reactive.cmd;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.net.MaterialRenameScreenPayload;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -31,13 +41,15 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.commands.arguments.coordinates.BlockPosArgument.ERROR_NOT_LOADED;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid= ReactiveMod.MODID)
 public class ReactiveCommand {
     private static final SimpleCommandExceptionType ERROR_NO_PLAYER = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_player"));
     private static final SimpleCommandExceptionType ERROR_NO_CRUCIBLE = new SimpleCommandExceptionType(Component.translatable("commands.reactive.no_crucible"));
@@ -53,7 +65,8 @@ public class ReactiveCommand {
                         .then(Commands.literal("list")
                             .executes((context) -> listReactions(context.getSource())))
                         .then(Commands.literal("reload")
-                            .executes((context) -> reloadReactions())))
+                            .executes((context) -> reloadReactions())
+                        ))
 
                 .then(Commands.literal("power")
                         .then(Commands.literal("add")
@@ -73,8 +86,33 @@ public class ReactiveCommand {
                                         context.getArgument("crucible_location", WorldCoordinates.class),
                                         context.getArgument("power_id", ResourceLocation.class),
                                         context.getArgument("amount", Integer.class), true)
-                                )))))
-                );
+                                ))))))
+
+                .then(Commands.literal("material")
+                        .then(Commands.literal("give")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                .then(Commands.argument("amount", IntegerArgumentType.integer())
+                                .executes(context -> giveMaterialBlockItem(context,
+                                        ResourceLocationArgument.getId(context, "id"),
+                                        IntegerArgumentType.getInteger(context, "amount"),
+                                        EntityArgument.getPlayer(context, "player")))))))
+                        .then(Commands.literal("rename")
+                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                .executes(context -> openRenameScreen(context,
+                                        ResourceLocationArgument.getId(context, "id")))))
+                        .then(Commands.literal("list")
+                                .executes(context -> printMaterials(context.getSource())))
+                        .then(Commands.literal("reload")
+                                .executes(context -> reloadMaterials(context.getSource())))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                .then(Commands.literal("confirm-delete")
+                                .executes(context ->
+                                        removeMaterial(context, ResourceLocationArgument.getId(context, "id"))))))
+                        .then(Commands.literal("remove-everything")
+                                .then(Commands.literal("confirm-delete")
+                                .executes(ReactiveCommand::removeAllMaterials))));
 
         dispatcher.register(command_builder);
     }
@@ -120,7 +158,6 @@ public class ReactiveCommand {
             }
         }
 
-        // TODO do we need this? : bearer.setDirty();
         return 1;
     }
 
@@ -144,6 +181,79 @@ public class ReactiveCommand {
             Reaction reaction = ReactiveMod.REACTION_MAN.get(source.getLevel(), alias);
             source.sendSuccess(() -> Component.literal(alias + " : " + reaction.getName().getString()), true);
         });
+        return 1;
+    }
+
+    private static int createMaterial(CommandSourceStack source, ResourceLocation id, CompoundTag tag) {
+        var result = Material.CODEC.decode(NbtOps.INSTANCE, tag);
+        if(result.isError()) {
+            source.sendFailure(Component.translatable("message.reactive.invalid_material_definition").append(result.error().get().message()));
+            return 0;
+        }
+        MaterialMan.addMaterial(source.getLevel(), id, result.getOrThrow().getFirst());
+        return 1;
+    }
+
+    private static int printMaterials(CommandSourceStack source) {
+        for(Map.Entry<ResourceLocation, Material> material_entry : MaterialMan.getAll(source.getLevel()).entrySet()) {
+            source.sendSuccess(() -> Component.literal(material_entry.getKey().toString() + " - " + material_entry.getValue().getNameComponent(material_entry.getKey()).getString()), true);
+        }
+        return 1;
+    }
+
+    private static int removeMaterial(CommandContext<CommandSourceStack> context, ResourceLocation id) {
+        if(!ConfigMan.SERVER.allowMaterialDeletion.get()) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_removal_disabled"));
+            return 0;
+        }
+        if(!MaterialMan.occupied(context.getSource().getLevel(), id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_not_found"));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> Component.translatable("message.reactive.material_removed"), true);
+        MaterialMan.remove(context.getSource().getLevel(), id);
+        return 1;
+    }
+
+    private static int removeAllMaterials(CommandContext<CommandSourceStack> context) {
+        if(!ConfigMan.SERVER.allowMaterialDeletion.get()) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_removal_disabled"));
+            return 0;
+        }
+        context.getSource().sendSuccess(() -> Component.translatable("message.reactive.materials_reset"), true);
+        MaterialMan.reset(context.getSource().getLevel());
+        return 1;
+    }
+
+    private static int giveMaterialBlockItem(CommandContext<CommandSourceStack> context, ResourceLocation material_id, int amount, ServerPlayer player) {
+        ServerLevel level = context.getSource().getLevel();
+        if(!MaterialMan.occupied(level, material_id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_id_invalid"));
+            return 0;
+        }
+        ItemStack stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
+        stack.setCount(amount);
+        player.addItem(stack);
+        return 1;
+    }
+
+    private static int reloadMaterials(CommandSourceStack source) {
+        MaterialMan.data(source.getLevel()).addBuiltIns(source.getLevel());
+        MaterialMan.data(source.getLevel()).setDirty();
+        return 1;
+    }
+
+    private static int openRenameScreen(CommandContext<CommandSourceStack> context, ResourceLocation material_id) {
+        ServerLevel level = context.getSource().getLevel();
+        if(!MaterialMan.occupied(level, material_id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_not_found"));
+            return 0;
+        }
+        if(context.getSource().getPlayer() == null) {
+            return 0;
+        }
+        PacketDistributor.sendToPlayer(context.getSource().getPlayer(), new MaterialRenameScreenPayload(material_id));
         return 1;
     }
 

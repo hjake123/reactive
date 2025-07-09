@@ -10,7 +10,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 
-@EventBusSubscriber(modid= ReactiveMod.MODID, bus=EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber
 public class PotionRecipeRegistrar {
     @SubscribeEvent
     public static void registerPotions(RegisterBrewingRecipesEvent event) {

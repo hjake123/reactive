@@ -83,9 +83,9 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private int process_stage = 0; // Used for sequential processing. See tick().
     private int gather_stage = 0; // Used for sequential processing. See gatherPower().
-    public final Color mix_color = new Color(); // Used to cache mixture color between updates;
+    public final Color mix_color = Color.black(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
-    private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
+    private final Color next_mix_color = Color.black(); // Used to smoothly change mix_color.
     public boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
@@ -740,22 +740,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         }
         // Iterate through each power and add its tint to the total, adjusted for its actual prevalence.
         next_mix_color.reset();
-        for (Power p : powers.keySet()) {
-            if(p == null || p.invisible){
-                continue; // Skip any invalid or invisible powers.
-            }
-            Color pow_color = p.getColor();
-            float pow_weight = getPowerLevel(p) / (float) getTotalVisiblePowerLevel();
-            next_mix_color.red += pow_color.red * pow_weight;
-            next_mix_color.green += pow_color.green * pow_weight;
-            next_mix_color.blue += pow_color.blue * pow_weight;
-        }
-
-        // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
-        float tint_alpha = (float) getTotalVisiblePowerLevel() / (float) CRUCIBLE_MAX_POWER;
-        next_mix_color.red = (int) (water_color.red * (1 - tint_alpha) + next_mix_color.red * (tint_alpha));
-        next_mix_color.green = (int) (water_color.green * (1 - tint_alpha) + next_mix_color.green * (tint_alpha));
-        next_mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + next_mix_color.blue * (tint_alpha));
+        next_mix_color.setMixColor(water_color, getPowerMap(), getTotalVisiblePowerLevel(), maxPower());
         color_changed = false;
     }
 
