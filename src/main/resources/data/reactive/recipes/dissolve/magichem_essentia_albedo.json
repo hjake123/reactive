@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "magichem:essentia_albedo"
+  },
+  "product": {
+    "item": "minecraft:glass_bottle"
+  }
+}

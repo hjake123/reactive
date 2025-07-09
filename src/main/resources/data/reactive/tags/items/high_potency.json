@@ -73,6 +73,10 @@
     {
       "id": "alexscaves:radiant_essence",
       "required": false
+    },
+    {
+      "id": "malum:umbral_spirit",
+      "required": false
     }
   ]
 }

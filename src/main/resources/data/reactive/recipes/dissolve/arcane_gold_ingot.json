@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "wizards_reborn:arcane_gold_ingot"
+  },
+  "product": {
+    "item": "minecraft:gold_ingot"
+  }
+}

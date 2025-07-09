@@ -93,6 +93,18 @@
     {
       "id": "alexscaves:radiant_essence",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_albedo",
+      "required": false
+    },
+    {
+      "id": "magichem:occulted_cinder",
+      "required": false
+    },
+    {
+      "id": "malum:astral_weave",
+      "required": false
     }
   ]
 }

@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "magichem:essentia_fleshy"
+  },
+  "product": {
+    "item": "minecraft:glass_bottle"
+  }
+}

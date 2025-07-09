@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "malum:soul_stained_steel_ingot"
+  },
+  "product": {
+    "item": "minecraft:iron_ingot"
+  }
+}

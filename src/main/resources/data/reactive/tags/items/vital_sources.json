@@ -40,6 +40,14 @@
     {
       "id": "alexsmobs:blood_sac",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_fleshy",
+      "required": false
+    },
+    {
+      "id": "malum:living_flesh",
+      "required": false
     }
   ]
 }

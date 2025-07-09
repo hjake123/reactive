@@ -47,6 +47,10 @@
     {
       "id": "#hexerei:herbs",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_verdant",
+      "required": false
     }
   ],
   "remove": [

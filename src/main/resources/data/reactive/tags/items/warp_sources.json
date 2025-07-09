@@ -68,6 +68,14 @@
     {
       "id": "alexsmobs:cosmic_cod",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_ender",
+      "required": false
+    },
+    {
+      "id": "malum:warp_flux",
+      "required": false
     }
   ]
 }

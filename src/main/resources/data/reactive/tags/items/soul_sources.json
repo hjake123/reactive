@@ -68,6 +68,30 @@
     {
       "id": "alexsmobs:hemolymph_sac",
       "required": false
+    },
+    {
+      "id": "#malum:aspected_spirits",
+      "required": false
+    },
+    {
+      "id": "malum:processed_soulstone",
+      "required": false
+    },
+    {
+      "id": "malum:soul_stained_steel_ingot",
+      "required": false
+    },
+    {
+      "id": "malum:hex_ash",
+      "required": false
+    },
+    {
+      "id": "malum:spirit_fabric",
+      "required": false
+    },
+    {
+      "id": "malum:hallowed_gold_ingot",
+      "required": false
     }
   ]
 }

@@ -61,6 +61,10 @@
     {
       "id": "hexerei:milk_bottle",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_nourishing",
+      "required": false
     }
   ],
   "remove": [

@@ -28,6 +28,22 @@
     {
       "id": "alexscaves:dark_tatters",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_rotten",
+      "required": false
+    },
+    {
+      "id": "malum:umbral_spirit",
+      "required": false
+    },
+    {
+      "id": "ummalum:rotting_essence",
+      "required": false
+    },
+    {
+      "id": "malum:blighted_gunk",
+      "required": false
     }
   ]
 }

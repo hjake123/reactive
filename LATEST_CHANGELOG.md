@@ -1,1 +1,1 @@
-- Fixed Shulker Crucibles duplicating when self-destructing through various means
+- Added compatibility recipes and tags for MagiChem, Malum, and Wizards Reborn

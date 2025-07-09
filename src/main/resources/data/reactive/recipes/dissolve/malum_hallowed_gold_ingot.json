@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "malum:hallowed_gold_ingot"
+  },
+  "product": {
+    "item": "minecraft:gold_ingot"
+  }
+}

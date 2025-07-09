@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "tag": "wizards_reborn:dyeable_arcane_lumos"
+  },
+  "product": {
+    "item": "minecraft:glowstone_dust"
+  }
+}

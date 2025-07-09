@@ -92,6 +92,26 @@
     {
       "id": "occultism:taboo_book",
       "required": false
+    },
+    {
+      "id": "magichem:essentia_arcane",
+      "required": false
+    },
+    {
+      "id": "magichem:essentia_conceptual",
+      "required": false
+    },
+    {
+      "id": "wizards_reborn:arcanum",
+      "required": false
+    },
+    {
+      "id": "wizards_reborn:arcane_gold_ingot",
+      "required": false
+    },
+    {
+      "id": "#wizards_reborn:dyeable_arcane_lumos",
+      "required": false
     }
   ]
 }

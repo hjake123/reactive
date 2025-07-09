@@ -20,6 +20,10 @@
     {
       "id": "alexscaves:sulfur_dust",
       "required": false
+    },
+    {
+      "id": "magichem:alchemical_waste",
+      "required": false
     }
   ]
 }

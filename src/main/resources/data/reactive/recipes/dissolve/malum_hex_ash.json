@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "malum:hex_ash"
+  },
+  "product": {
+    "item": "minecraft:gunpowder"
+  }
+}

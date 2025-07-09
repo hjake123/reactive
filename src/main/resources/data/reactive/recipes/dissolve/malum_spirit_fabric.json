@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "malum:spirit_fabric"
+  },
+  "product": {
+    "item": "minecraft:black_wool"
+  }
+}
