@@ -1,10 +1,13 @@
 package dev.hyperlynx.reactive.entites;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.net.HoverQuiltHeightPayload;
 import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 public class HoverQuilt extends VehicleEntity {
     public final AnimationState hovering = new AnimationState();
     public long animation_timer = 0;
+    private boolean ridden_last_tick = false;
+    private int position_force_timer = 0;
 
     public HoverQuilt(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -96,29 +101,30 @@ public class HoverQuilt extends VehicleEntity {
             if(this.isVehicle() && this.isControlledByLocalInstance()) {
                 LivingEntity riding_entity = this.getControllingPassenger();
                 if(riding_entity instanceof LocalPlayer rider) {
-                    double velocity = 0.0;
+                    float velocity = 0.0F;
                     if(rider.input.up || rider.input.jumping) {
-                        velocity = 0.03;
+                        velocity = 0.03F;
                     }
                     if(rider.input.down) {
-                        velocity = -0.03;
+                        velocity = -0.03F;
                     }
                     PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
-                    this.setDeltaMovement(0, Math.clamp(velocity + this.getDeltaMovement().y, -MAX_SPEED, MAX_SPEED), 0);
-                    this.move(MoverType.PLAYER, this.getDeltaMovement());
                 }
-            } else if(!this.isVehicle()) {
-                this.setDeltaMovement(0, 0, 0);
             }
-            ReactiveMod.LOGGER.debug("Client movement is {}", getDeltaMovement());
+        } else if(!this.isVehicle()) {
+            this.setDeltaMovement(0, 0, 0);
+            if(ridden_last_tick) {
+                position_force_timer = 100;
+            }
+            if(position_force_timer > 0) {
+                PacketDistributor.sendToPlayersTrackingEntity(this, new HoverQuiltHeightPayload(this.getId(), this.getY()));
+                position_force_timer--;
+            }
+            ridden_last_tick = false;
         } else {
-            if(!this.isVehicle()){
-                this.setDeltaMovement(0, 0, 0);
-            }
-            ReactiveMod.LOGGER.debug("Server movement is {}", getDeltaMovement());
-            this.move(MoverType.PLAYER, this.getDeltaMovement());
+            ridden_last_tick = true;
         }
-
+        this.move(MoverType.PLAYER, this.getDeltaMovement());
     }
 
     public static void handleInputPacket(HoverQuiltVelocityPayload payload, IPayloadContext context) {
@@ -144,7 +150,6 @@ public class HoverQuilt extends VehicleEntity {
             return InteractionResult.PASS;
         }
         if (!this.level().isClientSide) {
-            ReactiveMod.LOGGER.debug("Player mounted");
             return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
         } else {
             return InteractionResult.SUCCESS;
@@ -153,7 +158,16 @@ public class HoverQuilt extends VehicleEntity {
 
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        ReactiveMod.LOGGER.debug("Player dismounting");
         return super.getDismountLocationForPassenger(passenger);
+    }
+
+    public static void handleHeightPacket(HoverQuiltHeightPayload payload, IPayloadContext context) {
+        var vehicle = context.player().level().getEntity(payload.id());
+        if(vehicle instanceof HoverQuilt quilt) {
+            quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
+            quilt.setDeltaMovement(0, 0, 0);
+            quilt.setOldPosAndRot();
+            quilt.lerpPositionAndRotationStep(1, quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot());
+        }
     }
 }
