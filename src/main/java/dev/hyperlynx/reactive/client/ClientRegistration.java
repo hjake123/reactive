@@ -6,9 +6,11 @@ import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.client.gui.DeskScreen;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.client.models.HoverQuiltModel;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.be.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.be.GatewayRenderer;
+import dev.hyperlynx.reactive.client.renderers.entities.HoverQuiltRenderer;
 import dev.hyperlynx.reactive.client.renderers.entities.ReactorEntityRenderer;
 import dev.hyperlynx.reactive.client.renderers.be.SymbolRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
@@ -58,6 +60,12 @@ public class ClientRegistration {
         }
         event.registerEntityRenderer(ReactiveEntityTypes.REACTOR.get(), ReactorEntityRenderer::new);
         event.registerEntityRenderer(ReactiveEntityTypes.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
+        event.registerEntityRenderer(ReactiveEntityTypes.HOVER_QUILT.get(), HoverQuiltRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(HoverQuiltModel.LAYER_LOCATION, HoverQuiltModel::createBodyLayer);
     }
 
     @SubscribeEvent

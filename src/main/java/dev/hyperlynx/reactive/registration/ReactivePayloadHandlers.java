@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.registration;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.client.gui.ScreenOpener;
+import dev.hyperlynx.reactive.entites.HoverQuilt;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.net.*;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -78,6 +79,16 @@ public class ReactivePayloadHandlers {
                         ScreenOpener.materialList();
                     }
                 }
+        );
+        registrar.playToServer(
+                HoverQuiltVelocityPayload.TYPE,
+                HoverQuiltVelocityPayload.STREAM_CODEC,
+                HoverQuilt::handleInputPacket
+        );
+        registrar.playToClient(
+                HoverQuiltHeightPayload.TYPE,
+                HoverQuiltHeightPayload.STREAM_CODEC,
+                HoverQuilt::handleHeightPacket
         );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);

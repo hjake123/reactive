@@ -191,4 +191,7 @@ public class ReactiveItems {
             () -> new MaterialItem(ReactiveBlocks.MATERIAL_BLOCK.get(), new Item.Properties()));
 
     public static final DeferredHolder<Item, BlockItem> DESK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.DESK);
+
+    public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+            new PhantomQuiltItem(new Item.Properties()));
 }
