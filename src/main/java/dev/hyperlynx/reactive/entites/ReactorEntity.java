@@ -314,6 +314,6 @@ public class ReactorEntity extends Entity implements Reactor {
 
     @Override
     public ReactionStatusPayload getPayload() {
-        return new ReactionStatusPayload(getReactionStatus(), new ReactionStatusPayload.Target(Either.right(getId())));
+        return new ReactionStatusPayload(new ArrayList<>(getReactionStatus()), new ReactionStatusPayload.Target(Either.right(getId())));
     }
 }

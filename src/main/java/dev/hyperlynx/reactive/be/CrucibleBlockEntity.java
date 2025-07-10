@@ -616,7 +616,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     @Override
     public ReactionStatusPayload getPayload() {
-        return new ReactionStatusPayload(getReactionStatus(), new ReactionStatusPayload.Target(Either.left(getBlockPos())));
+        return new ReactionStatusPayload(new ArrayList<>(getReactionStatus()), new ReactionStatusPayload.Target(Either.left(getBlockPos())));
     }
 
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
