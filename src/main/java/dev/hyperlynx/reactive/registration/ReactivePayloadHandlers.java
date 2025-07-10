@@ -70,6 +70,15 @@ public class ReactivePayloadHandlers {
                 MaterialNotesPayload.STREAM_CODEC,
                 MaterialNotesPayload::handle
         );
+        registrar.commonToClient(
+                MaterialListScreenPayload.TYPE,
+                MaterialListScreenPayload.STREAM_CODEC,
+                (payload, _context) -> {
+                    if (FMLLoader.getDist() == Dist.CLIENT) {
+                        ScreenOpener.materialList();
+                    }
+                }
+        );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
         async_registrar.commonToClient(

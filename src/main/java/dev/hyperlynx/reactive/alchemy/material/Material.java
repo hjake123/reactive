@@ -12,11 +12,9 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -112,7 +110,7 @@ public class Material {
         return result.getOrThrow().getAsString();
     }
 
-    public Component getNameComponent(ResourceLocation id) {
+    public Component getNameComponent() {
         if(custom_name.isEmpty()) {
             return Component.translatable("block.reactive.undiscovered_material");
         }

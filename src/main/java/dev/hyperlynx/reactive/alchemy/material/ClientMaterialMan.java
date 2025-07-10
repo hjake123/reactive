@@ -4,13 +4,11 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
 import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.net.MaterialRenamePayload;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +60,7 @@ public class ClientMaterialMan {
 
     public static Component getName(ResourceLocation id) {
         if(clientside_data.get().materials.containsKey(id)) {
-            return clientside_data.get().get(id).getNameComponent(id);
+            return clientside_data.get().get(id).getNameComponent();
         }
         return Component.translatable("block.reactive.invalid_material");
     }

@@ -14,4 +14,8 @@ public class ScreenOpener {
     public static void materialRename(@NotNull ResourceLocation material_id) {
         Minecraft.getInstance().setScreen(new MaterialRenameScreen(material_id));
     }
+
+    public static void materialList() {
+        Minecraft.getInstance().setScreen(new MaterialListScreen());
+    }
 }

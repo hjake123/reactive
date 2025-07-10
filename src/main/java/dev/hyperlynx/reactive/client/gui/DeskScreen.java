@@ -13,6 +13,7 @@ import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.PacketDecoder;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,9 @@ import java.util.Objects;
 
 public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     private static final ResourceLocation DESK_BACKGROUND_LOCATION = ReactiveMod.location("textures/gui/discovery_desk.png");
+    private static final ResourceLocation VIEW_DISCOVERIES_BUTTON = ReactiveMod.location("discoveries_tab");
+    private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_INACTIVE = ReactiveMod.location("discoveries_tab_inactive");
+    private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_FOCUSED = ReactiveMod.location("discoveries_tab_focused");
 
     Button rename_button = new Button.Builder(Component.empty(),
             button -> {
@@ -43,6 +47,9 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     NakedMultiLineEditBox notes_box = new NakedMultiLineEditBox(Minecraft.getInstance().font, 0, 0, 104, 60, Component.translatable("ui.reactive.notes_hint"), Component.empty());
     boolean notes_loaded = false;
     boolean notes_changed = false;
+
+    Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
+            button -> ScreenOpener.materialList(), Component.empty());
 
     public DeskScreen(DeskMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -66,6 +73,9 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         notes_box.setValueListener(this::updateNotes);
         notes_box.setCharacterLimit(256);
         addRenderableWidget(notes_box);
+
+        discoveries_button.setPosition(this.getGuiLeft() + 150, this.getGuiTop() - 17);
+        addRenderableWidget(discoveries_button);
     }
 
     private Material getMaterial() {

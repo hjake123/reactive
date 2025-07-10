@@ -31,5 +31,4 @@ public record MaterialRenameScreenPayload(ResourceLocation material_id) implemen
     public @NotNull ClientboundCustomPayloadPacket toVanillaClientbound() {
         return CustomPacketPayload.super.toVanillaClientbound();
     }
-
 }

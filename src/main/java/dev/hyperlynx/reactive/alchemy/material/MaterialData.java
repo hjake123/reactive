@@ -16,10 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MaterialData extends SavedData {
     protected final Map<ResourceLocation, Material> materials;
@@ -108,5 +105,9 @@ public class MaterialData extends SavedData {
     public void setDirty() {
         super.setDirty();
         PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(this));
+    }
+
+    public Collection<ResourceLocation> getKeys() {
+        return materials.keySet();
     }
 }

@@ -21,7 +21,6 @@ import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
@@ -184,19 +183,9 @@ public class ReactiveCommand {
         return 1;
     }
 
-    private static int createMaterial(CommandSourceStack source, ResourceLocation id, CompoundTag tag) {
-        var result = Material.CODEC.decode(NbtOps.INSTANCE, tag);
-        if(result.isError()) {
-            source.sendFailure(Component.translatable("message.reactive.invalid_material_definition").append(result.error().get().message()));
-            return 0;
-        }
-        MaterialMan.addMaterial(source.getLevel(), id, result.getOrThrow().getFirst());
-        return 1;
-    }
-
     private static int printMaterials(CommandSourceStack source) {
         for(Map.Entry<ResourceLocation, Material> material_entry : MaterialMan.getAll(source.getLevel()).entrySet()) {
-            source.sendSuccess(() -> Component.literal(material_entry.getKey().toString() + " - " + material_entry.getValue().getNameComponent(material_entry.getKey()).getString()), true);
+            source.sendSuccess(() -> Component.literal(material_entry.getKey().toString() + " - " + material_entry.getValue().getNameComponent().getString()), true);
         }
         return 1;
     }
