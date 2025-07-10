@@ -34,9 +34,7 @@ public class EnergyParticle extends TextureSheetParticle {
         this.bCol = options.getColor().blue / 255.0F;
         this.hasPhysics = false;
         this.reversed = options.reverse_motion;
-        if(options.isReversed()) {
-            this.setLifetime(1);
-        }
+        this.setLifetime(reversed ? 20 : 200);
         setSpriteFromAge(sprites);
     }
 
@@ -160,7 +158,6 @@ public class EnergyParticle extends TextureSheetParticle {
         public @Nullable Particle createParticle(@NotNull Options options, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             EnergyParticle particle = new EnergyParticle(level, x, y, z, options, sprites);
             particle.speed = options.getSpeed();
-            particle.setLifetime(200);
             return particle;
         }
     }

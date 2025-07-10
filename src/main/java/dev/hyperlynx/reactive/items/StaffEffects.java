@@ -215,8 +215,8 @@ public class StaffEffects {
         }
 
         if(user.level().isClientSide) {
-            ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.02F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), true), aoe, 5);
+            ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), true), aoe.deflate(3.0), 5);
         }
-        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
+        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.7F, 1.3f);
     }
 }
