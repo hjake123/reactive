@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "m": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "r": {
+      "item": "reactive:phantom_residue"
+    },
+    "s": {
+      "item": "reactive:secret_scale"
+    }
+  },
+  "pattern": [
+    "mrm",
+    "rsr",
+    "mrm"
+  ],
+  "result": {
+    "id": "reactive:phantom_quilt"
+  }
+}
