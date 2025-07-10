@@ -1,10 +1,12 @@
 package dev.hyperlynx.reactive.entites;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.net.HoverQuiltHeightPayload;
 import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -30,6 +32,7 @@ public class HoverQuilt extends VehicleEntity {
     public long animation_timer = 0;
     private boolean ridden_last_tick = false;
     private int position_force_timer = 0;
+    private boolean client_position_lock = false;
 
     public HoverQuilt(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -93,9 +96,6 @@ public class HoverQuilt extends VehicleEntity {
 
     private static final double MAX_SPEED = 0.25;
 
-    // TODO: Replace the client-side move logic with logic that sends custom packets to the server,
-    // which then adjust the speed of the movement there
-
     @Override
     public void tick() {
         super.tick();
@@ -113,11 +113,14 @@ public class HoverQuilt extends VehicleEntity {
                     }
                     PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
                 }
+                client_position_lock = false;
+            } else {
+                client_position_lock = true;
             }
         } else if(!this.isVehicle()) {
             this.setDeltaMovement(0, 0, 0);
             if(ridden_last_tick) {
-                position_force_timer = 100;
+                position_force_timer = 10;
             }
             if(position_force_timer > 0) {
                 PacketDistributor.sendToPlayersTrackingEntity(this, new HoverQuiltHeightPayload(this.getId(), this.getY()));
@@ -127,6 +130,17 @@ public class HoverQuilt extends VehicleEntity {
         } else {
             ridden_last_tick = true;
             this.getControllingPassenger().resetFallDistance();
+//            double corner_dist = 0.4;
+//            float particle_amount = (float) (Math.abs(this.getDeltaMovement().y / 0.25));
+//            if(this.getDeltaMovement().y > 0) {
+//                ParticleScribe.drawParticleBox(level(), ParticleTypes.END_ROD, this.getBoundingBox().deflate(0.5).move(0, -0.2, 0), (int) particle_amount * 5);
+//            } else if(this.getDeltaMovement().y < 0) {
+//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() + corner_dist, this.getY(), this.getZ() + corner_dist, 0.2F * particle_amount, 0, 0, 0);
+//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() + corner_dist, this.getY(), this.getZ() - corner_dist, 0.2F * particle_amount, 0, 0, 0);
+//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() - corner_dist, this.getY(), this.getZ() + corner_dist, 0.2F * particle_amount, 0, 0, 0);
+//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() - corner_dist, this.getY(), this.getZ() - corner_dist, 0.2F * particle_amount, 0, 0, 0);
+//
+//            }
         }
         if(this.isHittingRidersHead()) {
             this.setDeltaMovement(0, Math.min(-0.05, -this.getDeltaMovement().y), 0);
@@ -196,12 +210,6 @@ public class HoverQuilt extends VehicleEntity {
         }
     }
 
-
-    @Override
-    public void setPos(double x, double y, double z) {
-        super.setPos(x, y, z);
-    }
-
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         InteractionResult super_interaction_result = super.interact(player, hand);
@@ -226,10 +234,20 @@ public class HoverQuilt extends VehicleEntity {
     public static void handleHeightPacket(HoverQuiltHeightPayload payload, IPayloadContext context) {
         var vehicle = context.player().level().getEntity(payload.id());
         if(vehicle instanceof HoverQuilt quilt) {
+            quilt.client_position_lock = false;
             quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
+            quilt.client_position_lock = true;
             quilt.setDeltaMovement(0, 0, 0);
             quilt.setOldPosAndRot();
             quilt.lerpPositionAndRotationStep(1, quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot());
         }
+    }
+
+    @Override
+    public void setPos(double x, double y, double z) {
+        if(client_position_lock) {
+            return;
+        }
+        super.setPos(x, y, z);
     }
 }
