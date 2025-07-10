@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Version**
-Which version of the mod you're using (e.g. `1.21.1-9k.0`).
+Which version of the mod you're using (e.g. `1.21.1-9.18.3`).
 
 **To Reproduce**
 Steps to cause the crash:

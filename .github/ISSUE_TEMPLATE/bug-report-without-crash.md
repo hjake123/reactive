@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Version**
-The mod version number you're using, like e.g. `1.21.1-9k.0`
+The mod version number you're using, like e.g. `1.21.1-9.18.3`
 
 **What you expected**
 A clear and concise description of what you expected to happen.
