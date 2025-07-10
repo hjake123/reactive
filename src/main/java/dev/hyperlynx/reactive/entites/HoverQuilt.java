@@ -15,8 +15,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
@@ -123,14 +126,73 @@ public class HoverQuilt extends VehicleEntity {
             ridden_last_tick = false;
         } else {
             ridden_last_tick = true;
+            this.getControllingPassenger().resetFallDistance();
         }
-        this.move(MoverType.PLAYER, this.getDeltaMovement());
+        if(this.isHittingRidersHead()) {
+            this.setDeltaMovement(0, Math.min(-0.05, -this.getDeltaMovement().y), 0);
+        } else if(this.isHittingRidersButt()) {
+            this.setDeltaMovement(0, Math.max(0.05, -this.getDeltaMovement().y), 0);
+        }
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
+    }
+
+    private boolean isHittingRidersHead() {
+        if(!this.isVehicle()) {
+            return false;
+        }
+        Entity passenger = this.getControllingPassenger();
+        if(passenger == null) {
+            return false;
+        }
+        AABB passenger_hitbox = passenger.getBoundingBox();
+        double passenger_width = passenger_hitbox.getXsize();
+        AABB passenger_top_box = new AABB(passenger_hitbox.getMaxPosition().subtract(passenger_width, 1, passenger_width), passenger_hitbox.getMaxPosition().add(0, 0.1, 0));
+        return this.level().collidesWithSuffocatingBlock(null, passenger_top_box);
+    }
+
+    private boolean isHittingRidersButt() {
+        if(!this.isVehicle()) {
+            return false;
+        }
+        Entity passenger = this.getControllingPassenger();
+        if(passenger == null) {
+            return false;
+        }
+        AABB passenger_hitbox = passenger.getBoundingBox();
+        double passenger_width = passenger_hitbox.getXsize();
+        AABB passenger_below_box = new AABB(passenger_hitbox.getMinPosition(), passenger_hitbox.getMinPosition().add(passenger_width, 1, passenger_width));
+        return this.level().collidesWithSuffocatingBlock(null, passenger_below_box);
+    }
+
+    private double getMaxUpSpeed() {
+        double max_world_height = this.level().getMaxBuildHeight();
+        double current_height = this.position().y;
+        if(current_height > max_world_height) {
+            if(current_height - max_world_height > 10) {
+                return 0;
+            }
+            return MAX_SPEED * (1 / (current_height - max_world_height + 1));
+        }
+        return MAX_SPEED;
+    }
+
+    private double getMaxDownSpeed() {
+        double min_world_height = this.level().getMinBuildHeight();
+        double current_height = this.position().y;
+        if(current_height < min_world_height) {
+            if(current_height - min_world_height < -5) {
+                return 0;
+            }
+            return -MAX_SPEED * (1 / (min_world_height - current_height + 1));
+        }
+        return -MAX_SPEED;
     }
 
     public static void handleInputPacket(HoverQuiltVelocityPayload payload, IPayloadContext context) {
         var vehicle = context.player().getVehicle();
         if(vehicle instanceof HoverQuilt quilt) {
-            quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, -MAX_SPEED, MAX_SPEED), 0);
+            quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, quilt.getMaxDownSpeed(), quilt.getMaxUpSpeed()), 0);
         }
     }
 
