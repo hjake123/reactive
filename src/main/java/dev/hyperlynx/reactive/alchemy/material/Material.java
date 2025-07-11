@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,7 +29,7 @@ public class Material {
     private final Reference2ObjectMap<MaterialProperty<?>, Object> properties;
     private String custom_name = "";
     private final Optional<Map<Power, Integer>> original_formula;
-    private Optional<UUID> discoverer = Optional.empty();
+    private Optional<Discoverer> discoverer = Optional.empty();
     private Optional<String> notes = Optional.empty();
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
@@ -39,13 +40,13 @@ public class Material {
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
                     Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
                     Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
-                    UUIDUtil.CODEC.optionalFieldOf("discoverer").forGetter(Material::discovererUUID),
+                    Discoverer.CODEC.optionalFieldOf("discoverer").forGetter(Material::discoverer),
                     Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<UUID> discoverer, Optional<String> notes) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<Discoverer> discoverer, Optional<String> notes) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
@@ -81,7 +82,7 @@ public class Material {
         return original_formula;
     }
 
-    private Optional<UUID> discovererUUID() { return discoverer; }
+    private Optional<Discoverer> discoverer() { return discoverer; }
 
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);
@@ -122,7 +123,7 @@ public class Material {
     }
 
     public void setDiscoverer(Player player) {
-        this.discoverer = Optional.of(player.getUUID());
+        this.discoverer = Optional.of(new Discoverer(player.getUUID(), player.getName().getString()));
     }
 
     public boolean wasDiscovered() {
@@ -130,11 +131,11 @@ public class Material {
     }
 
     public Player getDiscoverer(Level level) {
-        return this.discoverer.map(level::getPlayerByUUID).orElse(null);
+        return this.discoverer.map(d -> level.getPlayerByUUID(d.uuid)).orElse(null);
     }
 
     public boolean playerDiscoveredThis(Player player) {
-        return this.discoverer.isPresent() && this.discoverer.get().equals(player.getUUID());
+        return this.discoverer.isPresent() && this.discoverer.get().uuid.equals(player.getUUID());
     }
 
     /// Use this only as absolutely necessary.
@@ -171,5 +172,24 @@ public class Material {
             return;
         }
         this.notes = Optional.of(notes);
+    }
+
+    public Component getDiscovererName(Level level) {
+        if(!wasDiscovered()) {
+            return Component.empty();
+        }
+        Player player = getDiscoverer(level);
+        if(player == null) {
+            return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer().get().name);
+        }
+        setDiscoverer(player); // Resets the name of the player, so that if the player's username changes it will be up to date
+        return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(player.getName());
+    }
+
+    public record Discoverer(UUID uuid, String name) {
+        public static final Codec<Discoverer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                UUIDUtil.CODEC.fieldOf("uuid").forGetter(Discoverer::uuid),
+                Codec.STRING.fieldOf("name").forGetter(Discoverer::name)
+        ).apply(instance, Discoverer::new));
     }
 }

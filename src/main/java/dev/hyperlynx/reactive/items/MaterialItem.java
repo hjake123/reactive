@@ -49,9 +49,9 @@ public class MaterialItem extends BlockItem {
             }
         }
         if(flag.hasShiftDown()) {
-            Player discoverer = material.getDiscoverer(context.level());
-            if(discoverer != null) {
-                components.add(Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer.getName()));
+            Component discoverer = material.getDiscovererName(context.level());
+            if(!discoverer.equals(Component.empty())) {
+                components.add(discoverer);
             }
         }
         if(flag.isAdvanced()) {

@@ -178,6 +178,7 @@
   "text.reactive.power": " Power",
   "text.reactive.charged": "Charged",
   "text.reactive.random": "Random Contents",
+  "text.reactive.question_marks": "???",
   "ui.reactive.discover_button": "Discover",
   "ui.reactive.rename_button": "Rename",
   "ui.reactive.name_material_screen": "Name The Material",
