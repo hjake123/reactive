@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.net;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.MaterialData;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -27,7 +28,7 @@ public record MaterialDataSyncRequestPayload(int index) implements CustomPacketP
     public static void handle(MaterialDataSyncRequestPayload payload, IPayloadContext context) {
         if(payload.index == -1) {
             // Send all information.
-            PacketDistributor.sendToPlayer((ServerPlayer) context.player(), new MaterialDataSyncPayload(MaterialMan.data(context.player().level())));
+            PacketDistributor.sendToPlayer((ServerPlayer) context.player(), new MaterialDataSyncPayload(new MaterialData(MaterialMan.data(context.player().level()))));
         } else {
             throw new RuntimeException("Patch payloads are not yet implemented.");
         }

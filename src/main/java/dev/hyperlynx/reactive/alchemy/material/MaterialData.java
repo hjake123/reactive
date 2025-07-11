@@ -26,6 +26,10 @@ public class MaterialData extends SavedData {
             MaterialData::new
     );
 
+    public MaterialData(MaterialData data) {
+        materials = new HashMap<>(data.materials);
+    }
+
     public MaterialData addBuiltIns(ServerLevel level) {
         for(Map.Entry<ResourceKey<Material>, Material> material_entry : level.registryAccess().registry(BuiltInMaterials.KEY).get().entrySet()) {
             addMaterial(material_entry.getKey().location(), material_entry.getValue());
@@ -37,7 +41,7 @@ public class MaterialData extends SavedData {
         return new MaterialData(new HashMap<>());
     }
 
-    MaterialData(Map<ResourceLocation, Material>materials) {
+    public MaterialData(Map<ResourceLocation, Material> materials) {
         this.materials = materials;
     }
 
@@ -104,7 +108,7 @@ public class MaterialData extends SavedData {
     @Override
     public void setDirty() {
         super.setDirty();
-        PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(this));
+        PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(new MaterialData(this)));
     }
 
     public Collection<ResourceLocation> getKeys() {

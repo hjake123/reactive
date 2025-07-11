@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.entites;
 
-import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
@@ -8,14 +7,12 @@ import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class ThrownReactionFlask extends ThrowableItemProjectile {
@@ -32,7 +29,7 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
         if (getItem().has(ReactiveComponentTypes.REACTION_FLASK_CONTENTS)) {
             contents = getItem().get(ReactiveComponentTypes.REACTION_FLASK_CONTENTS);
         } else {
-            contents = new ReactionFlaskContents(generateRandomPowerCombo(), false);
+            contents = new ReactionFlaskContents(Power.generateRandomPowerCombo(level()), false);
         }
 
         ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR.get(), level());
@@ -48,19 +45,6 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
                     result.getLocation(), 0.2, 5);
         }
         this.kill();
-    }
-
-    private Map<Power, Integer> generateRandomPowerCombo() {
-        Map<Power, Integer> powers = new HashMap<>();
-        RandomSource random = level().random;
-        for(int i = 0; i < random.nextIntBetweenInclusive(1, 3); i++) {
-            Power power = Powers.POWER_REGISTRY.getRandom(random).get().value();
-            while(powers.equals(Powers.ASTRAL_POWER)) {
-                power = Powers.POWER_REGISTRY.getRandom(random).get().value();
-            }
-            powers.put(power, random.nextInt(200, 500));
-        }
-        return powers;
     }
 
     @Override

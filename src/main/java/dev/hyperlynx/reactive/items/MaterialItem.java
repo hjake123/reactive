@@ -1,10 +1,13 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -35,6 +38,7 @@ public class MaterialItem extends BlockItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, context, components, flag);
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            components.add(Component.translatable("text.reactive.random_material_tooltip"));
             return;
         }
         Material material = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
@@ -72,5 +76,17 @@ public class MaterialItem extends BlockItem {
         }
         Material material = MaterialMan.fetch(level, stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
         return MaterialModel.fromName(material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "SALT")).getModelIndex();
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+            ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, Power.generateRandomPowerCombo(level));
+            stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), random_material_id);
+        }
+        ResourceLocation id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
+        if(!MaterialMan.occupied(level, id)) {
+            stack.remove(ReactiveComponentTypes.MATERIAL_ID.get());
+        }
     }
 }

@@ -67,7 +67,7 @@ public class MaterialMan {
 
     /// Creates or gets a [Material] based on the formula provided
     /// and returns the ResourceLocation of that material, to be set onto an item or block.
-    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Map<Power, Integer> formula, MaterialModel model) {
+    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Map<Power, Integer> formula) {
         for(Map.Entry<ResourceLocation, Material> existing_material : data(level).materials.entrySet()) {
             if(existing_material.getValue().formulaMatches(formula)) {
                 return existing_material.getKey();

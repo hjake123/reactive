@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
 /// See [Material] and [MaterialItem]
@@ -81,6 +82,9 @@ public class MaterialBlock extends Block implements EntityBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         MaterialBlockEntity mbe = (MaterialBlockEntity) level.getBlockEntity(pos);
+        if(mbe.hasNoValidMaterial()) {
+            return ReactiveItems.SALT_BLOCK.get().getDefaultInstance();
+        }
         stack.set(ReactiveComponentTypes.MATERIAL_ID, mbe.getId());
         return stack;
     }
@@ -89,6 +93,9 @@ public class MaterialBlock extends Block implements EntityBlock {
     protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
         BlockEntity entity = params.getParameter(LootContextParams.BLOCK_ENTITY);
         if(entity instanceof MaterialBlockEntity mbe) {
+            if(mbe.hasNoValidMaterial()) {
+                return List.of(ReactiveItems.SALT_BLOCK.get().getDefaultInstance());
+            }
             ItemStack stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
             stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), mbe.getId());
             return List.of(stack);

@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
@@ -10,7 +9,6 @@ import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -27,6 +25,9 @@ public class MaterialBlockEntity extends BlockEntity {
     }
 
     public Material getMaterial() {
+        if(material_id == null) {
+            return Material.empty();
+        }
         return MaterialMan.fetch(level, material_id);
     }
 
@@ -36,6 +37,10 @@ public class MaterialBlockEntity extends BlockEntity {
         } else {
             ReactiveMod.LOGGER.error("Material block tried to take an invalid id {}, which is not yet occupied.", material_id);
         }
+    }
+
+    public boolean hasNoValidMaterial() {
+        return this.material_id == null;
     }
 
     @Override
