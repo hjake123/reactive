@@ -506,6 +506,7 @@ public class ReactionEffects {
     }
 
     private static void runNodulePlaceEffects(BlockPos pos, Direction direction, Level level, Reactor reactor) {
+        reactor.expendPower(Powers.WARP_POWER.get(), 4);
         level.playSound(null, pos, SoundEvents.TUFF_PLACE, SoundSource.BLOCKS,1.0F, 1.2F);
         Vec3 beam_target = pos.getCenter().add(new Vec3(direction.step()).scale(0.3));
         ParticleScribe.drawParticleLine(level, new EnergyParticle.Options(0.2F, Powers.Z_POWER.get().getColor(), beam_target, false), reactor.getBlockPos().getCenter(), beam_target, 50, 0.05F);

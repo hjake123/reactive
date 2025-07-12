@@ -113,7 +113,7 @@ public class ReactionRenderers {
 
     public void warpEnergy(Reactor reactor) {
         if(reactor.getLevel().random.nextFloat() < 0.2F) {
-            ParticleScribe.drawParticleBox(reactor.getLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), new AABB(reactor.getBlockPos()), 1);
+            ParticleScribe.drawParticleBox(reactor.getLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), AABB.ofSize(reactor.getPos(), 1, 1, 1), 1);
         }
     }
 }

@@ -213,7 +213,7 @@ public class ReactionMan {
 
         REACTIONS.add(new EffectReaction("cryo", ReactionEffects::cryo, Powers.ACID_POWER.get(), Powers.BLAZE_POWER.get()));
 
-        REACTIONS.add(new EffectReaction("nodule", ReactionEffects::noduleGrowth, Powers.Z_POWER.get(), Powers.WARP_POWER.get()).setCost(3));
+        REACTIONS.add(new EffectReaction("nodule", ReactionEffects::noduleGrowth, Powers.Z_POWER.get(), Powers.WARP_POWER.get()).setCost(4));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
 
