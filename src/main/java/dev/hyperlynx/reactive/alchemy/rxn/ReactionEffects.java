@@ -2,6 +2,8 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.blocks.NoduleBlock;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -14,6 +16,8 @@ import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -472,5 +476,38 @@ public class ReactionEffects {
                 reactor.addPower(Powers.BLAZE_POWER.get(), 3);
             }
         });
+    }
+
+    public static void noduleGrowth(Reactor reactor) {
+        Level level = reactor.getLevel();
+        if(level == null)
+            return;
+
+        int range = 4;
+        BlockPos pos = reactor.getBlockPos().offset(level.random.nextInt(-range, range + 1), level.random.nextInt(0, range), level.random.nextInt(-range, range + 1));
+        if(!level.getBlockState(pos).isAir()) {
+            if(level.getBlockState(pos).is(ReactiveBlocks.UNGROWN_NODULE.get())) {
+                BlockState old_state = level.getBlockState(pos);
+                Direction direction = old_state.getValue(NoduleBlock.FACING);
+                level.setBlock(pos, ReactiveBlocks.NODULE.get().defaultBlockState().setValue(NoduleBlock.FACING, direction), Block.UPDATE_CLIENTS);
+                runNodulePlaceEffects(pos, direction, level, reactor);
+                level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS,0.2F, 0.7F + level.random.nextFloat() * 0.1F);
+            }
+            return;
+        }
+        for(Direction direction : Direction.allShuffled(level.random)) {
+            BlockPos side_pos = pos.offset(new Vec3i(direction.getStepX(), direction.getStepY(), direction.getStepZ()));
+            if(level.getBlockState(side_pos).isCollisionShapeFullBlock(level, side_pos)) {
+                level.setBlock(pos, ReactiveBlocks.UNGROWN_NODULE.get().defaultBlockState().setValue(NoduleBlock.FACING, direction), Block.UPDATE_CLIENTS);
+                runNodulePlaceEffects(pos, direction, level, reactor);
+                return;
+            }
+        }
+    }
+
+    private static void runNodulePlaceEffects(BlockPos pos, Direction direction, Level level, Reactor reactor) {
+        level.playSound(null, pos, SoundEvents.TUFF_PLACE, SoundSource.BLOCKS,1.0F, 1.2F);
+        Vec3 beam_target = pos.getCenter().add(new Vec3(direction.step()).scale(0.3));
+        ParticleScribe.drawParticleLine(level, new EnergyParticle.Options(0.2F, Powers.Z_POWER.get().getColor(), beam_target, false), reactor.getBlockPos().getCenter(), beam_target, 50, 0.05F);
     }
 }

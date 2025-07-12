@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.net.ReactionStatusPayload;
 import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.AreaMemory;
+import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -93,4 +94,5 @@ public interface Reactor extends PowerBearer {
     }
 
     ReactionStatusPayload getPayload();
+
 }

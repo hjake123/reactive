@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -93,10 +94,14 @@ public class MaterialMan {
             }
         }
 
+        // Determine the material's yield depending on world specific things TODO
+        int yield = 16;
+
         // Construct and add the new material
-        Material new_material = new Material(properties, "", Optional.of(new HashMap<>(formula)));
+        Material new_material = new Material(properties, "", Optional.of(new HashMap<>(formula)), yield);
         addMaterial(level, new_material_id, new_material);
 
+        ReactiveMod.LOGGER.debug("Created new material {}", new_material_id);
         return new_material_id;
     }
 }

@@ -1,11 +1,13 @@
 package dev.hyperlynx.reactive.client.renderers.rxn;
 
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
@@ -30,6 +32,7 @@ public class ReactionRenderers {
         RENDERERS.put("ominous_transformation", this::ominous);
         RENDERERS.put("astral_curse_annihilation", this::creation);
         RENDERERS.put("cryo", this::snow);
+        RENDERERS.put("nodule", this::warpEnergy);
     }
 
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
@@ -106,5 +109,11 @@ public class ReactionRenderers {
         AABB aoe = new AABB(reactor.getBlockPos());
         aoe = aoe.inflate(5);
         ParticleScribe.drawParticleBox(reactor.getLevel(), ParticleTypes.SNOWFLAKE, aoe, 1);
+    }
+
+    public void warpEnergy(Reactor reactor) {
+        if(reactor.getLevel().random.nextFloat() < 0.2F) {
+            ParticleScribe.drawParticleBox(reactor.getLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), new AABB(reactor.getBlockPos()), 1);
+        }
     }
 }

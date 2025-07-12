@@ -40,18 +40,4 @@ public class BuiltInMaterialGenerator {
                 }
         );
     }
-
-    private static void addMaterial(BootstrapContext<Material> bootstrap, String path, String name, Map<MaterialProperty<?>, Object> properties) {
-        bootstrap.register(
-                ResourceKey.create(BuiltInMaterials.KEY, ReactiveMod.location(path)),
-                new Material(properties, name)
-        );
-    }
-
-    private static void addMaterial(BootstrapContext<Material> bootstrap, String path, String name, Map<MaterialProperty<?>, Object> properties, @NotNull Map<Power, Integer> formula) {
-        bootstrap.register(
-                ResourceKey.create(BuiltInMaterials.KEY, ReactiveMod.location(path)),
-                new Material(properties, name, Optional.of(formula))
-        );
-    }
 }

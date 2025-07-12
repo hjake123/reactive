@@ -279,6 +279,7 @@
   "reaction.reactive.y_synthesis": "Esoteric II Synthesis",
   "reaction.reactive.z_synthesis": "Esoteric III Synthesis",
   "reaction.reactive.lightning": "Lightning",
+  "reaction.reactive.nodule": "Nodule Growth",
   "reactive.configuration.config": "Options",
   "reactive.configuration.acidMeltBlockEntities": "Acid Melts Block Entities",
   "reactive.configuration.areaMemoryRange": "Crucible Block Memory Range",

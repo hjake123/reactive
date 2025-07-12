@@ -72,6 +72,7 @@ public class ReactionMan {
         ReactionAdvancementGenerator.add("lightning");
         ReactionAdvancementGenerator.add("chomp");
         ReactionAdvancementGenerator.add("cryo");
+        ReactionAdvancementGenerator.add("nodule");
     }
 
     public List<Reaction> getReactions(Level level){
@@ -211,6 +212,8 @@ public class ReactionMan {
         REACTIONS.add(new EffectReaction("lightning", ReactionEffects::lightning, Powers.FLOW_POWER.get(), Powers.LIGHT_POWER.get()).setStimulus(Reaction.Stimulus.ELECTRIC));
 
         REACTIONS.add(new EffectReaction("cryo", ReactionEffects::cryo, Powers.ACID_POWER.get(), Powers.BLAZE_POWER.get()));
+
+        REACTIONS.add(new EffectReaction("nodule", ReactionEffects::noduleGrowth, Powers.Z_POWER.get(), Powers.WARP_POWER.get()).setCost(3));
 
         NeoForge.EVENT_BUS.post(new ReactionConstructEvent(level));
 

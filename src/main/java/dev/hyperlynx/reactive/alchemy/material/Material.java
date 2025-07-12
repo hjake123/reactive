@@ -31,6 +31,7 @@ public class Material {
     private final Optional<Map<Power, Integer>> original_formula;
     private Optional<Discoverer> discoverer = Optional.empty();
     private Optional<String> notes = Optional.empty();
+    private int yield;
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
@@ -41,29 +42,33 @@ public class Material {
                     Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
                     Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
                     Discoverer.CODEC.optionalFieldOf("discoverer").forGetter(Material::discoverer),
-                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
+                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes),
+                    Codec.INT.fieldOf("yield").forGetter(Material::yield)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<Discoverer> discoverer, Optional<String> notes) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<Discoverer> discoverer, Optional<String> notes, int yield) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
         this.discoverer = discoverer;
         this.notes = notes;
+        this.yield = yield;
     }
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, int yield) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
+        this.yield = yield;
     }
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, int yield) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = Optional.empty();
+        this.yield = yield;
     }
 
     public Optional<String> getNotes() {
@@ -71,7 +76,7 @@ public class Material {
     }
 
     public static Material empty() {
-        return new Material(Map.of(), "");
+        return new Material(Map.of(), "", 0);
     }
 
     private String customNameRaw() {
@@ -83,6 +88,12 @@ public class Material {
     }
 
     private Optional<Discoverer> discoverer() { return discoverer; }
+
+    public int yield() { return yield; }
+
+    public void setYield(int yield) {
+        this.yield = yield;
+    }
 
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);

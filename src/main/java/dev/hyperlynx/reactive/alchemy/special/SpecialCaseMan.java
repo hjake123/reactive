@@ -721,17 +721,24 @@ public class SpecialCaseMan {
 
     private static final int MATERIAL_CRAFT_MIN_POWER = 800;
     private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
-        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER) {
+        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER || crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10) {
             return;
         }
         ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
         ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), crucible.getPowerMap());
         material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
-        material_stack.setCount(salt_item_entity.getItem().getCount());
+
+        int yield = MaterialMan.fetch(crucible.getLevel(), material_id).yield();
+        int amount_made = Math.min(salt_item_entity.getItem().getCount(), yield);
+        material_stack.setCount(amount_made);
+        salt_item_entity.getItem().shrink(amount_made);
+        if(salt_item_entity.getItem().getCount() <= 0) {
+            salt_item_entity.kill();
+        }
+
         Vec3 in_crucible = crucible.getBlockPos().getCenter();
         ItemEntity drop = new ItemEntity(crucible.getLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
         crucible.getLevel().addFreshEntity(drop);
-        salt_item_entity.kill();
         crucible.expendPower();
         crucible.setDirty();
     }
