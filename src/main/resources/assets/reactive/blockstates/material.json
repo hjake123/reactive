@@ -17,6 +17,12 @@
     },
     "model=circles":{
       "model": "reactive:block/material/circles"
+    },
+    "model=squares":{
+      "model": "reactive:block/material/squares"
+    },
+    "model=static":{
+      "model": "reactive:block/material/static"
     }
   }
 }

@@ -30,6 +30,18 @@
         "reactive:material_model_index": 5
       },
       "model": "reactive:block/material/circles"
+    },
+    {
+      "predicate": {
+        "reactive:material_model_index": 6
+      },
+      "model": "reactive:block/material/squares"
+    },
+    {
+      "predicate": {
+        "reactive:material_model_index": 7
+      },
+      "model": "reactive:block/material/static"
     }
   ]
 }

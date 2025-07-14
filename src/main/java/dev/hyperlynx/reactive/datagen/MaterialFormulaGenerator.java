@@ -215,9 +215,15 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
-                                "smooth",
+                                "squares",
                                 Powers.WARP_POWER.getId(),
-                                950,
+                                500,
+                                Optional.of(1500)
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "static",
+                                Powers.WARP_POWER.getId(),
+                                1500,
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(

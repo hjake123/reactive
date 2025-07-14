@@ -12,7 +12,6 @@ import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.registration.ReactiveSoundEvents;
 import dev.hyperlynx.reactive.util.Color;
-import net.minecraft.client.particle.PortalParticle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -47,7 +46,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -75,9 +73,9 @@ public class MaterialBlock extends Block implements EntityBlock {
         return new MaterialBlockEntity(pos, state);
     }
 
-    private void setModelByMaterialId(Level level, BlockPos pos, BlockState state, ResourceLocation material_id) {
+    private BlockState setModelByMaterialId(Level level, BlockState state, ResourceLocation material_id) {
         String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt");
-        level.setBlock(pos, state.setValue(MODEL, MaterialModel.fromName(model_name)), Block.UPDATE_CLIENTS);
+        return state.setValue(MODEL, MaterialModel.fromName(model_name));
     }
 
     @Override
@@ -88,8 +86,9 @@ public class MaterialBlock extends Block implements EntityBlock {
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
             }
-            setModelByMaterialId(level, pos, state, material_id);
-            setRandomTicking(level, pos, state, material_id);
+            state = setModelByMaterialId(level, state, material_id);
+            state = setRandomTicking(level, state, material_id);
+            level.setBlock(pos, state, Block.UPDATE_CLIENTS);
         }
     }
     private Material material(BlockGetter getter, BlockPos pos) {
@@ -270,10 +269,11 @@ public class MaterialBlock extends Block implements EntityBlock {
         return state.getValue(RANDOM_TICKING);
     }
 
-    private void setRandomTicking(Level level, BlockPos pos, BlockState state, ResourceLocation material_id) {
+    private BlockState setRandomTicking(Level level, BlockState state, ResourceLocation material_id) {
         if(MaterialMan.fetch(level, material_id).has(MaterialProperties.WARPING.get())) {
-            level.setBlock(pos, state.setValue(RANDOM_TICKING, true), Block.UPDATE_CLIENTS);
+            return state.setValue(RANDOM_TICKING, true);
         }
+        return state;
     }
 
     @Override
