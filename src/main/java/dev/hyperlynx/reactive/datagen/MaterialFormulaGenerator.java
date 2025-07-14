@@ -197,6 +197,24 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
+                                "streaked",
+                                Powers.X_POWER.getId(),
+                                20,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "squares",
+                                Powers.Y_POWER.getId(),
+                                20,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "static",
+                                Powers.Z_POWER.getId(),
+                                20,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
                                 "cracked",
                                 Powers.BODY_POWER.getId(),
                                 500,
@@ -209,21 +227,27 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
-                                "circles",
-                                Powers.MIND_POWER.getId(),
-                                1200,
-                                Optional.empty()
+                                "smooth",
+                                Powers.WARP_POWER.getId(),
+                                500,
+                                Optional.of(1400)
                         ),
                         new RangeStringFormulaOutcome(
                                 "squares",
                                 Powers.WARP_POWER.getId(),
-                                500,
+                                1400,
                                 Optional.of(1500)
                         ),
                         new RangeStringFormulaOutcome(
                                 "static",
                                 Powers.WARP_POWER.getId(),
                                 1500,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "circles",
+                                Powers.MIND_POWER.getId(),
+                                1200,
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
@@ -239,7 +263,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.of(1250)
                         ),
                         new RangeStringFormulaOutcome(
-                                "gel",
+                                "smooth",
                                 Powers.BLAZE_POWER.getId(),
                                 1250,
                                 Optional.empty()
