@@ -33,7 +33,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 )), false)
                 .add(MaterialProperties.REDSTONE, new PropertyFormulaRequirements(List.of(
                         new PropertyFormulaRequirements.Part(Powers.MIND_POWER.getId(),
-                                500, 500,
+                                10, 25,
                                 Optional.empty(), Optional.empty())
                 )), false)
                 .add(MaterialProperties.LIGHT, new PropertyFormulaRequirements(List.of(
@@ -43,7 +43,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 )), false)
                 .add(MaterialProperties.FLAMMABILITY, new PropertyFormulaRequirements(List.of(
                         new PropertyFormulaRequirements.Part(Powers.VERDANT_POWER.getId(),
-                                700, 1200,
+                                120, 240,
                                 Optional.empty(), Optional.empty())
                 )), false)
                 .add(MaterialProperties.ENCHANT_POWER, new PropertyFormulaRequirements(List.of(
@@ -68,6 +68,14 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 1500, 1510,
                                 Optional.empty(), Optional.empty())
                 )), false)
+                .add(MaterialProperties.REDSTONE_MELTING, new PropertyFormulaRequirements(List.of(
+                        new PropertyFormulaRequirements.Part(Powers.ACID_POWER.getId(),
+                                20, 50,
+                                Optional.empty(), Optional.empty()),
+                        new PropertyFormulaRequirements.Part(Powers.MIND_POWER.getId(),
+                                10, 100,
+                                Optional.of(400), Optional.of(500))
+                )), false)
 
         ;
 
@@ -77,21 +85,21 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new IntegerZeroToMaxFormulaOutcome(
                                 Powers.LIGHT_POWER.getId(),
                                 200,
-                                1600,
+                                1000,
                                 15
                 )), false)
                 .add(MaterialProperties.REDSTONE, List.of(
                         new IntegerZeroToMaxFormulaOutcome(
                                 Powers.MIND_POWER.getId(),
-                                500,
-                                1200,
+                                10,
+                                1000,
                                 15
                 )), false)
                 .add(MaterialProperties.FLAMMABILITY, List.of(
                         new IntegerZeroToMaxFormulaOutcome(
-                                Powers.MIND_POWER.getId(),
-                                700,
-                                1600,
+                                Powers.VERDANT_POWER.getId(),
+                                120,
+                                1000,
                                 300
                 )), false)
                 .add(MaterialProperties.ENCHANT_POWER, List.of(
@@ -131,7 +139,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 .add(MaterialProperties.FRICTION, List.of(
                         new FloatOneToValueFormulaOutcome(
                                 Powers.WARP_POWER.getId(),
-                                800,
+                                50,
                                 1000,
                                 0.9F),
                         new FloatOneToValueFormulaOutcome(
@@ -179,12 +187,6 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 ), false)
                 .add(MaterialProperties.MODEL_NAME, List.of(
                         new RangeStringFormulaOutcome(
-                                "gel",
-                                Powers.ACID_POWER.getId(),
-                                1000,
-                                Optional.empty()
-                        ),
-                        new RangeStringFormulaOutcome(
                                 "cracked",
                                 Powers.CURSE_POWER.getId(),
                                 10,
@@ -224,6 +226,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 "streaked",
                                 Powers.BODY_POWER.getId(),
                                 1200,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
+                                "streaked",
+                                Powers.VITAL_POWER.getId(),
+                                1000,
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
@@ -268,12 +276,6 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 1250,
                                 Optional.empty()
                         ),
-                        new RangeStringFormulaOutcome(
-                                "smooth",
-                                Powers.VITAL_POWER.getId(),
-                                1200,
-                                Optional.empty()
-                        ),
                         new DefaultStringFormulaOutcome(
                                 "salt"
                         )
@@ -283,7 +285,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Powers.VITAL_POWER.getId(),
                                 1000,
                                 1300,
-                                4.0F)
+                                3.0F)
                 ), false)
         ;
     }

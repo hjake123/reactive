@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.net.MaterialBESyncPayload;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.registration.ReactiveSoundEvents;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
@@ -99,12 +100,8 @@ public class MaterialBlock extends Block implements EntityBlock {
         return material_entity.getMaterial();
     }
 
-    private boolean isGelBlock(BlockGetter getter, BlockPos pos) {
-        Material material = material(getter, pos);
-        if(!material.has(MaterialProperties.MODEL_NAME.get())) {
-            return false;
-        }
-        return material.get(MaterialProperties.MODEL_NAME.get()).equals(MaterialModel.GEL.getSerializedName());
+    private boolean isGelBlock(BlockState state) {
+        return state.getValue(MODEL).equals(MaterialModel.GEL);
     }
 
     @Override
@@ -114,7 +111,7 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        if(isGelBlock(getter, pos)) {
+        if(isGelBlock(state)) {
             return Shapes.empty();
         }
         return Shapes.block();
@@ -122,13 +119,10 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if(isGelBlock(level, pos)) {
-            if (!(entity instanceof LivingEntity living)) {
-                return;
-            }
-            living.makeStuckInBlock(state, new Vec3(0.9F, 0.9D, 0.9F));
+        if (!(entity instanceof LivingEntity living)) {
+            return;
         }
-        super.entityInside(state, level, pos, entity);
+        living.makeStuckInBlock(state, isGelBlock(state) ? new Vec3(0.9F, 0.9D, 0.9F) : new Vec3(0.4F, 0.4D, 0.4F));
     }
 
     @Override
@@ -180,11 +174,11 @@ public class MaterialBlock extends Block implements EntityBlock {
                 ParticleScribe.drawParticle(level, ParticleTypes.ANGRY_VILLAGER, center.x + level.random.nextFloat() - 0.5, center.y , center.z + level.random.nextFloat() - 0.5);
                 float damage = material.get(MaterialProperties.SELF_DEFENSE.get());
                 player.hurt(level.damageSources().magic(), damage);
-                ParticleScribe.drawParticleZigZag(level, ParticleTypes.ELECTRIC_SPARK,
+                ParticleScribe.drawParticleZigZag(level, ReactiveParticles.ACID_BUBBLE,
                         center.x, center.y,center.z,
-                        player.getX(), player.getEyeHeight() / 2 + player.getY(), player.getZ(), 8, 10, 0.3);
-                level.playSound(null, player.getX(), player.getY(), player.getZ(), ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS, 0.5F, 0.98F + player.level().random.nextFloat()*0.05F);
-                mbe.generic_delay = 40;
+                        player.getX(), player.getEyeHeight() / 2 + player.getY(), player.getZ(), 5, 10, 0.3);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 0.98F + player.level().random.nextFloat()*0.05F);
+                mbe.generic_delay = 20;
             } else {
                 mbe.generic_delay--;
             }
@@ -298,8 +292,18 @@ public class MaterialBlock extends Block implements EntityBlock {
                 ParticleScribe.drawParticleBox(level, new DustParticleOptions(new Vector3f(f * 0.9F, f * 0.3F, f), 0.5F), new AABB(pos),8);
                 return;
             }
-
         }
     }
 
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if(material(level, pos).has(MaterialProperties.REDSTONE_MELTING.get())) {
+            if(level.getDirectSignalTo(pos) > 0) {
+                level.setBlock(pos, state.setValue(MODEL, MaterialModel.GEL), Block.UPDATE_CLIENTS);
+            } else {
+                level.setBlock(pos, state.setValue(MODEL, MaterialModel.valueOf(material(level, pos).get(MaterialProperties.MODEL_NAME.get()).toUpperCase())), Block.UPDATE_CLIENTS);
+            }
+        }
+    }
 }

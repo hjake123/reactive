@@ -32,6 +32,7 @@ public class MaterialProperties {
     public static final DeferredHolder<MaterialProperty<?>, IntMaterialProperty> REDSTONE = PROPERTIES.register("redstone", IntMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FloatMaterialProperty> SELF_DEFENSE = PROPERTIES.register("self_defense", FloatMaterialProperty::new);
     public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> WARPING = PROPERTIES.register("warping", FlagMaterialProperty::new);
+    public static final DeferredHolder<MaterialProperty<?>, FlagMaterialProperty> REDSTONE_MELTING = PROPERTIES.register("redstone_melting", FlagMaterialProperty::new);
 
 
     @SubscribeEvent
