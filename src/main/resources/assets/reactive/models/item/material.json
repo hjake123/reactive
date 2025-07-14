@@ -24,6 +24,12 @@
         "reactive:material_model_index": 4
       },
       "model": "reactive:block/material/smooth"
+    },
+    {
+      "predicate": {
+        "reactive:material_model_index": 5
+      },
+      "model": "reactive:block/material/circles"
     }
   ]
 }

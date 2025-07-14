@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class MaterialBlockEntity extends BlockEntity {
     public static final LightingMan lights = new LightingMan();
     ResourceLocation material_id;
+    public int generic_delay = 0;
 
     public MaterialBlockEntity(BlockPos pos, BlockState blockState) {
         super(ReactiveBlockEntityTypes.MATERIAL.get(), pos, blockState);
@@ -71,7 +72,7 @@ public class MaterialBlockEntity extends BlockEntity {
         MaterialBlockEntity.lights.setLightAt(this.getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
     }
 
-    public ResourceLocation getId() {
+    public ResourceLocation getMaterialId() {
         return material_id;
     }
 }

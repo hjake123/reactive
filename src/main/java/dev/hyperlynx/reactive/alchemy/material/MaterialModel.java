@@ -15,7 +15,8 @@ public enum MaterialModel implements StringRepresentable {
     CRACKED("cracked", 1.0F, SoundType.DRIPSTONE_BLOCK),
     GEL("gel", 2.0F, SoundType.SLIME_BLOCK),
     STREAKED("streaked", 3.0F, SoundType.DEEPSLATE),
-    SMOOTH("smooth", 4.0F, SoundType.WOOL);
+    SMOOTH("smooth", 4.0F, SoundType.WOOL),
+    CIRCLES("circles", 5.0F, SoundType.DRIPSTONE_BLOCK);
 
     private final String name;
     private final float index;

@@ -90,6 +90,11 @@ public class ReactivePayloadHandlers {
                 HoverQuiltHeightPayload.STREAM_CODEC,
                 HoverQuilt::handleHeightPacket
         );
+        registrar.playToClient(
+                MaterialBESyncPayload.TYPE,
+                MaterialBESyncPayload.STREAM_CODEC,
+                MaterialBESyncPayload::handle
+        );
 
         final PayloadRegistrar async_registrar = event.registrar("1").executesOn(HandlerThread.NETWORK);
         async_registrar.commonToClient(

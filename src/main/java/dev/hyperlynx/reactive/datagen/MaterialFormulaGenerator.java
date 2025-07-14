@@ -58,6 +58,17 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 .add(MaterialProperties.FRICTION, new PropertyFormulaRequirements(List.of()), false)
                 .add(MaterialProperties.BREAK_STRENGTH, new PropertyFormulaRequirements(List.of()), false)
                 .add(MaterialProperties.MODEL_NAME, new PropertyFormulaRequirements(List.of()), false)
+                .add(MaterialProperties.SELF_DEFENSE, new PropertyFormulaRequirements(List.of(
+                        new PropertyFormulaRequirements.Part(Powers.VITAL_POWER.getId(),
+                                1000, 1150,
+                                Optional.empty(), Optional.empty())
+                )), false)
+                .add(MaterialProperties.WARPING, new PropertyFormulaRequirements(List.of(
+                        new PropertyFormulaRequirements.Part(Powers.WARP_POWER.getId(),
+                                1500, 1510,
+                                Optional.empty(), Optional.empty())
+                )), false)
+
         ;
 
 
@@ -198,6 +209,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
+                                "circles",
+                                Powers.MIND_POWER.getId(),
+                                1200,
+                                Optional.empty()
+                        ),
+                        new RangeStringFormulaOutcome(
                                 "smooth",
                                 Powers.WARP_POWER.getId(),
                                 950,
@@ -230,6 +247,13 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new DefaultStringFormulaOutcome(
                                 "salt"
                         )
+                ), false)
+                .add(MaterialProperties.SELF_DEFENSE, List.of(
+                        new FloatOneToValueFormulaOutcome(
+                                Powers.VITAL_POWER.getId(),
+                                1000,
+                                1300,
+                                4.0F)
                 ), false)
         ;
     }

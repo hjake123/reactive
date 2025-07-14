@@ -721,7 +721,7 @@ public class SpecialCaseMan {
 
     private static final int MATERIAL_CRAFT_MIN_POWER = 800;
     private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
-        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER || crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10) {
+        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER && !(crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10)) {
             return;
         }
         ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
