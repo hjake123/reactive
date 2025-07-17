@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.client.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
@@ -10,6 +11,7 @@ import dev.hyperlynx.reactive.menu.DeskMenu;
 import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.util.Color;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.css.Rect;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
@@ -46,6 +49,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
     Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
             button -> ScreenOpener.materialList(), Component.empty());
+    MultiLineTextWidget readout = new MultiLineTextWidget(Component.empty(), Minecraft.getInstance().font);
 
     public DeskScreen(DeskMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -65,6 +69,12 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
         discoveries_button.setPosition(this.getGuiLeft() + 150, this.getGuiTop() - 17);
         addRenderableWidget(discoveries_button);
+
+        readout.active = false;
+        readout.setPosition(slot_x + 41, slot_y - 4);
+        readout.setMaxWidth(104);
+        readout.setMaxRows(6);
+        addRenderableWidget(readout);
     }
 
     private Material getMaterial() {
@@ -84,10 +94,12 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         rename_button.active = false;
         rename_button.visible = false;
         rename_button.setTooltip(null);
+        readout.active = false;
         if(this.getMenu().getSlot(0).hasItem()) {
             Material material = getMaterial();
             if(material != null) {
                 updateButton(material);
+                updateReadout(material);
             }
         }
     }
@@ -105,6 +117,23 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
             rename_button.setMessage(Component.translatable("ui.reactive.discover_button"));
             rename_button.active = true;
         }
+    }
+
+    private void updateReadout(Material material) {
+        readout.active = true;
+        Map<Power, Integer> original_formula = material.getOriginalFormula().orElse(Map.of());
+        if(original_formula.isEmpty()) {
+            readout.setMessage(Component.translatable("ui.reactive.no_formula"));
+        }
+        StringBuilder builder = new StringBuilder(Component.translatable("ui.reactive.material_readout_header").getString());
+        builder.append("\n");
+        for(Power power : original_formula.keySet()) {
+            builder.append(power.getName());
+            builder.append(": ");
+            builder.append(Math.round(original_formula.get(power) / 16.0));
+            builder.append("%\n");
+        }
+        readout.setMessage(Component.literal(builder.toString()));
     }
 
     @Override

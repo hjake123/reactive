@@ -83,7 +83,7 @@ public class Material {
         return custom_name;
     }
 
-    private Optional<Map<Power, Integer>> getOriginalFormula() {
+    public Optional<Map<Power, Integer>> getOriginalFormula() {
         return original_formula;
     }
 
