@@ -134,7 +134,13 @@ public class Material {
     }
 
     public void setDiscoverer(Player player) {
-        this.discoverer = Optional.of(new Discoverer(player.getUUID(), player.getName().getString()));
+        long timestamp;
+        if(this.discoverer.isPresent()) {
+            timestamp = discoverer.get().discovery_timestamp();
+        } else {
+            timestamp = System.currentTimeMillis();
+        }
+        this.discoverer = Optional.of(new Discoverer(player.getUUID(), player.getName().getString(), timestamp));
     }
 
     public boolean wasDiscovered() {
@@ -197,10 +203,15 @@ public class Material {
         return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(player.getName());
     }
 
-    public record Discoverer(UUID uuid, String name) {
+    public long getDiscoveryTime() {
+        return discoverer.map(Discoverer::discovery_timestamp).orElse(0L);
+    }
+
+    public record Discoverer(UUID uuid, String name, long discovery_timestamp) {
         public static final Codec<Discoverer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 UUIDUtil.CODEC.fieldOf("uuid").forGetter(Discoverer::uuid),
-                Codec.STRING.fieldOf("name").forGetter(Discoverer::name)
+                Codec.STRING.fieldOf("name").forGetter(Discoverer::name),
+                Codec.LONG.optionalFieldOf("discovery_timestamp",0L).forGetter(Discoverer::discovery_timestamp)
         ).apply(instance, Discoverer::new));
     }
 }

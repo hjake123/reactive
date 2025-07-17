@@ -6,9 +6,12 @@ import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.net.MaterialRenamePayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -75,5 +78,10 @@ public class ClientMaterialMan {
             Optional<String> notes = data().materials.get(id).getNotes();
             PacketDistributor.sendToServer(new MaterialNotesPayload(id, notes.orElse("")));
         }
+    }
+
+    public static List<ResourceLocation> getKeysInDiscoveryOrder() {
+        return data().materials.keySet().stream().sorted((left_id, right_id) ->
+                Math.clamp(data().materials.get(right_id).getDiscoveryTime() - data().materials.get(left_id).getDiscoveryTime(), -Integer.MAX_VALUE, Integer.MAX_VALUE)).toList();
     }
 }

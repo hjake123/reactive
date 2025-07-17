@@ -44,10 +44,6 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
                 }
             }).build();
 
-    NakedMultiLineEditBox notes_box = new NakedMultiLineEditBox(Minecraft.getInstance().font, 0, 0, 104, 60, Component.translatable("ui.reactive.notes_hint"), Component.empty());
-    boolean notes_loaded = false;
-    boolean notes_changed = false;
-
     Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
             button -> ScreenOpener.materialList(), Component.empty());
 
@@ -66,13 +62,6 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         rename_button.setPosition(slot_x - 16,slot_y + 24);
         rename_button.setWidth(51);
         addRenderableWidget(rename_button);
-
-        notes_box.active = false;
-        notes_box.visible = false;
-        notes_box.setPosition(slot_x + 39, slot_y - 6);
-        notes_box.setValueListener(this::updateNotes);
-        notes_box.setCharacterLimit(256);
-        addRenderableWidget(notes_box);
 
         discoveries_button.setPosition(this.getGuiLeft() + 150, this.getGuiTop() - 17);
         addRenderableWidget(discoveries_button);
@@ -95,16 +84,9 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         rename_button.active = false;
         rename_button.visible = false;
         rename_button.setTooltip(null);
-        notes_box.visible = false;
-        notes_box.active = false;
-        notes_loaded = false;
         if(this.getMenu().getSlot(0).hasItem()) {
             Material material = getMaterial();
             if(material != null) {
-                if(!notes_loaded) {
-                    loadNotes(material);
-                    notes_loaded = true;
-                }
                 updateButton(material);
             }
         }
@@ -125,19 +107,6 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         }
     }
 
-    private void loadNotes(Material material) {
-        notes_box.active = true;
-        notes_box.visible = true;
-        if(material.getNotes().isPresent()) {
-            notes_box.setValue(material.getNotes().get());
-        }
-    }
-
-    private void updateNotes(String notes) {
-        Objects.requireNonNull(getMaterial()).setNotes(notes);
-        notes_changed = true;
-    }
-
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
@@ -151,23 +120,6 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(DESK_BACKGROUND_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
         renderDecorations(guiGraphics);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
-        if (notes_box.isFocused() && Minecraft.getInstance().options.keyInventory.isActiveAndMatches(mouseKey)) {
-            return false;
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        if(notes_changed) {
-            ClientMaterialMan.syncNotes();
-        }
     }
 
     // -- Square glowing decoration --

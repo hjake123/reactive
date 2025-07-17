@@ -73,7 +73,7 @@ public class MaterialListScreen extends Screen {
     private static class MaterialsList extends ObjectSelectionList<MaterialEntry> {
         public MaterialsList(Minecraft client, int width, int height, int y, int item_height) {
             super(client, width, height, y, item_height);
-            for(ResourceLocation material_id : ClientMaterialMan.data().getKeys()) {
+            for(ResourceLocation material_id : ClientMaterialMan.getKeysInDiscoveryOrder()) {
                 if(ClientMaterialMan.data().get(material_id).wasDiscovered()) {
                     this.addEntry(new MaterialEntry(material_id));
                 }
