@@ -67,6 +67,8 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
         discoveries_button.setPosition(this.getGuiLeft() + 150, this.getGuiTop() - 17);
         addRenderableWidget(discoveries_button);
+
+        readout = null;
     }
 
     private Material getMaterial() {
@@ -117,7 +119,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     }
 
     private void updateReadout(Material material, ResourceLocation material_id) {
-        if(material_id.equals(last_material)) {
+        if(material_id.equals(last_material) && readout != null) {
             return;
         }
         last_material = material_id;
