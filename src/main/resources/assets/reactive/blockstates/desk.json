@@ -1,7 +1,19 @@
 {
-  "variants":{
-    "":{
+  "variants": {
+    "facing=north": {
       "model": "reactive:block/desk"
+    },
+    "facing=west": {
+      "model": "reactive:block/desk",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "reactive:block/desk",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "reactive:block/desk",
+      "y": 90
     }
   }
 }
