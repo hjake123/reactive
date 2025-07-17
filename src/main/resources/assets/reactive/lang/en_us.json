@@ -186,7 +186,7 @@
   "text.reactive.cannot_rename_others_discovery": "Can't rename someone else's discovery",
   "ui.reactive.notes_hint": "Enter notes here...",
   "ui.reactive.material_list": "Material List",
-  "ui.reactive.material_readout_header": "Formula",
+  "ui.reactive.property_count": " properties",
   "ui.reactive.no_formula": "Not made using a formula",
   "menu.title.reactive.desk": "Discovery Desk",
   "text.reactive.discovered_by": "Discovered by ",
