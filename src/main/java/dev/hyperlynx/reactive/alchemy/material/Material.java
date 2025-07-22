@@ -2,8 +2,10 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
+import dev.hyperlynx.reactive.util.Color;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.ChatFormatting;
@@ -11,15 +13,14 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /// A particular Material that a [MaterialBlock] can have the properties of.
 ///
@@ -213,5 +214,30 @@ public class Material {
                 Codec.STRING.fieldOf("name").forGetter(Discoverer::name),
                 Codec.LONG.optionalFieldOf("discovery_timestamp",0L).forGetter(Discoverer::discovery_timestamp)
         ).apply(instance, Discoverer::new));
+    }
+
+    public MutableComponent formulaComponent() {
+        MutableComponent readout_message = Component.empty();
+        Map<Power, Integer> original_formula = this.getOriginalFormula().orElse(Map.of());
+        if(original_formula.isEmpty()) {
+            return Component.translatable("ui.reactive.no_formula");
+        }
+        List<Component> power_lines = new ArrayList<>();
+        for(Power power : original_formula.keySet().stream().sorted(Comparator.comparing(original_formula::get)).toList().reversed()) {
+            power_lines.add(Component.literal(power.getName() + ": " + Math.round(original_formula.get(power) / 16.0) + "%")
+                    .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex() : 0xFFFFFF));
+        }
+        for(int i = 0; i < power_lines.size(); i++) {
+            readout_message.append(power_lines.get(i));
+            if(i < power_lines.size() - 1) {
+                readout_message.append("\n");
+            }
+        }
+        return readout_message;
+    }
+
+    private static boolean shouldColorizeAgainstBlack(Color color) {
+        int threshold = 90;
+        return ConfigMan.CLIENT.colorizeLitmusOutput.get() && (color.red > threshold || color.green > threshold || color.blue > threshold);
     }
 }

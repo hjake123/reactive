@@ -126,23 +126,8 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
         if(readout != null) {
             removeWidget(readout);
         }
-        MutableComponent readout_message = Component.empty();
-        Map<Power, Integer> original_formula = material.getOriginalFormula().orElse(Map.of());
-        if(original_formula.isEmpty()) {
-            readout_message = Component.translatable("ui.reactive.no_formula");
-        }
-        List<Component> power_lines = new ArrayList<>();
-        for(Power power : original_formula.keySet().stream().sorted(Comparator.comparing(original_formula::get)).toList().reversed()) {
-            power_lines.add(Component.literal(power.getName() + ": " + Math.round(original_formula.get(power) / 16.0) + "%")
-                    .withColor(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? power.getColor().hex() : 0xFFFFFF));
-        }
-        for(int i = 0; i < power_lines.size(); i++) {
-            readout_message.append(power_lines.get(i));
-            if(i < power_lines.size() - 1) {
-                readout_message.append("\n");
-            }
-        }
-        readout = new BetterFittingMultiLineTextWidget(slot_x + 39, slot_y - 6, 104, 60, readout_message, Minecraft.getInstance().font);
+
+        readout = new BetterFittingMultiLineTextWidget(slot_x + 39, slot_y - 6, 104, 60, material.formulaComponent(), Minecraft.getInstance().font);
         addRenderableWidget(readout);
     }
 

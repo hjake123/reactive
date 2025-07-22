@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.client.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
@@ -8,6 +9,10 @@ import net.minecraft.network.chat.Component;
 public class BetterFittingMultiLineTextWidget extends FittingMultiLineTextWidget {
     public BetterFittingMultiLineTextWidget(int x, int y, int width, int height, Component message, Font font) {
         super(x, y, width, height, message, font);
+    }
+
+    public BetterFittingMultiLineTextWidget withMessage(Component message) {
+        return new BetterFittingMultiLineTextWidget(this.getX(), this.getY(), this.getWidth(), this.getHeight(), message, Minecraft.getInstance().font);
     }
 
     @Override
@@ -33,6 +38,10 @@ public class BetterFittingMultiLineTextWidget extends FittingMultiLineTextWidget
         if(!scrollbarVisible()) {
             guiGraphics.pose().popPose();
         }
+    }
+
+    public int getInnerPadding() {
+        return this.innerPadding();
     }
 
 }
