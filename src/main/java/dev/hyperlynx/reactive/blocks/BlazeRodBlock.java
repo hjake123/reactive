@@ -22,7 +22,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class BlazeRodBlock extends RotatedPillarBlock implements SimpleWaterloggedBlock {
     protected static final VoxelShape X_SHAPE = Block.box(0, 6, 6, 16, 10, 10);

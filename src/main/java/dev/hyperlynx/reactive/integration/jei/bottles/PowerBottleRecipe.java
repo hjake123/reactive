@@ -9,12 +9,10 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 public class PowerBottleRecipe implements Recipe<RecipeInput> {
-    protected final String group;
     protected final Ingredient bottle;
     protected final Power power;
 
-    public PowerBottleRecipe(String group, Power power) {
-        this.group = group;
+    public PowerBottleRecipe(String ignored, Power power) {
         this.bottle = Ingredient.of(power.getBottle());
         this.power = power;
     }

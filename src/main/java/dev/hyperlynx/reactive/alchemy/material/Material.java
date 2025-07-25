@@ -32,7 +32,7 @@ public class Material {
     private final Optional<Map<Power, Integer>> original_formula;
     private Optional<Discoverer> discoverer = Optional.empty();
     private Optional<String> notes = Optional.empty();
-    private int yield;
+    private final int yield;
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);

@@ -25,7 +25,6 @@ public class MnemonicBlockEntity extends BlockEntity {
     public static final int MAX_SIGNAL_DURATION = 600; // Maximum number of ticks allowed in a given sequence step. Being at 0 this long ends the recording.
     public static final int MAX_SEQUENCE_LENGTH = 256; // Maximum number of transitions it can save at once.
 
-
     public MnemonicBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ReactiveBlockEntityTypes.MNEMONIC_BULB.value(), pPos, pBlockState);
     }

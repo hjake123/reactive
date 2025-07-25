@@ -20,6 +20,8 @@ import java.util.Objects;
 
 public class StardustItem extends Item {
     final int MAX_CHAIN_DEPTH = 10;
+
+    @SuppressWarnings("unused")
     public StardustItem(Properties p_41383_) {
         super(p_41383_);
     }

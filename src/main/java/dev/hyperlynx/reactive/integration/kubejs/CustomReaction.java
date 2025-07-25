@@ -21,6 +21,7 @@ public class CustomReaction extends Reaction {
     protected int yield = 0;
     protected Optional<Power> output_power = Optional.empty();
 
+    @SuppressWarnings("unused")
     public static final StreamCodec<RegistryFriendlyByteBuf, CustomReaction> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, CustomReaction::getAlias,
             ByteBufCodecs.map(HashMap::new, Power.STREAM_CODEC, ByteBufCodecs.INT), CustomReaction::getReagents,

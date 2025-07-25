@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 public class AlchemyScrollItem extends Item {
+    @SuppressWarnings("unused")
     public AlchemyScrollItem(Properties props) {
         super(props.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     }

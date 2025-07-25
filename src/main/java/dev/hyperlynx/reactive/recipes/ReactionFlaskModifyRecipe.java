@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class ReactionFlaskModifyRecipe extends CustomRecipe {
+
+    @SuppressWarnings("unused")
     public ReactionFlaskModifyRecipe(CraftingBookCategory category) {
         super(category);
     }

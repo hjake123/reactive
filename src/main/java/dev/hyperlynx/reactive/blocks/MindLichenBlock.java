@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.GlowLichenBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MindLichenBlock extends GlowLichenBlock {
+    @SuppressWarnings("unused")
     public MindLichenBlock(Properties props) {
         super(props);
     }

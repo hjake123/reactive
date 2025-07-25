@@ -22,6 +22,7 @@ public class VortexStoneItem extends Item {
     private static final double STRENGTH = 0.8;
     private static final double TOP_SPEED = 1.6;
 
+    @SuppressWarnings("unused")
     public VortexStoneItem(Properties props) {
         super(props);
     }

@@ -99,11 +99,6 @@ public class ReactionRenderers {
             ParticleScribe.drawParticleReactionSurface(level, ParticleTypes.HAPPY_VILLAGER, reactor);
     }
 
-    public void astral(Reactor reactor) {
-        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) < reactor.getTotalPowerLevel())
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), ReactiveParticles.STARDUST.getType(), reactor.getPos(), 0.7, 1);
-    }
-
     public void snow(Reactor reactor) {
         AABB aoe = new AABB(reactor.getBlockPos());
         aoe = aoe.inflate(5);

@@ -22,6 +22,7 @@ public class ActiveGoldFoamBlock extends GoldFoamBlock implements EntityBlock {
         return new ActiveFoamBlockEntity(pos, state);
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <ActiveFoamBlockEntity extends BlockEntity> BlockEntityTicker<ActiveFoamBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<ActiveFoamBlockEntity> t) {

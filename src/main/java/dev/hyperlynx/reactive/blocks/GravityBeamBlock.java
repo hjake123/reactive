@@ -22,6 +22,7 @@ public class GravityBeamBlock extends DirectionalBlock implements EntityBlock {
     public static final MapCodec<GravityBeamBlock> CODEC = simpleCodec(GravityBeamBlock::new);
     public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 
+    @SuppressWarnings("unused")
     public GravityBeamBlock(Properties props) {
         super(props);
         registerDefaultState(this.defaultBlockState().setValue(ENABLED, false));

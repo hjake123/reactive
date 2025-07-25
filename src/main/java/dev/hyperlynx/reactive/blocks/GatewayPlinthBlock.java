@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +52,7 @@ public class GatewayPlinthBlock extends Block {
             Block.box(4, 2, 4, 12, 7, 12));
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
+    @SuppressWarnings("unused")
     public GatewayPlinthBlock(Properties props) {
         super(props);
         registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));

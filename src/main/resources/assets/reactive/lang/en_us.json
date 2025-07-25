@@ -180,6 +180,7 @@
   "text.reactive.random": "Random Contents",
   "text.reactive.question_marks": "???",
   "text.reactive.random_material_tooltip": "Will become a randomized material",
+  "message.reactive.material_id_invalid": "Invalid material id",
   "ui.reactive.discover_button": "Discover",
   "ui.reactive.rename_button": "Rename",
   "ui.reactive.name_material_screen": "Name The Material",

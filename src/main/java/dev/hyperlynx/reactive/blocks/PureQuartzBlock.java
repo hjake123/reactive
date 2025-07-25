@@ -11,6 +11,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class PureQuartzBlock extends TransparentBlock {
+
+    @SuppressWarnings("unused")
     public PureQuartzBlock(Properties prop) {
         super(prop);
     }

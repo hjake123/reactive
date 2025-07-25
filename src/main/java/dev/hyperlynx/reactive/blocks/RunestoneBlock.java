@@ -18,6 +18,7 @@ import java.util.Random;
 public class RunestoneBlock extends HorizontalDirectionalBlock {
     public static final MapCodec<RunestoneBlock> CODEC = simpleCodec(RunestoneBlock::new);
 
+    @SuppressWarnings("unused")
     public RunestoneBlock(BlockBehaviour.Properties props) {
         super(props);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));

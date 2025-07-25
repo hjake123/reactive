@@ -35,6 +35,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
     public static final BooleanProperty CHARGED = BooleanProperty.create("charged");
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
+    @SuppressWarnings("unused")
     public MnemonicBlock(Properties props) {
         super(props);
         registerDefaultState(this.defaultBlockState().setValue(POWER, 0).setValue(CHARGED, false).setValue(ACTIVE, false));
@@ -73,7 +74,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
         return super.playerWillDestroy(level, pos, state, player);
     }
 
-        @Nullable
+    @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         return new MnemonicBlockEntity(pos, state);

@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -27,10 +26,6 @@ public record ReactionStatusEntry(Reaction.Status status, String reaction_alias)
 
     public String getStatusAsString(){
         return status.toString();
-    }
-
-    public Component getName() {
-        return Component.translatable("reaction.reactive." + reaction_alias);
     }
 
     public static ReactionStatusEntry stable(){

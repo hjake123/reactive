@@ -313,6 +313,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
 
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <CrucibleBlockEntity extends BlockEntity> BlockEntityTicker<CrucibleBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<CrucibleBlockEntity> type) {

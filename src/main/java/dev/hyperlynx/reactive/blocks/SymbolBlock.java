@@ -81,8 +81,7 @@ public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        SymbolBlockEntity symbol = new SymbolBlockEntity(pos, state, symbol_item);
-        return symbol;
+        return new SymbolBlockEntity(pos, state, symbol_item);
     }
 
     @Override

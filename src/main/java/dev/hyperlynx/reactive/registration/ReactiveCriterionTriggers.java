@@ -40,13 +40,13 @@ public class ReactiveCriterionTriggers {
             FlagTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> TRY_LAVA_CRUCIBLE = CRITERIA_TRIGGERS.register("try_lava_crucible_criterion",
-            () -> new StagedFlagTrigger(ReactiveMod.location("try_lava_crucible_criterion"), ReactiveMod.location("try_nether_crucible")));
+            () -> new StagedFlagTrigger(ReactiveMod.location("try_nether_crucible")));
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_SACRIFICE = CRITERIA_TRIGGERS.register("see_sacrifice_criterion",
             FlagTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> MAKE_RIFT = CRITERIA_TRIGGERS.register("make_rift_criterion",
-            () -> new StagedFlagTrigger(ReactiveMod.location("make_rift_criterion"), ReactiveMod.location("dissolve_tp")));
+            () -> new StagedFlagTrigger(ReactiveMod.location("dissolve_tp")));
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> PORTAL_TRADE = CRITERIA_TRIGGERS.register("portal_trade_criterion",
             FlagTrigger::new);
@@ -58,13 +58,13 @@ public class ReactiveCriterionTriggers {
             FlagTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> OCCULT_AWAKENING = CRITERIA_TRIGGERS.register("activate_eye_criterion",
-            () -> new StagedFlagTrigger(ReactiveMod.location("activate_eye_criterion"), ReactiveMod.location("place_eye")));
+            () -> new StagedFlagTrigger(ReactiveMod.location("place_eye")));
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> HARVEST = CRITERIA_TRIGGERS.register("harvest_criterion",
-            () -> new StagedFlagTrigger(ReactiveMod.location("harvest_criterion"), ReactiveMod.location("see_synthesis")));
+            () -> new StagedFlagTrigger(ReactiveMod.location("see_synthesis")));
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_DISPLACEMENT = CRITERIA_TRIGGERS.register("see_displacement_criterion",
-            () -> new StagedFlagTrigger(ReactiveMod.location("see_displacement_criterion"), ReactiveMod.location("get_motion_salts")));
+            () -> new StagedFlagTrigger(ReactiveMod.location("get_motion_salts")));
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> BE_SLOWFALLED = CRITERIA_TRIGGERS.register("be_slowfalled_criterion",
             FlagTrigger::new);
