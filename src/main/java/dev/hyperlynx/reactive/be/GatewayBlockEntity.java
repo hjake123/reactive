@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.TheEndPortalBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -77,10 +78,7 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         Optional<BlockPos> pos = NbtUtils.readBlockPos(tag, TARGET_POS_TAG);
         if(pos.isEmpty())
             return;
-        Tag target_tag = tag.get(TARGET_DIMENSION_TAG);
-        if(target_tag != null) {
-            ResourceLocation location = ResourceLocation.parse(tag.getAsString());
-            target = GlobalPos.of(ResourceKey.create(Registries.DIMENSION, location), pos.get());
-        }
+        ResourceLocation location = ResourceLocation.parse(Objects.requireNonNull(tag.get(TARGET_DIMENSION_TAG)).getAsString());
+        target = GlobalPos.of(ResourceKey.create(Registries.DIMENSION, location), pos.get());
     }
 }

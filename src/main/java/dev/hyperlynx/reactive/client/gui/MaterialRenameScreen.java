@@ -17,15 +17,16 @@ import net.minecraft.world.item.ItemStack;
 public class MaterialRenameScreen extends Screen {
     final ResourceLocation material_to_rename;
     final EditBox name_box = new EditBox(Minecraft.getInstance().font,142, 20, Component.empty());
-    final Button name_set_button = new Button.Builder(Component.translatable("ui.reactive.discover_button"),
-            button -> {
-                ClientMaterialMan.rename(material_to_rename, name_box.getValue());
-                Minecraft.getInstance().popGuiLayer();
-            }).width(142).build();
+    final Button name_set_button;
 
     protected MaterialRenameScreen(ResourceLocation material_to_rename) {
         super(Component.translatable("ui.reactive.name_material_screen"));
         this.material_to_rename = material_to_rename;
+        this.name_set_button = new Button.Builder(Component.translatable("ui.reactive.discover_button"),
+                button -> {
+                    ClientMaterialMan.rename(material_to_rename, name_box.getValue());
+                    Minecraft.getInstance().popGuiLayer();
+                }).width(142).build();
     }
 
     @Override
