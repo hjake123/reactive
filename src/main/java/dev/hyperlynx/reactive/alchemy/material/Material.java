@@ -28,7 +28,7 @@ import java.util.*;
 /// When a MaterialBlock queries its material, it can ask it for various block properties.
 public class Material {
     private final Reference2ObjectMap<MaterialProperty<?>, Object> properties;
-    private String custom_name = "";
+    private String custom_name;
     private final Optional<Map<Power, Integer>> original_formula;
     private Optional<Discoverer> discoverer = Optional.empty();
     private Optional<String> notes = Optional.empty();
@@ -92,10 +92,6 @@ public class Material {
 
     public int yield() { return yield; }
 
-    public void setYield(int yield) {
-        this.yield = yield;
-    }
-
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);
     }
@@ -157,6 +153,7 @@ public class Material {
     }
 
     /// Use this only as absolutely necessary.
+    @SuppressWarnings("SameParameterValue")
     protected <T> void set(MaterialProperty<T> property, T value) {
         properties.put(property, value);
     }
@@ -198,6 +195,8 @@ public class Material {
         }
         Player player = getDiscoverer(level);
         if(player == null) {
+            // The discoverer is known to exist (that's what we checked with wasDiscovered()), so...
+            //noinspection OptionalGetWithoutIsPresent
             return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer().get().name);
         }
         setDiscoverer(player); // Resets the name of the player, so that if the player's username changes it will be up to date

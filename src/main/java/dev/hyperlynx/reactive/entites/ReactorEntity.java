@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class ReactorEntity extends Entity implements Reactor {
-    public static int MAX_POWER = 10000;
+    public static final int MAX_POWER = 10000;
 
     private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, ReactiveEntityDataSerializers.REACTOR_DATA_SERIALIZER.get());
 
@@ -54,7 +54,7 @@ public class ReactorEntity extends Entity implements Reactor {
     private static final String LINKED_CRYSTAL_KEY = "crystal";
 
     // Don't need to save either.
-    private List<String> render_aliases = new ArrayList<>();
+    private final List<String> render_aliases = new ArrayList<>();
     private AreaMemory area_memory = null;
     private int sync_timer = 10;
     private int react_timer = 0;
@@ -149,10 +149,6 @@ public class ReactorEntity extends Entity implements Reactor {
 
     public int getLifespan() {
         return this.getEntityData().get(LIFESPAN);
-    }
-
-    public void forceGoldSymbol() {
-        this.getEntityData().set(FORCE_GOLD_SYMBOL, true);
     }
 
     @Override

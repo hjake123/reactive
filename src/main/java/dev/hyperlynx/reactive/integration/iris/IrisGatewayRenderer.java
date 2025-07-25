@@ -57,9 +57,9 @@ public class IrisGatewayRenderer extends GatewayRenderer<GatewayBlockEntity> imp
     }
 
     public static class IrisGatewayRendererContext extends GatewayRenderContext {
-        int light;
-        int overlay;
-        float progress;
+        final int light;
+        final int overlay;
+        final float progress;
         int count;
         Vector3f normal;
 

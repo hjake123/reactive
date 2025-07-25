@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import java.util.function.Consumer;
 
 public class CatalystEffectReaction extends EffectReaction{
-    Item reactant;
+    final Item reactant;
 
     public CatalystEffectReaction(String alias, Consumer<Reactor> function, Power required_power, Item reactant) {
         super(alias, function, required_power);

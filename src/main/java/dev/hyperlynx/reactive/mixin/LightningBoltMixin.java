@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 /*
 Makes it so that lightning bolts will power the Crucible.
  */
+@SuppressWarnings("ALL")
 @Mixin(LightningBolt.class)
 public class LightningBoltMixin{
 

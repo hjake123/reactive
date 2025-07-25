@@ -19,10 +19,10 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     protected final String group;
     protected final ItemStack product;
     protected final List<Power> reagents;
-    int cost;
-    int minimum;
-    int reagent_count;
-    public boolean needs_electricity;
+    final int cost;
+    final int minimum;
+    final int reagent_count;
+    public final boolean needs_electricity;
 
     public PrecipitateRecipe(String group, ItemStack product, List<Power> reagents, int min, int cost, int reagent_count, boolean needs_electricity) {
         this.group = group;
@@ -40,7 +40,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
     }
 
     // If you meet the required power for the first reagent_cost powers in the world specific order, you're good to go.
-    private boolean powerMet(CrucibleRecipeInput input, Level level){
+    private boolean powerMet(CrucibleRecipeInput input){
         ArrayList<Power> sorted_reagents = WorldSpecificValue.shuffle(reagents.hashCode() + "-" + product.hashCode() + "_reagent_order", reagents);
 
         int power_level = 0;
@@ -59,7 +59,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
         return has_all_reagents && power_level > minimum;
     }
 
-    public ItemStack apply(PowerBearer bearer, Level level) {
+    public ItemStack apply(PowerBearer bearer) {
         if(cost > 0) {
             for (Power p : reagents) {
                 bearer.expendPower(p, cost / reagent_count);
@@ -72,7 +72,7 @@ public class PrecipitateRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public boolean matches(@NotNull CrucibleRecipeInput input, @NotNull Level level) {
-        return powerMet(input, level); // Only power levels are relevant.
+        return powerMet(input); // Only power levels are relevant.
     }
 
     @Override

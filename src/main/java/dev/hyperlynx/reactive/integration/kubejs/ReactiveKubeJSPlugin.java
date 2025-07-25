@@ -30,21 +30,14 @@ import java.util.Set;
 public class ReactiveKubeJSPlugin implements KubeJSPlugin {
     public static final Logger LOGGER = LogManager.getLogger("Reactive/KubeJS Integration");
 
-    public static EventHandlerCache REACTION_EFFECT_CACHE = new EventHandlerCache();
-    public static Set<String> CUSTOM_REACTION_ALIASES = new HashSet<>();
-
-    @Override
-    public void init() {
-
-    }
+    public static final EventHandlerCache REACTION_EFFECT_CACHE = new EventHandlerCache();
+    public static final Set<String> CUSTOM_REACTION_ALIASES = new HashSet<>();
 
     @Override
     public void registerBuilderTypes(BuilderTypeRegistry registry){
         registry.addDefault(Powers.POWER_REGISTRY_KEY, KubePowerBuilder.class, KubePowerBuilder::new);
         registry.addDefault(Registries.TRIGGER_TYPE, FlagTriggerBuilder.class, FlagTriggerBuilder::new);
-        registry.of(Registries.ITEM, reg -> {
-            reg.add(ReactiveMod.location("power_bottle"), CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new);
-        });
+        registry.of(Registries.ITEM, reg -> reg.add(ReactiveMod.location("power_bottle"), CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new));
     }
 
     @Override

@@ -20,16 +20,6 @@ import java.util.Optional;
 
 // Represents an advancement criterion that always occurs when triggered.
 public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerInstance> {
-    private final ResourceLocation crit_rl;
-
-    public FlagTrigger(ResourceLocation crit_rl){
-        this.crit_rl = crit_rl;
-    }
-
-    public String path(){
-        return crit_rl.getPath();
-    }
-
     public static void triggerForNearbyPlayers(ServerLevel l, FlagTrigger crit, BlockPos center, int range){
         List<Player> nearby_players = l.getEntitiesOfClass(Player.class, AABB.ofSize(Vec3.atCenterOf(center), range, range, range));
         for(Player p : nearby_players) {
@@ -42,20 +32,17 @@ public class FlagTrigger extends SimpleCriterionTrigger<FlagTrigger.FlagTriggerI
         return FlagTriggerInstance.CODEC;
     }
 
-    public Criterion<FlagTriggerInstance> instance() {
-        return this.createCriterion(new FlagTriggerInstance(Optional.empty()));
-    }
-
     public static class FlagTriggerInstance implements SimpleInstance {
         public static final Codec<FlagTriggerInstance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(FlagTriggerInstance::player)
         ).apply(instance, FlagTriggerInstance::new));
 
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        public FlagTriggerInstance(Optional<ContextAwarePredicate> player){
+        public FlagTriggerInstance(Optional<ContextAwarePredicate> ignored){
 
         }
 
+        @SuppressWarnings("SameReturnValue")
         public boolean matches() {
             return true;
         }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRecipe> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public PowerBottleRecipeCategory() {
         slot_manager.addSlot("bottle", 1, 1);

@@ -9,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -63,14 +62,14 @@ public class MaterialItem extends BlockItem {
         }
     }
 
-    public static int getItemColor(ItemStack stack, int index) {
+    public static int getItemColor(ItemStack stack, int ignored) {
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.white()).hex();
         }
         return 0;
     }
 
-    public static float getModelOverrideValue(ItemStack stack, Level level, LivingEntity holder, long seed) {
+    public static float getModelOverrideValue(ItemStack stack, Level level, LivingEntity ignored, long ignoredSeed) {
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             return 0.0F;
         }

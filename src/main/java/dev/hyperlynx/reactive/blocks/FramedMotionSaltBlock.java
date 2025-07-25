@@ -25,7 +25,7 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState prior, boolean p_60570_) {
         if(level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get())){
-            ((ChainDisplacingBlock) ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get()).breadthFirstDisplace(level, pos, level.getBestNeighborSignal(pos) > 10);
+            ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get().breadthFirstDisplace(level, pos, level.getBestNeighborSignal(pos) > 10);
         }
     }
 
@@ -43,7 +43,7 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
     // These displace themselves instantly.
     private static void checkBecomeElectrified(Level level, BlockPos salt_pos, BlockState our_state, BlockPos neighbor_pos){
         if(level.getBlockState(neighbor_pos).is(ReactiveBlocks.VOLT_CELL.get()) && salt_pos.below().equals(neighbor_pos)){
-            ((ChainDisplacingBlock) ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get()).breadthFirstDisplace(level, salt_pos, our_state.getValue(POWERED));
+            ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get().breadthFirstDisplace(level, salt_pos, our_state.getValue(POWERED));
         }
     }
 

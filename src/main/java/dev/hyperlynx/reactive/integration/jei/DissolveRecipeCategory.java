@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<DissolveRecipe>> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public DissolveRecipeCategory() {
         slot_manager.addSlot("reactant", 1, 1);
@@ -36,6 +36,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
     }
     @Override
     public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<DissolveRecipe> holder) {
+        assert holder != null;
         return holder.id();
     }
 

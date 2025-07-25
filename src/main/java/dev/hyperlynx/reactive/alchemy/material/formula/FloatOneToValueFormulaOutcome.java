@@ -10,10 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Map;
 
 public class FloatOneToValueFormulaOutcome extends FormulaOutcome implements FloatFormulaOutcome {
-    ResourceLocation power;
-    int min_power;
-    int max_power;
-    float value;
+    final ResourceLocation power;
+    final int min_power;
+    final int max_power;
+    final float value;
 
     public static final MapCodec<FloatOneToValueFormulaOutcome> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("power").forGetter(FloatOneToValueFormulaOutcome::power),

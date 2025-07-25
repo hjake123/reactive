@@ -2,13 +2,12 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.world.level.Level;
 
 import java.util.function.Consumer;
 
 // This reaction runs a particular effect function each reaction tick.
 public class FreeEffectReaction extends Reaction{
-    protected Consumer<Reactor> effectFunction;
+    protected final Consumer<Reactor> effectFunction;
 
     public FreeEffectReaction(String alias, Consumer<Reactor> effect, int numReagents) {
         super(alias, numReagents);

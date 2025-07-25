@@ -47,7 +47,7 @@ public class CrucibleGameTests {
         shard.setDeltaMovement(0, 0, 0);
         helper.runAfterDelay(5, () -> helper.getLevel().addFreshEntity(shard));
         helper.runAfterDelay(20, () -> {
-            if(!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity crucible)){
+            if(!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity)){
                 throw new GameTestAssertException("Crucible has wrong block entity");
             }
             helper.assertTrue(!helper.getEntities(EntityType.ITEM).isEmpty(), "No residual item");
@@ -71,7 +71,7 @@ public class CrucibleGameTests {
         helper.runAfterDelay(5, () -> helper.getLevel().addFreshEntity(redstone));
         helper.runAfterDelay(25, () -> helper.getLevel().addFreshEntity(input_entity));
         helper.runAfterDelay(50, () -> {
-            if(!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity crucible)){
+            if(!(helper.getBlockEntity(new BlockPos(0, 2, 0)) instanceof CrucibleBlockEntity)){
                 throw new GameTestAssertException("Crucible has wrong block entity");
             }
             helper.assertTrue(!helper.getEntities(EntityType.ITEM).isEmpty(), "No residual item");

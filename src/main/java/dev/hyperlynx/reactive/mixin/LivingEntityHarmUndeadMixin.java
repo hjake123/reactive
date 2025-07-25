@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityHarmUndeadMixin {
     Optional<BlockPos> symbol_maybe = Optional.empty();

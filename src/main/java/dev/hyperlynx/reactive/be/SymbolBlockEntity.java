@@ -28,7 +28,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 public class SymbolBlockEntity extends BlockEntity {
 
-    public Direction facing = Direction.DOWN;
     public Item symbol_item = Items.BARRIER;
 
     public SymbolBlockEntity(BlockPos pos, BlockState state, Item item) {
@@ -41,9 +40,6 @@ public class SymbolBlockEntity extends BlockEntity {
         super(ReactiveBlockEntityTypes.SYMBOL.get(), pos, state);
     }
 
-    public void setFacing(Direction facing) {
-        this.facing = facing;
-    }
     public void setItem(Item item){ this.symbol_item = item; }
 
     // If you die near an Occult Symbol, it breaks, and you come back as an undead being.

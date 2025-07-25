@@ -247,7 +247,7 @@ public class ReactionMan {
      * if you want reaction advancements and their data gen to work.
      */
     public static class ReactionConstructEvent extends Event {
-        public Level level;
+        public final Level level;
         public ReactionConstructEvent(Level level){
             this.level = level;
         }
@@ -261,12 +261,12 @@ public class ReactionMan {
     }
 
     protected static class ReactionMap extends HashMap<String, Reaction> {
-        public Reaction add(Reaction reaction) {
+        public void add(Reaction reaction) {
             String alias = reaction.alias;
             if(ConfigMan.SERVER.disabledReactions.get().contains(alias)){
-                return null;
+                return;
             }
-            return super.put(reaction.alias, reaction);
+            super.put(reaction.alias, reaction);
         }
 
         public void addAll(Reaction... reactions){

@@ -15,8 +15,7 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class DeskMenu extends AbstractContainerMenu {
-    Inventory player_inventory;
-    ContainerLevelAccess access;
+    final ContainerLevelAccess access;
 
     private static final int CONTAINER_SLOT_INDEX = 0;
 
@@ -26,7 +25,6 @@ public class DeskMenu extends AbstractContainerMenu {
 
     public DeskMenu(int containerId, Inventory player_inventory, IItemHandler desk_inventory, ContainerLevelAccess access) {
         super(ReactiveMenus.DESK_MENU.get(), containerId);
-        this.player_inventory = player_inventory;
         this.access = access;
         this.addSlot(new SlotItemHandler(desk_inventory, CONTAINER_SLOT_INDEX, 26, 25));
 

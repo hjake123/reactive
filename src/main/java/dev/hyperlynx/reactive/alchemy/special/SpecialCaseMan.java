@@ -33,7 +33,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.StructureTags;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -70,9 +69,9 @@ import java.util.Optional;
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
 public class SpecialCaseMan {
-    public static List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
-    public static List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
-    public static List<BottleSpecialCase> EXTRACT_BOTTLE_SPECIAL_CASES = new ArrayList<>();
+    public static final List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
+    public static final List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
+    public static final List<BottleSpecialCase> EXTRACT_BOTTLE_SPECIAL_CASES = new ArrayList<>();
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         NeoForge.EVENT_BUS.post(new DissolveEvent(e, c));
@@ -164,7 +163,7 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Items.SCULK_CATALYST)) {
-                sculkMagic(c, e);
+                sculkMagic(c);
                 return true;
             }
             return false;
@@ -254,6 +253,9 @@ public class SpecialCaseMan {
     // Ender eyes that are thrown into the Crucible without Curse are launched as if used.
     private static void enderEyeFlyAway(CrucibleBlockEntity c, ItemEntity e) {
         ServerLevel serverlevel = (ServerLevel) c.getLevel();
+        if(serverlevel == null) {
+            return;
+        }
         BlockPos blockpos = serverlevel.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
         if (blockpos != null) {
             EyeOfEnder eyeofender = new EyeOfEnder(c.getLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
@@ -290,8 +292,8 @@ public class SpecialCaseMan {
     }
 
     // Either spread Sculk or change Vital to Soul using a Catalyst.
-    private static void sculkMagic(CrucibleBlockEntity c, ItemEntity e) {
-        if(!(c.getLevel() instanceof ServerLevel serverlevel))
+    private static void sculkMagic(CrucibleBlockEntity c) {
+        if(!(c.getLevel() instanceof ServerLevel))
             return;
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
@@ -313,7 +315,7 @@ public class SpecialCaseMan {
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
         c.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
-        EntityType.BLAZE.spawn((ServerLevel) level, (ItemStack) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
+        EntityType.BLAZE.spawn((ServerLevel) level, null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
@@ -329,17 +331,17 @@ public class SpecialCaseMan {
     private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner() instanceof ServerPlayer player)
                     ReactiveCriterionTriggers.SEE_ALLAY_SUMMON.get().trigger(player);
             }
             else
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             else {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner()  instanceof ServerPlayer player)
                     ReactiveCriterionTriggers.SEE_ALLAY_SUMMON.get().trigger(player);
             }
@@ -532,7 +534,7 @@ public class SpecialCaseMan {
                 break;
             // Remove a random word from the page.
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
-            if(words.size() == 0)
+            if(words.isEmpty())
                 continue;
             did_anything = true;
             String victim = words.get(e.level().random.nextInt(words.size()));
@@ -564,12 +566,16 @@ public class SpecialCaseMan {
 
     // Throwing a Motion Salt Block into an electrified crucible displaces a nearby block.
     private static void displaceNearby(CrucibleBlockEntity c) {
+        if(c.getLevel() == null) {
+            return;
+        }
         Optional<BlockPos> target = BlockPos.findClosestMatch(c.getBlockPos(), ConfigMan.COMMON.crucibleRange.get(), ConfigMan.COMMON.crucibleRange.get(),
                 blockPos -> {
                     BlockState state = Objects.requireNonNull(c.getLevel()).getBlockState(blockPos);
                     return !blockPos.equals(c.getBlockPos()) && !state.isAir() && !state.is(ReactiveBlocks.VOLT_CELL.get());
                 });
         if(target.isPresent()){
+            assert c.getLevel() != null;
             DisplacedBlock.displace(c.getLevel().getBlockState(target.get()), target.get(), c.getLevel(), 200);
             for(int i = 0; i < 2; i++)
                 ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK, c.getBlockPos(), target.get(),
@@ -660,7 +666,7 @@ public class SpecialCaseMan {
         if(level == null)
             return;
         // From WindCharge.java
-        level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), radius, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
+        level.explode(null, null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), radius, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
     }
 
     private static void badOmen(CrucibleBlockEntity c){
@@ -693,6 +699,10 @@ public class SpecialCaseMan {
     }
 
     private static void expelReaction(CrucibleBlockEntity crucible, ItemEntity thread){
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
         boolean is_reactive = false;
         for(ReactionStatusEntry entry : crucible.getReactionStatus()){
             if(entry.status().equals(Reaction.Status.REACTING)){
@@ -721,6 +731,10 @@ public class SpecialCaseMan {
 
     private static final int MATERIAL_CRAFT_MIN_POWER = 800;
     private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
         if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER && !(crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10)) {
             return;
         }

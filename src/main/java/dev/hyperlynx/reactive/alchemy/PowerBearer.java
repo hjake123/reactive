@@ -6,26 +6,27 @@ import java.util.Map;
 
 public interface PowerBearer {
     default boolean addPower(Power p, int amount) {
+        int amount_to_add = amount;
         if(p == null){
             return false;
         }
         if(getPowerLevel(p) == this.maxPower()){
             return false;
         }
-        if(getTotalPowerLevel() + amount > this.maxPower()) {
-            int excess = getTotalPowerLevel() + amount - this.maxPower();
+        if(getTotalPowerLevel() + amount_to_add > this.maxPower()) {
+            int excess = getTotalPowerLevel() + amount_to_add - this.maxPower();
             expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - this.maxPower();
+            excess = getTotalPowerLevel() + amount_to_add - this.maxPower();
             if(excess > 0) {
-                amount -= excess;
+                amount_to_add -= excess;
             }
         }
 
         int prev = getPowerMap().getOrDefault(p, 0);
         if(prev > 0)
-            getPowerMap().replace(p, amount + prev);
+            getPowerMap().replace(p, amount_to_add + prev);
         else
-            getPowerMap().put(p, amount);
+            getPowerMap().put(p, amount_to_add);
 
         return true;
     }
@@ -81,6 +82,6 @@ public interface PowerBearer {
     @NotNull Map<Power, Integer> getPowerMap();
 
     default int getPowerCount(){
-        return getPowerMap().keySet().size();
+        return getPowerMap().size();
     }
 }

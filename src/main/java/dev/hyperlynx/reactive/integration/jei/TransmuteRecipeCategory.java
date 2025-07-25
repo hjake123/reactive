@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<TransmuteRecipe>> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public TransmuteRecipeCategory() {
         slot_manager.addSlot("reactant", 1, 1);
@@ -37,6 +37,9 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
     }
     @Override
     public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<TransmuteRecipe> holder) {
+        if(holder == null) {
+            return null;
+        }
         return holder.id();
     }
 

@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @Mixin(Allay.class)
 public abstract class AllayMixin {
     Optional<BlockPos> symbol_maybe = Optional.empty();

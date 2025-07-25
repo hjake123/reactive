@@ -11,11 +11,8 @@ import org.jetbrains.annotations.NotNull;
 
 // Adapted from TheEndPortalRenderer
 public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntityRenderer<T> {
-    BlockEntityRendererProvider.Context context;
 
-    public GatewayRenderer(BlockEntityRendererProvider.Context context) {
-        this.context = context;
-    }
+    public GatewayRenderer(BlockEntityRendererProvider.Context ignoredContext) {}
 
     public void render(@NotNull T gateway, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         this.renderVolume(gateway, new GatewayRenderContext(bufferSource.getBuffer(RenderType.END_GATEWAY), poseStack.last()), partialTick);
@@ -73,8 +70,8 @@ public class GatewayRenderer<T extends GatewayBlockEntity> implements BlockEntit
     }
 
     public static class GatewayRenderContext {
-        protected VertexConsumer consumer;
-        protected PoseStack.Pose pose;
+        protected final VertexConsumer consumer;
+        protected final PoseStack.Pose pose;
 
         protected GatewayRenderContext(VertexConsumer consumer, PoseStack.Pose pose) {
             this.consumer = consumer;

@@ -35,7 +35,7 @@ import java.util.Objects;
 import static dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers.HARVEST;
 
 public class OccultSymbolBlock extends SymbolBlock{
-    public static BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
+    public static final BooleanProperty ACTIVE = BlockStateProperties.ENABLED;
 
     public OccultSymbolBlock(Properties props) {
         super(props);

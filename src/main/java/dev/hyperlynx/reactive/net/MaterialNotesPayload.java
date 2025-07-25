@@ -5,12 +5,10 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
 
 public record MaterialNotesPayload(ResourceLocation material_id, String notes) implements CustomPacketPayload {
     public static final Type<MaterialNotesPayload> TYPE = new Type<>(ReactiveMod.location("material_update_notes"));
@@ -24,11 +22,6 @@ public record MaterialNotesPayload(ResourceLocation material_id, String notes) i
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    @Override
-    public @NotNull ClientboundCustomPayloadPacket toVanillaClientbound() {
-        return CustomPacketPayload.super.toVanillaClientbound();
     }
 
     public void handle(IPayloadContext context) {

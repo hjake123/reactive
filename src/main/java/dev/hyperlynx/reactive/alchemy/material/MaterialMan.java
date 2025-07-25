@@ -2,7 +2,6 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /// It's MaterialMan's time to shine!
@@ -21,13 +21,13 @@ import java.util.Optional;
 public class MaterialMan {
     public static MaterialData data(Level level) {
         if(level instanceof ServerLevel slevel) {
-            return slevel.getServer().getLevel(ServerLevel.OVERWORLD).getDataStorage()
+            return Objects.requireNonNull(slevel.getServer().getLevel(ServerLevel.OVERWORLD)).getDataStorage()
                     .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.empty().addBuiltIns(slevel), MaterialData::load),
                             "reactive_materials");
         } else if(level != null && level.isClientSide()) {
             return ClientMaterialMan.data();
         }
-        ReactiveMod.LOGGER.debug("Tried to fetch data before ServerLevel was available. Level is {}", level.toString());
+        ReactiveMod.LOGGER.debug("Tried to fetch data before ServerLevel was available. Level is {}", level);
         return MaterialData.empty();
     }
 

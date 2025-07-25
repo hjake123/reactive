@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SmallBlackRuneParticle extends RuneParticle{
+    @SuppressWarnings("SameParameterValue")
     protected SmallBlackRuneParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(level, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed, pSprites);
         this.base_size = 0.5F;

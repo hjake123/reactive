@@ -1,22 +1,7 @@
 package dev.hyperlynx.reactive.datagen;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.material.Material;
-import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
 import dev.hyperlynx.reactive.alchemy.material.BuiltInMaterials;
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.Unit;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.Optional;
 
 public class BuiltInMaterialGenerator {
     public static RegistrySetBuilder get() {

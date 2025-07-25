@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class StagedFlagTrigger extends FlagTrigger {
-    ResourceLocation prereq;
+    final ResourceLocation prereq;
 
     public StagedFlagTrigger(ResourceLocation crit_rl, ResourceLocation prerequisite_advancement_rl) {
         super(crit_rl);

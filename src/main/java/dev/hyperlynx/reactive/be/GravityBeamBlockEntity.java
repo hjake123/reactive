@@ -33,7 +33,7 @@ public class GravityBeamBlockEntity extends BlockEntity {
             return;
         }
         BlockHitResult hit = BeamHelper.rayTrace(level, start_pos(pos, state.getValue(GravityBeamBlock.FACING)),
-                xrot(state), yrot(state), ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32, null, CollisionContext.empty());
+                xrot(state), yrot(state), ClipContext.Fluid.NONE, ClipContext.Block.VISUAL, 32, CollisionContext.empty());
         Vec3 particle_start = Vec3.atCenterOf(pos);
         particle_start.add(0, 0.1, 0);
         ParticleScribe.drawParticleLine(level, ParticleTypes.END_ROD, particle_start, Vec3.atCenterOf(hit.getBlockPos()), 1, 0.05);

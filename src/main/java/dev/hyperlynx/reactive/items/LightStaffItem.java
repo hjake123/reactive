@@ -46,7 +46,7 @@ public class LightStaffItem extends StaffItem {
         Level level = entity.level();
         if(entity instanceof Player){
             BlockPos light_to_break = BlockPos.findClosestMatch(entity.getOnPos(), LIGHT_BREAK_RANGE, LIGHT_BREAK_RANGE,
-                    (BlockPos pos) -> level.getBlockState(pos).is(ReactiveBlocks.GLOWING_AIR.get())).orElseGet(() -> null);
+                    (BlockPos pos) -> level.getBlockState(pos).is(ReactiveBlocks.GLOWING_AIR.get())).orElse(null);
             if(light_to_break != null){
                 level.setBlock(light_to_break, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                 ParticleScribe.drawParticleSphere(level, ParticleTypes.SMOKE, light_to_break, 0.5, 0.2, 5);

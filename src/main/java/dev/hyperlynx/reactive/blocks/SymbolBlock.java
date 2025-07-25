@@ -22,6 +22,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     private Item symbol_item = Items.BARRIER;
@@ -71,24 +73,17 @@ public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
         super.createBlockStateDefinition(builder);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return super.getStateForPlacement(context).setValue(FACING, context.getClickedFace());
+        return Objects.requireNonNull(super.getStateForPlacement(context)).setValue(FACING, context.getClickedFace());
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
         SymbolBlockEntity symbol = new SymbolBlockEntity(pos, state, symbol_item);
-        symbol.setFacing(FACING.getValue("facing").orElse(Direction.UP));
         return symbol;
     }
-
-//    @Nullable
-//    @Override
-//    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-//        return null;
-//    }
 
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {

@@ -25,15 +25,15 @@ public class CrystalIronItem extends Item {
         super(props);
     }
 
-    // Return whether the given entity should be subjected to an effect (i.e. if there was no Crystal Iron blocking it.
+    // Return whether the given entity should be subjected to an effect (i.e. if there was no Crystal Iron blocking it).
     // Also damages the item if necessary.
     public static boolean effectNotBlocked(LivingEntity entity, int cost) {
         if(entity.isHolding(ReactiveItems.CRYSTAL_IRON.get())) {
             if(cost > 0) {
                 if (entity.getOffhandItem().is(ReactiveItems.CRYSTAL_IRON.get())) {
-                    entity.getOffhandItem().hurtAndBreak(cost, entity, entity.getOffhandItem().getEquipmentSlot());
+                    entity.getOffhandItem().hurtAndBreak(cost, entity, entity.getEquipmentSlotForItem(entity.getOffhandItem()));
                 } else {
-                    entity.getMainHandItem().hurtAndBreak(cost, entity, entity.getMainHandItem().getEquipmentSlot());
+                    entity.getMainHandItem().hurtAndBreak(cost, entity,entity.getEquipmentSlotForItem(entity.getMainHandItem()));
                 }
             }
             return false;

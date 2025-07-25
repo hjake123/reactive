@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public class ReactionFactory {
     CustomReaction rxn;
 

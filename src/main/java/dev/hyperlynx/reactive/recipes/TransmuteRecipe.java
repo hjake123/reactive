@@ -19,9 +19,9 @@ public class TransmuteRecipe implements Recipe<CrucibleRecipeInput> {
     protected final Ingredient reactant;
     protected final ItemStack product;
     protected final List<Power> reagents;
-    int cost;
-    int minimum;
-    public boolean needs_electricity;
+    final int cost;
+    final int minimum;
+    public final boolean needs_electricity;
 
     public TransmuteRecipe(String group, Ingredient reactant, ItemStack product, List<Power> reagents, int min, int cost, boolean needs_electricity) {
         this.group = group;

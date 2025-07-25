@@ -36,11 +36,6 @@ public class WarpBottleItem extends PowerBottleItem{
     }
 
     @Override
-    public @NotNull Component getDescription() {
-        return super.getDescription();
-    }
-
-    @Override
     public boolean isFoil(@NotNull ItemStack stack) {
         return isRiftBottle(stack) || super.isFoil(stack);
     }

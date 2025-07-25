@@ -22,7 +22,7 @@ public class EnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final Vec3 target;
     private float speed = 0.05F;
-    private boolean reversed = false;
+    private final boolean reversed;
 
     protected EnergyParticle(ClientLevel level, double x, double y, double z, Options options, SpriteSet sprites) {
         super(level, x, y, z);
@@ -68,9 +68,9 @@ public class EnergyParticle extends TextureSheetParticle {
 
     public static class Options extends ScalableParticleOptionsBase {
         float speed = 0.05F;
-        Color color;
-        Vec3 target;
-        boolean reverse_motion;
+        final Color color;
+        final Vec3 target;
+        final boolean reverse_motion;
 
         protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                     Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),

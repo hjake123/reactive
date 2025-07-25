@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -35,6 +34,7 @@ public class CustomReaction extends Reaction {
     protected static void serializeName(RegistryFriendlyByteBuf buffer, MutableComponent name) {
         if(name == null){
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).encode(buffer, Optional.empty());
+            return;
         }
         ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8).encode(buffer, Optional.of(Component.Serializer.toJson(name, buffer.registryAccess())));
     }
@@ -90,9 +90,7 @@ public class CustomReaction extends Reaction {
     }
 
     public static ReactionRenderer getRenderFunction(String alias) {
-        return (reactor) -> {
-            EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(new CustomReactionTickEvent(alias, reactor));
-        };
+        return (reactor) -> EventTransceiver.CUSTOM_REACTION_RENDER_EVENT.post(new CustomReactionTickEvent(alias, reactor));
     }
 
     private void expendPower(Reactor reactor, int cost){

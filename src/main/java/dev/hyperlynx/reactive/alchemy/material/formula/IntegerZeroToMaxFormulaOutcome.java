@@ -10,10 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Map;
 
 public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome implements IntegerFormulaOutcome {
-    ResourceLocation power;
-    int min_power;
-    int max_power;
-    int max_value;
+    final ResourceLocation power;
+    final int min_power;
+    final int max_power;
+    final int max_value;
 
     public static final MapCodec<IntegerZeroToMaxFormulaOutcome> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ResourceLocation.CODEC.fieldOf("power").forGetter(IntegerZeroToMaxFormulaOutcome::power),

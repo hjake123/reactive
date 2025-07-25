@@ -57,6 +57,7 @@ public class GravityChandelierBlock extends WaterloggableBlock implements Entity
         return new GravityChandelierBlockEntity(pos, state);
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <GravityChandelierBlockEntity extends BlockEntity> BlockEntityTicker<GravityChandelierBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityChandelierBlockEntity> t) {

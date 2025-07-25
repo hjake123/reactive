@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @Mixin(Phantom.class)
 public abstract class PhantomMixin {
 

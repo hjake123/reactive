@@ -13,7 +13,6 @@ import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@SuppressWarnings("unused")
 public class ReactiveItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ReactiveMod.MODID);
 

@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.recipes;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.registration.ReactivePotions;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.world.item.Items;

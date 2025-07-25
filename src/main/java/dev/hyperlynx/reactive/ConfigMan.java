@@ -8,44 +8,44 @@ import java.util.List;
 
 public class ConfigMan {
     public static class Common {
-        public ModConfigSpec.IntValue crucibleTickDelay;
-        public ModConfigSpec.IntValue crucibleRange;
-        public ModConfigSpec.IntValue areaMemoryRange;
-        public ModConfigSpec.IntValue maxDisplaceCount;
-        public ModConfigSpec.IntValue displaceConductRange;
-        public ModConfigSpec.DoubleValue maxMoveBlockBreakTime;
-        public ModConfigSpec.ConfigValue<List<String>> doNotTeleport;
-        public ModConfigSpec.BooleanValue acidMeltBlockEntities;
-        public ModConfigSpec.BooleanValue lightStaffLightsPermanent;
-        public ModConfigSpec.BooleanValue registerCommand;
-        public ModConfigSpec.BooleanValue litmusScreen;
+        public final ModConfigSpec.IntValue crucibleTickDelay;
+        public final ModConfigSpec.IntValue crucibleRange;
+        public final ModConfigSpec.IntValue areaMemoryRange;
+        public final ModConfigSpec.IntValue maxDisplaceCount;
+        public final ModConfigSpec.IntValue displaceConductRange;
+        public final ModConfigSpec.DoubleValue maxMoveBlockBreakTime;
+        public final ModConfigSpec.ConfigValue<List<String>> doNotTeleport;
+        public final ModConfigSpec.BooleanValue acidMeltBlockEntities;
+        public final ModConfigSpec.BooleanValue lightStaffLightsPermanent;
+        public final ModConfigSpec.BooleanValue registerCommand;
+        public final ModConfigSpec.BooleanValue litmusScreen;
 
-        public ModConfigSpec.IntValue lightStaffFrequency;
-        public ModConfigSpec.IntValue blazeStaffFrequency;
-        public ModConfigSpec.IntValue mindStaffFrequency;
-        public ModConfigSpec.IntValue soulStaffFrequency;
+        public final ModConfigSpec.IntValue lightStaffFrequency;
+        public final ModConfigSpec.IntValue blazeStaffFrequency;
+        public final ModConfigSpec.IntValue mindStaffFrequency;
+        public final ModConfigSpec.IntValue soulStaffFrequency;
 
-        public ModConfigSpec.IntValue lightStaffRange;
-        public ModConfigSpec.IntValue blazeStaffRange;
-        public ModConfigSpec.IntValue mindStaffRange;
-        public ModConfigSpec.IntValue soulStaffRange;
-        public ModConfigSpec.IntValue warpStaffRange;
-        public ModConfigSpec.IntValue vitalStaffRange;
+        public final ModConfigSpec.IntValue lightStaffRange;
+        public final ModConfigSpec.IntValue blazeStaffRange;
+        public final ModConfigSpec.IntValue mindStaffRange;
+        public final ModConfigSpec.IntValue soulStaffRange;
+        public final ModConfigSpec.IntValue warpStaffRange;
+        public final ModConfigSpec.IntValue vitalStaffRange;
 
-        public ModConfigSpec.DoubleValue mindStaffPower;
-        public ModConfigSpec.DoubleValue soulStaffPower;
-        public ModConfigSpec.DoubleValue lightStaffPowerVsUndead;
+        public final ModConfigSpec.DoubleValue mindStaffPower;
+        public final ModConfigSpec.DoubleValue soulStaffPower;
+        public final ModConfigSpec.DoubleValue lightStaffPowerVsUndead;
 
-        public ModConfigSpec.IntValue blazeStaffExplosionSize;
+        public final ModConfigSpec.IntValue blazeStaffExplosionSize;
 
-        public ModConfigSpec.IntValue mindStaffMaxHits;
-        public ModConfigSpec.IntValue mindStaffBaseMissiles;
-        public ModConfigSpec.IntValue mindStaffEnchantedMissiles;
+        public final ModConfigSpec.IntValue mindStaffMaxHits;
+        public final ModConfigSpec.IntValue mindStaffBaseMissiles;
+        public final ModConfigSpec.IntValue mindStaffEnchantedMissiles;
 
-        public ModConfigSpec.IntValue vitalStaffHealthBoost;
-        public ModConfigSpec.IntValue vitalStaffRegeneration;
+        public final ModConfigSpec.IntValue vitalStaffHealthBoost;
+        public final ModConfigSpec.IntValue vitalStaffRegeneration;
 
-        public ModConfigSpec.BooleanValue warpStaffAffectsPlayers;
+        public final ModConfigSpec.BooleanValue warpStaffAffectsPlayers;
 
         Common(ModConfigSpec.Builder builder){
             builder.comment("Options:")
@@ -132,15 +132,15 @@ public class ConfigMan {
     public static final Common COMMON;
 
     public static class Server {
-        public ModConfigSpec.BooleanValue useCustomSeed;
-        public ModConfigSpec.LongValue seed;
-        public ModConfigSpec.DoubleValue shrinkSmallSize;
-        public ModConfigSpec.DoubleValue growLargeSize;
-        public ModConfigSpec.DoubleValue shrinkSmallStep;
-        public ModConfigSpec.DoubleValue growLargeStep;
-        public ModConfigSpec.IntValue vortexStoneCooldown;
-        public ModConfigSpec.ConfigValue<List<String>> disabledReactions;
-        public ModConfigSpec.BooleanValue allowMaterialDeletion;
+        public final ModConfigSpec.BooleanValue useCustomSeed;
+        public final ModConfigSpec.LongValue seed;
+        public final ModConfigSpec.DoubleValue shrinkSmallSize;
+        public final ModConfigSpec.DoubleValue growLargeSize;
+        public final ModConfigSpec.DoubleValue shrinkSmallStep;
+        public final ModConfigSpec.DoubleValue growLargeStep;
+        public final ModConfigSpec.IntValue vortexStoneCooldown;
+        public final ModConfigSpec.ConfigValue<List<String>> disabledReactions;
+        public final ModConfigSpec.BooleanValue allowMaterialDeletion;
 
         Server(ModConfigSpec.Builder builder){
             builder.comment("World Specific Value Options:")
@@ -174,11 +174,11 @@ public class ConfigMan {
     public static final Server SERVER;
 
     public static class Client {
-        public ModConfigSpec.BooleanValue showPowerSources;
-        public ModConfigSpec.BooleanValue listPowersAsIngredients;
-        public ModConfigSpec.BooleanValue doNotChangeWaterTexture;
-        public ModConfigSpec.BooleanValue colorizeLitmusOutput;
-        public ModConfigSpec.BooleanValue irisCompat;
+        public final ModConfigSpec.BooleanValue showPowerSources;
+        public final ModConfigSpec.BooleanValue listPowersAsIngredients;
+        public final ModConfigSpec.BooleanValue doNotChangeWaterTexture;
+        public final ModConfigSpec.BooleanValue colorizeLitmusOutput;
+        public final ModConfigSpec.BooleanValue irisCompat;
 
         Client(ModConfigSpec.Builder builder){
             builder.comment("Client Side Options:")

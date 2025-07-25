@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.List;
 
 public class HyperComposterRecipe implements IJeiCompostingRecipe {
-    Holder<Item> holder;
+    final Holder<Item> holder;
     public HyperComposterRecipe(Holder<Item> holder){
         this.holder = holder;
     }

@@ -18,15 +18,14 @@ import javax.annotation.Nullable;
 public class HyperPortalShape {
 
     // The only edits.
-    private static boolean isEmpty(BlockState state) {
-        return state.isAir() || state.is(BlockTags.FIRE) || state.is(Blocks.NETHER_PORTAL) || state.is(ReactiveBlocks.SOLID_PORTAL.get());
+    private static boolean isFilled(BlockState state) {
+        return !state.isAir() && !state.is(BlockTags.FIRE) && !state.is(Blocks.NETHER_PORTAL) && !state.is(ReactiveBlocks.SOLID_PORTAL.get());
     }
 
     public void createSolidPortalBlocks() {
         BlockState blockstate = ReactiveBlocks.SOLID_PORTAL.get().defaultBlockState().setValue(NetherPortalBlock.AXIS, this.axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
-        BlockPos.betweenClosed(this.bottomLeft, this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((p_77725_) -> {
-            this.level.setBlock(p_77725_, blockstate, 18);
-        });
+        assert this.bottomLeft != null;
+        BlockPos.betweenClosed(this.bottomLeft, this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((p_77725_) -> this.level.setBlock(p_77725_, blockstate, 18));
     }
 
     public boolean isValid() {
@@ -44,7 +43,7 @@ public class HyperPortalShape {
     private int height;
     private final int width;
 
-    public HyperPortalShape(LevelAccessor p_77695_, BlockPos p_77696_, Direction.Axis p_77697_) {
+    public HyperPortalShape(LevelAccessor p_77695_, @Nullable BlockPos p_77696_, Direction.Axis p_77697_) {
         this.level = p_77695_;
         this.axis = p_77697_;
         this.rightDir = p_77697_ == Direction.Axis.X ? Direction.WEST : Direction.SOUTH;
@@ -64,9 +63,6 @@ public class HyperPortalShape {
 
     @Nullable
     private BlockPos calculateBottomLeft(BlockPos p_77734_) {
-        for(int i = Math.max(this.level.getMinBuildHeight(), p_77734_.getY() - 21); p_77734_.getY() > i && isEmpty(this.level.getBlockState(p_77734_.below())); p_77734_ = p_77734_.below()) {
-        }
-
         Direction direction = this.rightDir.getOpposite();
         int j = this.getDistanceUntilEdgeAboveFrame(p_77734_, direction) - 1;
         return j < 0 ? null : p_77734_.relative(direction, j);
@@ -83,7 +79,7 @@ public class HyperPortalShape {
         for(int i = 0; i <= 21; ++i) {
             blockpos$mutableblockpos.set(p_77736_).move(p_77737_, i);
             BlockState blockstate = this.level.getBlockState(blockpos$mutableblockpos);
-            if (!isEmpty(blockstate)) {
+            if (isFilled(blockstate)) {
                 if (FRAME.test(blockstate, this.level, blockpos$mutableblockpos)) {
                     return i;
                 }
@@ -107,6 +103,7 @@ public class HyperPortalShape {
 
     private boolean hasTopFrame(BlockPos.MutableBlockPos p_77731_, int p_77732_) {
         for(int i = 0; i < this.width; ++i) {
+            assert this.bottomLeft != null;
             BlockPos.MutableBlockPos blockpos$mutableblockpos = p_77731_.set(this.bottomLeft).move(Direction.UP, p_77732_).move(this.rightDir, i);
             if (!FRAME.test(this.level.getBlockState(blockpos$mutableblockpos), this.level, blockpos$mutableblockpos)) {
                 return false;
@@ -118,6 +115,7 @@ public class HyperPortalShape {
 
     private int getDistanceUntilTop(BlockPos.MutableBlockPos p_77729_) {
         for(int i = 0; i < 21; ++i) {
+            assert this.bottomLeft != null;
             p_77729_.set(this.bottomLeft).move(Direction.UP, i).move(this.rightDir, -1);
             if (!FRAME.test(this.level.getBlockState(p_77729_), this.level, p_77729_)) {
                 return i;
@@ -131,7 +129,7 @@ public class HyperPortalShape {
             for(int j = 0; j < this.width; ++j) {
                 p_77729_.set(this.bottomLeft).move(Direction.UP, i).move(this.rightDir, j);
                 BlockState blockstate = this.level.getBlockState(p_77729_);
-                if (!isEmpty(blockstate)) {
+                if (isFilled(blockstate)) {
                     return i;
                 }
 
@@ -146,9 +144,8 @@ public class HyperPortalShape {
 
     public void createPortalBlocks() {
         BlockState blockstate = Blocks.NETHER_PORTAL.defaultBlockState().setValue(NetherPortalBlock.AXIS, this.axis);
-        BlockPos.betweenClosed(this.bottomLeft, this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((p_77725_) -> {
-            this.level.setBlock(p_77725_, blockstate, 18);
-        });
+        assert this.bottomLeft != null;
+        BlockPos.betweenClosed(this.bottomLeft, this.bottomLeft.relative(Direction.UP, this.height - 1).relative(this.rightDir, this.width - 1)).forEach((p_77725_) -> this.level.setBlock(p_77725_, blockstate, 18));
     }
 
     public boolean isComplete() {

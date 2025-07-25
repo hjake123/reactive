@@ -65,30 +65,30 @@ public class DisplacerItem extends Item {
                 }
                 return InteractionResult.SUCCESS;
             }
-            return InteractionResult.PASS;
         } else {
             if(perform(context, level, pos, state, slot, 8, DISPLACER_BASE_DISPLACE_TIME).isPresent()){
                 return InteractionResult.SUCCESS;
             }
-            return InteractionResult.PASS;
         }
+        return InteractionResult.PASS;
     }
 
     private Optional<BlockPos> perform(UseOnContext context, Level level, BlockPos pos, BlockState state, EquipmentSlot slot, int max_depth, int displace_time){
+        BlockPos displace_pos = pos;
         if(state.getBlock() instanceof DisplacedBlock){
             // Allow the player to click on above and below blocks "though" the one they're facing if they're inside a block.
             if(context.isInside()) {
                 if (context.getPlayer() != null && context.getPlayer().getXRot() > 20 && !context.getClickedFace().equals(Direction.UP)) {
-                    pos = pos.below();
+                    displace_pos = displace_pos.below();
                 }
                 if (context.getPlayer() != null && context.getPlayer().getXRot() < -20 && !context.getClickedFace().equals(Direction.DOWN)) {
-                    pos = pos.above();
+                    displace_pos = displace_pos.above();
                 }
             }
 
             // Scan up to MAX_TUNNEL_DEPTH blocks forward and try to displace another.
             // Since this may be called repeatedly it can be used to make a pathway.
-            BlockPos selected = pos;
+            BlockPos selected = displace_pos;
             for(int i = 0; i < max_depth; i++){
                 selected = selected.offset(context.getClickedFace().getOpposite().getNormal());
                 if(level.getBlockState(selected).getBlock() instanceof DisplacedBlock)
@@ -98,20 +98,20 @@ public class DisplacerItem extends Item {
                     context.getItemInHand().hurtAndBreak(1, splayer, slot);
                 break;
             }
-            level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
+            level.playSound(null, displace_pos, state.getBlock().getSoundType(state, level, displace_pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.1F);
             return Optional.of(selected);
         }
 
-        boolean displace_worked = displace(level, pos, displace_time);
+        boolean displace_worked = displace(level, displace_pos, displace_time);
         if(displace_worked){
-            level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
+            level.playSound(null, displace_pos, state.getBlock().getSoundType(state, level, displace_pos, null).getHitSound(),
                     SoundSource.PLAYERS, 1.0F, 1.0F);
             if(context.getPlayer() instanceof ServerPlayer splayer && !context.getPlayer().isCreative())
                 context.getItemInHand().hurtAndBreak(1, splayer, slot);
-            return Optional.of(pos);
+            return Optional.of(displace_pos);
         }
-        level.playSound(null, pos, state.getBlock().getSoundType(state, level, pos, null).getHitSound(),
+        level.playSound(null, displace_pos, state.getBlock().getSoundType(state, level, displace_pos, null).getHitSound(),
                 SoundSource.PLAYERS, 1.0F, 0.7F);
         return Optional.empty();
     }

@@ -38,13 +38,12 @@ import java.util.*;
 @JeiPlugin
 public class ReactiveJEIPlugin implements IModPlugin {
     public static IJeiHelpers HELPERS;
-    public static DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
-    public static TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
-    public static PowerBottleRecipeCategory POWER_BOTTLE_CATEGORY = new PowerBottleRecipeCategory();
-    public static PowerIngredientType POWER_TYPE = new PowerIngredientType();
-    public static PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
-    public static PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
-    public static IJeiRuntime RUNTIME;
+    public static final DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
+    public static final TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
+    public static final PowerBottleRecipeCategory POWER_BOTTLE_CATEGORY = new PowerBottleRecipeCategory();
+    public static final PowerIngredientType POWER_TYPE = new PowerIngredientType();
+    public static final PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
+    public static final PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -214,12 +213,6 @@ public class ReactiveJEIPlugin implements IModPlugin {
                                 Ingredient.of(ReactiveItems.VOLT_CELL.get()))))
         ));
     }
-
-    @Override
-    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        RUNTIME = jeiRuntime;
-    }
-
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

@@ -13,7 +13,7 @@ public record PropertyFormulaRequirements(List<Part> requirements) {
             Part.CODEC.listOf().fieldOf("requirements").forGetter(PropertyFormulaRequirements::requirements)
     ).apply(instance, PropertyFormulaRequirements::new));
 
-    /// Defines a particular Power and a pair of ranges, one for the low bound (least Power to get this property) and one for the high bound.
+    /// Defines a particular Power and a pair of ranges, one for the low bound (the least Power to get this property) and one for the high bound.
     /// The actual range is world specific within these constraints
     /// The high bound may be `Optional.empty()`, in which case there is no high bound.
     public record Part(ResourceLocation power_id, int low_bound_minimum, int low_bound_maximum, Optional<Integer> high_bound_minimum, Optional<Integer> high_bound_maximum) {

@@ -1,7 +1,5 @@
 package dev.hyperlynx.reactive.client.renderers.rxn;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.ReactiveClientMod;
 

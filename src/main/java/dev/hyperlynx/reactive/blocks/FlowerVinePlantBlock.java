@@ -20,7 +20,7 @@ public class FlowerVinePlantBlock extends GrowingPlantBodyBlock {
 
     @Override
     protected @NotNull GrowingPlantHeadBlock getHeadBlock() {
-        return (GrowingPlantHeadBlock) ReactiveBlocks.FLOWER_VINES.get();
+        return ReactiveBlocks.FLOWER_VINES.get();
     }
 
 

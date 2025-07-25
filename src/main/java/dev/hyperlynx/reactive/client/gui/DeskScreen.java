@@ -1,8 +1,6 @@
 package dev.hyperlynx.reactive.client.gui;
 
-import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
@@ -14,16 +12,12 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     private static final ResourceLocation DESK_BACKGROUND_LOCATION = ReactiveMod.location("textures/gui/discovery_desk.png");
@@ -31,7 +25,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_INACTIVE = ReactiveMod.location("discoveries_tab_inactive");
     private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_FOCUSED = ReactiveMod.location("discoveries_tab_focused");
 
-    Button rename_button = new Button.Builder(Component.empty(),
+    final Button rename_button = new Button.Builder(Component.empty(),
             button -> {
                 if(this.getMenu().getSlot(0).hasItem()) {
                     ItemStack stack = this.getMenu().getSlot(0).getItem();
@@ -42,7 +36,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
                 }
             }).build();
 
-    Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
+    final Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
             button -> ScreenOpener.materialList(), Component.empty());
     BetterFittingMultiLineTextWidget readout;
     int slot_x;
@@ -92,7 +86,10 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
             Material material = getMaterial();
             if(material != null) {
                 updateButton(material);
-                updateReadout(material, getMaterialId());
+                ResourceLocation material_id = getMaterialId();
+                if(material_id != null) {
+                    updateReadout(material, material_id);
+                }
             }
         } else {
             if(readout != null) {

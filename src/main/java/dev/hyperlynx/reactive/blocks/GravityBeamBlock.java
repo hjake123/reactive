@@ -55,6 +55,7 @@ public class GravityBeamBlock extends DirectionalBlock implements EntityBlock {
         return new GravityBeamBlockEntity(pos, state);
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <GravityBeamBlockEntity extends BlockEntity> BlockEntityTicker<GravityBeamBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityBeamBlockEntity> t) {

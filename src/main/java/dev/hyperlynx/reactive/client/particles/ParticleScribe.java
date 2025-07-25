@@ -190,12 +190,4 @@ public class ParticleScribe {
             throw new UnsupportedOperationException("No reaction surface defined for reactor type '" + reactor.getClass() + "' !");
         }
     }
-
-    public static void drawParticleStream(Level level, ParticleOptions opt, Vec3 start, Vec3 angle, int frequency){
-        angle.normalize();
-        angle.multiply(0.0003, 0.0003, 0.0003);
-        for(int i = 0; i < frequency; i++){
-            level.addParticle(opt, start.x, start.y, start.z, angle.x, angle.y, angle.z);
-        }
-    }
 }

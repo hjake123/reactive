@@ -22,10 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -85,9 +82,9 @@ public class Power {
         Map<Power, Integer> powers = new HashMap<>();
         RandomSource random = level.random;
         for(int i = 0; i < random.nextIntBetweenInclusive(1, 3); i++) {
-            Power power = Powers.POWER_REGISTRY.getRandom(random).get().value();
-            while(powers.equals(Powers.ASTRAL_POWER)) {
-                power = Powers.POWER_REGISTRY.getRandom(random).get().value();
+            Power power = Powers.POWER_REGISTRY.getRandom(random).orElseThrow().value();
+            while(power.equals(Powers.ASTRAL_POWER.get())) {
+                power = Powers.POWER_REGISTRY.getRandom(random).orElseThrow().value();
             }
             powers.put(power, random.nextInt(200, 500));
         }
@@ -117,10 +114,7 @@ public class Power {
     }
     public String getId() { return location.getPath(); }
     public String getName() {
-        if(name_override != null){
-            return name_override.getString();
-        }
-        return Component.translatable(name).getString();
+        return Objects.requireNonNullElseGet(name_override, () -> Component.translatable(name)).getString();
     }
     public ResourceLocation getResourceLocation() { return location; }
     public Block getWaterRenderBlock(){

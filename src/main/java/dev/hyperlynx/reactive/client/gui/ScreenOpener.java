@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.client.gui;
 
 import dev.hyperlynx.reactive.net.LitmusScreenPayload;
-import dev.hyperlynx.reactive.net.MaterialRenameScreenPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;

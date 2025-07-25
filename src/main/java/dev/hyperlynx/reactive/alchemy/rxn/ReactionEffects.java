@@ -373,6 +373,7 @@ public class ReactionEffects {
             }
         }
         var pos = Vec3.atCenterOf(reactor.getBlockPos());
+        @SuppressWarnings("DataFlowIssue") // The constructor isn't annotated Nullable, but the method it passed owner to is, so null should be fine here.
         EvokerFangs fangs = new EvokerFangs(level, pos.x, pos.y + 0.48, pos.z, 0F, 10, null);
         reactor.getLevel().addFreshEntity(fangs);
 
@@ -380,6 +381,7 @@ public class ReactionEffects {
         aoe = aoe.inflate(4);
         List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
         for(LivingEntity living : nearby){
+            @SuppressWarnings("DataFlowIssue") // The constructor isn't annotated Nullable, but the method it passed owner to is, so null should be fine here.
             EvokerFangs targeted_fangs = new EvokerFangs(level, living.position().x, living.position().y, living.position().z, 0F, 10, null);
             reactor.getLevel().addFreshEntity(targeted_fangs);
         }

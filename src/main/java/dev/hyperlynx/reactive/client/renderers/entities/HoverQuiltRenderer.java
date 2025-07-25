@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HoverQuiltRenderer extends EntityRenderer<HoverQuilt> implements RenderLayerParent<HoverQuilt, HoverQuiltModel> {
     public static final ResourceLocation TEXTURE_LOCATION = ReactiveMod.location("textures/entity/entity_quilt.png");
-    private HoverQuiltModel model;
+    private final HoverQuiltModel model;
 
     public HoverQuiltRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -24,7 +24,7 @@ public class HoverQuiltRenderer extends EntityRenderer<HoverQuilt> implements Re
     }
 
     @Override
-    public HoverQuiltModel getModel() {
+    public @NotNull HoverQuiltModel getModel() {
         return model;
     }
 

@@ -93,7 +93,7 @@ public class StaffEffects {
         }
     }
 
-    public static void blazing(Player user, ItemStack stack){
+    public static void blazing(Player user, ItemStack ignored){
         int range = ConfigMan.COMMON.blazeStaffRange.get();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
@@ -190,7 +190,7 @@ public class StaffEffects {
         }
     }
 
-    public static void living(Player user, ItemStack stack){
+    public static void living(Player user, ItemStack ignored){
         AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
         aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
         if (user.level().random.nextFloat() < 0.4) {

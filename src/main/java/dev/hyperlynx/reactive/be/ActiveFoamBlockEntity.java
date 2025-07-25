@@ -71,7 +71,7 @@ public class ActiveFoamBlockEntity extends BlockEntity {
 
     int tick_counter = 0;
 
-    public static void tick(Level level, BlockPos pos, BlockState state, ActiveFoamBlockEntity foam) {
+    public static void tick(Level level, BlockPos pos, ActiveFoamBlockEntity foam) {
         if(level.isClientSide)
             return;
 

@@ -82,11 +82,6 @@ public class GatewayBlock extends Block implements Portal, EntityBlock {
     }
 
     @Override
-    public Transition getLocalTransition() {
-        return Portal.super.getLocalTransition();
-    }
-
-    @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }

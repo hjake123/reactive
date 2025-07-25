@@ -7,7 +7,6 @@ import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.Level;
@@ -19,7 +18,7 @@ import java.util.*;
 // This class manages the renderers for reactions.
 // This is important, since reaction rendering is no longer even known on the server side!
 public class ReactionRenderers {
-    public Map<String, ReactionRenderer> RENDERERS = new HashMap<>();
+    public final Map<String, ReactionRenderer> RENDERERS = new HashMap<>();
 
     public ReactionRenderers(){
         RENDERERS.put("curse_assimilation", this::curseRing);

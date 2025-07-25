@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class CurseAssimilationReaction extends Reaction{
-    int rate;
+    final int rate;
 
     public CurseAssimilationReaction(String alias){
         super(alias, 0);

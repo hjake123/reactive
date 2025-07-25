@@ -26,7 +26,7 @@ public abstract class Reaction {
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
-    String alias;
+    final String alias;
 
     protected Reaction(String alias){
         this.alias = alias;
@@ -166,8 +166,8 @@ public abstract class Reaction {
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;
-        end_crystals.get(0).setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
-        reactor.setLinkedCrystal(end_crystals.get(0));
+        end_crystals.getFirst().setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        reactor.setLinkedCrystal(end_crystals.getFirst());
         reactor.setUsedCrystalThisCycle(true);
         return true;
     }

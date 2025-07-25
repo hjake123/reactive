@@ -22,7 +22,7 @@ public record MaterialDataSyncPayload(MaterialData data) implements CustomPacket
         MaterialDataSyncPayload::new
     );
 
-    public static void handle(MaterialDataSyncPayload payload, IPayloadContext context) {
+    public static void handle(MaterialDataSyncPayload payload, IPayloadContext ignored) {
         ClientMaterialMan.receiveDataAsync(payload.data());
     }
 }

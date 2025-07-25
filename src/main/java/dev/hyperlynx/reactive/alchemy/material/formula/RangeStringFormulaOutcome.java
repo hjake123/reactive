@@ -12,10 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public class RangeStringFormulaOutcome extends FormulaOutcome implements StringFormulaOutcome {
-    String option;
-    ResourceLocation power_id;
-    int threshold;
-    Optional<Integer> max_power;
+    final String option;
+    final ResourceLocation power_id;
+    final int threshold;
+    final Optional<Integer> max_power;
 
     public static final MapCodec<RangeStringFormulaOutcome> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("option").forGetter(RangeStringFormulaOutcome::option),

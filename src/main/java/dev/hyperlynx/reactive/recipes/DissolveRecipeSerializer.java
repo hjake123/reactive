@@ -39,7 +39,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
         buffer.writeBoolean(recipe.needs_electricity);
     }
 
-    public static @Nullable DissolveRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+    public static @NotNull DissolveRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         var reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         var product = ItemStack.STREAM_CODEC.decode(buffer);
         boolean needs_electricity = buffer.readBoolean();

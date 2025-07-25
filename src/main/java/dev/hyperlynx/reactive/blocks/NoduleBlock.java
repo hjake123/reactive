@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class NoduleBlock extends DirectionalBlock {
-    private boolean small;
+    private final boolean small;
     private static final VoxelShape SMALL_FLOOR_SHAPE = Block.box(6, 0, 6, 10, 3, 10);
     private static final VoxelShape SMALL_CEILING_SHAPE = Block.box(6, 13, 6, 10, 16, 10);
     private static final VoxelShape SMALL_WEST_SHAPE = Block.box(0, 6, 6, 3, 10, 10);
@@ -28,10 +28,18 @@ public class NoduleBlock extends DirectionalBlock {
     private static final VoxelShape NORTH_SHAPE = Block.box(4, 4, 0,12, 12, 6);
     private static final VoxelShape SOUTH_SHAPE = Block.box(4, 4, 10,12, 12, 16);
 
+    public static final MapCodec<NoduleBlock> CODEC = simpleCodec(NoduleBlock::new);
+
     public NoduleBlock(Properties properties, boolean small_hitbox) {
         super(properties);
         registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.DOWN));
         small = small_hitbox;
+    }
+
+    private NoduleBlock(Properties properties) {
+        super(properties);
+        registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.DOWN));
+        small = false;
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -69,7 +77,7 @@ public class NoduleBlock extends DirectionalBlock {
 
     @Override
     protected MapCodec<? extends DirectionalBlock> codec() {
-        return null;
+        return CODEC;
     }
 
     @Override

@@ -2,9 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.Color;
-import net.minecraft.resources.ResourceKey;
 
 import java.util.Map;
 

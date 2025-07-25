@@ -87,8 +87,8 @@ public class MaterialListScreen extends Screen {
     }
 
     static class MaterialEntry extends ObjectSelectionList.Entry<MaterialEntry> implements GuiEventListener {
-        ResourceLocation material_id;
-        Material material;
+        final ResourceLocation material_id;
+        final Material material;
         boolean focused = false;
 
         public MaterialEntry(ResourceLocation material_id) {

@@ -44,6 +44,6 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
 
             return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1), level.registryAccess());
         }
-        return null;
+        return IVariable.empty();
     }
 }

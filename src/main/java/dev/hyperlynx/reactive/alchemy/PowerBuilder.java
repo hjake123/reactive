@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class PowerBuilder {
-    public ResourceLocation id;
+    public final ResourceLocation id;
     public transient int color;
     public transient Holder<Item> bottle_holder;
     public transient Holder<Block> water_holder;

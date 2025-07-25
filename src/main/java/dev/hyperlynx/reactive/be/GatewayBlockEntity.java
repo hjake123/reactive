@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -38,7 +39,7 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         return true;
     }
 
-    public static <T extends BlockEntity> void tick(Level level, BlockPos blockPos, BlockState blockState, T t) {
+    public static <T extends BlockEntity> void tick(Level level, BlockPos ignoredBlockPos, BlockState ignoredBlockState, T t) {
         if(level.isClientSide() && t instanceof GatewayBlockEntity gateway){
             gateway.tick_count++;
             if(gateway.startup_timer < STARTUP_DURATION) {
@@ -76,7 +77,10 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         Optional<BlockPos> pos = NbtUtils.readBlockPos(tag, TARGET_POS_TAG);
         if(pos.isEmpty())
             return;
-        ResourceLocation location = ResourceLocation.parse(tag.get(TARGET_DIMENSION_TAG).getAsString());
-        target = GlobalPos.of(ResourceKey.create(Registries.DIMENSION, location), pos.get());
+        Tag target_tag = tag.get(TARGET_DIMENSION_TAG);
+        if(target_tag != null) {
+            ResourceLocation location = ResourceLocation.parse(tag.getAsString());
+            target = GlobalPos.of(ResourceKey.create(Registries.DIMENSION, location), pos.get());
+        }
     }
 }

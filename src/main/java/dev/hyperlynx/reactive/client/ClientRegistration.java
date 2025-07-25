@@ -83,7 +83,10 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
-        event.register(MaterialBlock::getBlockColor, ReactiveBlocks.MATERIAL_BLOCK.get());
+        event.register((state, getter, pos, index) -> {
+            assert getter != null;
+            return MaterialBlock.getBlockColor(getter, pos);
+        }, ReactiveBlocks.MATERIAL_BLOCK.get());
     }
 
     @SubscribeEvent

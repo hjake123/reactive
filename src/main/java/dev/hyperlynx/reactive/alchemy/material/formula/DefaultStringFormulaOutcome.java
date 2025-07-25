@@ -8,7 +8,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import java.util.Map;
 
 public class DefaultStringFormulaOutcome extends FormulaOutcome implements StringFormulaOutcome{
-    String value;
+    final String value;
 
     public static final MapCodec<DefaultStringFormulaOutcome> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("value").forGetter(DefaultStringFormulaOutcome::value)

@@ -11,13 +11,11 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
-    protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
-    public boolean needs_electricity;
+    public final boolean needs_electricity;
 
-    public DissolveRecipe(String group, Ingredient reactant, ItemStack product, boolean needs_electricity) {
-        this.group = group;
+    public DissolveRecipe(String ignored, Ingredient reactant, ItemStack product, boolean needs_electricity) {
         this.reactant = reactant;
         this.product = product;
         this.needs_electricity = needs_electricity;

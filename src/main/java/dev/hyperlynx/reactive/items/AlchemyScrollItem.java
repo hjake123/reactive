@@ -36,7 +36,7 @@ public class AlchemyScrollItem extends Item {
                 ReactiveCriterionTriggers.MAKE_CRUCIBLE.get().trigger((ServerPlayer) context.getPlayer());
             }
 
-            if(!context.getPlayer().isCreative())
+            if(context.getPlayer() != null && !context.getPlayer().isCreative())
                 context.getPlayer().setItemInHand(context.getHand(), Items.PAPER.getDefaultInstance());
             return InteractionResult.SUCCESS;
         }
@@ -56,7 +56,7 @@ public class AlchemyScrollItem extends Item {
                 ReactiveCriterionTriggers.OCCULT_AWAKENING.get().trigger((ServerPlayer) context.getPlayer());
             }
 
-            if(!context.getPlayer().isCreative())
+            if(!(context.getPlayer() == null) && !context.getPlayer().isCreative())
                 context.getPlayer().setItemInHand(context.getHand(), Items.PAPER.getDefaultInstance());
             return InteractionResult.SUCCESS;
         }

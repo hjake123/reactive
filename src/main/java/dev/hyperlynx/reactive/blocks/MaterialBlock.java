@@ -11,7 +11,6 @@ import dev.hyperlynx.reactive.net.MaterialBESyncPayload;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.registration.ReactiveParticles;
-import dev.hyperlynx.reactive.registration.ReactiveSoundEvents;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -81,15 +80,15 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockState to_place_state = state;
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID)) {
-            @SuppressWarnings("DataFlowIssue") // It's confirmed to exist already so there is no issue.
             ResourceLocation material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
             }
-            state = setModelByMaterialId(level, state, material_id);
-            state = setRandomTicking(level, state, material_id);
-            level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+            to_place_state = setModelByMaterialId(level, to_place_state, material_id);
+            to_place_state = setRandomTicking(level, to_place_state, material_id);
+            level.setBlock(pos, to_place_state, Block.UPDATE_CLIENTS);
         }
     }
     private Material material(BlockGetter getter, BlockPos pos) {
@@ -249,7 +248,7 @@ public class MaterialBlock extends Block implements EntityBlock {
         // TODO -- can't override normally, so maybe some block state stuff or mixins?
     }
 
-    public static int getBlockColor(BlockState state, @NotNull BlockAndTintGetter getter, BlockPos pos, int index) {
+    public static int getBlockColor(@NotNull BlockAndTintGetter getter, BlockPos pos) {
         BlockEntity entity = getter.getBlockEntity(pos);
         if(!(entity instanceof MaterialBlockEntity mbe)) {
             return 0;

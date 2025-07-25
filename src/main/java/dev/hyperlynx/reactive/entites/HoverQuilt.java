@@ -1,15 +1,10 @@
 package dev.hyperlynx.reactive.entites;
 
-import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.net.HoverQuiltHeightPayload;
 import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -17,15 +12,15 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class HoverQuilt extends VehicleEntity {
     public final AnimationState hovering = new AnimationState();
@@ -54,11 +49,6 @@ public class HoverQuilt extends VehicleEntity {
     @Override
     public boolean isPickable() {
         return true;
-    }
-
-    @Override
-    public boolean isInvulnerable() {
-        return super.isInvulnerable();
     }
 
     @Override
@@ -129,18 +119,7 @@ public class HoverQuilt extends VehicleEntity {
             ridden_last_tick = false;
         } else {
             ridden_last_tick = true;
-            this.getControllingPassenger().resetFallDistance();
-//            double corner_dist = 0.4;
-//            float particle_amount = (float) (Math.abs(this.getDeltaMovement().y / 0.25));
-//            if(this.getDeltaMovement().y > 0) {
-//                ParticleScribe.drawParticleBox(level(), ParticleTypes.END_ROD, this.getBoundingBox().deflate(0.5).move(0, -0.2, 0), (int) particle_amount * 5);
-//            } else if(this.getDeltaMovement().y < 0) {
-//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() + corner_dist, this.getY(), this.getZ() + corner_dist, 0.2F * particle_amount, 0, 0, 0);
-//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() + corner_dist, this.getY(), this.getZ() - corner_dist, 0.2F * particle_amount, 0, 0, 0);
-//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() - corner_dist, this.getY(), this.getZ() + corner_dist, 0.2F * particle_amount, 0, 0, 0);
-//                ParticleScribe.drawParticle(level(), ParticleTypes.END_ROD, this.getX() - corner_dist, this.getY(), this.getZ() - corner_dist, 0.2F * particle_amount, 0, 0, 0);
-//
-//            }
+            Objects.requireNonNull(this.getControllingPassenger()).resetFallDistance();
         }
         if(this.isHittingRidersHead()) {
             this.setDeltaMovement(0, Math.min(-0.05, -this.getDeltaMovement().y), 0);

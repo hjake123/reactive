@@ -90,7 +90,7 @@ public class WarpStaffItem extends StaffItem{
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
         if(hasBoundEntity(stack)){
             hover_text.add(Component.translatable("tooltip.reactive.entity_bound")
-                    .append(stack.get(ReactiveComponentTypes.BOUND_ENTITY).name()));
+                    .append(Objects.requireNonNull(stack.get(ReactiveComponentTypes.BOUND_ENTITY)).name()));
         }else{
             hover_text.add(Component.translatable("tooltip.reactive.no_entity_bound"));
         }
@@ -160,7 +160,7 @@ public class WarpStaffItem extends StaffItem{
                         man.setBeingStaredAt();
                         user.getCooldowns().addCooldown(stack.getItem(), 100);
                     }else{
-                        String name = entity.hasCustomName() ? entity.getCustomName().getString() : entity.getName().getString();
+                        String name = entity.hasCustomName() ? Objects.requireNonNull(entity.getCustomName()).getString() : entity.getName().getString();
                         stack.set(ReactiveComponentTypes.BOUND_ENTITY, new BoundEntity(name, entityHit.getEntity().getUUID()));
                         stack.set(ReactiveComponentTypes.TUTORIAL_DONE, Unit.INSTANCE);
                     }

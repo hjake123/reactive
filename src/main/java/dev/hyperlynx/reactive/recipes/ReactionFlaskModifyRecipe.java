@@ -14,6 +14,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
+
 public class ReactionFlaskModifyRecipe extends CustomRecipe {
     public ReactionFlaskModifyRecipe(CraftingBookCategory category) {
         super(category);
@@ -47,11 +49,14 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
 
     @Override
     public @NotNull ItemStack assemble(@NotNull CraftingInput input, HolderLookup.@NotNull Provider registries) {
-        ReactionFlaskContents contents = null;
+        ReactionFlaskContents contents = new ReactionFlaskContents(Map.of(), false);
         for(ItemStack stack : input.items()) {
             if(stack.is(ReactiveItems.REACTION_FLASK.get())) {
                 contents = stack.get(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get());
             }
+        }
+        if(contents == null) {
+            throw new RuntimeException("Reaction flask with no contents was allowed to assemble a flask modify recipe");
         }
         ItemStack flask = ReactiveItems.REACTION_FLASK.get().getDefaultInstance();
         flask.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(contents.powers(), true));

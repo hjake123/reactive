@@ -18,6 +18,9 @@ public abstract class MaterialProperty<T> {
         ResourceLocation id = MaterialProperties.PROPERTY_REGISTRY.getKey(this);
         assert id != null;
         var holder = MaterialProperties.PROPERTY_REGISTRY.getHolder(id);
+        if(holder.isEmpty()) {
+            throw new RuntimeException("Can't retrieve the material property registry from location " + id);
+        }
         var requirement_map = holder.get().getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP);
         if(requirement_map == null) {
             ReactiveMod.LOGGER.error("No requirement map has been defined for {}", id);
@@ -37,7 +40,7 @@ public abstract class MaterialProperty<T> {
             }
 
             if(requirement.high_bound_minimum().isPresent() && requirement.high_bound_maximum().isPresent()) {
-                int high_bound = WorldSpecificValue.get(id + "REQH" + requirement.power_id().toString(),
+                int high_bound = WorldSpecificValue.get(id + "REQH" + requirement.power_id(),
                         requirement.high_bound_minimum().get(), requirement.high_bound_maximum().get());
                 if(formula.get(power) > high_bound) {
                     return false;

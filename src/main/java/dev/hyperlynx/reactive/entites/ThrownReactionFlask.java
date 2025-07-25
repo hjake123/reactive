@@ -31,6 +31,9 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
         } else {
             contents = new ReactionFlaskContents(Power.generateRandomPowerCombo(level()), false);
         }
+        if(contents == null) {
+            return;
+        }
 
         ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR.get(), level());
         entity.setPos(result.getLocation().add(0, 1.0, 0));

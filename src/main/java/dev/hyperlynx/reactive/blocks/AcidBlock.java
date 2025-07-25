@@ -36,22 +36,22 @@ public class AcidBlock extends Block implements BucketPickup {
     }
 
     @Override
-    public @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor accessor, BlockPos pos, BlockState state) {
+    public @NotNull ItemStack pickupBlock(@Nullable Player player, LevelAccessor accessor, @NotNull BlockPos pos, @NotNull BlockState state) {
         accessor.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
         return ReactiveItems.ACID_BUCKET.get().getDefaultInstance();
     }
 
     @Override
-    public Optional<SoundEvent> getPickupSound() {
+    public @NotNull Optional<SoundEvent> getPickupSound() {
         return Optional.of(SoundEvents.SLIME_BLOCK_BREAK);
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState p_154285_, BlockGetter p_154286_, BlockPos p_154287_, CollisionContext p_154288_) {
+    public @NotNull VoxelShape getCollisionShape(@NotNull BlockState p_154285_, @NotNull BlockGetter p_154286_, @NotNull BlockPos p_154287_, @NotNull CollisionContext p_154288_) {
         return Shapes.empty();
     }
 
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if(entity instanceof ItemEntity item){
             ItemStack stack = item.getItem();
             if(stack.getMaxStackSize() > 1){
@@ -82,7 +82,7 @@ public class AcidBlock extends Block implements BucketPickup {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource rng) {
         if(!(ConfigMan.COMMON.acidMeltBlockEntities.get()) && level.getBlockEntity(pos.below()) != null)
             return;
         BlockState state_beneath = level.getBlockState(pos.below());
@@ -100,17 +100,18 @@ public class AcidBlock extends Block implements BucketPickup {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rng) {
+    public void randomTick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource rng) {
         if(!(ConfigMan.COMMON.acidMeltBlockEntities.get()) && level.getBlockEntity(pos.below()) != null)
             return;
         killPlantsUnderneath(level, pos, state);
         BlockState state_beneath = level.getBlockState(pos.below());
         if(blockIsOnExcludedList(state_beneath))
             return;
-        if(state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.LOGS)
-                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.PLANKS)
-                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL)
-                || state_beneath.getBlock().getCloneItemStack(level, pos, state).is(ItemTags.WOOL_CARPETS)
+        ItemStack pick_stack = new ItemStack(state_beneath.getBlock());
+        if(pick_stack.is(ItemTags.LOGS)
+                || pick_stack.is(ItemTags.PLANKS)
+                || pick_stack.is(ItemTags.WOOL)
+                || pick_stack.is(ItemTags.WOOL_CARPETS)
                 || state_beneath.getBlock() instanceof MossBlock || state_beneath.is(Blocks.DRIPSTONE_BLOCK)){
             level.setBlockAndUpdate(pos.below(), state);
             level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
@@ -127,22 +128,22 @@ public class AcidBlock extends Block implements BucketPickup {
     }
 
     @Override
-    public boolean isRandomlyTicking(BlockState irrelevant) {
+    public boolean isRandomlyTicking(@NotNull BlockState irrelevant) {
         return true;
     }
 
     @Override
-    public void onPlace(BlockState p_60566_, Level level, BlockPos pos, BlockState p_60569_, boolean p_60570_) {
+    public void onPlace(@NotNull BlockState p_60566_, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState p_60569_, boolean p_60570_) {
         killPlantsUnderneath(level, pos, level.getBlockState(pos));
     }
 
     @Override
-    public void neighborChanged(BlockState our_state, Level level, BlockPos pos, Block block, BlockPos neighbor_pos, boolean unknown) {
+    public void neighborChanged(@NotNull BlockState our_state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Block block, @NotNull BlockPos neighbor_pos, boolean unknown) {
         killPlantsUnderneath(level, pos, our_state);
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
+    public void animateTick(@NotNull BlockState state, Level level, BlockPos pos, @NotNull RandomSource rng) {
         if(!level.getBlockState(pos.above()).isSolidRender(level, pos)) {
             for (int i = 0; i < 1; i++) {
                 double x = pos.getX() + rng.nextFloat();

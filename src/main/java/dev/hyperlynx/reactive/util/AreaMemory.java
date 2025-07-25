@@ -15,9 +15,9 @@ import java.util.Optional;
 // This class provides a way to check the contents of the surrounding area with a cache.
 // It should be instantiated by classes that use it.
 public class AreaMemory {
-    BlockPos hostPos;
-    Map<Block, BlockPos> model;
-    Map<TagKey<Block>, BlockPos> tag_model;
+    final BlockPos hostPos;
+    final Map<Block, BlockPos> model;
+    final Map<TagKey<Block>, BlockPos> tag_model;
     BlockPos block_above_model;
 
     public AreaMemory(BlockPos hostPos){
@@ -87,6 +87,7 @@ public class AreaMemory {
     public BlockPos fetchAbove(Level l, int range, Block target){
         for(int i = 1; i < range; i++){
             if(l.getBlockState(hostPos.above(i)).is(target)){
+                block_above_model = hostPos.above(i);
                 return hostPos.above(i);
             }else if(stateIsBlocking(l.getBlockState(hostPos.above(i)))){
                 return null;

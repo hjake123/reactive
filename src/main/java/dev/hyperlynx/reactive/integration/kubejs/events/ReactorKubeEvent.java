@@ -8,8 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
+@SuppressWarnings("unused")
 public interface ReactorKubeEvent extends KubeEvent {
-    abstract KubeWrapped<Reactor> getReactor();
+    KubeWrapped<Reactor> getReactor();
 
     default int getPowerLevel(String power_rl){
         var reactor = getReactor().get();

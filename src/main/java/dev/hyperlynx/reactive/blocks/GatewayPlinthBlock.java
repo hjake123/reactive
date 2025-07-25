@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class GatewayPlinthBlock extends Block {
-    ExplosionDamageCalculator COLLAPSE_DAMAGE_CALCULATOR = new SimpleExplosionDamageCalculator(false, false, Optional.of(1.8F), Optional.empty());
+    final ExplosionDamageCalculator COLLAPSE_DAMAGE_CALCULATOR = new SimpleExplosionDamageCalculator(false, false, Optional.of(1.8F), Optional.empty());
 
     private final VoxelShape SHAPE = Shapes.or(
             Block.box(1, 0, 1, 15, 2, 15),
@@ -139,7 +139,7 @@ public class GatewayPlinthBlock extends Block {
                 for(BlockPos point : ReactionEffects.getCreationPoints(pos)){
                     ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, pos.above(), point, 10, 7, 0.8);
                 }
-                level.explode(null, (DamageSource)null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, ReactiveParticles.STARDUST, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
+                level.explode(null, null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, ReactiveParticles.STARDUST, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
             }
         }
         super.onRemove(state, level, pos, new_state, moved_by_piston);

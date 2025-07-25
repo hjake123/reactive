@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.latvian.mods.kubejs.event.EventExit;
 import dev.latvian.mods.kubejs.event.EventResult;
@@ -22,12 +21,8 @@ public class EventHandlerCache {
     private final List<IEventHandler> server_reaction_tests = new ArrayList<>();
 
     public void ingestReactionHandlers(){
-        EventTransceiver.CUSTOM_REACTION_RUN_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
-            reaction_runners.add(container.handler);
-        });
-        EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> {
-            server_reaction_tests.add(container.handler);
-        });
+        EventTransceiver.CUSTOM_REACTION_RUN_EVENT.forEachListener(ScriptType.SERVER, (container) -> reaction_runners.add(container.handler));
+        EventTransceiver.CUSTOM_REACTION_TEST_CONDITIONS_EVENT.forEachListener(ScriptType.SERVER, (container) -> server_reaction_tests.add(container.handler));
     }
 
     public void resetReactionHandlers(){
@@ -56,6 +51,7 @@ public class EventHandlerCache {
         return processEvent(event, server_reaction_tests);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public EventResult processRunEvent(CustomReactionTickEvent event){
         return processEvent(event, reaction_runners);
     }

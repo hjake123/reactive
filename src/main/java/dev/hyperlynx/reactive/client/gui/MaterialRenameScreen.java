@@ -15,9 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class MaterialRenameScreen extends Screen {
-    ResourceLocation material_to_rename;
-    EditBox name_box = new EditBox(Minecraft.getInstance().font,142, 20, Component.empty());
-    Button name_set_button = new Button.Builder(Component.translatable("ui.reactive.discover_button"),
+    final ResourceLocation material_to_rename;
+    final EditBox name_box = new EditBox(Minecraft.getInstance().font,142, 20, Component.empty());
+    final Button name_set_button = new Button.Builder(Component.translatable("ui.reactive.discover_button"),
             button -> {
                 ClientMaterialMan.rename(material_to_rename, name_box.getValue());
                 Minecraft.getInstance().popGuiLayer();
@@ -26,11 +26,6 @@ public class MaterialRenameScreen extends Screen {
     protected MaterialRenameScreen(ResourceLocation material_to_rename) {
         super(Component.translatable("ui.reactive.name_material_screen"));
         this.material_to_rename = material_to_rename;
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return true;
     }
 
     @Override
@@ -68,11 +63,5 @@ public class MaterialRenameScreen extends Screen {
         graphics.pose().scale(4, 4, 4); // Zoom in to make the material block preview bigger
         graphics.renderFakeItem(dummy_stack, this.width / 8 - 8, this.height / 8 - 17); // The pixel scaling is also altered by the zoom in
         graphics.pose().popPose();
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-
     }
 }

@@ -144,7 +144,7 @@ public class MnemonicBlockEntity extends BlockEntity {
     }
 
     static class OutputStep {
-        public int signal;
+        public final int signal;
         public int duration;
 
         public OutputStep(int signal){

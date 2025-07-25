@@ -31,13 +31,13 @@ public class DissolveComponentProcessor implements IComponentProcessor {
     }
 
     @Override
-    public IVariable process(Level level, @NotNull String key) {
+    public @NotNull IVariable process(Level level, @NotNull String key) {
         if(recipe == null) {
             return IVariable.empty();
         }
         if(key.equals("product")){
             return IVariable.from(recipe.getResultItem(level.registryAccess()), level.registryAccess());
         }
-        return null;
+        return IVariable.empty();
     }
 }

@@ -17,6 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHandlerModifiable {
     private @NotNull ItemStack stack = ItemStack.EMPTY;
 
@@ -91,7 +93,7 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
             stack = stack_to_insert.copy();
             return ItemStack.EMPTY;
         }
-        if(!stack_to_insert.get(ReactiveComponentTypes.MATERIAL_ID.get()).equals(stack.get(ReactiveComponentTypes.MATERIAL_ID.get()))) {
+        if(!Objects.equals(stack_to_insert.get(ReactiveComponentTypes.MATERIAL_ID.get()), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()))) {
             return stack_to_insert;
         }
         int number_to_move = Math.min(stack.getMaxStackSize() - stack.getCount(), stack_to_insert.getCount());

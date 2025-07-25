@@ -2,24 +2,20 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
-import dev.hyperlynx.reactive.net.MaterialNotesPayload;
 import dev.hyperlynx.reactive.net.MaterialRenamePayload;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ClientMaterialMan {
-    public static AtomicReference<MaterialData> clientside_data = new AtomicReference<>(MaterialData.empty());
+    public static final AtomicReference<MaterialData> clientside_data = new AtomicReference<>(MaterialData.empty());
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
     private static final Semaphore response_ready = new Semaphore(0, false);
 
@@ -71,13 +67,6 @@ public class ClientMaterialMan {
     public static void rename(ResourceLocation material_id, String value) {
         // clientside_data.get().get(material_id).setName(value); // Update on the client side.
         PacketDistributor.sendToServer(new MaterialRenamePayload(material_id, value)); // Tell server to update itself.
-    }
-
-    public static void syncNotes() {
-        for(ResourceLocation id : data().materials.keySet()) {
-            Optional<String> notes = data().materials.get(id).getNotes();
-            PacketDistributor.sendToServer(new MaterialNotesPayload(id, notes.orElse("")));
-        }
     }
 
     public static List<ResourceLocation> getKeysInDiscoveryOrder() {

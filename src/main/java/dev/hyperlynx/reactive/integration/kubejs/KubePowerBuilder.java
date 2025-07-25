@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+@SuppressWarnings("unused")
 public class KubePowerBuilder extends BuilderBase<Power> {
     private final PowerBuilder builder;
 

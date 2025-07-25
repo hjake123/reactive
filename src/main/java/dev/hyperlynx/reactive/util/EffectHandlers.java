@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.util;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.registration.ReactiveMobEffects;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;

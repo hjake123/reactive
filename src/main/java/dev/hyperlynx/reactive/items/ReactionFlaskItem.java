@@ -52,11 +52,6 @@ public class ReactionFlaskItem extends Item implements ProjectileItem {
     }
 
     @Override
-    public DispenseConfig createDispenseConfig() {
-        return ProjectileItem.super.createDispenseConfig();
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> hover_text, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, hover_text, tooltipFlag);
         if(!stack.has(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get())){
@@ -64,6 +59,7 @@ public class ReactionFlaskItem extends Item implements ProjectileItem {
             return;
         }
         ReactionFlaskContents contents = stack.get(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get());
+        assert contents != null;
         MutableComponent power_readout = Component.empty();
         int counter = 0;
         var powers = contents.powers().keySet();

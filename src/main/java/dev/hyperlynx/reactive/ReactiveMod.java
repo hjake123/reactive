@@ -48,7 +48,7 @@ public class ReactiveMod
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
-    public static void commonSetupHandler(FMLCommonSetupEvent evt){
+    public static void commonSetupHandler(FMLCommonSetupEvent ignored){
         SpecialCaseMan.bootstrap();
         ReactiveBlocks.COPPER_SYMBOL.get().setSymbolItem(ReactiveItems.COPPER_SYMBOL.get());
         ReactiveBlocks.IRON_SYMBOL.get().setSymbolItem(ReactiveItems.IRON_SYMBOL.get());

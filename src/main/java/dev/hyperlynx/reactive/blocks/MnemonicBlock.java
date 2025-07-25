@@ -102,6 +102,7 @@ public class MnemonicBlock extends Block implements EntityBlock {
         }
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <MnemonicBlockEntity extends BlockEntity> BlockEntityTicker<MnemonicBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<MnemonicBlockEntity> type) {

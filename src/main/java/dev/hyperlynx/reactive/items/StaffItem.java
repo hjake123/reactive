@@ -35,10 +35,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class StaffItem extends BlockItem {
-    BiConsumer<Player, ItemStack> effectFunction;
-    boolean beam; // Whether the effect should render as a beam (true) or zap (false).
+    final BiConsumer<Player, ItemStack> effectFunction;
+    final boolean beam; // Whether the effect should render as a beam (true) or zap (false).
     private final Supplier<Integer> frequency; // Beam abilities activate once in this many ticks.
-    public Item repair_item;
+    public final Item repair_item;
 
     public StaffItem(Block block, Properties props, BiConsumer<Player, ItemStack> effect, boolean beam, Supplier<Integer> frequency, Item repair_item) {
         super(block, props);

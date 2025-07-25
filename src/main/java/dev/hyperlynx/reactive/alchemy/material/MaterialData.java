@@ -6,7 +6,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,7 +20,7 @@ import java.util.*;
 public class MaterialData extends SavedData {
     protected final Map<ResourceLocation, Material> materials;
 
-    public static StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, Material.STREAM_CODEC), MaterialData::materials,
             MaterialData::new
     );
@@ -31,7 +30,12 @@ public class MaterialData extends SavedData {
     }
 
     public MaterialData addBuiltIns(ServerLevel level) {
-        for(Map.Entry<ResourceKey<Material>, Material> material_entry : level.registryAccess().registry(BuiltInMaterials.KEY).get().entrySet()) {
+        var optional_registry = level.registryAccess().registry(BuiltInMaterials.KEY);
+        if(optional_registry.isEmpty()) {
+            ReactiveMod.LOGGER.error("No built in material registry was defined, so none will be loaded.");
+            return this;
+        }
+        for(Map.Entry<ResourceKey<Material>, Material> material_entry : optional_registry.get().entrySet()) {
             addMaterial(material_entry.getKey().location(), material_entry.getValue());
         }
         return this;
@@ -70,7 +74,7 @@ public class MaterialData extends SavedData {
         return tag;
     }
 
-    public static MaterialData load(CompoundTag full_tag, HolderLookup.Provider registries) {
+    public static MaterialData load(CompoundTag full_tag, HolderLookup.Provider ignored) {
         var list = full_tag.getList("materials", ListTag.TAG_COMPOUND);
         Map<ResourceLocation, Material> materials = new HashMap<>();
         for (int i = 0; i < list.size(); i++) {
@@ -111,7 +115,4 @@ public class MaterialData extends SavedData {
         PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(new MaterialData(this)));
     }
 
-    public Collection<ResourceLocation> getKeys() {
-        return materials.keySet();
-    }
 }
