@@ -192,4 +192,10 @@ public class ReactiveBlocks {
 
     public static final DeferredHolder<Block, DeskBlock> DESK = BLOCKS.register("desk",
             () -> new DeskBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_PLANKS)));
+
+    public static final DeferredHolder<Block, Block> ADEPT_SALT_BLOCK = BLOCKS.register("adept_salt_block",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND)));
+
+    public static final DeferredHolder<Block, Block> CREATION_SALT_BLOCK = BLOCKS.register("creation_salt_block",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND)));
 }
