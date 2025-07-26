@@ -11,6 +11,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("unused")
@@ -194,4 +195,14 @@ public class ReactiveItems {
 
     public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
             new PhantomQuiltItem(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> ADEPT_SALT = ITEMS.register("adept_salt", () ->
+            new Item(new Item.Properties()));
+
+    public static final DeferredItem<BlockItem> ADEPT_SALT_BLOCK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.ADEPT_SALT_BLOCK);
+
+    public static final DeferredHolder<Item, Item> CREATION_SALT = ITEMS.register("creation_salt", () ->
+            new Item(new Item.Properties()));
+
+    public static final DeferredItem<BlockItem> CREATION_SALT_BLOCK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.CREATION_SALT_BLOCK);
 }
