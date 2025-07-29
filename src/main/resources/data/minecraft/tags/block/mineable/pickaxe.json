@@ -15,6 +15,7 @@
     "reactive:rending_plinth",
     "reactive:shulker_crucible",
     "reactive:ungrown_nodule",
-    "reactive:nodule"
+    "reactive:nodule",
+    "reactive:adept_salt_block"
   ]
 }

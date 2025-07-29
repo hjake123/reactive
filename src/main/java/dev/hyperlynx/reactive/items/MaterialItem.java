@@ -2,7 +2,9 @@ package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.*;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -80,7 +82,7 @@ public class MaterialItem extends BlockItem {
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, Power.generateRandomPowerCombo(level));
+            ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, new Formula(Power.generateRandomPowerCombo(level), ReactiveItems.SALT_BLOCK));
             stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), random_material_id);
         }
         ResourceLocation id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());

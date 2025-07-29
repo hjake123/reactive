@@ -2,8 +2,10 @@ package dev.hyperlynx.reactive.datagen;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
 import dev.hyperlynx.reactive.alchemy.material.formula.*;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.DataMapProvider;
@@ -277,7 +279,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new DefaultStringFormulaOutcome(
-                                "salt"
+                                "default"
                         )
                 ), false)
                 .add(MaterialProperties.SELF_DEFENSE, List.of(
@@ -287,6 +289,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 1300,
                                 3.0F)
                 ), false)
+        ;
+
+        builder(ReactiveDataMaps.MATERIAL_SALT_YIELDS)
+                .add(ReactiveItems.SALT_BLOCK, new YieldEntry(16, "salt"), false)
+                .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(32, "squares"), false)
+                .add(ReactiveItems.CREATION_SALT, new YieldEntry(64, "static"), false)
         ;
     }
 }

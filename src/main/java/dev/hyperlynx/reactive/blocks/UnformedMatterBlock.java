@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -36,7 +37,12 @@ public class UnformedMatterBlock extends Block {
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.randomTick(state, level, pos, random);
-        Block result = BuiltInRegistries.BLOCK.getTag(AlchemyTags.canBeGenerated).flatMap(tag -> tag.getRandomElement(random)).orElse(Holder.direct(Blocks.AIR)).value(); // THANK YOU FORGE !
+        Block result;
+        if(random.nextFloat() < 0.25F) {
+            result = ReactiveBlocks.CREATION_SALT_BLOCK.get();
+        } else {
+            result = BuiltInRegistries.BLOCK.getTag(AlchemyTags.canBeGenerated).flatMap(tag -> tag.getRandomElement(random)).orElse(Holder.direct(Blocks.AIR)).value(); // THANK YOU FORGE !
+        }
         level.setBlock(pos, result.defaultBlockState(), Block.UPDATE_CLIENTS);
         level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
     }

@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.util.Color;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -17,6 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,10 +32,9 @@ import java.util.*;
 public class Material {
     private final Reference2ObjectMap<MaterialProperty<?>, Object> properties;
     private String custom_name;
-    private final Optional<Map<Power, Integer>> original_formula;
+    private final Optional<Formula> original_formula;
     private Optional<Discoverer> discoverer = Optional.empty();
     private Optional<String> notes = Optional.empty();
-    private final int yield;
 
     private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
             Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
@@ -41,35 +43,31 @@ public class Material {
             instance.group(
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
                     Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
-                    Codec.unboundedMap(Power.CODEC, Codec.INT).optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
+                    Formula.CODEC.optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
                     Discoverer.CODEC.optionalFieldOf("discoverer").forGetter(Material::discoverer),
-                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes),
-                    Codec.INT.fieldOf("yield").forGetter(Material::yield)
+                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
             ).apply(instance, Material::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, Optional<Discoverer> discoverer, Optional<String> notes, int yield) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Formula> original_formula, Optional<Discoverer> discoverer, Optional<String> notes) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
         this.discoverer = discoverer;
         this.notes = notes;
-        this.yield = yield;
     }
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Map<Power, Integer>> original_formula, int yield) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Formula> original_formula) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
-        this.yield = yield;
     }
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, int yield) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = Optional.empty();
-        this.yield = yield;
     }
 
     public Optional<String> getNotes() {
@@ -77,20 +75,18 @@ public class Material {
     }
 
     public static Material empty() {
-        return new Material(Map.of(), "", 0);
+        return new Material(Map.of(), "");
     }
 
     private String customNameRaw() {
         return custom_name;
     }
 
-    public Optional<Map<Power, Integer>> getOriginalFormula() {
+    public Optional<Formula> getOriginalFormula() {
         return original_formula;
     }
 
     private Optional<Discoverer> discoverer() { return discoverer; }
-
-    public int yield() { return yield; }
 
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);
@@ -161,20 +157,23 @@ public class Material {
     private static final int POWER_SAME_THRESHOLD = 100;
 
     /// Determines whether the formula given matches this Material, and therefore if it should be considered to be the output of the creation process.
-    public boolean formulaMatches(@NotNull Map<Power, Integer> formula) {
+    public boolean formulaMatches(@NotNull Formula formula) {
         if(original_formula.isEmpty()) {
             return false;
         }
-        for(Power power : formula.keySet()) {
-            if(!original_formula.get().containsKey(power)) {
+        if(!original_formula.get().base_material().is(formula.base_material())) {
+            return false;
+        }
+        for(Power power : formula.powers().keySet()) {
+            if(!original_formula.get().powers().containsKey(power)) {
                 return false;
             }
         }
-        for(Power power : original_formula.get().keySet()) {
-            if(!(formula.containsKey(power))) {
+        for(Power power : original_formula.get().powers().keySet()) {
+            if(!(formula.powers().containsKey(power))) {
                 return false;
             }
-            if(Math.abs(formula.get(power) - original_formula.get().get(power)) > POWER_SAME_THRESHOLD) {
+            if(Math.abs(formula.powers().get(power) - original_formula.get().powers().get(power)) > POWER_SAME_THRESHOLD) {
                 return false;
             }
         }
@@ -217,18 +216,20 @@ public class Material {
 
     public MutableComponent formulaComponent() {
         MutableComponent readout_message = Component.empty();
-        Map<Power, Integer> original_formula = this.getOriginalFormula().orElse(Map.of());
-        if(original_formula.isEmpty()) {
+        Formula original_formula = this.getOriginalFormula().orElse(new Formula(Map.of(), BuiltInRegistries.ITEM.wrapAsHolder(Items.AIR)));
+        Map<Power, Integer> original_powers = original_formula.powers();
+        if(original_powers.isEmpty()) {
             return Component.translatable("ui.reactive.no_formula");
         }
-        List<Component> power_lines = new ArrayList<>();
-        for(Power power : original_formula.keySet().stream().sorted(Comparator.comparing(original_formula::get)).toList().reversed()) {
-            power_lines.add(Component.literal(power.getName() + ": " + Math.round(original_formula.get(power) / 16.0) + "%")
+        List<Component> formula_lines = new ArrayList<>();
+        formula_lines.add(original_formula.base_material().value().getName(original_formula.base_material().value().getDefaultInstance()));
+        for(Power power : original_powers.keySet().stream().sorted(Comparator.comparing(original_powers::get)).toList().reversed()) {
+            formula_lines.add(Component.literal(power.getName() + ": " + Math.round(original_powers.get(power) / 16.0) + "%")
                     .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex() : 0xFFFFFF));
         }
-        for(int i = 0; i < power_lines.size(); i++) {
-            readout_message.append(power_lines.get(i));
-            if(i < power_lines.size() - 1) {
+        for(int i = 0; i < formula_lines.size(); i++) {
+            readout_message.append(formula_lines.get(i));
+            if(i < formula_lines.size() - 1) {
                 readout_message.append("\n");
             }
         }

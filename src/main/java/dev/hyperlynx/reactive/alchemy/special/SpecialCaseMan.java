@@ -3,6 +3,8 @@ package dev.hyperlynx.reactive.alchemy.special;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
@@ -191,7 +193,7 @@ public class SpecialCaseMan {
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if((e.getItem().is(ReactiveItems.SALT_BLOCK.get()))) {
+            if((e.getItem().getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS) != null)) {
                 saltMaterialCraft(c, e);
                 return true;
             }
@@ -739,10 +741,10 @@ public class SpecialCaseMan {
             return;
         }
         ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
-        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), crucible.getPowerMap());
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItemHolder()));
         material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
 
-        int yield = MaterialMan.fetch(crucible.getLevel(), material_id).yield();
+        int yield = getMaterialYield(salt_item_entity.getItem());
         int amount_made = Math.min(salt_item_entity.getItem().getCount(), yield);
         material_stack.setCount(amount_made);
         salt_item_entity.getItem().shrink(amount_made);
@@ -755,6 +757,14 @@ public class SpecialCaseMan {
         crucible.getLevel().addFreshEntity(drop);
         crucible.expendPower();
         crucible.setDirty();
+    }
+
+    private static int getMaterialYield(ItemStack stack) {
+        YieldEntry yield_entry = stack.getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+        if(yield_entry == null) {
+            return 1;
+        }
+        return yield_entry.yield();
     }
 
 }

@@ -2,6 +2,8 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
+import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -68,7 +70,7 @@ public class MaterialMan {
 
     /// Creates or gets a [Material] based on the formula provided
     /// and returns the ResourceLocation of that material, to be set onto an item or block.
-    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Map<Power, Integer> formula) {
+    public static ResourceLocation createOrFetchByFormula(Level level, @NotNull Formula formula) {
         for(Map.Entry<ResourceLocation, Material> existing_material : data(level).materials.entrySet()) {
             if(existing_material.getValue().formulaMatches(formula)) {
                 return existing_material.getKey();
@@ -89,16 +91,20 @@ public class MaterialMan {
         // Decide on the properties of the new material
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
         for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
-            if(property.requirementsMet(formula)) {
-                properties.put(property, property.instance(formula));
+            if(property.requirementsMet(formula.powers())) {
+                properties.put(property, property.instance(formula.powers()));
             }
         }
 
-        // Determine the material's yield depending on world specific things TODO
-        int yield = 16;
+        if(properties.get(MaterialProperties.MODEL_NAME.get()).equals("default")) {
+            YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+            if(yield != null) {
+                properties.put(MaterialProperties.MODEL_NAME.get(), yield.default_model());
+            }
+        }
 
         // Construct and add the new material
-        Material new_material = new Material(properties, "", Optional.of(new HashMap<>(formula)), yield);
+        Material new_material = new Material(properties, "", Optional.of(formula.copy()));
         addMaterial(level, new_material_id, new_material);
 
         ReactiveMod.LOGGER.debug("Created new material {}", new_material_id);
