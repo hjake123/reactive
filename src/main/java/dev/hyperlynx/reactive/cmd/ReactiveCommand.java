@@ -10,6 +10,8 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
 import dev.hyperlynx.reactive.net.MaterialRenameScreenPayload;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -108,6 +110,10 @@ public class ReactiveCommand {
                                 .then(Commands.literal("confirm-delete")
                                 .executes(context ->
                                         removeMaterial(context, ResourceLocationArgument.getId(context, "id"))))))
+                        .then(Commands.literal("info")
+                                .then(Commands.argument("id", ResourceLocationArgument.id())
+                                        .executes(context -> printMaterialInfo(context,
+                                                ResourceLocationArgument.getId(context, "id")))))
                         .then(Commands.literal("remove-everything")
                                 .then(Commands.literal("confirm-delete")
                                 .executes(ReactiveCommand::removeAllMaterials))));
@@ -223,6 +229,21 @@ public class ReactiveCommand {
         stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
         stack.setCount(amount);
         player.addItem(stack);
+        return 1;
+    }
+
+    private static int printMaterialInfo(CommandContext<CommandSourceStack> context, ResourceLocation material_id) {
+        ServerLevel level = context.getSource().getLevel();
+        if(!MaterialMan.occupied(level, material_id)) {
+            context.getSource().sendFailure(Component.translatable("message.reactive.material_id_invalid"));
+            return 0;
+        }
+        Material material = MaterialMan.fetch(level, material_id);
+        context.getSource().sendSuccess(material::getNameComponent, true);
+        context.getSource().sendSuccess(material::formulaComponent, true);
+        for(MaterialProperty<?> property : material.properties().keySet()) {
+            context.getSource().sendSuccess(() -> Component.literal(String.valueOf(MaterialProperties.PROPERTY_REGISTRY.getKey(property))), true);
+        }
         return 1;
     }
 

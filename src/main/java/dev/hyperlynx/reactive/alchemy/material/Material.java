@@ -106,7 +106,7 @@ public class Material {
         return default_value;
     }
 
-    private Map<MaterialProperty<?>, Object> properties() {
+    public Map<MaterialProperty<?>, Object> properties() {
         return properties;
     }
 
@@ -161,7 +161,7 @@ public class Material {
         if(original_formula.isEmpty()) {
             return false;
         }
-        if(!original_formula.get().base_material().is(formula.base_material())) {
+        if(!original_formula.get().base_material().is(formula.base_material().unwrap().orThrow())) {
             return false;
         }
         for(Power power : formula.powers().keySet()) {

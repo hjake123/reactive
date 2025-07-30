@@ -43,6 +43,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -59,7 +60,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     public static final BooleanProperty RANDOM_TICKING = BooleanProperty.create("random_ticking");
 
     public MaterialBlock() {
-        super(BlockBehaviour.Properties.of());
+        super(BlockBehaviour.Properties.of().noOcclusion());
         registerDefaultState(this.defaultBlockState().setValue(MODEL, MaterialModel.SALT).setValue(RANDOM_TICKING, false));
     }
 
@@ -103,6 +104,13 @@ public class MaterialBlock extends Block implements EntityBlock {
         return state.getValue(MODEL).equals(MaterialModel.GEL);
     }
 
+    private boolean isIntangible(BlockGetter getter, BlockPos pos, @Nullable Entity collider) {
+        if(collider != null && material(getter, pos).has(MaterialProperties.SEMITANGIBLE.get())) {
+            return collider.isShiftKeyDown();
+        }
+        return material(getter, pos).has(MaterialProperties.INTANGIBLE.get());
+    }
+
     @Override
     public boolean hasDynamicShape() {
         return true;
@@ -110,7 +118,11 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        if(isGelBlock(state)) {
+        Entity collider = null;
+        if(context instanceof EntityCollisionContext entity_context) {
+            collider = entity_context.getEntity();
+        }
+        if(isGelBlock(state) || isIntangible(getter, pos, collider)) {
             return Shapes.empty();
         }
         return Shapes.block();
@@ -121,7 +133,13 @@ public class MaterialBlock extends Block implements EntityBlock {
         if (!(entity instanceof LivingEntity living)) {
             return;
         }
+        if(isIntangible(level, pos, entity)) {
+            return;
+        }
         living.makeStuckInBlock(state, isGelBlock(state) ? new Vec3(0.9F, 0.9D, 0.9F) : new Vec3(0.4F, 0.4D, 0.4F));
+        if(material(level, pos).has(MaterialProperties.MAGMA_STEP.get())) {
+            hurtWithMagmaStep(level, entity);
+        }
     }
 
     @Override
@@ -152,9 +170,13 @@ public class MaterialBlock extends Block implements EntityBlock {
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity victim) { // Working!
         if(material(level, pos).has(MaterialProperties.MAGMA_STEP.get())) {
-            if (!victim.isSteppingCarefully() && victim instanceof LivingEntity) {
-                victim.hurt(level.damageSources().hotFloor(), 1.0F);
-            }
+            hurtWithMagmaStep(level, victim);
+        }
+    }
+
+    private static void hurtWithMagmaStep(Level level, Entity victim) {
+        if (!victim.isSteppingCarefully() && victim instanceof LivingEntity) {
+            victim.hurt(level.damageSources().hotFloor(), 1.0F);
         }
     }
 

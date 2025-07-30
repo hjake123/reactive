@@ -121,7 +121,7 @@ public class MaterialMan {
         // Assign the properties
         for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
             // Check against the formula's actual inputs
-            if(property.requirementsMet(input_powers)) {
+            if(property.requirementsMet(adjusted_input_powers)) {
                 // Apply properties based on the adjusted powers
                 properties.put(property, property.instance(adjusted_input_powers));
             }

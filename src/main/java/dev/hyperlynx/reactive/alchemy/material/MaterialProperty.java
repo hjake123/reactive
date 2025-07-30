@@ -38,14 +38,6 @@ public abstract class MaterialProperty<T> {
             if(!formula.containsKey(power) || formula.get(power) < low_bound) {
                 return false;
             }
-
-            if(requirement.high_bound_minimum().isPresent() && requirement.high_bound_maximum().isPresent()) {
-                int high_bound = WorldSpecificValue.get(id + "REQH" + requirement.power_id(),
-                        requirement.high_bound_minimum().get(), requirement.high_bound_maximum().get());
-                if(formula.get(power) > high_bound) {
-                    return false;
-                }
-            }
         }
         return true;
     }
