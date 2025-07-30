@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
-import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
