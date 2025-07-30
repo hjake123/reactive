@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 
 import java.util.List;
@@ -87,14 +88,14 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new IntegerZeroToMaxFormulaOutcome(
                                 Powers.LIGHT_POWER.getId(),
                                 200,
-                                1000,
+                                1600,
                                 15
                 )), false)
                 .add(MaterialProperties.REDSTONE, List.of(
                         new IntegerZeroToMaxFormulaOutcome(
                                 Powers.MIND_POWER.getId(),
                                 10,
-                                1000,
+                                2000,
                                 15
                 )), false)
                 .add(MaterialProperties.FLAMMABILITY, List.of(
@@ -108,8 +109,8 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new FloatZeroToMaxFormulaOutcome(
                                 Powers.MIND_POWER.getId(),
                                 50,
-                                1000,
-                                2.0F
+                                2000,
+                                4.0F
                 )), false)
                 .add(MaterialProperties.BLAST_RESISTANCE, List.of(
                         new FloatOneToValueFormulaOutcome(
@@ -136,7 +137,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Powers.WARP_POWER.getId(),
                                 100,
                                 550,
-                                0.2F)
+                                0.2F),
+                        new FloatOneToValueFormulaOutcome(
+                                Powers.LIGHT_POWER.getId(),
+                                2500,
+                                3200,
+                                5.0F)
                     ), false)
                 .add(MaterialProperties.FRICTION, List.of(
                         new FloatOneToValueFormulaOutcome(
@@ -164,13 +170,13 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new FloatOneToValueFormulaOutcome(
                                 Powers.BODY_POWER.getId(),
                                 0,
-                                1600,
-                                3.0F),
+                                3200,
+                                6.0F),
                         new FloatOneToValueFormulaOutcome(
                                 Powers.VERDANT_POWER.getId(),
                                 0,
-                                1600,
-                                1.25F),
+                                3200,
+                                2.5F),
                         new FloatOneToValueFormulaOutcome(
                                 Powers.ACID_POWER.getId(),
                                 200,
@@ -185,7 +191,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Powers.MIND_POWER.getId(),
                                 777,
                                 877,
-                                1.05F)
+                                1.05F),
+                        new FloatOneToValueFormulaOutcome(
+                                Powers.LIGHT_POWER.getId(),
+                                2500,
+                                3200,
+                                5.0F)
                 ), false)
                 .add(MaterialProperties.MODEL_NAME, List.of(
                         new RangeStringFormulaOutcome(
@@ -207,13 +218,13 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
-                                "squares",
+                                "circles",
                                 Powers.Y_POWER.getId(),
                                 20,
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
-                                "static",
+                                "smooth",
                                 Powers.Z_POWER.getId(),
                                 20,
                                 Optional.empty()
@@ -257,7 +268,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                         new RangeStringFormulaOutcome(
                                 "circles",
                                 Powers.MIND_POWER.getId(),
-                                1200,
+                                1500,
                                 Optional.empty()
                         ),
                         new RangeStringFormulaOutcome(
@@ -291,10 +302,12 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                 ), false)
         ;
 
+        //noinspection deprecation
         builder(ReactiveDataMaps.MATERIAL_SALT_YIELDS)
                 .add(ReactiveItems.SALT_BLOCK, new YieldEntry(16, "salt", 1.0F), false)
                 .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(32, "squares", 1.33F), false)
                 .add(ReactiveItems.CREATION_SALT_BLOCK, new YieldEntry(64, "static", 2.0F), false)
+                .add(Items.WHITE_WOOL.builtInRegistryHolder(), new YieldEntry(64, "wool", 0.0F), false)
         ;
     }
 }

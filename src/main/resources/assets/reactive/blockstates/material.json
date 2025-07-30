@@ -23,6 +23,9 @@
     },
     "model=static":{
       "model": "reactive:block/material/static"
+    },
+    "model=wool":{
+      "model": "reactive:block/material/wool"
     }
   }
 }

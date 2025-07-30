@@ -42,6 +42,12 @@
         "reactive:material_model_index": 7
       },
       "model": "reactive:block/material/static"
+    },
+    {
+      "predicate": {
+        "reactive:material_model_index": 8
+      },
+      "model": "reactive:block/material/wool"
     }
   ]
 }

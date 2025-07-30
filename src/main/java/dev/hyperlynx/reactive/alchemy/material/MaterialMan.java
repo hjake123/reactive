@@ -94,16 +94,34 @@ public class MaterialMan {
             throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getRegisteredName()  +") with no defined yield! This shouldn't have been possible...");
         }
 
+        // Construct and add the new material
+        Material new_material = new Material(generateProperties(formula.powers(), yield), "", Optional.of(formula.copy()));
+        addMaterial(level, new_material_id, new_material);
+        ReactiveMod.LOGGER.info("Created new material {}", new_material_id);
+        return new_material_id;
+    }
+
+    private static Map<MaterialProperty<?>, Object> generateProperties(Map<Power, Integer> input_powers, YieldEntry yield_entry) {
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
 
+        // If this base only yields cosmetic materials, just set the color and model name and return.
+        if(yield_entry.cosmetic()) {
+            properties.put(MaterialProperties.COLOR.get(), MaterialProperties.COLOR.get().instance(input_powers));
+            properties.put(MaterialProperties.MODEL_NAME.get(), yield_entry.default_model());
+            if(MaterialProperties.LIGHT.get().requirementsMet(input_powers)) {
+                properties.put(MaterialProperties.LIGHT.get(), MaterialProperties.LIGHT.get().instance(input_powers));
+            }
+            return properties;
+        }
+
         // Apply the effect multiplier from the base item
-        Map<Power, Integer> adjusted_input_powers = new HashMap<>(formula.powers());
-        adjusted_input_powers.replaceAll((p, v) -> (int) (adjusted_input_powers.get(p) * yield.power_effect_multiplier()));
+        Map<Power, Integer> adjusted_input_powers = new HashMap<>(input_powers);
+        adjusted_input_powers.replaceAll((p, v) -> (int) (adjusted_input_powers.get(p) * yield_entry.power_effect_multiplier()));
 
         // Assign the properties
         for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
             // Check against the formula's actual inputs
-            if(property.requirementsMet(formula.powers())) {
+            if(property.requirementsMet(input_powers)) {
                 // Apply properties based on the adjusted powers
                 properties.put(property, property.instance(adjusted_input_powers));
             }
@@ -111,13 +129,9 @@ public class MaterialMan {
 
         // Use the default model for this yield entry if necessary
         if(properties.get(MaterialProperties.MODEL_NAME.get()).equals("default")) {
-            properties.put(MaterialProperties.MODEL_NAME.get(), yield.default_model());
+            properties.put(MaterialProperties.MODEL_NAME.get(), yield_entry.default_model());
         }
 
-        // Construct and add the new material
-        Material new_material = new Material(properties, "", Optional.of(formula.copy()));
-        addMaterial(level, new_material_id, new_material);
-        ReactiveMod.LOGGER.info("Created new material {}", new_material_id);
-        return new_material_id;
+        return properties;
     }
 }

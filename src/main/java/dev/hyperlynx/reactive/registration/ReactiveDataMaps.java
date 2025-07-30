@@ -1,17 +1,12 @@
 package dev.hyperlynx.reactive.registration;
 
-import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
 import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
-import dev.latvian.mods.rhino.ast.Yield;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

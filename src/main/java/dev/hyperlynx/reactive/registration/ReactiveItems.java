@@ -201,8 +201,5 @@ public class ReactiveItems {
 
     public static final DeferredItem<BlockItem> ADEPT_SALT_BLOCK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.ADEPT_SALT_BLOCK);
 
-    public static final DeferredHolder<Item, Item> CREATION_SALT = ITEMS.register("creation_salt", () ->
-            new Item(new Item.Properties()));
-
     public static final DeferredItem<BlockItem> CREATION_SALT_BLOCK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.CREATION_SALT_BLOCK);
 }
