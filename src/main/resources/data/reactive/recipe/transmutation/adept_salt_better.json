@@ -5,9 +5,9 @@
   },
   "product": {
     "id": "reactive:adept_salt",
-    "count": 3
+    "count": 2
   },
-  "reagents": ["reactive:caustic", "reactive:esoteric_z"],
+  "reagents": ["reactive:caustic"],
   "min": 800,
   "cost": 10
 }

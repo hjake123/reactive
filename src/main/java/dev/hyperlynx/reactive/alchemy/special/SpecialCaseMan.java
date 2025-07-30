@@ -744,10 +744,16 @@ public class SpecialCaseMan {
         ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItemHolder()));
         material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
 
-        int yield = getMaterialYield(salt_item_entity.getItem());
-        int amount_made = Math.min(salt_item_entity.getItem().getCount(), yield);
-        material_stack.setCount(amount_made);
-        salt_item_entity.getItem().shrink(amount_made);
+        int max_amount_used = 1;
+        int yield_multiplier = 1;
+        YieldEntry yield_entry = salt_item_entity.getItem().getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+        if(yield_entry != null) {
+            max_amount_used = yield_entry.max_input_items();
+            yield_multiplier = yield_entry.yield_per_input();
+        }
+        int amount_used = Math.min(salt_item_entity.getItem().getCount(), max_amount_used);
+        material_stack.setCount(amount_used * yield_multiplier);
+        salt_item_entity.getItem().shrink(amount_used);
         if(salt_item_entity.getItem().getCount() <= 0) {
             salt_item_entity.kill();
         }
@@ -757,14 +763,6 @@ public class SpecialCaseMan {
         crucible.getLevel().addFreshEntity(drop);
         crucible.expendPower();
         crucible.setDirty();
-    }
-
-    private static int getMaterialYield(ItemStack stack) {
-        YieldEntry yield_entry = stack.getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
-        if(yield_entry == null) {
-            return 1;
-        }
-        return yield_entry.yield();
     }
 
 }
