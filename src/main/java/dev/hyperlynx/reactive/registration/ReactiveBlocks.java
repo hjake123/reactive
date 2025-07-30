@@ -197,5 +197,5 @@ public class ReactiveBlocks {
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.QUARTZ_BLOCK)));
 
     public static final DeferredHolder<Block, Block> CREATION_SALT_BLOCK = BLOCKS.register("creation_salt_block",
-            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).sound(SoundType.SCULK).lightLevel(state -> 12)));
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.SAND).sound(SoundType.LODESTONE).lightLevel(state -> 12)));
 }

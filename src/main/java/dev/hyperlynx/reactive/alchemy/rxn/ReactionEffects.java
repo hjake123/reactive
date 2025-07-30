@@ -325,11 +325,16 @@ public class ReactionEffects {
 
     public static void creation(Reactor reactor){
         Level level = Objects.requireNonNull(reactor.getLevel());
-        if(level.random.nextFloat() < 0.2){
+        if(level.random.nextFloat() < 0.35){
             for(BlockPos creation_point : getCreationPoints(reactor.getBlockPos())){
                 if(level.getBlockState(creation_point).isAir() && level.isLoaded(creation_point)){
-                    level.setBlock(creation_point, ReactiveBlocks.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-                    level.updateNeighborsAt(creation_point, ReactiveBlocks.UNFORMED_MATTER.get());
+                    if(level.random.nextFloat() < 0.34) {
+                        level.setBlock(creation_point, ReactiveBlocks.CREATION_SALT_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                        level.updateNeighborsAt(creation_point, ReactiveBlocks.CREATION_SALT_BLOCK.get());
+                    } else {
+                        level.setBlock(creation_point, ReactiveBlocks.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                        level.updateNeighborsAt(creation_point, ReactiveBlocks.UNFORMED_MATTER.get());
+                    }
                     ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, reactor.getBlockPos(), creation_point, 10, 5, 0.5F);
                     break;
                 }

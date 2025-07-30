@@ -193,7 +193,7 @@ public class ReactionMan {
 
         REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
-        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation));
+        REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation).setCost(2));
 
         Reaction size_shrink_effect = new FreeEffectReaction("size_shrink_effect", ReactionEffects::shrink, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.ACID_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
         Reaction size_grow_effect = new FreeEffectReaction("size_grow_effect", ReactionEffects::grow, Powers.MIND_POWER.get(), Powers.BODY_POWER.get(), Powers.VERDANT_POWER.get()).setStimulus(Reaction.Stimulus.NO_ELECTRIC);
