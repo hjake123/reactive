@@ -61,14 +61,18 @@ public class ReactionRenderers {
 
     public void curseRing(Reactor reactor) {
         RandomSource random = reactor.getLevel().random;
-        Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2);
-        ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0.7, 1);
+        if(random.nextFloat() < 0.3) {
+            Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0.7, 1);
+        }
     }
 
     public void astralRing(Reactor reactor) {
         RandomSource random = reactor.getLevel().random;
-        Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2);
-        ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0.7, 1);
+        if (random.nextFloat() < 0.3) {
+            Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0.7, 1);
+        }
     }
 
     public void growth(Reactor reactor) {
