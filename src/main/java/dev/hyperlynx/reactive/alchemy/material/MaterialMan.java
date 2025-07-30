@@ -88,26 +88,36 @@ public class MaterialMan {
             new_material_id = ReactiveMod.location("auto" + index);
         }
 
-        // Decide on the properties of the new material
+        // Retrieve the base item's yield entry
+        YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+        if(yield == null) {
+            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getRegisteredName()  +") with no defined yield! This shouldn't have been possible...");
+        }
+
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
+
+        // Apply the effect multiplier from the base item
+        Map<Power, Integer> adjusted_input_powers = new HashMap<>(formula.powers());
+        adjusted_input_powers.replaceAll((p, v) -> (int) (adjusted_input_powers.get(p) * yield.power_effect_multiplier()));
+
+        // Assign the properties
         for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
+            // Check against the formula's actual inputs
             if(property.requirementsMet(formula.powers())) {
-                properties.put(property, property.instance(formula.powers()));
+                // Apply properties based on the adjusted powers
+                properties.put(property, property.instance(adjusted_input_powers));
             }
         }
 
+        // Use the default model for this yield entry if necessary
         if(properties.get(MaterialProperties.MODEL_NAME.get()).equals("default")) {
-            YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
-            if(yield != null) {
-                properties.put(MaterialProperties.MODEL_NAME.get(), yield.default_model());
-            }
+            properties.put(MaterialProperties.MODEL_NAME.get(), yield.default_model());
         }
 
         // Construct and add the new material
         Material new_material = new Material(properties, "", Optional.of(formula.copy()));
         addMaterial(level, new_material_id, new_material);
-
-        ReactiveMod.LOGGER.debug("Created new material {}", new_material_id);
+        ReactiveMod.LOGGER.info("Created new material {}", new_material_id);
         return new_material_id;
     }
 }

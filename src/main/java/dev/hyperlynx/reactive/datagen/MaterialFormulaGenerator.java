@@ -292,9 +292,9 @@ public class MaterialFormulaGenerator extends DataMapProvider {
         ;
 
         builder(ReactiveDataMaps.MATERIAL_SALT_YIELDS)
-                .add(ReactiveItems.SALT_BLOCK, new YieldEntry(16, "salt"), false)
-                .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(32, "squares"), false)
-                .add(ReactiveItems.CREATION_SALT, new YieldEntry(64, "static"), false)
+                .add(ReactiveItems.SALT_BLOCK, new YieldEntry(16, "salt", 1.0F), false)
+                .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(32, "squares", 1.33F), false)
+                .add(ReactiveItems.CREATION_SALT_BLOCK, new YieldEntry(64, "static", 2.0F), false)
         ;
     }
 }

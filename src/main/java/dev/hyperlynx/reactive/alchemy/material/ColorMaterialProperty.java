@@ -21,7 +21,7 @@ public class ColorMaterialProperty extends MaterialProperty<Color> {
             if(!p.invisible)
                 totalpp += formula.get(p);
         }
-        mix_color.setMixColor(Color.white(), formula, totalpp, 1600); // TODO: max power subject to change
+        mix_color.setMixColor(Color.white(), formula, totalpp, Math.max(1600, totalpp));
         return mix_color;
     }
 
