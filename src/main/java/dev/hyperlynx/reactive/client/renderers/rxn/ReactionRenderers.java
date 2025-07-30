@@ -9,8 +9,10 @@ import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 
 import java.util.*;
@@ -32,6 +34,7 @@ public class ReactionRenderers {
         RENDERERS.put("astral_curse_annihilation", this::creation);
         RENDERERS.put("cryo", this::snow);
         RENDERERS.put("nodule", this::warpEnergy);
+        RENDERERS.put("astral", this::astralRing);
     }
 
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
@@ -57,7 +60,15 @@ public class ReactionRenderers {
     }
 
     public void curseRing(Reactor reactor) {
-        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.ASH, reactor.getPos(), 0.7, 1);
+        RandomSource random = reactor.getLevel().random;
+        Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0.7, 1);
+    }
+
+    public void astralRing(Reactor reactor) {
+        RandomSource random = reactor.getLevel().random;
+        Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.2);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0.7, 1);
     }
 
     public void growth(Reactor reactor) {

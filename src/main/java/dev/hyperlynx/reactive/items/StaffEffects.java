@@ -25,6 +25,7 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -108,20 +109,22 @@ public class StaffEffects {
             }else{
                 target = entityHit.getLocation();
             }
+            Level level = user.level();
             var fireball_position = start
                     .add(user.getLookAngle().scale(1.5))
-                    .add(user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
+                    .add(level.random.nextDouble()*2-1, level.random.nextDouble()*2-1, level.random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
 
             Fireball fireball;
             if(ConfigMan.COMMON.blazeStaffExplosionSize.get() > 0) {
-                fireball = new LargeFireball(user.level(), user, aim, ConfigMan.COMMON.blazeStaffExplosionSize.get());
+                fireball = new LargeFireball(level, user, aim, ConfigMan.COMMON.blazeStaffExplosionSize.get());
             } else {
-                fireball = new SmallFireball(user.level(), user, aim);
+                fireball = new SmallFireball(level, user, aim);
             }
             fireball.setPos(fireball_position);
-            user.level().addFreshEntity(fireball);
-            user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
+            level.addFreshEntity(fireball);
+            level.playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
+            ParticleScribe.drawExactParticleSphere(level, ParticleTypes.FLAME, fireball_position, 0.0, 0.3, level.random.nextIntBetweenInclusive(1, 5));
         }
     }
 
@@ -215,7 +218,7 @@ public class StaffEffects {
         }
 
         if(user.level().isClientSide) {
-            ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), true), aoe.deflate(3.0), 5);
+            ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), user.level().random.nextFloat() > 0.2, true), aoe.deflate(3.0), 5);
         }
         user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.7F, 1.3f);
     }

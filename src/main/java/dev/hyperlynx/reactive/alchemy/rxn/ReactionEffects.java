@@ -491,7 +491,7 @@ public class ReactionEffects {
             return;
 
         int range = 4;
-        BlockPos pos = reactor.getBlockPos().offset(level.random.nextInt(-range, range + 1), level.random.nextInt(0, range), level.random.nextInt(-range, range + 1));
+        BlockPos pos = reactor.getBlockPos().offset(level.random.nextInt(-range, range + 1), level.random.nextInt(-1, range), level.random.nextInt(-range, range + 1));
         if(!level.getBlockState(pos).isAir()) {
             if(level.getBlockState(pos).is(ReactiveBlocks.UNGROWN_NODULE.get())) {
                 BlockState old_state = level.getBlockState(pos);

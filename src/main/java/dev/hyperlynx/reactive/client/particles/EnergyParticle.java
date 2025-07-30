@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ScalableParticleOptionsBase;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,7 @@ public class EnergyParticle extends TextureSheetParticle {
     private final Vec3 target;
     private float speed = 0.05F;
     private final boolean reversed;
+    private final boolean orbit;
 
     protected EnergyParticle(ClientLevel level, double x, double y, double z, Options options, SpriteSet sprites) {
         super(level, x, y, z);
@@ -34,7 +36,8 @@ public class EnergyParticle extends TextureSheetParticle {
         this.bCol = options.getColor().blue / 255.0F;
         this.hasPhysics = false;
         this.reversed = options.reverse_motion;
-        this.setLifetime(reversed ? 20 : 200);
+        this.orbit = options.orbit;
+        this.setLifetime(reversed || orbit ? 20 : 200);
         setSpriteFromAge(sprites);
     }
 
@@ -61,22 +64,34 @@ public class EnergyParticle extends TextureSheetParticle {
     @Override
     public void move(double x, double y, double z) {
         Vec3 pos = this.getPos();
-        Vec3 to_target = this.target.subtract(pos);
-        Vec3 move_step = this.reversed ? to_target.normalize().scale(speed).reverse() : to_target.normalize().scale(speed);
+        Vec3 move_step;
+        if(orbit) {
+            Vec3 normalized_toward_center = target.subtract(pos).normalize();
+            Vec3 normalized_tangent = new Vec3(-normalized_toward_center.z, 0, normalized_toward_center.x);
+            move_step = normalized_tangent.scale(speed);
+        } else {
+            move_step = target.subtract(pos).normalize().scale(speed);
+        }
+
+        if(reversed) {
+            move_step = move_step.reverse();
+        }
         super.move(move_step.x, move_step.y, move_step.z);
     }
 
     public static class Options extends ScalableParticleOptionsBase {
-        float speed = 0.05F;
+        final float speed;
         final Color color;
         final Vec3 target;
         final boolean reverse_motion;
+        final boolean orbit;
 
         protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                     Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
                     Color.CODEC.fieldOf("color").forGetter(Options::getColor),
                     Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
-                    Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed)
+                    Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed),
+                    Codec.BOOL.fieldOf("orbit").forGetter(Options::isOrbiting)
                 ).apply(instance, Options::new)
         );
 
@@ -89,26 +104,24 @@ public class EnergyParticle extends TextureSheetParticle {
         );
 
         public Options(Color color, Vec3 target) {
-            super(0.1F);
-            this.color = color;
-            this.target = target;
-            this.reverse_motion = false;
+            this(0.05F, color, target);
         }
 
         public Options(float speed, Color color, Vec3 target) {
-            super(0.1F);
-            this.speed = speed;
-            this.color = color;
-            this.target = target;
-            this.reverse_motion = false;
+            this(speed, color, target, false);
         }
 
         public Options(float speed, Color color, Vec3 target, boolean reverse) {
+            this(speed, color, target, reverse, false);
+        }
+
+        public Options(float speed, Color color, Vec3 target, boolean reverse, boolean orbit) {
             super(0.1F);
             this.speed = speed;
             this.color = color;
             this.target = target;
             this.reverse_motion = reverse;
+            this.orbit = orbit;
         }
 
         @Override
@@ -129,6 +142,10 @@ public class EnergyParticle extends TextureSheetParticle {
         }
 
         public boolean isReversed() { return this.reverse_motion; }
+
+        private boolean isOrbiting() {
+            return orbit;
+        }
     }
 
     public static class Type extends ParticleType<Options> {
