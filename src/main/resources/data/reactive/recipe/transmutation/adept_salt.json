@@ -4,8 +4,7 @@
     "item": "reactive:motion_salt"
   },
   "product": {
-    "id": "reactive:adept_salt",
-    "count": 2
+    "id": "reactive:adept_salt"
   },
   "reagents": ["reactive:caustic"],
   "min": 800,
