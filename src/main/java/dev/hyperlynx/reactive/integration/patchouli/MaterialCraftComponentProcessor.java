@@ -1,9 +1,10 @@
 package dev.hyperlynx.reactive.integration.patchouli;
 
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
+import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -20,15 +21,17 @@ public class MaterialCraftComponentProcessor implements IComponentProcessor {
 
     @Override
     public void setup(Level level, IVariableProvider variables) {
-        String base_id = variables.get("base", level.registryAccess()).asString();
-        ResourceLocation base_rl = ResourceLocation.parse(base_id);
-        base = BuiltInRegistries.ITEM.get(base_rl).getDefaultInstance();
+        base = variables.get("base", level.registryAccess()).as(ItemStack.class);
 
         String output_material_id = variables.get("output_material", level.registryAccess()).asString();
         ResourceLocation output_material_rl = ResourceLocation.parse(output_material_id);
         if(MaterialMan.occupied(level, output_material_rl)) {
             result = ReactiveItems.MATERIAL.get().getDefaultInstance();
             result.set(ReactiveComponentTypes.MATERIAL_ID.get(), output_material_rl);
+            YieldEntry yield = base.getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+            if(yield != null) {
+                result.setCount(base.getCount() * yield.yield_per_input());
+            }
         }
     }
 

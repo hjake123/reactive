@@ -26,6 +26,12 @@
       "text": "$(mat)If you'd like to make a Material without any fancy properties, try $(item)White Wool$(mat) as a base! Wool absorbs the color from the provided Powers without taking on any unnatural effects."
     },
     {
+      "type": "reactive:material_craft",
+      "base": "reactive:salt_block#64",
+      "output_material": "reactive:example_salt",
+      "text": "$(mat)Also! You can throw $(item)a stack of Salt Blocks in at once$()$(mat) to create more then one Material Block -- the resulting Material is the same as if you'd just added one."
+    },
+    {
       "type": "patchouli:text",
       "text": "$(o)Well, you heard her! Go ahead: make yourself a Material and I'll show you more..."
     }
