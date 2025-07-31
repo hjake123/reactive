@@ -250,6 +250,7 @@ public class ReactiveCommand {
     private static int reloadMaterials(CommandSourceStack source) {
         MaterialMan.data(source.getLevel()).addBuiltIns(source.getLevel());
         MaterialMan.data(source.getLevel()).setDirty();
+        source.sendSuccess(() -> Component.translatable("message.reactive.reloaded_materials"), true);
         return 1;
     }
 

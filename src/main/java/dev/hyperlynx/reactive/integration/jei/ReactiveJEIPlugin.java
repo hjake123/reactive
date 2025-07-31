@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.integration.jei;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
@@ -25,10 +26,13 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -87,6 +91,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
         addReactionFlaskRecipes(registration);
+        addMaterialRecipes(registration);
     }
 
     private void addPowerBottleRecipes(IRecipeRegistration registration){
@@ -212,6 +217,68 @@ public class ReactiveJEIPlugin implements IModPlugin {
                                 Ingredient.of(ReactiveItems.VOLT_CELL.get()))))
         ));
     }
+
+    private void addMaterialRecipes(IRecipeRegistration registration) {
+        ItemStack salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_salt"));
+        salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack adept_salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        adept_salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_adept_salt"));
+        adept_salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack creation_salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        creation_salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_creation_salt"));
+        creation_salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack wool_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        wool_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_wool"));
+        wool_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), List.of(
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.SALT_BLOCK.get()),
+                                salt_material_example,
+                                List.of(Powers.MIND_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.adept_salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.ADEPT_SALT_BLOCK.get()),
+                                adept_salt_material_example,
+                                List.of(Powers.SOUL_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.creation_salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.CREATION_SALT_BLOCK.get()),
+                                creation_salt_material_example,
+                                List.of(Powers.WARP_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.wool"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(Items.WHITE_WOOL),
+                                wool_material_example,
+                                List.of(Powers.X_POWER.get()),
+                                10, 10, false
+                        )
+                )
+        ));
+    }
+
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
