@@ -15,7 +15,7 @@ public class BuiltInMaterialGenerator {
                 BuiltInMaterials.KEY,
                 bootstrap -> {
                     addMaterial(bootstrap, "example_salt", "Example Material", Map.of(
-                            MaterialProperties.MODEL_NAME.get(), MaterialModel.SALT.getSerializedName(),
+                            MaterialProperties.MODEL_NAME.get(), MaterialModel.CIRCLES.getSerializedName(),
                             MaterialProperties.COLOR.get(), new Color(0x7A5BB5)
                     ));
                     addMaterial(bootstrap, "example_adept_salt", "Example Material", Map.of(
@@ -26,9 +26,9 @@ public class BuiltInMaterialGenerator {
                             MaterialProperties.MODEL_NAME.get(), MaterialModel.STATIC.getSerializedName(),
                             MaterialProperties.COLOR.get(), new Color(0x118066)
                     ));
-                    addMaterial(bootstrap, "example_wool", "Example Material", Map.of(
+                    addMaterial(bootstrap, "example_wool", "Example Dyed Wool", Map.of(
                             MaterialProperties.MODEL_NAME.get(), MaterialModel.WOOL.getSerializedName(),
-                            MaterialProperties.COLOR.get(), new Color(0x9800FF)
+                            MaterialProperties.COLOR.get(), new Color(0x7A82C4)
                     ));
                 }
         );

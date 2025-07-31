@@ -3,9 +3,11 @@ package dev.hyperlynx.reactive.alchemy.material;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -64,6 +66,7 @@ public class MaterialMan {
         material.setName(name);
         if(!material.wasDiscovered()) {
             material.setDiscoverer(player);
+            ReactiveCriterionTriggers.DISCOVER_MATERIAL.get().trigger((ServerPlayer) player);
         }
         data(level).setDirty();
     }
@@ -88,6 +91,13 @@ public class MaterialMan {
             new_material_id = ReactiveMod.location("auto" + index);
         }
 
+        addMaterial(level, new_material_id, generateMaterial(formula));
+        ReactiveMod.LOGGER.info("Created new material {}", new_material_id);
+        return new_material_id;
+    }
+
+    /// Just makes a Material without adding it to the world.
+    public static @NotNull Material generateMaterial(@NotNull Formula formula) {
         // Retrieve the base item's yield entry
         YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
         if(yield == null) {
@@ -95,10 +105,7 @@ public class MaterialMan {
         }
 
         // Construct and add the new material
-        Material new_material = new Material(generateProperties(formula.powers(), yield), "", Optional.of(formula.copy()));
-        addMaterial(level, new_material_id, new_material);
-        ReactiveMod.LOGGER.info("Created new material {}", new_material_id);
-        return new_material_id;
+        return new Material(generateProperties(formula.powers(), yield), "", Optional.of(formula.copy()));
     }
 
     private static Map<MaterialProperty<?>, Object> generateProperties(Map<Power, Integer> input_powers, YieldEntry yield_entry) {

@@ -272,7 +272,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
                                 "material_crafting_demo",
                                 Ingredient.of(Items.WHITE_WOOL),
                                 wool_material_example,
-                                List.of(Powers.X_POWER.get()),
+                                List.of(Powers.FLOW_POWER.get()),
                                 10, 10, false
                         )
                 )

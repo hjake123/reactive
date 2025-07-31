@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:lectern"
+  },
+  "product": {
+    "id": "reactive:desk"
+  },
+  "reagents": ["reactive:mind", "reactive:light"],
+  "min": 1200,
+  "cost": 10
+}

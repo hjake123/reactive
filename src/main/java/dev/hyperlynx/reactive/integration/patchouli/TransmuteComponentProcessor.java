@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -25,8 +26,9 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
         recipe = (TransmuteRecipe) manager.byKey(ResourceLocation.parse(recipe_id)).orElseThrow().value();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public IVariable process(Level level, @NotNull String key) {
+    public @Nullable IVariable process(Level level, @NotNull String key) {
         if(recipe != null && key.equals("reactant")){
             return IVariable.from(recipe.getReactant().getItems(), level.registryAccess());
         }
@@ -44,6 +46,6 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
 
             return IVariable.wrap(Component.translatable("docs.reactive.reagent_label").getString() + reagent_list.toString().substring(1, reagent_list.toString().length()-1), level.registryAccess());
         }
-        return IVariable.empty();
+        return null;
     }
 }

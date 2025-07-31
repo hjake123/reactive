@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -30,14 +31,15 @@ public class DissolveComponentProcessor implements IComponentProcessor {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public @NotNull IVariable process(Level level, @NotNull String key) {
+    public @Nullable IVariable process(Level level, @NotNull String key) {
         if(recipe == null) {
             return IVariable.empty();
         }
         if(key.equals("product")){
             return IVariable.from(recipe.getResultItem(level.registryAccess()), level.registryAccess());
         }
-        return IVariable.empty();
+        return null;
     }
 }

@@ -95,4 +95,7 @@ public class ReactiveCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> MAKE_CRUCIBLE = CRITERIA_TRIGGERS.register("make_crucible_criterion",
             FlagTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> DISCOVER_MATERIAL = CRITERIA_TRIGGERS.register("discover_material_criterion",
+            FlagTrigger::new);
 }

@@ -8,5 +8,9 @@
   "show_progress": false,
   "creative_tab": "reactive:reactive_tab",
   "filler_texture": "reactive:textures/gui/page_filler.png",
-  "use_resource_pack": true
+  "use_resource_pack": true,
+  "macros": {
+    "$(mind)": "$(#7A5BB5)",
+    "$(mat)": "$(#118066)"
+  }
 }

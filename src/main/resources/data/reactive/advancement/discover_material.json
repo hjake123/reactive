@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "id": "reactive:desk"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.discover_material"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.discover_material"
+    }
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:discover_material_criterion"
+    }
+  },
+  "parent": "reactive:get_material"
+}
