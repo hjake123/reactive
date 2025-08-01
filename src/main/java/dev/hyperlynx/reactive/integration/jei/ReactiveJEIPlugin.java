@@ -99,7 +99,6 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 .map((power ->  power.hasBottle() ? new PowerBottleRecipe("power_bottles", power) : null)).filter((recipe) -> !(recipe == null)).toList());
     }
 
-    // TODO: this is bad! and slow!
     private void addPowerSourceRecipes(IRecipeRegistration registration){
         Set<Item> excluded = new HashSet<>();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
@@ -193,6 +192,9 @@ public class ReactiveJEIPlugin implements IModPlugin {
         ItemStack result_flask = ReactiveItems.REACTION_FLASK.get().getDefaultInstance();
         result_flask.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), false));
 
+        ItemStack result_flask_charged = result_flask.copy();
+        result_flask_charged.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), true));
+
         registration.addRecipes(RecipeTypes.CRAFTING, List.of(
                 new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_small"),
                         new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
@@ -211,9 +213,9 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
         new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_charge"),
                 new ShapelessRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
-                        result_flask,
+                        result_flask_charged,
                         NonNullList.of(Ingredient.EMPTY,
-                                Ingredient.of(ReactiveItems.REACTION_FLASK.get()),
+                                Ingredient.of(result_flask),
                                 Ingredient.of(ReactiveItems.VOLT_CELL.get()))))
         ));
     }

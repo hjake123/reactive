@@ -4,12 +4,14 @@ import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.entites.ThrownReactionFlask;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.registration.ReactiveEntityTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +40,7 @@ public class ReactionFlaskItem extends Item implements ProjectileItem {
             flask.setItem(stack);
             flask.shootFromRotation(player, player.getXRot(), player.getYRot(), -20.0F, 0.5F, 1.0F);
             level.addFreshEntity(flask);
+            ReactiveCriterionTriggers.THROW_FLASK.get().trigger((ServerPlayer) player);
         }
         stack.consume(1, player);
         return InteractionResultHolder.success(stack);

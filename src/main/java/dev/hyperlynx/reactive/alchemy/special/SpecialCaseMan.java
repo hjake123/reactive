@@ -729,6 +729,9 @@ public class SpecialCaseMan {
         if(thread.getItem().getCount() == 0){
             thread.kill();
         }
+        if(crucible.getLevel() instanceof ServerLevel slevel) {
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.GOLD_THREAD_REACTION.get(), crucible.getBlockPos(), 9);
+        }
     }
 
     private static final int MATERIAL_CRAFT_MIN_POWER = 800;

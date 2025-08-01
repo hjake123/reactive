@@ -264,12 +264,6 @@ public class MaterialBlock extends Block implements EntityBlock {
         return MaterialModel.fromName(material(level, pos).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt")).getSoundType();
     }
 
-    @Override
-    public boolean isStickyBlock(BlockState state) {
-        return super.isStickyBlock(state);
-        // TODO -- can't override normally, so maybe some block state stuff or mixins?
-    }
-
     public static int getBlockColor(@NotNull BlockAndTintGetter getter, BlockPos pos) {
         BlockEntity entity = getter.getBlockEntity(pos);
         if(!(entity instanceof MaterialBlockEntity mbe)) {

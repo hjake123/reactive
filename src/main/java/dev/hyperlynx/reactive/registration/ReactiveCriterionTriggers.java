@@ -98,4 +98,10 @@ public class ReactiveCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> DISCOVER_MATERIAL = CRITERIA_TRIGGERS.register("discover_material_criterion",
             FlagTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> GOLD_THREAD_REACTION = CRITERIA_TRIGGERS.register("see_gold_thread_reaction_criterion",
+            FlagTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> THROW_FLASK = CRITERIA_TRIGGERS.register("throw_flask_criterion",
+            FlagTrigger::new);
 }

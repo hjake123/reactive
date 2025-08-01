@@ -17,7 +17,6 @@ import java.util.List;
 
 @EventBusSubscriber
 public class ReactiveDataMaps {
-    // TODO Advanced data map?
     public static final DataMapType<MaterialProperty<?>, PropertyFormulaRequirements> PROPERTY_FORMULA_MAP = DataMapType.builder(
             ReactiveMod.location("formula_requirements"),
             MaterialProperties.MATERIAL_PROPERTY_REGISTRY_KEY,

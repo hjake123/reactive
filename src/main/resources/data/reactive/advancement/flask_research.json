@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "get_crystal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:inert_crystal"
+            ]
+          }
+        ]
+      }
+    },
+    "get_thread": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:gold_thread"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
