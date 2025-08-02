@@ -3,10 +3,9 @@ package dev.hyperlynx.reactive.alchemy.material;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncPayload;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.*;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -19,14 +18,17 @@ import java.util.*;
 
 public class MaterialData extends SavedData {
     protected final Map<ResourceLocation, Material> materials;
+    private final List<ResourceLocation> datapack_material_ids; // Remove these when reloading materials
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, Material.STREAM_CODEC), MaterialData::materials,
+            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), MaterialData::datapack_material_ids,
             MaterialData::new
     );
 
     public MaterialData(MaterialData data) {
         materials = new HashMap<>(data.materials);
+        datapack_material_ids = new ArrayList<>(data.datapack_material_ids);
     }
 
     public MaterialData addBuiltIns(ServerLevel level) {
@@ -35,22 +37,36 @@ public class MaterialData extends SavedData {
             ReactiveMod.LOGGER.error("No built in material registry was defined, so none will be loaded.");
             return this;
         }
+        ReactiveMod.LOGGER.info("Removing existing datapack materials");
+        for(ResourceLocation existing_builtin_id : datapack_material_ids) {
+            Material stub = Material.empty();
+            stub.setName(Component.translatable("text.reactive.datapack_material_removed").getString());
+            materials.put(existing_builtin_id, stub);
+        }
+        datapack_material_ids.clear();
         for(Map.Entry<ResourceKey<Material>, Material> material_entry : optional_registry.get().entrySet()) {
-            addMaterial(material_entry.getKey().location(), material_entry.getValue());
+            materials.put(material_entry.getKey().location(), material_entry.getValue());
+            datapack_material_ids.add(material_entry.getKey().location());
+            ReactiveMod.LOGGER.info("Adding datapack material {}", material_entry.getKey().location());
         }
         return this;
     }
 
     public static MaterialData empty() {
-        return new MaterialData(new HashMap<>());
+        return new MaterialData(new HashMap<>(), new ArrayList<>());
     }
 
-    public MaterialData(Map<ResourceLocation, Material> materials) {
+    public MaterialData(Map<ResourceLocation, Material> materials, List<ResourceLocation> datapack_material_ids) {
         this.materials = materials;
+        this.datapack_material_ids = datapack_material_ids;
     }
 
     private Map<ResourceLocation, Material> materials() {
         return materials;
+    }
+
+    private List<ResourceLocation> datapack_material_ids() {
+        return datapack_material_ids;
     }
 
     public Material get(ResourceLocation id) {
@@ -71,6 +87,11 @@ public class MaterialData extends SavedData {
             list.add(entry_tag);
         }
         tag.put("materials", list);
+        ListTag datapack_ids = new ListTag();
+        for(ResourceLocation id : datapack_material_ids) {
+            datapack_ids.add(StringTag.valueOf(id.toString()));
+        }
+        tag.put("datapack_material_ids", datapack_ids);
         return tag;
     }
 
@@ -84,7 +105,13 @@ public class MaterialData extends SavedData {
             ResourceLocation id = ResourceLocation.parse(entry_tag.getString("id"));
             materials.put(id, material);
         }
-        return new MaterialData(materials);
+        List<ResourceLocation> datapack_ids = new ArrayList<>();
+        var dpids = full_tag.getList("datapack_material_ids", ListTag.TAG_STRING);
+        for(int i = 0; i < list.size(); i++) {
+            datapack_ids.add(ResourceLocation.parse(dpids.getString(i)));
+        }
+
+        return new MaterialData(materials, datapack_ids);
     }
 
     private static void validate(Material material) {
@@ -100,7 +127,9 @@ public class MaterialData extends SavedData {
     }
 
     public void setToEmpty(ResourceLocation id) {
-        materials.put(id, dev.hyperlynx.reactive.alchemy.material.Material.empty());
+        Material stub = Material.empty();
+        stub.setName(Component.translatable("text.reactive.material_removed").getString());
+        materials.put(id, stub);
         setDirty();
     }
 

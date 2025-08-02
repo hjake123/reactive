@@ -186,6 +186,8 @@
   "text.reactive.jei_material_tooltip": "Any combination of Powers works.",
   "text.reactive.jei_material_tooltip_1": "The output depends on which",
   "text.reactive.jei_material_tooltip_2": "Powers you use!",
+  "text.reactive.datapack_material_removed": "Removed Datapack Material",
+  "text.reactive.material_removed": "Removed Material",
   "message.reactive.reloaded_materials": "Reloaded materials",
   "message.reactive.material_id_invalid": "Invalid material id",
   "ui.reactive.discover_button": "Discover",

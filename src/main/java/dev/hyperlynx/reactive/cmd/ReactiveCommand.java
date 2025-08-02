@@ -43,6 +43,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -189,7 +190,10 @@ public class ReactiveCommand {
     }
 
     private static int printMaterials(CommandSourceStack source) {
-        for(Map.Entry<ResourceLocation, Material> material_entry : MaterialMan.getAll(source.getLevel()).entrySet()) {
+        List<Map.Entry<ResourceLocation, Material>> materials = MaterialMan.getAll(source.getLevel()).entrySet().stream()
+                .sorted(Comparator.comparing(left -> left.getKey().toString()))
+                .toList();
+        for(Map.Entry<ResourceLocation, Material> material_entry : materials) {
             source.sendSuccess(() -> Component.literal(material_entry.getKey().toString() + " - " + material_entry.getValue().getNameComponent().getString()), true);
         }
         return 1;

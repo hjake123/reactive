@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 
 @EventBusSubscriber
 public class BuiltInMaterials {
-    public static final ResourceKey<Registry<Material>> KEY = ResourceKey.createRegistryKey(ReactiveMod.location("built_in_materials"));
+    public static final ResourceKey<Registry<Material>> KEY = ResourceKey.createRegistryKey(ReactiveMod.location("materials"));
 
     @SubscribeEvent
     public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

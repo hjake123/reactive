@@ -16,7 +16,9 @@ public class Color {
     public int hex;
 
     public static final Codec<Color> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-            Codec.INT.fieldOf("color").forGetter(Color::hex))
+            Codec.INT.fieldOf("red").forGetter(Color::red),
+            Codec.INT.fieldOf("green").forGetter(Color::green),
+            Codec.INT.fieldOf("blue").forGetter(Color::blue))
             .apply(instance, Color::new)
     );
 
@@ -25,11 +27,18 @@ public class Color {
             Color::new
     );
 
-    public Color(int color){
+    public Color(int color) {
         hex = color;
         red = (((color >> 16) & 0xFF));
         green = (((color >> 8) & 0xFF));
         blue = ((color & 0xFF));
+    }
+
+    public Color(int red, int green, int blue) {
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        updateHexFromRGB();
     }
 
     public static Color black() {
@@ -40,9 +49,10 @@ public class Color {
         return new Color(0xFFFFFF);
     }
 
-    public int hex(){
-        return hex;
-    }
+    public int hex() { return hex; }
+    private int red() { return red; }
+    private int green() { return green; }
+    private int blue() { return blue; }
 
     public void reset(){
         red = 0;
