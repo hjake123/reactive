@@ -1,7 +1,7 @@
 {
   "name": "Star Dust",
   "icon": "reactive:stardust",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:make_crucible",
   "pages": [
     {

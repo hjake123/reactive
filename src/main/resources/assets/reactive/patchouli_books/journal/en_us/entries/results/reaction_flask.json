@@ -1,7 +1,7 @@
 {
   "name": "Reaction Flasks",
   "icon": "reactive:reaction_flask",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:flask_research",
   "turnin": "reactive:throw_flask",
   "pages": [

@@ -1,7 +1,7 @@
 {
   "name": "Gold Foam",
   "icon": "reactive:gold_foam",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:see_synthesis",
   "pages": [
     {

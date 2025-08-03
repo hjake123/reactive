@@ -1,7 +1,7 @@
 {
   "name": "Portal Crystallization",
   "icon": "reactive:solid_portal",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:portal_freeze",
   "pages": [
     {

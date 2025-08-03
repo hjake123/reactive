@@ -1,7 +1,7 @@
 {
   "name": "Rending Plinth",
   "icon": "reactive:rending_plinth",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:get_rending_plinth",
   "pages": [
     {

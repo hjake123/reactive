@@ -1,7 +1,7 @@
 {
   "name": "Staff of Power",
   "icon": "reactive:incomplete_staff",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:see_synthesis",
   "pages": [
     {

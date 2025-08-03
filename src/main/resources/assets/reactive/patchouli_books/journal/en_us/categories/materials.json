@@ -1,6 +1,6 @@
 {
   "name": "Material Synthesis",
-  "description": "Entries related to the various materials made using salt",
+  "description": "$(mat)Entries related to the various materials made using salt",
   "icon": "reactive:desk",
   "sortnum": 4
 }
