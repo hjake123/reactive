@@ -83,7 +83,7 @@ public class MaterialMan {
 
         // Decide on the identifier for the new material.
         // Since they're being made automatically, call it "auto:#".
-        int index = data(level).materials.size();
+        int index = data(level).materials.size() - data(level).datapackIdCount();
         ResourceLocation new_material_id = ResourceLocation.fromNamespaceAndPath("auto", "" + index);
         while(occupied(level, new_material_id)) {
             // Ideally the above index will never already be taken, but in case it is for some reason we need to increment.

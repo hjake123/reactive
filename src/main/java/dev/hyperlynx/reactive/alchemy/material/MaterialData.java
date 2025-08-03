@@ -1,5 +1,9 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.net.MaterialDataSyncPayload;
 import net.minecraft.core.HolderLookup;
@@ -14,17 +18,41 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MaterialData extends SavedData {
     protected final Map<ResourceLocation, Material> materials;
     private final List<ResourceLocation> datapack_material_ids; // Remove these when reloading materials
+
+    /// Bump this when there's a change in the material data format that would cause issues if not dealt with.
+    public static final int CURRENT_VERSION = 1;
+    /*
+    Version history:
+    1 - Initial version.
+     */
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, Material.STREAM_CODEC), MaterialData::materials,
             ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), MaterialData::datapack_material_ids,
             MaterialData::new
     );
+
+    private static final Codec<MaterialData> CODEC_V1 = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.unboundedMap(ResourceLocation.CODEC, Material.CODEC).fieldOf("materials").forGetter(MaterialData::materials),
+            Codec.list(ResourceLocation.CODEC).fieldOf("datapack_material_ids").orElse(List.of()).forGetter(MaterialData::datapack_material_ids)
+    ).apply(instance, MaterialData::new));
+
+    public static final Map<Integer, Codec<MaterialData>> CODECS_BY_VERSION = Map.of(
+            1, CODEC_V1
+    );
+
+    public MaterialData(Map<ResourceLocation, Material> materials, List<ResourceLocation> datapack_material_ids) {
+        this.materials = new HashMap<>(materials);
+        this.datapack_material_ids = new ArrayList<>(datapack_material_ids);
+    }
 
     public MaterialData(MaterialData data) {
         materials = new HashMap<>(data.materials);
@@ -56,11 +84,6 @@ public class MaterialData extends SavedData {
         return new MaterialData(new HashMap<>(), new ArrayList<>());
     }
 
-    public MaterialData(Map<ResourceLocation, Material> materials, List<ResourceLocation> datapack_material_ids) {
-        this.materials = materials;
-        this.datapack_material_ids = datapack_material_ids;
-    }
-
     private Map<ResourceLocation, Material> materials() {
         return materials;
     }
@@ -73,52 +96,36 @@ public class MaterialData extends SavedData {
         if (materials.containsKey(id)) {
             return materials.get(id);
         }
-        ReactiveMod.LOGGER.error("Invalid material identifier {}", id);
         return Material.empty();
     }
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        ListTag list = new ListTag();
-        for (Map.Entry<ResourceLocation, Material> material_entry : materials.entrySet()) {
-            CompoundTag entry_tag = new CompoundTag();
-            entry_tag.putString("id", material_entry.getKey().toString());
-            entry_tag.put("material", Material.CODEC.encode(material_entry.getValue(), NbtOps.INSTANCE, null).getOrThrow(error -> new RuntimeException("Failed to save material type: " + error)));
-            list.add(entry_tag);
-        }
-        tag.put("materials", list);
-        ListTag datapack_ids = new ListTag();
-        for(ResourceLocation id : datapack_material_ids) {
-            datapack_ids.add(StringTag.valueOf(id.toString()));
-        }
-        tag.put("datapack_material_ids", datapack_ids);
-        return tag;
+        DataResult<Tag> data = CODEC_V1.encode(this, NbtOps.INSTANCE, tag);
+        CompoundTag saved_tag = (CompoundTag) data.getOrThrow();
+        saved_tag.put("version", IntTag.valueOf(CURRENT_VERSION));
+        return saved_tag;
     }
 
-    public static MaterialData load(CompoundTag full_tag, HolderLookup.Provider ignored) {
-        var list = full_tag.getList("materials", ListTag.TAG_COMPOUND);
-        Map<ResourceLocation, Material> materials = new HashMap<>();
-        for (int i = 0; i < list.size(); i++) {
-            CompoundTag entry_tag = list.getCompound(i);
-            Material material = Material.CODEC.decode(NbtOps.INSTANCE, entry_tag.getCompound("material")).getOrThrow().getFirst();
-            validate(material);
-            ResourceLocation id = ResourceLocation.parse(entry_tag.getString("id"));
-            materials.put(id, material);
+    public static MaterialData load(CompoundTag tag, HolderLookup.Provider ignoredprovider) {
+        int version = 0;
+        if(tag.contains("version", Tag.TAG_INT)) {
+            version = tag.getInt("version");
         }
-        List<ResourceLocation> datapack_ids = new ArrayList<>();
-        var dpids = full_tag.getList("datapack_material_ids", ListTag.TAG_STRING);
-        for(int i = 0; i < list.size(); i++) {
-            datapack_ids.add(ResourceLocation.parse(dpids.getString(i)));
+        if(version != CURRENT_VERSION) {
+            ReactiveMod.LOGGER.info("Attempting to load material data with mismatched version {} (current is {})", version, CURRENT_VERSION);
+            if(!CODECS_BY_VERSION.containsKey(version)) {
+                ReactiveMod.LOGGER.error("No codec for this version was found, attempting load with most recent codec.");
+            }
         }
+        Codec<MaterialData> codec = CODECS_BY_VERSION.getOrDefault(version, CODEC_V1);
 
-        return new MaterialData(materials, datapack_ids);
-    }
-
-    private static void validate(Material material) {
-        if(!material.has(MaterialProperties.MODEL_NAME.get()) || !MaterialModel.isNameValid(material.get(MaterialProperties.MODEL_NAME.get()))) {
-            ReactiveMod.LOGGER.error("Material has an invalid or missing model name {}", material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "<null>"));
-            material.set(MaterialProperties.MODEL_NAME.get(), "salt");
+        DataResult<Pair<MaterialData, Tag>> result = codec.decode(NbtOps.INSTANCE, tag);
+        if(result.isError()) {
+            ReactiveMod.LOGGER.fatal("Failed to load material data. Materials will be lost!");
+            return null;
         }
+        return result.getOrThrow().getFirst();
     }
 
     public void addMaterial(ResourceLocation id, Material material) {
@@ -144,4 +151,8 @@ public class MaterialData extends SavedData {
         PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(new MaterialData(this)));
     }
 
+
+    public int datapackIdCount() {
+        return datapack_material_ids.size();
+    }
 }

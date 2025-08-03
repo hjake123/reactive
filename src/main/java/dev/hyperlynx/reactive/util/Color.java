@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.util;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -15,11 +16,21 @@ public class Color {
     public int blue;
     public int hex;
 
-    public static final Codec<Color> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+    public static final Codec<Color> RGB_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             Codec.INT.fieldOf("red").forGetter(Color::red),
             Codec.INT.fieldOf("green").forGetter(Color::green),
             Codec.INT.fieldOf("blue").forGetter(Color::blue))
             .apply(instance, Color::new)
+    );
+
+    public static final Codec<Color> HEX_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                    Codec.INT.fieldOf("color").forGetter(Color::hex))
+            .apply(instance, Color::new)
+    );
+
+    public static final Codec<Color> CODEC = Codec.either(RGB_CODEC, HEX_CODEC).xmap(
+            either -> either.left().orElseGet(() -> either.right().orElseThrow()),
+            Either::left
     );
 
     public static final StreamCodec<ByteBuf, Color> STREAM_CODEC = StreamCodec.composite(
