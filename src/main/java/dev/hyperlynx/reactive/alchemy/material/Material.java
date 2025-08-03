@@ -42,7 +42,7 @@ public class Material {
     public static final Codec<Material> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
-                    Codec.STRING.fieldOf("name").forGetter(Material::customNameRaw),
+                    Codec.STRING.fieldOf("name").orElse("").forGetter(Material::customNameRaw),
                     Formula.CODEC.optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
                     Discoverer.CODEC.optionalFieldOf("discoverer").forGetter(Material::discoverer),
                     Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
