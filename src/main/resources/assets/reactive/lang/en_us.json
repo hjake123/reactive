@@ -158,6 +158,7 @@
   "commands.reactive.no_player": "This command can only be run by a player",
   "commands.reactive.no_crucible": "There's no crucible at that location",
   "commands.reactive.fake_power": "Invalid power",
+  "commands.reactive.material_header": "Materials",
   "text.reactive.litmus_instructions": "Right click to read",
   "text.reactive.litmus_instructions_1": "Right click to read Powers",
   "text.reactive.litmus_instructions_2": "Shift right click to read Reaction Statuses",

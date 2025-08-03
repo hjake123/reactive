@@ -190,6 +190,7 @@ public class ReactiveCommand {
     }
 
     private static int printMaterials(CommandSourceStack source) {
+        source.sendSuccess(() -> Component.translatable("commands.reactive.material_header"), true);
         List<Map.Entry<ResourceLocation, Material>> materials = MaterialMan.getAll(source.getLevel()).entrySet().stream()
                 .sorted(Comparator.comparing(left -> left.getKey().toString()))
                 .toList();
