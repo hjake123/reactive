@@ -4,6 +4,7 @@
   "category": "reactive:materials",
   "advancement": "reactive:get_salt",
   "turnin": "reactive:get_material",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",

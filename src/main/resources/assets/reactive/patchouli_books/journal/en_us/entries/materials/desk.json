@@ -4,6 +4,7 @@
   "category": "reactive:materials",
   "advancement": "reactive:get_material",
   "turnin": "reactive:discover_material",
+  "priority": true,
   "pages": [
     {
       "type": "patchouli:text",
