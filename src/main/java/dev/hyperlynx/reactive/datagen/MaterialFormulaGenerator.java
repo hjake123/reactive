@@ -304,7 +304,7 @@ public class MaterialFormulaGenerator extends DataMapProvider {
         //noinspection deprecation
         builder(ReactiveDataMaps.MATERIAL_SALT_YIELDS)
                 .add(ReactiveItems.SALT_BLOCK, new YieldEntry(64, 1, "salt", 1.0F), false)
-                .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(16, 4, "squares", 1.33F), false)
+                .add(ReactiveItems.ADEPT_SALT_BLOCK, new YieldEntry(32, 4, "squares", 1.33F), false)
                 .add(ReactiveItems.CREATION_SALT_BLOCK, new YieldEntry(16, 16, "static", 2.0F), false)
                 .add(Items.WHITE_WOOL.builtInRegistryHolder(), new YieldEntry(64, 1, "wool", 0.0F), false)
         ;
