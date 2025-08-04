@@ -1,0 +1,12 @@
+{
+  "name": "Property: Fire Source",
+  "icon": "minecraft:netherrack",
+  "category": "reactive:materials",
+  "advancement": "reactive:get_material",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(mat)Materials with the Fire Source property are able to sustain a flame on their surface forever, similar to $(item)Netherrack$(mind)."
+    }
+  ]
+}

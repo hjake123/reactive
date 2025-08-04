@@ -1,0 +1,12 @@
+{
+  "name": "Property: Warping",
+  "icon": "minecraft:ender_pearl",
+  "category": "reactive:materials",
+  "advancement": "reactive:get_material",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(mat)Warping materials will occasionally teleport to an adjacent open space, leaving empty air where they came from."
+    }
+  ]
+}
