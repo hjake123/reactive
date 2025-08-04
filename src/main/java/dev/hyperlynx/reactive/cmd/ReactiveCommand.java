@@ -8,10 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.material.Material;
-import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
+import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.net.MaterialRenameScreenPayload;
 import dev.hyperlynx.reactive.registration.ReactiveCommandArguments;
 import dev.hyperlynx.reactive.alchemy.Power;
@@ -21,6 +18,7 @@ import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.registration.ReactiveItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -34,6 +32,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -247,7 +246,13 @@ public class ReactiveCommand {
         context.getSource().sendSuccess(material::getNameComponent, true);
         context.getSource().sendSuccess(material::formulaComponent, true);
         for(MaterialProperty<?> property : material.properties().keySet()) {
-            context.getSource().sendSuccess(() -> Component.literal(String.valueOf(MaterialProperties.PROPERTY_REGISTRY.getKey(property))), true);
+            ResourceLocation property_id = MaterialProperties.PROPERTY_REGISTRY.getKey(property);
+            assert property_id != null;
+            if(material.get(property) instanceof Unit) {
+                context.getSource().sendSuccess(() -> Component.translatable(property_id.toLanguageKey("material_property")).withStyle(ChatFormatting.GRAY), true);
+            } else {
+                context.getSource().sendSuccess(() -> Component.translatable(property_id.toLanguageKey("material_property")).append(": ").append(material.get(property).toString()).withStyle(ChatFormatting.GRAY), true);
+            }
         }
         return 1;
     }

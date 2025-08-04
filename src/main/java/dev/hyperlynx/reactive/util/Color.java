@@ -112,4 +112,9 @@ public class Color {
         blue = (int) (base_color.blue * (1 - tint_alpha) + blue * (tint_alpha));
         updateHexFromRGB();
     }
+
+    @Override
+    public String toString() {
+        return String.format("%02x", hex());
+    }
 }

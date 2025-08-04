@@ -1,5 +1,5 @@
 {
-  "name": "Break Strength",
+  "name": "Hardness",
   "icon": "minecraft:iron_pickaxe",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",
