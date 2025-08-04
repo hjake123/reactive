@@ -1,5 +1,5 @@
 {
-  "name": "Property: Semitangible",
+  "name": "Semitangible",
   "icon": "minecraft:glass",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",

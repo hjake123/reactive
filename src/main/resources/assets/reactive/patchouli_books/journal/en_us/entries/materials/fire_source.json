@@ -1,5 +1,5 @@
 {
-  "name": "Property: Fire Source",
+  "name": "Fire Source",
   "icon": "minecraft:netherrack",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",

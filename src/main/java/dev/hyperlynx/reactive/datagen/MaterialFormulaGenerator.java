@@ -280,12 +280,6 @@ public class MaterialFormulaGenerator extends DataMapProvider {
                                 "cracked",
                                 Powers.BLAZE_POWER.getId(),
                                 20,
-                                Optional.of(1250)
-                        ),
-                        new RangeStringFormulaOutcome(
-                                "smooth",
-                                Powers.BLAZE_POWER.getId(),
-                                1250,
                                 Optional.empty()
                         ),
                         new DefaultStringFormulaOutcome(

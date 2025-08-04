@@ -1,12 +1,12 @@
 {
-  "name": "Property: Magma Step",
+  "name": "Magma Step",
   "icon": "minecraft:magma_block",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(mat)Stepping on a material with this Property causes any living thing to get burned, similar to standing on a $(item)Magma Block$(mind). By holding $(k:sneak) one may avoid the hottest parts and not take damage."
+      "text": "$(mat)Stepping on a material with this Property causes any living thing to get burned, similar to standing on a $(item)Magma Block$(mat). By holding $(k:sneak) one may avoid the hottest parts and not take damage."
     }
   ]
 }

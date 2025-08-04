@@ -1,5 +1,5 @@
 {
-  "name": "Property: Intangible",
+  "name": "Intangible",
   "icon": "reactive:pure_quartz_block",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",

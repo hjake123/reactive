@@ -1,5 +1,5 @@
 {
-  "name": "Property: Warping",
+  "name": "Warping",
   "icon": "minecraft:ender_pearl",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",

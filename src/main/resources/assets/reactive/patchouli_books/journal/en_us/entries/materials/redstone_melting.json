@@ -1,5 +1,5 @@
 {
-  "name": "Property: Redstone Melting",
+  "name": "Redstone Melting",
   "icon": "minecraft:redstone_block",
   "category": "reactive:materials",
   "advancement": "reactive:get_material",

@@ -1,5 +1,5 @@
 {
-  "name": "Adept Salts",
+  "name": "Base: Adept Salts",
   "icon": "reactive:adept_salt_block",
   "category": "reactive:materials",
   "advancement": "reactive:get_motion_salts",

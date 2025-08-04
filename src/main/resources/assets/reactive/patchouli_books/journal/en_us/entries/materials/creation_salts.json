@@ -1,5 +1,5 @@
 {
-  "name": "Creation Salts",
+  "name": "Base: Creation Salts",
   "icon": "reactive:creation_salt_block",
   "category": "reactive:materials",
   "advancement": "reactive:see_astral_synthesis",
