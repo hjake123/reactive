@@ -3,6 +3,7 @@
   "icon": "reactive:gold_foam",
   "category": "reactive:results",
   "advancement": "reactive:see_synthesis",
+  "turnin": "reactive:get_thread",
   "pages": [
     {
       "type": "patchouli:spotlight",

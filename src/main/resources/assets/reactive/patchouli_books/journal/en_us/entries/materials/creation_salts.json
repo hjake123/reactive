@@ -2,12 +2,17 @@
   "name": "Base: Creation Salts",
   "icon": "reactive:creation_salt_block",
   "category": "reactive:materials",
-  "advancement": "reactive:see_astral_synthesis",
+  "advancement": "reactive:creation_salt_research",
   "pages": [
     {
       "type": "patchouli:spotlight",
       "item": "reactive:creation_salt_block",
       "text": "$(mind)There exists a base for materials that far outshines any other. The remnant material from setting Astral against the universal corrupter, Curse: $(item)Creation Salts$(0)$(mind). It will appear about a quarter of the time. Watch as aspects of reality flash on its surface, then fade away..."
+    },
+    {
+      "type": "reactive:transmute",
+      "recipe": "creation_salt",
+      "text": "$(mind)It can also be created as an item with a simple transmutation."
     },
     {
       "type": "reactive:material_craft",

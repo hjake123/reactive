@@ -2,7 +2,7 @@
   "name": "Light Emission",
   "icon": "minecraft:glowstone",
   "category": "reactive:materials",
-  "advancement": "reactive:get_material",
+  "advancement": "reactive:discover_material",
   "pages": [
     {
       "type": "patchouli:text",

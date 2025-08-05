@@ -2,7 +2,7 @@
   "name": "Self Defense",
   "icon": "reactive:acid_bucket",
   "category": "reactive:materials",
-  "advancement": "reactive:get_material",
+  "advancement": "reactive:discover_material",
   "pages": [
     {
       "type": "patchouli:text",

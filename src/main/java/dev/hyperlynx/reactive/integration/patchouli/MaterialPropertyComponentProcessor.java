@@ -32,7 +32,11 @@ public class MaterialPropertyComponentProcessor implements IComponentProcessor {
     public @Nullable IVariable process(Level level, String key) {
         if(key.equals("formula")){
             var property = property();
-            List<PropertyFormulaRequirements.Part> requirements = Objects.requireNonNull(property.getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP)).requirements();
+            var data = property.getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP);
+            if(data == null) {
+                return null;
+            }
+            List<PropertyFormulaRequirements.Part> requirements = data.requirements();
             StringBuilder formula = new StringBuilder();
             if(!requirements.isEmpty()) {
                 formula.append(Component.translatable("docs.reactive.formula_label").getString());

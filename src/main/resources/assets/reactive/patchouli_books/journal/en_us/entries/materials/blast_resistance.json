@@ -2,7 +2,7 @@
   "name": "Blast Resistance",
   "icon": "minecraft:obsidian",
   "category": "reactive:materials",
-  "advancement": "reactive:get_material",
+  "advancement": "reactive:discover_material",
   "pages": [
     {
       "type": "patchouli:text",

@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.net;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.registration.ReactiveBlocks;
@@ -28,14 +29,6 @@ public record MaterialBESyncPayload(ResourceLocation material_id, BlockPos pos) 
     }
 
     public void handle(IPayloadContext context) {
-        if(!(context.player().level() instanceof ClientLevel clevel)) {
-            return;
-        }
-        if(!(clevel.getBlockState(pos).getBlock() instanceof MaterialBlock)) {
-            clevel.setBlock(pos, ReactiveBlocks.MATERIAL_BLOCK.get().defaultBlockState(), Block.UPDATE_NONE);
-        }
-        if(clevel.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
-            mbe.setMaterial(clevel, material_id);
-        }
+        ClientMaterialMan.handleMaterialBESync(context, material_id, pos);
     }
 }

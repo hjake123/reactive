@@ -2,7 +2,7 @@
   "name": "Semitangible",
   "icon": "minecraft:glass",
   "category": "reactive:materials",
-  "advancement": "reactive:get_material",
+  "advancement": "reactive:discover_material",
   "pages": [
     {
       "type": "patchouli:text",

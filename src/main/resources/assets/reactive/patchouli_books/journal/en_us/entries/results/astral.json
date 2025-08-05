@@ -4,7 +4,6 @@
   "category": "reactive:results",
   "advancement": "reactive:see_astral_synthesis",
   "turnin": "reactive:reactions/astral_curse_annihilation",
-  "secret": true,
   "pages": [
     {
       "type": "patchouli:text",

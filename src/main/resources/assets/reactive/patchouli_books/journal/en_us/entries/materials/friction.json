@@ -2,7 +2,7 @@
   "name": "Movement Speed Up",
   "icon": "reactive:gold_foam",
   "category": "reactive:materials",
-  "advancement": "reactive:get_material",
+  "advancement": "reactive:discover_material",
   "pages": [
     {
       "type": "patchouli:text",

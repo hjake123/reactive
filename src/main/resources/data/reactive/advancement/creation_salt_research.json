@@ -1,0 +1,14 @@
+{
+  "criteria": {
+    "astral": {
+      "conditions": {
+        "reaction_alias": "astral"
+      },
+      "trigger": "reactive:reaction"
+    },
+    "criterion": {
+      "trigger": "reactive:discover_material_criterion"
+    }
+  },
+  "parent": "reactive:activate_eye"
+}

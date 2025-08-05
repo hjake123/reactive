@@ -9,6 +9,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -27,6 +29,7 @@ meant to be unique per instance. This also prevents drawing from the randomizer 
 
 When called outside a world (by the data generator) it uses a seed of 0.
 */
+@EventBusSubscriber
 public class WorldSpecificValue {
     public static long alchemy_seed = 0;
     private static long getSeed(){
@@ -76,6 +79,7 @@ public class WorldSpecificValue {
     }
 
     // Sets the seed in the config to your world seed if that option is selected.
+    @SubscribeEvent
     public static void worldLoad(LevelEvent.Load event){
         if(!event.getLevel().isClientSide()){
             alchemy_seed = Objects.requireNonNull(Objects.requireNonNull(event.getLevel().getServer()).getLevel(Level.OVERWORLD)).getSeed();

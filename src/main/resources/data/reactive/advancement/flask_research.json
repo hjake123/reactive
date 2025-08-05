@@ -23,6 +23,9 @@
           }
         ]
       }
+    },
+    "see_synthesis": {
+      "trigger": "reactive:see_gold_thread_reaction_criterion"
     }
   }
 }

@@ -1,0 +1,20 @@
+{
+  "criteria": {
+    "motion_salts": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:motion_salt"
+            ]
+          }
+        ]
+      }
+    },
+    "criterion": {
+      "trigger": "reactive:discover_material_criterion"
+    }
+  },
+  "parent": "reactive:see_synthesis"
+}
