@@ -1,0 +1,9 @@
+{
+  "type": "reactive:dissolve",
+  "reactant": {
+    "item": "reactive:creation_salt"
+  },
+  "product": {
+    "id": "reactive:creation_salt"
+  }
+}

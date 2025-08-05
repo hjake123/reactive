@@ -188,13 +188,13 @@ public class ReactiveItems {
 
     public static final DeferredHolder<Item, BlockItem> NODULE = ITEMS.registerSimpleBlockItem(ReactiveBlocks.NODULE);
 
+    public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+            new PhantomQuiltItem(new Item.Properties()));
+
     public static final DeferredHolder<Item, MaterialItem> MATERIAL = ITEMS.register("material",
             () -> new MaterialItem(ReactiveBlocks.MATERIAL_BLOCK.get(), new Item.Properties()));
 
     public static final DeferredHolder<Item, BlockItem> DESK = ITEMS.registerSimpleBlockItem(ReactiveBlocks.DESK);
-
-    public static final DeferredHolder<Item, PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
-            new PhantomQuiltItem(new Item.Properties()));
 
     public static final DeferredHolder<Item, Item> ADEPT_SALT = ITEMS.register("adept_salt", () ->
             new Item(new Item.Properties()));
