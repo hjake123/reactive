@@ -243,11 +243,22 @@ public class ReactiveCommand {
             return 0;
         }
         Material material = MaterialMan.fetch(level, material_id);
+        if(material == null) {
+            ReactiveMod.LOGGER.error("Material {} was unexpectedly null when printing", material_id);
+            return 0;
+        }
         context.getSource().sendSuccess(material::getNameComponent, true);
-        context.getSource().sendSuccess(material::formulaComponent, true);
+        try {
+            context.getSource().sendSuccess(material::formulaComponent, true);
+        } catch (Exception e) {
+            ReactiveMod.LOGGER.error("Caught an exception while creating formula component for [{}]: {}", material_id, e);
+        }
         for(MaterialProperty<?> property : material.properties().keySet()) {
             ResourceLocation property_id = MaterialProperties.PROPERTY_REGISTRY.getKey(property);
-            assert property_id != null;
+            if(property_id == null) {
+                ReactiveMod.LOGGER.error("Invalid property couldn't be printed");
+                continue;
+            }
             if(material.get(property) instanceof Unit) {
                 context.getSource().sendSuccess(() -> Component.translatable(property_id.toLanguageKey("material_property")).withStyle(ChatFormatting.GRAY), true);
             } else {

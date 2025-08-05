@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
@@ -21,6 +22,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -215,8 +217,11 @@ public class Material {
     }
 
     public MutableComponent formulaComponent() {
-        MutableComponent readout_message = Component.empty();
-        Formula original_formula = this.getOriginalFormula().orElse(new Formula(Map.of(), BuiltInRegistries.ITEM.wrapAsHolder(Items.AIR)));
+        var possible_formula = this.getOriginalFormula();
+        if(possible_formula.isEmpty()) {
+            return Component.translatable("ui.reactive.no_formula");
+        }
+        Formula original_formula = possible_formula.get();
         Map<Power, Integer> original_powers = original_formula.powers();
         if(original_powers.isEmpty()) {
             return Component.translatable("ui.reactive.no_formula");
@@ -227,6 +232,7 @@ public class Material {
             formula_lines.add(Component.literal(power.getName() + ": " + Math.round(original_powers.get(power) / 16.0) + "%")
                     .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex() : 0xFFFFFF));
         }
+        MutableComponent readout_message = Component.empty();
         for(int i = 0; i < formula_lines.size(); i++) {
             readout_message.append(formula_lines.get(i));
             if(i < formula_lines.size() - 1) {
@@ -238,6 +244,9 @@ public class Material {
 
     private static boolean shouldColorizeAgainstBlack(Color color) {
         int threshold = 90;
+        if(FMLEnvironment.dist.isDedicatedServer()) {
+            return false;
+        }
         return ConfigMan.CLIENT.colorizeLitmusOutput.get() && (color.red > threshold || color.green > threshold || color.blue > threshold);
     }
 }

@@ -34,7 +34,7 @@ public class MaterialPropertyComponentProcessor implements IComponentProcessor {
             var property = property();
             var data = property.getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP);
             if(data == null) {
-                return null;
+                return IVariable.wrap("$(4)No formula data map could be loaded.", level.registryAccess());
             }
             List<PropertyFormulaRequirements.Part> requirements = data.requirements();
             StringBuilder formula = new StringBuilder();

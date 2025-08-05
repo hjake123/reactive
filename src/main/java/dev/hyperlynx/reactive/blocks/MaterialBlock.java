@@ -86,6 +86,9 @@ public class MaterialBlock extends Block implements EntityBlock {
             ResourceLocation material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
+                if(level instanceof ServerLevel slevel) {
+                    PacketDistributor.sendToPlayersTrackingChunk(slevel, new ChunkPos(pos), new MaterialBESyncPayload(mbe.getMaterialId(), pos));
+                }
             }
             to_place_state = setModelByMaterialId(level, to_place_state, material_id);
             to_place_state = setRandomTicking(level, to_place_state, material_id);
