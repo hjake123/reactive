@@ -21,18 +21,27 @@ public class ReactiveDataMaps {
             ReactiveMod.location("formula_requirements"),
             MaterialProperties.MATERIAL_PROPERTY_REGISTRY_KEY,
             PropertyFormulaRequirements.CODEC
+    ).synced(
+            PropertyFormulaRequirements.CODEC,
+            false
     ).build();
 
     public static final DataMapType<MaterialProperty<?>, List<FormulaOutcome>> FORMULA_OUTCOME_MAP = DataMapType.builder(
             ReactiveMod.location("formula_outcomes"),
             MaterialProperties.MATERIAL_PROPERTY_REGISTRY_KEY,
             FormulaOutcome.CODEC.listOf()
+    ).synced(
+            FormulaOutcome.CODEC.listOf(),
+            false
     ).build();
 
     public static final DataMapType<Item, YieldEntry> MATERIAL_SALT_YIELDS = DataMapType.builder(
             ReactiveMod.location("material_bases"),
             Registries.ITEM,
             YieldEntry.CODEC
+    ).synced(
+            YieldEntry.CODEC,
+            false
     ).build();
 
     @SubscribeEvent
