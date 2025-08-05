@@ -4,7 +4,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class AcidBubbleParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
@@ -31,22 +30,16 @@ public class AcidBubbleParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class AcidBubbleParticleProvider implements ParticleProvider<SimpleParticleType> {
-        private final SpriteSet sprite;
+    public record AcidBubbleParticleProvider(SpriteSet sprite) implements ParticleProvider<SimpleParticleType> {
 
-        public AcidBubbleParticleProvider(SpriteSet pSprites) {
-            this.sprite = pSprites;
+            @Override
+            public Particle createParticle(@NotNull SimpleParticleType pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+                var particle = new AcidBubbleParticle(pLevel, pX, pY, pZ, 0d, 0d, 0d, this.sprite);
+                particle.setColor(1f, 1f, 1f);
+                particle.setParticleSpeed(0, 0, 0);
+                particle.setLifetime(10);
+                particle.setSize(0.6F, 0.6F);
+                return particle;
+            }
         }
-
-        @Nullable
-        @Override
-        public Particle createParticle(@NotNull SimpleParticleType pType, @NotNull ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            var particle = new AcidBubbleParticle(pLevel, pX, pY, pZ, 0d, 0d, 0d, this.sprite);
-            particle.setColor(1f, 1f, 1f);
-            particle.setParticleSpeed(0, 0, 0);
-            particle.setLifetime(10);
-            particle.setSize(0.6F, 0.6F);
-            return particle;
-        }
-    }
 }
