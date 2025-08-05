@@ -92,6 +92,7 @@ public class HoverQuilt extends VehicleEntity {
         if(this.level().isClientSide()) {
             animation_timer++;
             if(this.isVehicle() && this.isControlledByLocalInstance()) {
+                // We're riding it.
                 LivingEntity riding_entity = this.getControllingPassenger();
                 if(riding_entity instanceof LocalPlayer rider) {
                     float velocity = 0.0F;
@@ -104,7 +105,11 @@ public class HoverQuilt extends VehicleEntity {
                     PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
                 }
                 client_position_lock = false;
-            } else {
+            } else if(this.isVehicle()) {
+                // Someone else is riding it, so we need to turn the lock off.
+                client_position_lock = false;
+            }else {
+                // No one is riding it, so it should not move.
                 client_position_lock = true;
             }
         } else if(!this.isVehicle()) {
