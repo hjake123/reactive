@@ -2,16 +2,11 @@ package dev.hyperlynx.reactive.net;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
-import dev.hyperlynx.reactive.be.MaterialBlockEntity;
-import dev.hyperlynx.reactive.blocks.MaterialBlock;
-import dev.hyperlynx.reactive.registration.ReactiveBlocks;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record MaterialBESyncPayload(ResourceLocation material_id, BlockPos pos) implements CustomPacketPayload {

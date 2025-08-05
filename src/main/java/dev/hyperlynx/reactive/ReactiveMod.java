@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive;
 
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcomeTypes;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;

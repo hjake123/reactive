@@ -91,6 +91,8 @@ public class HoverQuilt extends VehicleEntity {
         super.tick();
         if(this.level().isClientSide()) {
             animation_timer++;
+            // Someone else is riding it, so we need to turn the lock off.
+            // No one is riding it, so it should not move.
             if(this.isVehicle() && this.isControlledByLocalInstance()) {
                 // We're riding it.
                 LivingEntity riding_entity = this.getControllingPassenger();
@@ -105,12 +107,8 @@ public class HoverQuilt extends VehicleEntity {
                     PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
                 }
                 client_position_lock = false;
-            } else if(this.isVehicle()) {
-                // Someone else is riding it, so we need to turn the lock off.
-                client_position_lock = false;
-            }else {
-                // No one is riding it, so it should not move.
-                client_position_lock = true;
+            } else {
+                client_position_lock = !this.isVehicle();
             }
         } else if(!this.isVehicle()) {
             this.setDeltaMovement(0, 0, 0);
