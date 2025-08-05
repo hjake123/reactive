@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.alchemy.material.formula;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
@@ -21,5 +22,10 @@ public record PropertyFormulaRequirements(List<Part> requirements) {
                 Codec.INT.fieldOf("low_bound_minimum").forGetter(Part::low_bound_minimum),
                 Codec.INT.fieldOf("low_bound_maximum").forGetter(Part::low_bound_maximum)
                 ).apply(instance, Part::new));
+
+        public int lowBound(ResourceLocation id) {
+            return WorldSpecificValue.get(id + "REQL" + power_id().toString(),
+                    low_bound_minimum(),low_bound_maximum());
+        }
     }
 }

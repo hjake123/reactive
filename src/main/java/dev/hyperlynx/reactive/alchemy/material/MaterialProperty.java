@@ -33,9 +33,7 @@ public abstract class MaterialProperty<T> {
                 return false;
             }
 
-            int low_bound = WorldSpecificValue.get(id + "REQL" + requirement.power_id().toString(),
-                    requirement.low_bound_minimum(), requirement.low_bound_maximum());
-            if(!formula.containsKey(power) || formula.get(power) < low_bound) {
+            if(!formula.containsKey(power) || formula.get(power) < requirement.lowBound(id)) {
                 return false;
             }
         }
