@@ -36,5 +36,8 @@
       "type": "patchouli:text",
       "text": "$(o)Well, you heard her! Go ahead: make yourself a Material and I'll show you more...$(p)If you'd like some advice, I would recommend starting with $(4)large amounts of single powers$(0) to get a feeling for what each one does."
     }
-  ]
+  ],
+  "extra_recipe_mappings": {
+    "reactive:material": 0
+  }
 }

@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -23,6 +25,11 @@ public class DefaultStringFormulaOutcome extends FormulaOutcome implements Strin
     @Override
     public MapCodec<? extends FormulaOutcome> type() {
         return FormulaOutcomeTypes.DEFAULT_STRING.get();
+    }
+
+    @Override
+    public @Nullable ResourceLocation power() {
+        return null;
     }
 
     @Override

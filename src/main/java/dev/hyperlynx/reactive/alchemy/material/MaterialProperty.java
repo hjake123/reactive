@@ -6,7 +6,6 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
-import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;

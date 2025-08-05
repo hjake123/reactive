@@ -19,7 +19,7 @@ public class RangeStringFormulaOutcome extends FormulaOutcome implements StringF
 
     public static final MapCodec<RangeStringFormulaOutcome> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("option").forGetter(RangeStringFormulaOutcome::option),
-            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("power").forGetter(RangeStringFormulaOutcome::power_id),
+            net.minecraft.resources.ResourceLocation.CODEC.fieldOf("power").forGetter(RangeStringFormulaOutcome::power),
             Codec.INT.fieldOf("threshold").forGetter(RangeStringFormulaOutcome::threshold),
             Codec.INT.optionalFieldOf("max_power").forGetter(RangeStringFormulaOutcome::max_power)
     ).apply(instance, RangeStringFormulaOutcome::new));
@@ -32,7 +32,7 @@ public class RangeStringFormulaOutcome extends FormulaOutcome implements StringF
     }
 
     private String option() { return option; }
-    private ResourceLocation power_id() { return power_id; }
+    public ResourceLocation power() { return power_id; }
     private int threshold() { return threshold; }
     private Optional<Integer> max_power() { return max_power; }
 

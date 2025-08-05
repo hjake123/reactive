@@ -1,16 +1,15 @@
 package dev.hyperlynx.reactive.integration.patchouli;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.material.FlagMaterialProperty;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
 import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
-import dev.hyperlynx.reactive.net.ReactionPageFetcher;
 import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -35,26 +34,31 @@ public class MaterialPropertyComponentProcessor implements IComponentProcessor {
             var property = property();
             List<PropertyFormulaRequirements.Part> requirements = Objects.requireNonNull(property.getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP)).requirements();
             StringBuilder formula = new StringBuilder();
-            formula.append(Component.translatable("docs.reactive.formula_label").getString());
-            if(requirements.isEmpty()) {
-                formula.append(Component.translatable("docs.reactive.no_formula_requirements").getString());
-            }
-            requirements.forEach(part -> {
-                formula.append(Component.translatable("docs.reactive.at_least").getString());
-                int percent = part.lowBound(property_id) / 16;
-                formula.append(percent >= 1 ? percent : Component.translatable("docs.reactive.trace"));
-                formula.append("% ");
-                formula.append(Component.translatable(part.power_id().toLanguageKey("power")).getString());
+            if(!requirements.isEmpty()) {
+                formula.append(Component.translatable("docs.reactive.formula_label").getString());
+                requirements.forEach(requirement -> {
+                    formula.append(Component.translatable("docs.reactive.at_least").getString());
+                    int percent = requirement.lowBound(property_id) / 16;
+                    formula.append(percent >= 1 ? percent + "% " : Component.translatable("docs.reactive.trace").getString());
+                    formula.append(Component.translatable(requirement.power_id().toLanguageKey("power")).getString());
+                    formula.append("$(br)");
+                });
                 formula.append("$(br)");
-            });
+            }
+
+            if(!(property.value() instanceof FlagMaterialProperty)) {
+                var outcomes = Objects.requireNonNull(property.getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP));
+                formula.append(Component.translatable("docs.reactive.outcome_label").getString());
+                outcomes.forEach(outcome -> {
+                    ResourceLocation power_id = outcome.power();
+                    if(!(power_id == null)) {
+                        formula.append(Component.translatable(power_id.toLanguageKey("power")).getString());
+                        formula.append("$(br)");
+                    }
+                });
+            }
 
             return IVariable.wrap(formula.toString(), level.registryAccess());
-        }
-        if(key.equals("outcome")){
-            var property = property();
-            var outcome = Objects.requireNonNull(property.getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP));
-
-            return IVariable.wrap("TODO", level.registryAccess());
         }
         return null;
     }
