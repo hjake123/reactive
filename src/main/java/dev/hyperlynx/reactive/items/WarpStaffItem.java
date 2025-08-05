@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.components.BoundEntity;
 import dev.hyperlynx.reactive.util.BeamHelper;
@@ -62,19 +62,19 @@ public class WarpStaffItem extends StaffItem{
     }
 
     public static boolean hasBoundEntity(ItemStack stack){
-        return stack.has(Registration.BOUND_ENTITY);
+        return stack.has(ReactiveComponentTypes.BOUND_ENTITY);
     }
 
     public @Nullable Entity getBoundEntity(Level level, ItemStack stack){
-        if(!stack.has(Registration.BOUND_ENTITY))
+        if(!stack.has(ReactiveComponentTypes.BOUND_ENTITY))
             return null;
         if(!(level instanceof ServerLevel server))
             return null;
-        return server.getEntity(Objects.requireNonNull(stack.get(Registration.BOUND_ENTITY)).uuid());
+        return server.getEntity(Objects.requireNonNull(stack.get(ReactiveComponentTypes.BOUND_ENTITY)).uuid());
     }
 
     public static void tryShowTutorial(Player user, ItemStack stack){
-        if(!stack.has(Registration.TUTORIAL_DONE)){
+        if(!stack.has(ReactiveComponentTypes.TUTORIAL_DONE)){
             user.displayClientMessage(Component.translatable("message.reactive.warp_staff_tutorial"), true);
         }
     }
@@ -90,7 +90,7 @@ public class WarpStaffItem extends StaffItem{
         super.appendHoverText(stack, context, hover_text, tooltip_flag);
         if(hasBoundEntity(stack)){
             hover_text.add(Component.translatable("tooltip.reactive.entity_bound")
-                    .append(stack.get(Registration.BOUND_ENTITY).name()));
+                    .append(Objects.requireNonNull(stack.get(ReactiveComponentTypes.BOUND_ENTITY)).name()));
         }else{
             hover_text.add(Component.translatable("tooltip.reactive.no_entity_bound"));
         }
@@ -104,10 +104,10 @@ public class WarpStaffItem extends StaffItem{
             Entity bound = getBoundEntity(level, stack);
             // Draw the particles and update the model data or unbind invalid or too distant entities.
             if(bound != null) {
-                ParticleScribe.drawExactParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0, 0.5, 4);
+                ParticleScribe.drawExactParticleRing(level, ParticleTypes.REVERSE_PORTAL, bound.position(), 0.5, 4);
                 stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
             }else{
-                stack.remove(Registration.BOUND_ENTITY);
+                stack.remove(ReactiveComponentTypes.BOUND_ENTITY);
             }
 
         }else{
@@ -160,9 +160,9 @@ public class WarpStaffItem extends StaffItem{
                         man.setBeingStaredAt();
                         user.getCooldowns().addCooldown(stack.getItem(), 100);
                     }else{
-                        String name = entity.hasCustomName() ? entity.getCustomName().getString() : entity.getName().getString();
-                        stack.set(Registration.BOUND_ENTITY, new BoundEntity(name, entityHit.getEntity().getUUID()));
-                        stack.set(Registration.TUTORIAL_DONE, Unit.INSTANCE);
+                        String name = entity.hasCustomName() ? Objects.requireNonNull(entity.getCustomName()).getString() : entity.getName().getString();
+                        stack.set(ReactiveComponentTypes.BOUND_ENTITY, new BoundEntity(name, entityHit.getEntity().getUUID()));
+                        stack.set(ReactiveComponentTypes.TUTORIAL_DONE, Unit.INSTANCE);
                     }
                     zap(user, beam_end, ParticleTypes.ENCHANTED_HIT);
                     level.playSound(null, beam_end.x, beam_end.y, beam_end.z, SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.PLAYERS,
@@ -180,7 +180,7 @@ public class WarpStaffItem extends StaffItem{
                     level.playSound(null, bound, SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                     level.gameEvent(GameEvent.TELEPORT, bound.getEyePosition(), GameEvent.Context.of(bound));
                 }
-                stack.remove(Registration.BOUND_ENTITY);
+                stack.remove(ReactiveComponentTypes.BOUND_ENTITY);
                 stack.hurtAndBreak(1, user, slot);
                 return InteractionResultHolder.success(stack);
             } else {

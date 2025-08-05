@@ -1,16 +1,16 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.PowerBearer;
-import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.net.ReactionStatusPayload;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -37,8 +37,7 @@ public interface Reactor extends PowerBearer {
 
         // Update clients each reaction tick about what to display.
         BlockPos pos = this.getBlockPos();
-        PacketDistributor.sendToPlayersNear(level, null, pos.getX(), pos.getY(), pos.getZ(), 32,
-                new ReactionStatusPayload(getReactionStatus(), pos));
+        PacketDistributor.sendToPlayersNear(level, null, pos.getX(), pos.getY(), pos.getZ(), 32, getPayload());
 
         if (this.getReactionStatus().isEmpty()) {
             this.getReactionStatus().add(ReactionStatusEntry.stable());
@@ -46,6 +45,10 @@ public interface Reactor extends PowerBearer {
 
         if (!this.hasUsedCrystalThisCycle() && this.getLinkedCrystal() != null)
             this.unlinkCrystal(level, this.getBlockPos(), this.getBlockState());
+    }
+
+    default boolean checkGoldSymbol(){
+        return this.getAreaMemory().exists(this.getLevel(), ReactiveBlocks.GOLD_SYMBOL.get());
     }
 
     boolean hasUsedCrystalThisCycle();
@@ -56,20 +59,18 @@ public interface Reactor extends PowerBearer {
 
     BlockPos getBlockPos();
 
+    Vec3 getPos();
+
     // Only call this method when linked_crystal isn't null please and thank you.
     void unlinkCrystal(Level level, BlockPos pos, BlockState state);
 
     void setDirty();
-
-    int getPowerLevel(Power p);
 
     AreaMemory getAreaMemory();
 
     Level getLevel();
 
     int getElectricCharge();
-
-    int getSacrificeCount();
 
     EndCrystal getLinkedCrystal();
 
@@ -82,4 +83,15 @@ public interface Reactor extends PowerBearer {
     default void addElectricCharge(int i){
         setElectricCharge(getElectricCharge() + i);
     }
+
+    void clearRenderReactions();
+
+    void addRenderReaction(String s);
+
+    default boolean areReactionsPaused() {
+        return false;
+    }
+
+    ReactionStatusPayload getPayload();
+
 }

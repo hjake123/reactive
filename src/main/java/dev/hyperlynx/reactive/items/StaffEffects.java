@@ -1,8 +1,10 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.blocks.AirLightBlock;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import net.minecraft.core.BlockPos;
@@ -23,6 +25,7 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
@@ -71,13 +74,13 @@ public class StaffEffects {
                 if(!user.level().isLoaded(light_target)) {
                     return;
                 }
-                if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(Registration.GLOWING_AIR.get())) {
+                if (user.level().getBlockState(light_target).isAir() && !user.level().getBlockState(light_target).is(ReactiveBlocks.GLOWING_AIR.get())) {
                     user.level().setBlock(light_target,
-                            Registration.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
+                            ReactiveBlocks.GLOWING_AIR.get().defaultBlockState().setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get()),
                             Block.UPDATE_ALL_IMMEDIATE);
                 } else if (user.level().getBlockState(light_target).is(Blocks.WATER)) {
                     user.level().setBlock(light_target,
-                            Registration.GLOWING_AIR.get().defaultBlockState()
+                            ReactiveBlocks.GLOWING_AIR.get().defaultBlockState()
                                     .setValue(AirLightBlock.DECAYING, !ConfigMan.COMMON.lightStaffLightsPermanent.get())
                                     .setValue(AirLightBlock.WATERLOGGED, true),
                             Block.UPDATE_ALL_IMMEDIATE);
@@ -91,7 +94,7 @@ public class StaffEffects {
         }
     }
 
-    public static void blazing(Player user, ItemStack stack){
+    public static void blazing(Player user, ItemStack ignored){
         int range = ConfigMan.COMMON.blazeStaffRange.get();
         var start = user.getEyePosition();
         var end = start.add(user.getLookAngle().scale(range));
@@ -106,20 +109,22 @@ public class StaffEffects {
             }else{
                 target = entityHit.getLocation();
             }
+            Level level = user.level();
             var fireball_position = start
                     .add(user.getLookAngle().scale(1.5))
-                    .add(user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1, user.level().random.nextDouble()*2-1);
+                    .add(level.random.nextDouble()*2-1, level.random.nextDouble()*2-1, level.random.nextDouble()*2-1);
             var aim = target.subtract(fireball_position).normalize().scale(0.1);
 
             Fireball fireball;
             if(ConfigMan.COMMON.blazeStaffExplosionSize.get() > 0) {
-                fireball = new LargeFireball(user.level(), user, aim, ConfigMan.COMMON.blazeStaffExplosionSize.get());
+                fireball = new LargeFireball(level, user, aim, ConfigMan.COMMON.blazeStaffExplosionSize.get());
             } else {
-                fireball = new SmallFireball(user.level(), user, aim);
+                fireball = new SmallFireball(level, user, aim);
             }
             fireball.setPos(fireball_position);
-            user.level().addFreshEntity(fireball);
-            user.level().playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
+            level.addFreshEntity(fireball);
+            level.playSound(null, fireball_position.x, fireball_position.y, fireball_position.z, SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.25F, 1.0F);
+            ParticleScribe.drawExactParticleSphere(level, ParticleTypes.FLAME, fireball_position, 0.0, 0.3, level.random.nextIntBetweenInclusive(1, 5));
         }
     }
 
@@ -128,7 +133,7 @@ public class StaffEffects {
         var blockHitPos = blockHit.getLocation();
 
         AABB aoe = new AABB(blockHitPos.subtract(1, 1, 1), blockHitPos.add(1, 1, 1));
-        boolean wide = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
+        boolean wide = EnchantmentHelper.has(stack, ReactiveComponentTypes.WIDE_RANGE.value());
         aoe = aoe.inflate(wide ? 2.5 : 1.5);
 
         if(user instanceof ServerPlayer serveruser) {
@@ -149,7 +154,7 @@ public class StaffEffects {
     public static void missile(Player user, ItemStack stack){
         if (user instanceof ServerPlayer serveruser) {
             AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            boolean super_missile = EnchantmentHelper.has(stack, Registration.WIDE_RANGE.value());
+            boolean super_missile = EnchantmentHelper.has(stack, ReactiveComponentTypes.WIDE_RANGE.value());
             int base_range = ConfigMan.COMMON.mindStaffRange.get();
             aoe = aoe.inflate(super_missile ? base_range * 1.67 : base_range);
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
@@ -177,7 +182,7 @@ public class StaffEffects {
 
             for(LivingEntity victim : hit_counts.keySet()) {
                 for(int i = 0; i < hit_counts.get(victim); i++) {
-                    ParticleScribe.drawParticleZigZag(user.level(), Registration.SMALL_RUNE_PARTICLE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
+                    ParticleScribe.drawParticleZigZag(user.level(), ReactiveParticles.SMALL_RUNE, user.getX(), user.getEyeY() - 0.4, user.getZ(),
                             victim.getX(), victim.getEyeY(), victim.getZ(), 2, 5, 0.7);
                     user.level().playSound(null,  victim.getX(), victim.getEyeY(), victim.getZ(), SoundEvents.AMETHYST_BLOCK_STEP, SoundSource.PLAYERS, 0.30F,
                             user.level().random.nextFloat()*0.1f + 0.8f);
@@ -188,10 +193,10 @@ public class StaffEffects {
         }
     }
 
-    public static void living(Player user, ItemStack stack){
+    public static void living(Player user, ItemStack ignored){
+        AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
+        aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
         if (user.level().random.nextFloat() < 0.4) {
-            AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
                 for (LivingEntity victim : nearby_ents) {
                 boolean has_regen = false, has_hp_up = false;
@@ -212,11 +217,9 @@ public class StaffEffects {
             }
         }
 
-        for(int i = 0; i < 10; i++){
-            user.level().addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
-                    user.getRandomZ(5.0), 0, 0, 0);
+        if(user.level().isClientSide) {
+            ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), user.level().random.nextFloat() > 0.2, true), aoe.deflate(3.0), 5);
         }
-        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
-
+        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.7F, 1.3f);
     }
 }

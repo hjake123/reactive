@@ -2,9 +2,10 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<DissolveRecipe>> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public DissolveRecipeCategory() {
         slot_manager.addSlot("reactant", 1, 1);
@@ -35,12 +36,13 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
     }
     @Override
     public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<DissolveRecipe> holder) {
+        assert holder != null;
         return holder.id();
     }
 
     @Override
     public @NotNull RecipeType<RecipeHolder<DissolveRecipe>> getRecipeType() {
-        return RecipeType.createFromVanilla(Registration.DISSOLVE_RECIPE_TYPE.get());
+        return RecipeType.createFromVanilla(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
     }
 
     @Override
@@ -64,7 +66,7 @@ public class DissolveRecipeCategory implements IRecipeCategory<RecipeHolder<Diss
 
     @Override
     public IDrawable getIcon() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ReactiveItems.CRUCIBLE.get().getDefaultInstance());
     }
 
     @Override

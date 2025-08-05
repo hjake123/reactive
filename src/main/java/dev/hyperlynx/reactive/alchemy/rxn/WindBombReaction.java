@@ -1,9 +1,10 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -46,30 +47,30 @@ public class WindBombReaction extends FreeEffectReaction{
         Random wsv = WorldSpecificValue.getSource("breeze_rod_placements");
 
         BlockPos rod_1_pos = crucible_pos.offset(3, 1, 1);
-        if(!(level.getBlockState(rod_1_pos).is(Registration.BREEZE_ROD.get()))){
+        if(!(level.getBlockState(rod_1_pos).is(ReactiveBlocks.BREEZE_ROD.get()))){
             ParticleScribe.drawParticleSphere(level, ParticleTypes.SMALL_GUST, rod_1_pos, 0.5, 0.1, 5);
             return true;
         }
         if(crucible.getLevel() instanceof ServerLevel slevel){
-            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_FAILED_FLOW_CONTAINMENT.value(), crucible_pos, 10);
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_FAILED_FLOW_CONTAINMENT.value(), crucible_pos, 10);
         }
 
         BlockPos rod_2_pos = rod_1_pos.offset(wsv.nextInt(-3, 4), 0, wsv.nextInt(-3, 4));
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMALL_GUST, Vec3.atCenterOf(rod_1_pos).add(0, 0.5, 0), Vec3.atCenterOf(rod_2_pos).add(0, -0.5, 0), 5, 0);
-        if(!(level.getBlockState(rod_2_pos).is(Registration.BREEZE_ROD.get()))){
+        if(!(level.getBlockState(rod_2_pos).is(ReactiveBlocks.BREEZE_ROD.get()))){
             ParticleScribe.drawParticleSphere(level, ParticleTypes.SMALL_GUST, rod_2_pos, 0.5, 0.1, 5);
             return true;
         }
 
         BlockPos rod_3_pos = rod_2_pos.offset(wsv.nextInt(-3, 4), 0, wsv.nextInt(-3, 4));
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMALL_GUST, Vec3.atCenterOf(rod_2_pos).add(0, 0.5, 0), Vec3.atCenterOf(rod_3_pos).add(0, -0.5, 0), 5, 0);
-        if(!(level.getBlockState(rod_3_pos).is(Registration.BREEZE_ROD.get()))){
+        if(!(level.getBlockState(rod_3_pos).is(ReactiveBlocks.BREEZE_ROD.get()))){
             ParticleScribe.drawParticleSphere(level, ParticleTypes.SMALL_GUST, rod_3_pos, 0.5, 0.1, 5);
             return true;
         }
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMALL_GUST, Vec3.atCenterOf(rod_3_pos).add(0, 0.5, 0), Vec3.atCenterOf(rod_1_pos).add(0, -0.5, 0), 5, 0);
         if(crucible.getLevel() instanceof ServerLevel slevel){
-            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_FLOW_CONTAINMENT.value(), crucible_pos, 10);
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_FLOW_CONTAINMENT.value(), crucible_pos, 10);
         }
         return false;
     }

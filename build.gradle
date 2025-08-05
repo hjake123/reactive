@@ -40,6 +40,7 @@ runs {
     client {
         // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
         systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--uuid 474e6380-8adc-41f7-a94b-8cef410945f9'
     }
 
     server {
@@ -97,12 +98,7 @@ repositories {
     }
 
     maven {
-        // saps.dev Maven (KubeJS and Rhino)
-        url = "https://maven.saps.dev/minecraft"
-        content {
-            includeGroup "dev.latvian.mods"
-            includeGroup "dev.latvian.apps"
-        }
+        url "https://maven.latvian.dev/releases"
     }
 
     exclusiveContent {

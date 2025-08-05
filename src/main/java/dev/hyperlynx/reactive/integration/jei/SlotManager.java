@@ -4,11 +4,9 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Tuple;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,7 +19,7 @@ Until it does, it's best to do this myself...
 And since I'm doing this, might as well give this class more responsibility as well.
  */
 public class SlotManager {
-    HashMap<String, Tuple<Integer, Integer>> slots = new HashMap<>();
+    final HashMap<String, Tuple<Integer, Integer>> slots = new HashMap<>();
 
     public void drawSlotBackground(GuiGraphics gui, String key) {
         var slot = slots.get(key);

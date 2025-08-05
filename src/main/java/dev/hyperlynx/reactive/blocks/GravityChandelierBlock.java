@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.GravityChandelierBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -57,10 +57,11 @@ public class GravityChandelierBlock extends WaterloggableBlock implements Entity
         return new GravityChandelierBlockEntity(pos, state);
     }
 
+    @SuppressWarnings("TypeParameterHidesVisibleType")
     @Nullable
     @Override
     public <GravityChandelierBlockEntity extends BlockEntity> BlockEntityTicker<GravityChandelierBlockEntity> getTicker(Level level, BlockState state, BlockEntityType<GravityChandelierBlockEntity> t) {
-        if(t == Registration.GRAVITY_CHANDELIER_BE_TYPE.get()){
+        if(t == ReactiveBlockEntityTypes.GRAVITY_CHANDELIER.get()){
             return (l, p, s, a) -> dev.hyperlynx.reactive.be.GravityChandelierBlockEntity.tick(l, p);
         }
         return null;

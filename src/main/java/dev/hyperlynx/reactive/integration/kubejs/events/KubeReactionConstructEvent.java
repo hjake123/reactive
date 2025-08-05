@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
@@ -17,11 +16,10 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class KubeReactionConstructEvent implements KubeEvent {
-    ReactionMan.ReactionConstructEvent event;
+    final ReactionMan.ReactionConstructEvent event;
 
     public KubeReactionConstructEvent(ReactionMan.ReactionConstructEvent event){
         this.event = event;
-
     }
 
     public ReactionFactory builder(String alias, MutableComponent custom_name, String... reagent_locations){

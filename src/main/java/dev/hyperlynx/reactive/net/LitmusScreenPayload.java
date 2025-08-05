@@ -7,9 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,11 +23,6 @@ public record LitmusScreenPayload(LitmusMeasurement measurement, List<Component>
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    @Override
-    public @NotNull ClientboundCustomPayloadPacket toVanillaClientbound() {
-        return CustomPacketPayload.super.toVanillaClientbound();
     }
 
 }

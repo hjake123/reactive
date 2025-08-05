@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -24,8 +24,8 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState prior, boolean p_60570_) {
-        if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
-            ((ChainDisplacingBlock)Registration.FRAMED_MOTION_SALT_BLOCK.get()).breadthFirstDisplace(level, pos, level.getBestNeighborSignal(pos) > 10);
+        if(level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get())){
+            ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get().breadthFirstDisplace(level, pos, level.getBestNeighborSignal(pos) > 10);
         }
     }
 
@@ -42,13 +42,13 @@ public class FramedMotionSaltBlock extends Block implements ChainDisplacingBlock
 
     // These displace themselves instantly.
     private static void checkBecomeElectrified(Level level, BlockPos salt_pos, BlockState our_state, BlockPos neighbor_pos){
-        if(level.getBlockState(neighbor_pos).is(Registration.VOLT_CELL.get()) && salt_pos.below().equals(neighbor_pos)){
-            ((ChainDisplacingBlock)Registration.FRAMED_MOTION_SALT_BLOCK.get()).breadthFirstDisplace(level, salt_pos, our_state.getValue(POWERED));
+        if(level.getBlockState(neighbor_pos).is(ReactiveBlocks.VOLT_CELL.get()) && salt_pos.below().equals(neighbor_pos)){
+            ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get().breadthFirstDisplace(level, salt_pos, our_state.getValue(POWERED));
         }
     }
 
     @Override
     public boolean stateMatchesSelf(BlockState state) {
-        return state.is(Registration.FRAMED_MOTION_SALT_BLOCK.get());
+        return state.is(ReactiveBlocks.FRAMED_MOTION_SALT_BLOCK.get());
     }
 }

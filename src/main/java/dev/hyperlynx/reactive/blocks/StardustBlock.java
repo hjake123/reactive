@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +19,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class StardustBlock extends WaterloggableBlock {
-    VoxelShape SHAPE = box(5, 5, 5, 11, 11, 11);
+    final VoxelShape SHAPE = box(5, 5, 5, 11, 11, 11);
 
     public StardustBlock(Properties props) {
         super(props);
@@ -33,7 +34,7 @@ public class StardustBlock extends WaterloggableBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rng) {
-        level.addParticle(Registration.STARDUST_PARTICLE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
+        level.addParticle(ReactiveParticles.STARDUST, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
 
     @Override
@@ -53,12 +54,12 @@ public class StardustBlock extends WaterloggableBlock {
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
         for(int i = 0; i < 7; i++){
-            level.addParticle(Registration.STARDUST_PARTICLE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
+            level.addParticle(ReactiveParticles.STARDUST, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
         }
     }
 
     @Override
     public Item asItem() {
-        return Registration.STARDUST_ITEM.get();
+        return ReactiveItems.STARDUST.get();
     }
 }

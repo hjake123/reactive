@@ -1,0 +1,31 @@
+package dev.hyperlynx.reactive.alchemy.material.formula;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.util.WorldSpecificValue;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.List;
+
+/// A Data Map entry that describes what Powers are needed to obtain a particular `MaterialProperty`.
+public record PropertyFormulaRequirements(List<Part> requirements) {
+    public static final Codec<PropertyFormulaRequirements> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Part.CODEC.listOf().fieldOf("requirements").forGetter(PropertyFormulaRequirements::requirements)
+    ).apply(instance, PropertyFormulaRequirements::new));
+
+    /// Defines a particular Power and a pair of ranges, one for the low bound (the least Power to get this property) and one for the high bound.
+    /// The actual range is world specific within these constraints
+    /// The high bound may be `Optional.empty()`, in which case there is no high bound.
+    public record Part(ResourceLocation power_id, int low_bound_minimum, int low_bound_maximum) {
+        public static final Codec<Part> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                ResourceLocation.CODEC.fieldOf("power").forGetter(Part::power_id),
+                Codec.INT.fieldOf("low_bound_minimum").forGetter(Part::low_bound_minimum),
+                Codec.INT.fieldOf("low_bound_maximum").forGetter(Part::low_bound_maximum)
+                ).apply(instance, Part::new));
+
+        public int lowBound(ResourceLocation id) {
+            return WorldSpecificValue.get(id + "REQL" + power_id().toString(),
+                    low_bound_minimum(),low_bound_maximum());
+        }
+    }
+}

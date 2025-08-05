@@ -1,5 +1,7 @@
 {
   "values": [
-    "reactive:gold_foam"
+    "reactive:gold_foam",
+    "reactive:salt_block",
+    "reactive:creation_salt_block"
   ]
 }

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
@@ -27,8 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LitmusScreen extends Screen {
-    LitmusMeasurement measurement;
-    List<Component> reaction_lines;
+    final LitmusMeasurement measurement;
+    final List<Component> reaction_lines;
     private List<LitmusScreenComponent> lines_to_draw;
     int y = 0;
     int page = 0;
@@ -75,6 +76,7 @@ public class LitmusScreen extends Screen {
         return false;
     }
 
+    @Override
     protected void init() {
         super.init();
         List<LitmusScreenComponent> lines = buildPowerText(measurement);
@@ -104,6 +106,7 @@ public class LitmusScreen extends Screen {
 
     }
 
+    @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(graphics, mouseX, mouseY, partialTick);
         page_forward.visible = page < max_page;
@@ -127,7 +130,7 @@ public class LitmusScreen extends Screen {
     /*
         Select only lines on page (this.page).
          */
-    static int PAGE_LENGTH = 16;
+    static final int PAGE_LENGTH = 16;
     private List<LitmusScreenLine> paginate(List<LitmusScreenComponent> components) {
         this.max_page = (components.size() - 1) / PAGE_LENGTH;
         List<LitmusScreenLine> paginated = new LinkedList<>();
@@ -158,7 +161,7 @@ public class LitmusScreen extends Screen {
         return paginated;
     }
 
-    private static void pageForward(Button button) {
+    private static void pageForward(Button ignored) {
         if (Minecraft.getInstance().screen instanceof LitmusScreen lit_screen){
             if(lit_screen.page < lit_screen.max_page){
                 lit_screen.page++;
@@ -167,7 +170,7 @@ public class LitmusScreen extends Screen {
         }
     }
 
-    private static void pageBackward(Button button) {
+    private static void pageBackward(Button ignored) {
         if (Minecraft.getInstance().screen instanceof LitmusScreen lit_screen){
             if(lit_screen.page > 0){
                 lit_screen.page--;
@@ -201,11 +204,16 @@ public class LitmusScreen extends Screen {
         }
 
         LocalPlayer player = Minecraft.getInstance().player;
+        ClientLevel level = Minecraft.getInstance().level;
+        if(player == null || level == null) {
+            ReactiveMod.LOGGER.error("Tried to produce litmus screen text with no player or level!");
+            return List.of();
+        }
 
         if(measurement.measurements().isEmpty()){
             text.add(new LitmusScreenComponent(
                     Component.translatable("text.reactive.measurement_empty")
-                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(player.level(), player.getOnPos())) : Style.EMPTY),
+                    .withStyle(ConfigMan.CLIENT.colorizeLitmusOutput.get() ? Style.EMPTY.withColor(BiomeColors.getAverageWaterColor(level, player.getOnPos())) : Style.EMPTY),
                     true, false));
         }
         if(measurement.integrity_violated()){

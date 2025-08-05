@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.advancements.ReactionTrigger;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,7 +26,7 @@ public abstract class Reaction {
 
     public boolean always_perfect = false; // Set to true if this one always registers as perfect.
 
-    String alias;
+    final String alias;
 
     protected Reaction(String alias){
         this.alias = alias;
@@ -120,6 +119,9 @@ public abstract class Reaction {
         }
         boolean met_conditions = checkStimulus(reactor);
         if(met_conditions) {
+            if(reactor.areReactionsPaused()){
+                return Status.INHIBITED;
+            }
             if(reactor.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
             && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
@@ -138,10 +140,10 @@ public abstract class Reaction {
     private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
             case END_CRYSTAL -> checkEndCrystal(reactor);
-            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case GOLD_SYMBOL -> reactor.checkGoldSymbol();
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
-            case SACRIFICE -> reactor.getSacrificeCount() >= 10;
+            case NO_IRON_SYMBOL -> !reactor.getAreaMemory().exists(reactor.getLevel(), ReactiveBlocks.IRON_SYMBOL.get());
             default -> true;
         };
     }
@@ -164,8 +166,8 @@ public abstract class Reaction {
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;
-        end_crystals.get(0).setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
-        reactor.setLinkedCrystal(end_crystals.get(0));
+        end_crystals.getFirst().setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        reactor.setLinkedCrystal(end_crystals.getFirst());
         reactor.setUsedCrystalThisCycle(true);
         return true;
     }
@@ -194,9 +196,9 @@ public abstract class Reaction {
         GOLD_SYMBOL,
         ELECTRIC,
         NO_ELECTRIC,
-        SACRIFICE,
         END_CRYSTAL,
-        NO_END_CRYSTAL
+        NO_END_CRYSTAL,
+        NO_IRON_SYMBOL
     }
 
     public enum Status {
@@ -211,7 +213,7 @@ public abstract class Reaction {
 
     @Override
     public String toString(){
-        return reagents.toString();
+        return alias;
     }
 
 }

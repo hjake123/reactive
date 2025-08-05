@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -43,7 +43,7 @@ public class WarpSpongeBlock extends WetSpongeBlock {
                 level.setBlock(target, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3), Block.UPDATE_CLIENTS);
             }else if(level.getBlockState(target).is(Blocks.WATER_CAULDRON)){
                 level.setBlock(target, level.getBlockState(target).setValue(LayeredCauldronBlock.LEVEL, 3), Block.UPDATE_CLIENTS);
-            }else if(level.getBlockState(target).is(Registration.CRUCIBLE.get())){
+            }else if(level.getBlockState(target).is(ReactiveBlocks.CRUCIBLE.get())){
                 level.setBlock(target, level.getBlockState(target).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
             }else if(AreaMemory.stateIsBlocking(level.getBlockState(target))){
                 return;

@@ -1,9 +1,10 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -13,7 +14,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
     }
 
     private static @NotNull ItemStack getDropStack(Level level, @NotNull BlockPos pos, @NotNull BlockState state, CrucibleBlockEntity crucible) {
-        ItemStack drop_stack = Registration.SHULKER_CRUCIBLE_ITEM.get().getDefaultInstance();
+        ItemStack drop_stack = ReactiveItems.SHULKER_CRUCIBLE.get().getDefaultInstance();
         if(crucible.getTotalPowerLevel() > 0) {
             crucible.saveToItem(drop_stack, level.registryAccess());
             drop_stack.set(DataComponents.LORE, new ItemLore(List.of(Component.literal(getItemLabel(crucible)))));
@@ -50,7 +50,7 @@ public class ShulkerCrucibleBlock extends CrucibleBlock{
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean p_60519_) {
         BlockEntity be = level.getBlockEntity(pos);
-        if(!new_state.is(Registration.SHULKER_CRUCIBLE) && !new_state.is(AlchemyTags.crucibleCanBecome)){
+        if(!new_state.is(ReactiveBlocks.SHULKER_CRUCIBLE) && !new_state.is(AlchemyTags.crucibleCanBecome)){
             if (be instanceof CrucibleBlockEntity crucible) {
                 if (!level.isClientSide) {
                     ItemEntity drop = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, getDropStack(level, pos, state, crucible));

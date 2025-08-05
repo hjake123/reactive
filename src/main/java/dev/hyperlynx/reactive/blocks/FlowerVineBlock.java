@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
 import com.mojang.serialization.MapCodec;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
@@ -35,6 +35,6 @@ public class FlowerVineBlock extends GrowingPlantHeadBlock {
 
     @Override
     protected @NotNull Block getBodyBlock() {
-        return Registration.FLOWER_VINES_BODY.get();
+        return ReactiveBlocks.FLOWER_VINES_BODY.get();
     }
 }

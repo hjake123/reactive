@@ -1,0 +1,19 @@
+{
+  "display": {
+    "icon": {
+      "id": "reactive:gold_thread"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.see_thread_reaction"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.see_thread_reaction"
+    }
+  },
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "see_synthesis": {
+      "trigger": "reactive:see_gold_thread_reaction_criterion"
+    }
+  }
+}

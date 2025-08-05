@@ -6,8 +6,9 @@ import dev.hyperlynx.reactive.integration.kubejs.KubeWrapped;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 
+@SuppressWarnings("unused")
 public class KubeDissolveEvent implements CrucibleKubeEvent {
-    DissolveEvent event;
+    final DissolveEvent event;
 
     public KubeDissolveEvent(DissolveEvent event){
         this.event = event;

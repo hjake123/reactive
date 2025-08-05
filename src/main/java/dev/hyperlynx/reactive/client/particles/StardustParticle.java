@@ -13,6 +13,7 @@ public class StardustParticle extends TextureSheetParticle {
     static final Random RANDOM = new Random();
     private final SpriteSet sprites;
 
+    @SuppressWarnings("SameParameterValue")
     protected StardustParticle(ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed, SpriteSet pSprites) {
         super(level, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
         this.sprites = pSprites;

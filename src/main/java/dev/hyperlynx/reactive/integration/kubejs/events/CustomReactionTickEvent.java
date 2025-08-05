@@ -7,9 +7,10 @@ import dev.hyperlynx.reactive.integration.kubejs.KubeScriptException;
 import dev.hyperlynx.reactive.integration.kubejs.KubeWrapped;
 import dev.latvian.mods.kubejs.event.KubeEvent;
 
+@SuppressWarnings("unused")
 public class CustomReactionTickEvent implements KubeEvent, ReactorKubeEvent {
-    KubeWrapped<Reactor> reactor;
-    String alias;
+    final KubeWrapped<Reactor> reactor;
+    final String alias;
 
     public CustomReactionTickEvent(CustomReaction rxn, Reactor reactor){
         this.reactor = new KubeWrapped<>(reactor);

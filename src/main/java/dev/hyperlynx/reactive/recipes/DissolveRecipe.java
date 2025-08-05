@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.recipes;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -11,13 +11,11 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
-    protected final String group;
     protected final Ingredient reactant;
     protected final ItemStack product;
-    public boolean needs_electricity;
+    public final boolean needs_electricity;
 
-    public DissolveRecipe(String group, Ingredient reactant, ItemStack product, boolean needs_electricity) {
-        this.group = group;
+    public DissolveRecipe(String ignored, Ingredient reactant, ItemStack product, boolean needs_electricity) {
         this.reactant = reactant;
         this.product = product;
         this.needs_electricity = needs_electricity;
@@ -54,12 +52,12 @@ public class DissolveRecipe implements Recipe<CrucibleRecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Registration.DISSOLVE_SERIALIZER.get();
+        return ReactiveRecipes.DISSOLVE_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return Registration.DISSOLVE_RECIPE_TYPE.get();
+        return ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get();
     }
 
     // No, these recipes aren't for the recipe book, Mojang...

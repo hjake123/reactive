@@ -2,7 +2,8 @@ package dev.hyperlynx.reactive.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
+@SuppressWarnings("ALL")
 @Mixin(Allay.class)
 public abstract class AllayMixin {
     Optional<BlockPos> symbol_maybe = Optional.empty();
@@ -40,7 +42,7 @@ public abstract class AllayMixin {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
             symbol_maybe = BlockPos.findClosestMatch(((Allay)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Allay)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+                    blockPos -> ((Allay)(Object)this).level().getBlockState(blockPos).is(ReactiveBlocks.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 
@@ -48,14 +50,14 @@ public abstract class AllayMixin {
             ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 4);
         }
 
-        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(Registration.CRYSTAL_IRON.get())){
+        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(ReactiveItems.CRYSTAL_IRON.get())){
             ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 10);
         }
 
-        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(Registration.QUARTZ_BOTTLE.get())){
+        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(ReactiveItems.QUARTZ_BOTTLE.get())){
             if(unredeemed_duplication){
                 ((Allay)(Object) this).level().playSound(null, ((Allay)(Object) this).blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1.1F);
-                ((Allay)(Object) this).setItemInHand(InteractionHand.MAIN_HAND, Registration.SOUL_BOTTLE.get().getDefaultInstance());
+                ((Allay)(Object) this).setItemInHand(InteractionHand.MAIN_HAND, ReactiveItems.SOUL_BOTTLE.get().getDefaultInstance());
                 ((Allay) (Object) this).getEntityData().set(DATA_CAN_DONATE, false);
                 unredeemed_duplication = false;
             }

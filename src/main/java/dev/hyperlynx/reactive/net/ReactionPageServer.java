@@ -28,7 +28,7 @@ public class ReactionPageServer {
             if (reaction instanceof CurseAssimilationReaction) {
                 formula.append(Component.translatable("docs.reactive.curse_label").getString());
             }
-            if (reaction.getReagents().keySet().isEmpty()) {
+            if (reaction.getReagents().isEmpty()) {
                 formula.append(Component.translatable("docs.reactive.any_label").getString());
             }
             formula.append(Component.translatable("docs.reactive.stimulus_label").getString());
@@ -36,12 +36,13 @@ public class ReactionPageServer {
                 case NONE -> formula.append(Component.translatable("text.reactive.none").getString());
                 case GOLD_SYMBOL -> formula.append(Component.translatable("block.reactive.gold_symbol").getString());
                 case ELECTRIC -> formula.append(Component.translatable("text.reactive.electric_charge").getString());
-                case SACRIFICE -> formula.append(Component.translatable("text.reactive.sacrificial").getString());
                 case END_CRYSTAL -> formula.append(Component.translatable("item.minecraft.end_crystal").getString());
                 case NO_ELECTRIC ->
                         formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("text.reactive.electric_charge").getString());
                 case NO_END_CRYSTAL ->
                         formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("item.minecraft.end_crystal").getString());
+                case NO_IRON_SYMBOL ->
+                        formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("block.reactive.iron_symbol").getString());
             }
             if (reaction instanceof CatalystEffectReaction catre) {
                 formula.append(Component.translatable("docs.reactive.catalyst_label").getString());

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.GlowLichenBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class MindLichenBlock extends GlowLichenBlock {
+    @SuppressWarnings("unused")
     public MindLichenBlock(Properties props) {
         super(props);
     }
@@ -26,7 +27,7 @@ public class MindLichenBlock extends GlowLichenBlock {
                         player.giveExperiencePoints(-1);
                         level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.02F, 0.7F+level.random.nextFloat()*0.1F);
                         if(level.random.nextFloat() < 0.1){
-                            level.setBlock(to_pos.get().pos(), Registration.MNEMONIC_BULB.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+                            level.setBlock(to_pos.get().pos(), ReactiveBlocks.MNEMONIC_BULB.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                         }
                     }
                 }

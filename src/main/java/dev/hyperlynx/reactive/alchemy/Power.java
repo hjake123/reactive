@@ -16,12 +16,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
 public class Power {
@@ -77,6 +78,19 @@ public class Power {
         this.percent_reactivity = new PrimedWSV(location + "_reactivity", 50, 200);
     }
 
+    public static Map<Power, Integer> generateRandomPowerCombo(Level level) {
+        Map<Power, Integer> powers = new HashMap<>();
+        RandomSource random = level.random;
+        for(int i = 0; i < random.nextIntBetweenInclusive(1, 3); i++) {
+            Power power = Powers.POWER_REGISTRY.getRandom(random).orElseThrow().value();
+            while(power.equals(Powers.ASTRAL_POWER.get())) {
+                power = Powers.POWER_REGISTRY.getRandom(random).orElseThrow().value();
+            }
+            powers.put(power, random.nextInt(200, 500));
+        }
+        return powers;
+    }
+
     public TagKey<Item> getSourceTag(){
         return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
@@ -100,10 +114,7 @@ public class Power {
     }
     public String getId() { return location.getPath(); }
     public String getName() {
-        if(name_override != null){
-            return name_override.getString();
-        }
-        return Component.translatable(name).getString();
+        return Objects.requireNonNullElseGet(name_override, () -> Component.translatable(name)).getString();
     }
     public ResourceLocation getResourceLocation() { return location; }
     public Block getWaterRenderBlock(){

@@ -8,6 +8,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 
 public class SoupItem extends Item {
+
+    @SuppressWarnings("unused")
     public SoupItem(Properties p_40682_) {
         super(p_40682_);
     }

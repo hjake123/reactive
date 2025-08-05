@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:motion_salt"
+  },
+  "product": {
+    "id": "reactive:adept_salt"
+  },
+  "reagents": ["reactive:caustic"],
+  "min": 800,
+  "cost": 10
+}

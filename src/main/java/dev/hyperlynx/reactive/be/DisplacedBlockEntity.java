@@ -1,8 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import net.minecraft.client.Minecraft;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -13,8 +12,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,7 +33,7 @@ public class DisplacedBlockEntity extends BlockEntity {
 
 
     public DisplacedBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.DISPLACED_BLOCK_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.DISPLACED_BLOCK.get(), pos, state);
     }
 
     @Override

@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class TransmuteRecipeSerializer implements RecipeSerializer<TransmuteReci
         return STREAM_CODEC;
     }
 
-    public static @Nullable TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+    public static @NotNull TransmuteRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         Ingredient reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         ItemStack product = ItemStack.STREAM_CODEC.decode(buffer);
         List<ResourceLocation> reagent_locations = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readResourceLocation);

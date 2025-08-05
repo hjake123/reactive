@@ -1,9 +1,10 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +20,7 @@ public class StaffBlockEntity extends BlockEntity {
     private final String ITEM_STACK_TAG = "Stack";
 
     public StaffBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.STAFF_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.STAFF.get(), pos, state);
         stack = state.getBlock().asItem().getDefaultInstance();
     }
 
@@ -32,7 +33,12 @@ public class StaffBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(CompoundTag main_tag, HolderLookup.Provider registry_provider) {
         super.loadAdditional(main_tag, registry_provider);
-        Optional<ItemStack> possible_stack = ItemStack.parse(registry_provider, main_tag.get(ITEM_STACK_TAG));
+        Tag tag = main_tag.get(ITEM_STACK_TAG);
+        if(tag == null) {
+            stack = ItemStack.EMPTY;
+            return;
+        }
+        Optional<ItemStack> possible_stack = ItemStack.parse(registry_provider, tag);
         possible_stack.ifPresent(itemStack -> stack = itemStack);
     }
 }

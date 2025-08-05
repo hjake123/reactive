@@ -9,7 +9,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe> {
 
@@ -39,7 +38,7 @@ public class DissolveRecipeSerializer implements RecipeSerializer<DissolveRecipe
         buffer.writeBoolean(recipe.needs_electricity);
     }
 
-    public static @Nullable DissolveRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
+    public static @NotNull DissolveRecipe fromNetwork(@NotNull RegistryFriendlyByteBuf buffer) {
         var reactant = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
         var product = ItemStack.STREAM_CODEC.decode(buffer);
         boolean needs_electricity = buffer.readBoolean();

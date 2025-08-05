@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.client.particles;
 
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.entites.ReactorEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +18,16 @@ public class ParticleScribe {
             level.addParticle(opt, x, y, z, 0, 0, 0);
         } else {
             ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+        }
+    }
+
+    public static void drawParticle(Level level, ParticleOptions opt, double x, double y, double z, float odds, double xspeed, double yspeed, double zspeed) {
+        if(level.random.nextFloat() < odds){
+            if (level.isClientSide()) {
+                level.addParticle(opt, x, y, z, xspeed, yspeed, zspeed);
+            } else {
+                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, xspeed, yspeed, zspeed, 0.0);
+            }
         }
     }
 
@@ -112,13 +125,13 @@ public class ParticleScribe {
     }
 
     public static void drawParticleRing(Level level, ParticleOptions opt, BlockPos pos, double height, double radius, int frequency){
-        drawExactParticleRing(level, opt, Vec3.atBottomCenterOf(pos), height, radius, frequency);
+        drawExactParticleRing(level, opt, Vec3.atBottomCenterOf(pos).add(0, height, 0), radius, frequency);
     }
 
-    public static void drawExactParticleRing(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency){
+    public static void drawExactParticleRing(Level level, ParticleOptions opt, Vec3 pos, double radius, int frequency){
         for(int i = 0; i < frequency; i++){
             int deflection_angle = level.random.nextInt(1, 360);
-            drawDeflectedParticle(level, opt, pos, height, radius, deflection_angle);
+            drawDeflectedParticle(level, opt, pos, 0, radius, deflection_angle);
         }
     }
 
@@ -132,6 +145,10 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
+        drawExactParticleSphere(level, opt, new Vec3(center_x, pos.getY(), center_z), height, radius, frequency);
+    }
+
+    public static void drawExactParticleSphere(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency) {
         for(int i = 0; i < frequency; i++){
             double x = level.random.nextGaussian();
             double y = level.random.nextGaussian();
@@ -142,40 +159,35 @@ public class ParticleScribe {
             y = y * normalizer * radius;
             z = z * normalizer * radius;
 
-            drawParticle(level, opt, center_x + x, pos.getY() + height + y, center_z + z);
+            drawParticle(level, opt, pos.x + x, pos.y + height + y, pos.z + z);
         }
-
     }
 
     public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos){
         drawParticleCrucibleTop(level, opt, pos, 1, 0, 0, 0);
     }
 
-    public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds){
-        drawParticleCrucibleTop(level, opt, pos, odds, 0, 0, 0);
-    }
-
     public static void drawParticleCrucibleTop(Level level, ParticleOptions opt, BlockPos pos, float odds, double xspeed, double yspeed, double zspeed){
-        if(level.isClientSide()){
-            if(level.random.nextFloat() < odds){
-                double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                level.addParticle(opt, x, pos.getY() + 0.6, z, xspeed, yspeed, zspeed);
-            }
-        }else{
-            if(level.random.nextFloat() < odds){
-                double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
-                ((ServerLevel) level).sendParticles(opt, x, pos.getY() + 0.6, z, 1, xspeed, yspeed, zspeed, 0.0);
-            }
-        }
+        double x = pos.getX() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+        double z = pos.getZ() + level.getRandom().nextFloat() * (10.0/16) + 3.0/16;
+        drawParticle(level, opt, x, pos.getY() + 0.6, z, odds, xspeed, yspeed, zspeed);
     }
 
-    public static void drawParticleStream(Level level, ParticleOptions opt, Vec3 start, Vec3 angle, int frequency){
-        angle.normalize();
-        angle.multiply(0.0003, 0.0003, 0.0003);
-        for(int i = 0; i < frequency; i++){
-            level.addParticle(opt, start.x, start.y, start.z, angle.x, angle.y, angle.z);
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor){
+        drawParticleReactionSurface(level, opt, reactor, 1, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds){
+        drawParticleReactionSurface(level, opt, reactor, odds, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds, double xspeed, double yspeed, double zspeed){
+        if(reactor instanceof CrucibleBlockEntity) {
+            drawParticleCrucibleTop(level, opt, reactor.getBlockPos(), odds, xspeed, yspeed, zspeed);
+        } else if(reactor instanceof ReactorEntity) {
+            drawParticle(level, opt, reactor.getPos().x, reactor.getPos().y, reactor.getPos().z, odds, xspeed, yspeed, zspeed);
+        } else {
+            throw new UnsupportedOperationException("No reaction surface defined for reactor type '" + reactor.getClass() + "' !");
         }
     }
 }

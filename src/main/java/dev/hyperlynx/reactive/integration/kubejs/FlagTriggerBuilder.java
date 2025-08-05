@@ -11,6 +11,6 @@ public class FlagTriggerBuilder extends BuilderBase<FlagTrigger> {
 
     @Override
     public FlagTrigger createObject() {
-        return new FlagTrigger(id);
+        return new FlagTrigger();
     }
 }

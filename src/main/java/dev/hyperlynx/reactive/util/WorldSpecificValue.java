@@ -15,10 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 
 /*
@@ -81,7 +78,7 @@ public class WorldSpecificValue {
     // Sets the seed in the config to your world seed if that option is selected.
     public static void worldLoad(LevelEvent.Load event){
         if(!event.getLevel().isClientSide()){
-            alchemy_seed = event.getLevel().getServer().getLevel(Level.OVERWORLD).getSeed();
+            alchemy_seed = Objects.requireNonNull(Objects.requireNonNull(event.getLevel().getServer()).getLevel(Level.OVERWORLD)).getSeed();
             ReactiveMod.REACTION_MAN.reset();
         }
     }

@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.AlchemyTags;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -49,8 +49,8 @@ public interface ChainDisplacingBlock {
                     }
                     else if(displace_surroundings
                             && !level.getBlockState(next_target).isAir()
-                            && !level.getBlockState(next_target).is(Registration.VOLT_CELL.get())
-                            && !level.getBlockState(next_target).is(Registration.DISPLACED_BLOCK.get())){
+                            && !level.getBlockState(next_target).is(ReactiveBlocks.VOLT_CELL.get())
+                            && !level.getBlockState(next_target).is(ReactiveBlocks.DISPLACED_BLOCK.get())){
                         DisplacedBlock.displaceWithChain(level.getBlockState(next_target), next_target, level, 2+count, count, target);
                     }
                 }

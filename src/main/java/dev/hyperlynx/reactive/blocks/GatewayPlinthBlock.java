@@ -1,8 +1,8 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionEffects;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class GatewayPlinthBlock extends Block {
-    ExplosionDamageCalculator COLLAPSE_DAMAGE_CALCULATOR = new SimpleExplosionDamageCalculator(false, false, Optional.of(1.8F), Optional.empty());
+    final ExplosionDamageCalculator COLLAPSE_DAMAGE_CALCULATOR = new SimpleExplosionDamageCalculator(false, false, Optional.of(1.8F), Optional.empty());
 
     private final VoxelShape SHAPE = Shapes.or(
             Block.box(1, 0, 1, 15, 2, 15),
@@ -53,6 +52,7 @@ public class GatewayPlinthBlock extends Block {
             Block.box(4, 2, 4, 12, 7, 12));
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
+    @SuppressWarnings("unused")
     public GatewayPlinthBlock(Properties props) {
         super(props);
         registerDefaultState(this.defaultBlockState().setValue(ACTIVE, false));
@@ -75,7 +75,7 @@ public class GatewayPlinthBlock extends Block {
             convertEndGateway(slevel, pos.above());
             level.setBlock(pos, state.setValue(ACTIVE, true), Block.UPDATE_CLIENTS);
         }
-        if(state.getValue(ACTIVE) && !level.getBlockState(pos.above()).is(Registration.GATEWAY_BLOCK.get())){
+        if(state.getValue(ACTIVE) && !level.getBlockState(pos.above()).is(ReactiveBlocks.GATEWAY_BLOCK.get())){
             level.setBlock(pos, state.setValue(ACTIVE, false), Block.UPDATE_CLIENTS);
         }
         super.neighborChanged(state, level, pos, pNeighborBlock, pNeighborPos, pMovedByPiston);
@@ -90,6 +90,9 @@ public class GatewayPlinthBlock extends Block {
 
     @Override
     public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if(level.getBlockState(pos.above()).is(ReactiveBlocks.GATEWAY_BLOCK.get())) {
+            return ItemInteractionResult.CONSUME;
+        }
         if (Powers.WARP_POWER.get().matchesBottle(stack)) {
             if (WarpBottleItem.isRiftBottle(stack)) {
                 GlobalPos warp_target = WarpBottleItem.getTeleportPosition(stack);
@@ -98,10 +101,10 @@ public class GatewayPlinthBlock extends Block {
                     return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 }
                 setGateway(level, pos.above(), warp_target, state);
-                level.playSound((Player) null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
-                level.playSound((Player) null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
-                level.playSound((Player) null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
-                player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+                level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                level.playSound(null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
+                level.playSound(null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
+                player.setItemInHand(hand, ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
                 return ItemInteractionResult.SUCCESS;
             }
 
@@ -119,7 +122,7 @@ public class GatewayPlinthBlock extends Block {
 
     private static void setGateway(Level level, BlockPos source, GlobalPos destination, BlockState self_state){
         level.setBlock(source.below(), self_state.setValue(ACTIVE, true), Block.UPDATE_CLIENTS);
-        level.setBlock(source, Registration.GATEWAY_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        level.setBlock(source, ReactiveBlocks.GATEWAY_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         var be = level.getBlockEntity(source);
         if(!(be instanceof GatewayBlockEntity gateway)){
             return;
@@ -130,13 +133,13 @@ public class GatewayPlinthBlock extends Block {
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean moved_by_piston) {
         if(state.getValue(ACTIVE)){
-            if(level.getBlockState(pos.above()).is(Registration.GATEWAY_BLOCK.get())){
+            if(level.getBlockState(pos.above()).is(ReactiveBlocks.GATEWAY_BLOCK.get())){
                 level.removeBlock(pos.above(), false);
                 Vec3 rift_pos  = Vec3.atCenterOf(pos.above());
                 for(BlockPos point : ReactionEffects.getCreationPoints(pos)){
-                    ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos.above(), point, 10, 7, 0.8);
+                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, pos.above(), point, 10, 7, 0.8);
                 }
-                level.explode(null, (DamageSource)null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, Registration.STARDUST_PARTICLE, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
+                level.explode(null, null, COLLAPSE_DAMAGE_CALCULATOR, rift_pos.x(), rift_pos.y(), rift_pos.z(), 3, false, Level.ExplosionInteraction.TRIGGER, ReactiveParticles.STARDUST, ParticleTypes.REVERSE_PORTAL, Holder.direct(SoundEvents.BEACON_DEACTIVATE));
             }
         }
         super.onRemove(state, level, pos, new_state, moved_by_piston);
@@ -155,7 +158,7 @@ public class GatewayPlinthBlock extends Block {
             ReactiveMod.LOGGER.error("No valid destination for the end gateway at {}.", pos);
             return;
         }
-        level.setBlock(pos, Registration.GATEWAY_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        level.setBlock(pos, ReactiveBlocks.GATEWAY_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         BlockEntity be2 = level.getBlockEntity(pos);
         if(!(be2 instanceof GatewayBlockEntity gateway)) {
             ReactiveMod.LOGGER.error("Something went wrong while converting the gateway at {}.", pos);

@@ -1,12 +1,13 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -26,28 +27,24 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 
 public class SymbolBlockEntity extends BlockEntity {
 
-    public Direction facing = Direction.DOWN;
     public Item symbol_item = Items.BARRIER;
 
     public SymbolBlockEntity(BlockPos pos, BlockState state, Item item) {
-        super(Registration.SYMBOL_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.SYMBOL.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         setItem(item);
     }
 
     public SymbolBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.SYMBOL_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.SYMBOL.get(), pos, state);
     }
 
-    public void setFacing(Direction facing) {
-        this.facing = facing;
-    }
     public void setItem(Item item){ this.symbol_item = item; }
 
     // If you die near an Occult Symbol, it breaks, and you come back as an undead being.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(event.getEntity().level().isClientSide || !symbol_item.getDefaultInstance().is(Registration.OCCULT_SYMBOL_ITEM.get())
+        if(event.getEntity().level().isClientSide || !symbol_item.getDefaultInstance().is(ReactiveItems.OCCULT_SYMBOL.get())
                 ||  !(event.getEntity() instanceof Player)){
             return;
         }
@@ -79,6 +76,6 @@ public class SymbolBlockEntity extends BlockEntity {
         }
 
         for(int i = 0; i < 4; i++)
-            ParticleScribe.drawParticleZigZag(level, Registration.SMALL_BLACK_RUNE_PARTICLE, this.getBlockPos(), event.getEntity().blockPosition().above(), 5, 4, 0.7);
+            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.SMALL_BLACK_RUNE, this.getBlockPos(), event.getEntity().blockPosition().above(), 5, 4, 0.7);
     }
 }

@@ -29,6 +29,11 @@ public class EffectReaction extends FreeEffectReaction{
         cost = WorldSpecificValue.get(alias+"cost", 1, 20);
     }
 
+    public EffectReaction setCost(int cost) {
+        this.cost = cost;
+        return this;
+    }
+
     @Override
     public void run(Reactor reactor) {
         super.run(reactor);

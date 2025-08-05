@@ -1,0 +1,29 @@
+{
+  "variants":{
+    "facing=up": {
+      "model": "reactive:block/small_nodule",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "reactive:block/small_nodule",
+      "y": 270,
+      "x": 90
+    },
+    "facing=north": {
+      "model": "reactive:block/small_nodule",
+      "x": 270
+    },
+    "facing=south": {
+      "model": "reactive:block/small_nodule",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "reactive:block/small_nodule"
+    },
+    "facing=west": {
+      "model": "reactive:block/small_nodule",
+      "y": 90,
+      "x": 90
+    }
+  }
+}

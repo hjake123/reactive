@@ -1,10 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.client.particles.ParticleScribe;
-import net.minecraft.world.level.Level;
 
 public class AstralReaction extends Reaction{
     public AstralReaction(String alias){
@@ -25,7 +22,7 @@ public class AstralReaction extends Reaction{
 
     @Override
     public Status conditionsMet(Reactor reactor){
-        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0 && reactor.getTotalPowerLevel() > reactor.getPowerLevel(Powers.ASTRAL_POWER.get()))
             return Status.REACTING;
         return Status.STABLE;
     }

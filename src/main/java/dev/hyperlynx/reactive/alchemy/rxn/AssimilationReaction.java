@@ -2,12 +2,11 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.world.level.Level;
 
 public class AssimilationReaction extends Reaction{
-    Power consumedPower;
-    Power producedPower;
-    int rate;
+    final Power consumedPower;
+    final Power producedPower;
+    final int rate;
 
     public AssimilationReaction(String alias, Power producedPower, Power consumedPower){
         super(alias, 0);

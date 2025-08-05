@@ -1,14 +1,11 @@
 package dev.hyperlynx.reactive.be;
 
+import com.mojang.datafixers.util.Either;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
-import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.alchemy.PowerBottleInsertContext;
-import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -62,7 +59,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -83,26 +79,26 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     // Don't change the max power without updating the recipes.
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
-    public AreaMemory areaMemory; // Used to check for nearby blocks of interest.
+    public final AreaMemory areaMemory; // Used to check for nearby blocks of interest.
     private int tick_counter = 0; // Used for counting active ticks. See tick().
     private int process_stage = 0; // Used for sequential processing. See tick().
     private int gather_stage = 0; // Used for sequential processing. See gatherPower().
-    public final Color mix_color = new Color(); // Used to cache mixture color between updates;
+    public final Color mix_color = Color.black(); // Used to cache mixture color between updates;
     public boolean color_changed = true; // This is set to true when the color needs to be updated next rendering tick.
-    private final Color next_mix_color = new Color(); // Used to smoothly change mix_color.
+    private final Color next_mix_color = Color.black(); // Used to smoothly change mix_color.
     public boolean color_initialized = false; // This is set to true when mix_color is first updated.
     public int electricCharge = 0; // Used for the ELECTRIC Reaction Stimulus. Set by nearby Volt Cells and lightning.
-    public int sacrificeCount = 0; // Used for the SACRIFICE Reaction Stimulus.
     public int integrity = 100; // Level of Crucible Integrity, measured in cycles before failure. Operated on in the Curse Cell section.
     public int enderRiftStrength = 0; // Used for the Ender Pearl Dissolve feature.
     public EndCrystal linked_crystal = null; // Used for the END_CRYSTAL Reaction Stimulus.
     public boolean used_crystal_this_cycle = false; // True if the linked crystal powered a reaction this tick. If not, break the link.
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction state of the previous tick. Synced to the client.
-    public List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to render reactions, and is updated in response to the aforementioned packet.
+    public final List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to render reactions, and is updated in response to the aforementioned packet.
+    public boolean reactions_paused = false; // Set by the Inert Crystal special case. Inhibits all Reactions when true.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.CRUCIBLE_BE.get(), pos, state);
+        super(ReactiveBlockEntityTypes.CRUCIBLE.get(), pos, state);
         NeoForge.EVENT_BUS.register(this);
         areaMemory = new AreaMemory(pos);
     }
@@ -130,7 +126,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 switch (crucible.process_stage) {
                     case 0 -> {
                         // Deal with electricity.
-                        if (level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get()) && crucible.electricCharge < 15) {
+                        if (level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get()) && crucible.electricCharge < 15) {
                             crucible.electricCharge = 15;
                         } else if (crucible.electricCharge > 0) {
                             crucible.electricCharge--;
@@ -138,15 +134,15 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                         // Check for Effusive Sponges and fill if there is one.
                         if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
-                            if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
-                                crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+                            if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), ReactiveBlocks.WARP_SPONGE.get())) {
+                                level.setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                                 level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                                 level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(state));
                             }
                         }
 
                         // Handle the various properties of the Curse Cell and Integrity.
-                        if (level.getBlockState(pos.below()).is(Registration.CURSE_CELL.get())) {
+                        if (level.getBlockState(pos.below()).is(ReactiveBlocks.CURSE_CELL.get())) {
                             boolean hungers = true;
                             for (Power base_power : ReactionMan.BASE_POWER_LIST) {
                                 if (crucible.getPowerLevel(base_power) > 0) {
@@ -195,6 +191,9 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                         // Spread Sculk, if applicable
                         crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
+
+                        // Reset reaction pause mechanic.
+                        crucible.reactions_paused = false;
                     }
 
                     case 4 -> {
@@ -229,16 +228,12 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         }
     }
 
-    public int getTickCount(){
-        return tick_counter;
-    }
-
     private static void checkIntegrity(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
         if(crucible.integrity < 70){
             crucible.expendAnyPowerExcept(null, 1);
         }
         if(crucible.integrity < 50 && crucible.integrity > 10){
-            ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 1);
+            ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 1);
         }
         if(crucible.integrity < 20 && crucible.integrity > 12){
             level.playSound(null, pos, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3f, 0.9f);
@@ -265,15 +260,15 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     public static void integrityFail(Level level, BlockPos pos, BlockState state) {
-        ParticleScribe.drawParticleRing(level, Registration.RUNE_PARTICLE, pos, 0.7, 0.9, 20);
+        ParticleScribe.drawParticleRing(level, ReactiveParticles.RUNE, pos, 0.7, 0.9, 20);
         level.playSound(null, pos, SoundEvents.RESPAWN_ANCHOR_DEPLETE.value(), SoundSource.BLOCKS, 1.15f, 0.8f);
         level.explode(null, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, 0.1f, Level.ExplosionInteraction.NONE);
-        if(state.getBlock().equals(Registration.SHULKER_CRUCIBLE.get())){
+        if(state.getBlock().equals(ReactiveBlocks.SHULKER_CRUCIBLE.get())){
             ItemEntity dropped_shell = new ItemEntity(level, Vec3.atCenterOf(pos).x, Vec3.atCenterOf(pos).y, Vec3.atCenterOf(pos).z, Items.SHULKER_SHELL.getDefaultInstance());
             level.addFreshEntity(dropped_shell);
         }
         if(level instanceof ServerLevel slevel)
-            FlagTrigger.triggerForNearbyPlayers(slevel, Registration.SEE_CRUCIBLE_FAIL_TRIGGER.get(), pos, 24);
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.SEE_CRUCIBLE_FAIL.get(), pos, 24);
         if(state.getValue(CrucibleBlock.FULL))
             level.setBlock(pos, Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL), Block.UPDATE_CLIENTS);
         else
@@ -324,6 +319,11 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         used_crystal_this_cycle = used;
     }
 
+    @Override
+    public Vec3 getPos() {
+        return this.getBlockPos().getBottomCenter().add(0, 0.5625, 0);
+    }
+
     // Only call this method when linked_crystal isn't null please and thank you.
     @Override
     public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
@@ -334,28 +334,28 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     private static void gatherPower(Level level, CrucibleBlockEntity crucible){
         // Only gather power if a Copper Symbol is nearby, but not an Iron one.
-        if(crucible.areaMemory.exists(level, Registration.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, Registration.IRON_SYMBOL.get())){
+        if(crucible.areaMemory.exists(level, ReactiveBlocks.COPPER_SYMBOL.get()) && !crucible.areaMemory.exists(level, ReactiveBlocks.IRON_SYMBOL.get())){
             switch(crucible.gather_stage){
                 case 0 -> {
                     // Nether portals remove Powers, unless you surpass the concentration, in which case it solidifies the portal.
                     if(crucible.areaMemory.exists(level, Blocks.NETHER_PORTAL) && crucible.getTotalPowerLevel() > 400){
                         if (crucible.getPowerLevel(Powers.MIND_POWER.get()) > 1300) {
-                            BlockPos portal_pos = crucible.areaMemory.fetch(crucible.level, Blocks.NETHER_PORTAL);
-                            SpecialCaseMan.solidifyPortal(crucible.level, portal_pos, crucible.level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
-                            crucible.level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                            BlockPos portal_pos = crucible.areaMemory.fetch(level, Blocks.NETHER_PORTAL);
+                            SpecialCaseMan.solidifyPortal(level, portal_pos, level.getBlockState(portal_pos).getValue(NetherPortalBlock.AXIS));
+                            level.playSound(null, portal_pos, SoundEvents.ZOMBIE_VILLAGER_CURE, SoundSource.BLOCKS, 1.0F, 1.0F);
                             level.gameEvent(GameEvent.EXPLODE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
                         }
 
                         crucible.expendAnyPowerExcept(null, 400);
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.PORTAL_TRADE_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.PORTAL_TRADE.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
                 case 1 -> {
                     // Blaze Rods add blaze.
-                    if(crucible.areaMemory.exists(level, Registration.BLAZE_ROD.get())){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.BLAZE_ROD.get())){
                         crucible.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_rod_power_amount", 35, 50));
-                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.SEE_BLAZE_GATHER_TRIGGER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
+                        FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.SEE_BLAZE_GATHER.get(), crucible.getBlockPos(), ConfigMan.COMMON.crucibleRange.get());
                     }
                 }
 
@@ -368,10 +368,10 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
                 case 3 -> {
                     // Occult Symbols and Wither Skeleton Skulls add curse, while Divine Symbols remove it.
-                    if(crucible.areaMemory.exists(level, Registration.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_WALL_SKULL)){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.OCCULT_SYMBOL.get()) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_SKULL) || crucible.areaMemory.exists(level, Blocks.WITHER_SKELETON_WALL_SKULL)){
                         crucible.addPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("wither_skull_power_amount", 50, 400));
                     }
-                    if(crucible.areaMemory.exists(level, Registration.DIVINE_SYMBOL.get())){
+                    if(crucible.areaMemory.exists(level, ReactiveBlocks.DIVINE_SYMBOL.get())){
                         crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValue.get("divine_cleanse_amount", 200, 400));
                     }
                 }
@@ -427,7 +427,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
                 // The special case may have removed the item entity; continue to the next if it has died.
                 if(!item_entity.isAlive()) continue;
 
-                changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
+                changed = changed || tryTransmute(level, pos, state, crucible, item_entity);
                 changed = changed || tryReduceToPower(item_entity.getItem(), crucible);
 
                 // Remove entities that were completely transmuted or dissolved.
@@ -465,7 +465,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a matching Dissolve recipe, and if it does, adds the output as a new item entity.
     private static boolean tryDissolveWithByproduct(Level level, BlockPos pos, ItemStack stack, int count, CrucibleBlockEntity crucible){
-        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
         for (RecipeHolder<DissolveRecipe> holder : purify_recipes) {
             DissolveRecipe recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
@@ -483,7 +483,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a transmutation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryTransmute(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible, ItemEntity itemEntity) {
-        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
+        List<RecipeHolder<TransmuteRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.TRANS_RECIPE_TYPE.get());
         for (RecipeHolder<TransmuteRecipe> holder : purify_recipes) {
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
@@ -500,13 +500,13 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // Attempts to find a precipitation recipe that matches, and if it does, adds the output as a new item entity and returns true.
     private static boolean tryPrecipitate(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
-        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(Registration.PRECIPITATE_RECIPE_TYPE.get());
+        List<RecipeHolder<PrecipitateRecipe>> creation_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.PRECIPITATE_RECIPE_TYPE.get());
         for(var holder : creation_recipes){
             var recipe = holder.value();
             if(recipe.needs_electricity && crucible.electricCharge < 1)
                 continue;
             if(recipe.matches(CrucibleRecipeInput.of(crucible.getPowerMap()), level)){
-                ItemStack result = recipe.apply(crucible, level);
+                ItemStack result = recipe.apply(crucible);
                 level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, result));
                 crucible.setDirty(level, pos, state);
                 return true;
@@ -519,20 +519,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
     // CLIENT ONLY
     // Used to update reactionsToRender
-    public static void acceptReactionStatusPayload(ReactionStatusPayload payload, IPayloadContext context) {
-        Level level = context.player().level();
-        BlockEntity be = level.getBlockEntity(payload.pos());
-        if(!(be instanceof CrucibleBlockEntity crucible)){
-            ReactiveMod.LOGGER.error("Reaction status packet had an invalid destination. Ignoring.");
-            return;
-        }
-        crucible.reactions_to_render.clear();
-        for(ReactionStatusEntry entry : payload.statuses()){
-            if(entry.status() == Reaction.Status.REACTING){
-                crucible.reactions_to_render.add(entry.reaction_alias());
-            }
-        }
-    }
+
 
     public void setDirty(){
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
@@ -559,7 +546,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         LivingEntity entity = event.getEntity();
 
         double dist = BeamHelper.distance(event.getEntity().getX(), event.getEntity().getY(), event.getEntity().getZ(), this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ());
-        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), Registration.IRON_SYMBOL.get())) {
+        if(dist > ConfigMan.COMMON.crucibleRange.get() || areaMemory.exists(event.getEntity().level(), ReactiveBlocks.IRON_SYMBOL.get())) {
             return;
         }
 
@@ -574,8 +561,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
             return;
         }
 
-        sacrificeCount++;
-        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), Registration.SEE_SACRIFICE_TRIGGER.get(), getBlockPos(), 8);
+        FlagTrigger.triggerForNearbyPlayers((ServerLevel) event.getEntity().level(), ReactiveCriterionTriggers.SEE_SACRIFICE.get(), getBlockPos(), 8);
 
         double x = event.getEntity().getX();
         double y = event.getEntity().getY();
@@ -614,6 +600,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
         p.setPos(new Vec3(x, y +2, z));
         p.setPhantomSize(this.getLevel().random.nextInt(2, 4));
+        assert getLevel() != null;
         getLevel().addFreshEntity(p);
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
     }
@@ -623,12 +610,22 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         return powers;
     }
 
+    @Override
+    public boolean areReactionsPaused() {
+        return reactions_paused;
+    }
+
+    @Override
+    public ReactionStatusPayload getPayload() {
+        return new ReactionStatusPayload(new ArrayList<>(getReactionStatus()), new ReactionStatusPayload.Target(Either.left(getBlockPos())));
+    }
+
     public static void insertPowerBottle(CrucibleBlockEntity crucible, PowerBottleInsertContext context){
         boolean changed = false;
         for(Power p : Powers.POWERS.getRegistry().get()){
             if(p.matchesBottle(context.getBottle())){
                 if(crucible.addPower(p, WorldSpecificValues.BOTTLE_RETURN.get())) {
-                    if(context.getBottle().is(Registration.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
+                    if(context.getBottle().is(ReactiveItems.WARP_BOTTLE.get()) && WarpBottleItem.isRiftBottle(context.getBottle())){
                         crucible.enderRiftStrength = 2000;
                     }
                     context.reduceByOne();
@@ -639,6 +636,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
 
         if(changed){
             crucible.setDirty();
+            assert crucible.getLevel() != null;
             crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
             crucible.getLevel().gameEvent(GameEvent.FLUID_PICKUP, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
         }
@@ -655,43 +653,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     // These methods manage power in the Crucible. They might be extracted to an interface later.
 
     @Override
-    public boolean addPower(Power p, int amount) {
-        if(p == null){
-            return false;
-        }
-        if(getPowerLevel(p) == CRUCIBLE_MAX_POWER){
-            return false;
-        }
-        if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
-            int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            if(excess > 0) {
-                amount -= excess;
-            }
-        }
-
-        int prev = powers.getOrDefault(p, 0);
-        if(prev > 0)
-            powers.replace(p, amount + prev);
-        else
-            powers.put(p, amount);
-
-//        if(this.getLevel() != null && !this.getLevel().isClientSide)
-//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
-
-        return true;
-    }
-
-    @Override
-    public int getPowerLevel(Power t) {
-        if(powers.isEmpty() || powers.get(t) == null){
-            return 0;
-        }
-        return powers.get(t);
-    }
-
-    @Override
     public AreaMemory getAreaMemory() {
         return areaMemory;
     }
@@ -699,11 +660,6 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     @Override
     public int getElectricCharge() {
         return electricCharge;
-    }
-
-    @Override
-    public int getSacrificeCount() {
-        return sacrificeCount;
     }
 
     @Override
@@ -727,55 +683,22 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
     }
 
     @Override
-    public boolean expendPower(Power t, int amount) {
-        if(powers.isEmpty() || !powers.containsKey(t)){
-            return false;
-        }
-        int level = powers.get(t);
-        if(level > amount){
-            powers.put(t, level-amount);
-            return true;
-        }
-        if (level == amount) {
-            powers.put(t, 0);
-            return true;
-        }
-
-        // This implies that all power t wasn't enough to meet amount.
-        powers.put(t, 0);
-        return false;
+    public void clearRenderReactions() {
+        this.reactions_to_render.clear();
     }
 
-
-    public void expendAnyPowerExcept(Power immune_power, int amount) {
-        boolean expended = false;
-        for(Power p : powers.keySet()){
-            if(p != immune_power && p != Powers.CURSE_POWER.get()){
-                expended = expendPower(p, amount);
-            }
-            if(expended) return;
-        }
+    @Override
+    public void addRenderReaction(String s) {
+        this.reactions_to_render.add(s);
     }
 
+    @Override
     public void expendPower() {
-        powers.clear();
+        getPowerMap().clear();
         color_changed = true;
         mix_color.reset();
         next_mix_color.reset();
         color_initialized = false;
-    }
-
-    public int getTotalPowerLevel(){
-        int totalpp = 0;
-        for (Power p : powers.keySet()) {
-            totalpp += powers.get(p);
-        }
-        return totalpp;
-    }
-
-    @Override
-    public int getPowerCount(){
-        return powers.keySet().size();
     }
 
     @Override
@@ -819,22 +742,7 @@ public class CrucibleBlockEntity extends BlockEntity implements Reactor {
         }
         // Iterate through each power and add its tint to the total, adjusted for its actual prevalence.
         next_mix_color.reset();
-        for (Power p : powers.keySet()) {
-            if(p == null || p.invisible){
-                continue; // Skip any invalid or invisible powers.
-            }
-            Color pow_color = p.getColor();
-            float pow_weight = getPowerLevel(p) / (float) getTotalVisiblePowerLevel();
-            next_mix_color.red += pow_color.red * pow_weight;
-            next_mix_color.green += pow_color.green * pow_weight;
-            next_mix_color.blue += pow_color.blue * pow_weight;
-        }
-
-        // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
-        float tint_alpha = (float) getTotalVisiblePowerLevel() / (float) CRUCIBLE_MAX_POWER;
-        next_mix_color.red = (int) (water_color.red * (1 - tint_alpha) + next_mix_color.red * (tint_alpha));
-        next_mix_color.green = (int) (water_color.green * (1 - tint_alpha) + next_mix_color.green * (tint_alpha));
-        next_mix_color.blue = (int) (water_color.blue * (1 - tint_alpha) + next_mix_color.blue * (tint_alpha));
+        next_mix_color.setMixColor(water_color, getPowerMap(), getTotalVisiblePowerLevel(), maxPower());
         color_changed = false;
     }
 

@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.integration.iris;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
-import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
+import dev.hyperlynx.reactive.client.renderers.be.GatewayRenderer;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.uniforms.SystemTimeUniforms;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -57,9 +57,9 @@ public class IrisGatewayRenderer extends GatewayRenderer<GatewayBlockEntity> imp
     }
 
     public static class IrisGatewayRendererContext extends GatewayRenderContext {
-        int light;
-        int overlay;
-        float progress;
+        final int light;
+        final int overlay;
+        final float progress;
         int count;
         Vector3f normal;
 

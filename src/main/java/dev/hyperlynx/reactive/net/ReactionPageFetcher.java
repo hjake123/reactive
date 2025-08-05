@@ -34,7 +34,7 @@ public class ReactionPageFetcher {
         return RESPONSES.get(alias);
     }
 
-    public static void handlePageResponse(ReactionPagePayload payload, IPayloadContext context) {
+    public static void handlePageResponse(ReactionPagePayload payload, IPayloadContext ignored) {
         ReactiveMod.LOGGER.debug("Received response for page about {}", payload.alias());
         RESPONSES.put(payload.alias(), payload.contents());
         if (!REQUEST_BLOCKERS.containsKey(payload.alias())) {

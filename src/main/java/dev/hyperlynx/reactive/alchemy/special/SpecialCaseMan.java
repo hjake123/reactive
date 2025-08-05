@@ -1,14 +1,21 @@
 package dev.hyperlynx.reactive.alchemy.special;
 
 import dev.hyperlynx.reactive.ConfigMan;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
+import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.DisplacedBlock;
 import dev.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.entites.ReactorEntity;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
@@ -19,6 +26,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.Filterable;
@@ -27,7 +35,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.StructureTags;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -64,9 +71,9 @@ import java.util.Optional;
 // It's SpecialCaseMan, to the rescue once again!
 // Handles various circumstances that go beyond the normal logic of the mod.
 public class SpecialCaseMan {
-    public static List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
-    public static List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
-    public static List<BottleSpecialCase> EXTRACT_BOTTLE_SPECIAL_CASES = new ArrayList<>();
+    public static final List<DissolveSpecialCase> DISSOLVE_SPECIAL_CASES = new ArrayList<>();
+    public static final List<EmptySpecialCase> EMPTY_SPECIAL_CASES = new ArrayList<>();
+    public static final List<BottleSpecialCase> EXTRACT_BOTTLE_SPECIAL_CASES = new ArrayList<>();
 
     public static void checkDissolveSpecialCases(CrucibleBlockEntity c, ItemEntity e){
         NeoForge.EVENT_BUS.post(new DissolveEvent(e, c));
@@ -101,7 +108,7 @@ public class SpecialCaseMan {
 
     public static void register_dissolve_cases(){
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Registration.LITMUS_PAPER.get())) {
+            if(e.getItem().is(ReactiveItems.LITMUS_PAPER.get())) {
                 LitmusPaperItem.takeMeasurement(e.getItem(), c);
                 return true;
             }
@@ -150,7 +157,7 @@ public class SpecialCaseMan {
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if(e.getItem().is(Registration.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700) {
+            if(e.getItem().is(ReactiveItems.PHANTOM_RESIDUE.get()) && c.getPowerLevel(Powers.VERDANT_POWER.get()) > 700) {
                 residualSlime(c, e);
                 return true;
             }
@@ -158,15 +165,36 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Items.SCULK_CATALYST)) {
-                sculkMagic(c, e);
+                sculkMagic(c);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
-            if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
+            if((e.getItem().is(ReactiveItems.MOTION_SALT_BLOCK.get()) || e.getItem().is(ReactiveItems.FRAMED_MOTION_SALT_BLOCK.get()))
                     && c.electricCharge > 0) {
                 displaceNearby(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(ReactiveItems.INERT_CRYSTAL.get()))) {
+                preventReactions(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(ReactiveItems.GOLD_THREAD.get()))) {
+                expelReaction(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS) != null)) {
+                saltMaterialCraft(c, e);
                 return true;
             }
             return false;
@@ -203,14 +231,14 @@ public class SpecialCaseMan {
                 badOmen(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.areaMemory.exists(c.getLevel(), Registration.INCOMPLETE_STAFF.get()))
-                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), Registration.INCOMPLETE_STAFF.get()));
+            if(c.areaMemory.exists(c.getLevel(), ReactiveBlocks.INCOMPLETE_STAFF.get()))
+                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), ReactiveBlocks.INCOMPLETE_STAFF.get()));
         });
     }
 
     public static void register_bottle_cases() {
         EXTRACT_BOTTLE_SPECIAL_CASES.add((c, bottle) -> {
-            if(c.enderRiftStrength > 0 && bottle.is(Registration.WARP_BOTTLE.get()))
+            if(c.enderRiftStrength > 0 && bottle.is(ReactiveItems.WARP_BOTTLE.get()))
                 return WarpBottleItem.makeRiftBottle(c, bottle);
             return bottle;
         });
@@ -227,6 +255,9 @@ public class SpecialCaseMan {
     // Ender eyes that are thrown into the Crucible without Curse are launched as if used.
     private static void enderEyeFlyAway(CrucibleBlockEntity c, ItemEntity e) {
         ServerLevel serverlevel = (ServerLevel) c.getLevel();
+        if(serverlevel == null) {
+            return;
+        }
         BlockPos blockpos = serverlevel.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
         if (blockpos != null) {
             EyeOfEnder eyeofender = new EyeOfEnder(c.getLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
@@ -242,10 +273,10 @@ public class SpecialCaseMan {
 
     // Dissolving a carved pumpkin might have many effects.
     private static void pumpkinMagic(Level level, ItemEntity e, CrucibleBlockEntity c) {
-        if (level.isClientSide || c.areaMemory.exists(level, Registration.IRON_SYMBOL.get()))
+        if (level.isClientSide || c.areaMemory.exists(level, ReactiveBlocks.IRON_SYMBOL.get()))
             return;
 
-        BlockPos blazeRodPos = c.areaMemory.fetch(level, Registration.BLAZE_ROD.get());
+        BlockPos blazeRodPos = c.areaMemory.fetch(level, ReactiveBlocks.BLAZE_ROD.get());
         if(blazeRodPos != null && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 0){
             conjureBlaze(level, e, c, blazeRodPos);
             return;
@@ -263,8 +294,8 @@ public class SpecialCaseMan {
     }
 
     // Either spread Sculk or change Vital to Soul using a Catalyst.
-    private static void sculkMagic(CrucibleBlockEntity c, ItemEntity e) {
-        if(!(c.getLevel() instanceof ServerLevel serverlevel))
+    private static void sculkMagic(CrucibleBlockEntity c) {
+        if(!(c.getLevel() instanceof ServerLevel))
             return;
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
@@ -286,7 +317,7 @@ public class SpecialCaseMan {
 
     private static void conjureBlaze(Level level, ItemEntity e, CrucibleBlockEntity c, BlockPos blazeRodPos) {
         c.addPower(Powers.BLAZE_POWER.get(), WorldSpecificValue.get("blaze_conjure_yield", 200, 400));
-        EntityType.BLAZE.spawn((ServerLevel) level, (ItemStack) null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
+        EntityType.BLAZE.spawn((ServerLevel) level, null, null, blazeRodPos, MobSpawnType.MOB_SUMMONED, true, true);
         e.kill();
         ParticleScribe.drawParticleLine(level, ParticleTypes.FLAME,
                 c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.5125, c.getBlockPos().getZ() + 0.5,
@@ -302,19 +333,19 @@ public class SpecialCaseMan {
     private static void conjureSpirit(Level level, ItemEntity e, CrucibleBlockEntity c, int cause, BlockPos candlePos) {
         if (cause == 1) { // It's most likely that an Allay will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.CURSE_POWER.get()) > 20)) {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner() instanceof ServerPlayer player)
-                    Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
+                    ReactiveCriterionTriggers.SEE_ALLAY_SUMMON.get().trigger(player);
             }
             else
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
         } else if (cause == 2) { // It's most likely that a Vex will spawn.
             if (level.random.nextFloat() > 0.07 && !(c.getPowerLevel(Powers.MIND_POWER.get()) > 20))
-                EntityType.VEX.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.VEX.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
             else {
-                EntityType.ALLAY.spawn((ServerLevel) level, (ItemStack) null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
+                EntityType.ALLAY.spawn((ServerLevel) level, null, null, candlePos, MobSpawnType.MOB_SUMMONED, true, true);
                 if(e.getOwner()  instanceof ServerPlayer player)
-                    Registration.SEE_ALLAY_SUMMON_TRIGGER.get().trigger(player);
+                    ReactiveCriterionTriggers.SEE_ALLAY_SUMMON.get().trigger(player);
             }
         }
         e.kill();
@@ -348,14 +379,14 @@ public class SpecialCaseMan {
         if(thrower != null) {
             Player player = l.getPlayerByUUID(thrower.getUUID());
             if(!l.isClientSide)
-                Registration.ENDER_PEARL_DISSOLVE_TRIGGER.get().trigger((ServerPlayer) player);
+                ReactiveCriterionTriggers.ENDER_PEARL_DISSOLVE.get().trigger((ServerPlayer) player);
             if(player != null && e.level().dimension().equals(player.level().dimension())){
                 player.teleportTo(p.getX() + 0.5, p.getY() + 0.85, p.getZ() + 0.5);
                 foundTarget = true;
             }
         }
         if(!foundTarget){
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.MAKE_RIFT_TRIGGER.get(), p, 20);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, ReactiveCriterionTriggers.MAKE_RIFT.get(), p, 20);
             c.enderRiftStrength = 2000;
         }
         e.kill();
@@ -505,7 +536,7 @@ public class SpecialCaseMan {
                 break;
             // Remove a random word from the page.
             List<String> words = new ArrayList<>(List.of(pages.get(page_index).raw().split("\\s+")));
-            if(words.size() == 0)
+            if(words.isEmpty())
                 continue;
             did_anything = true;
             String victim = words.get(e.level().random.nextInt(words.size()));
@@ -537,12 +568,16 @@ public class SpecialCaseMan {
 
     // Throwing a Motion Salt Block into an electrified crucible displaces a nearby block.
     private static void displaceNearby(CrucibleBlockEntity c) {
+        if(c.getLevel() == null) {
+            return;
+        }
         Optional<BlockPos> target = BlockPos.findClosestMatch(c.getBlockPos(), ConfigMan.COMMON.crucibleRange.get(), ConfigMan.COMMON.crucibleRange.get(),
                 blockPos -> {
                     BlockState state = Objects.requireNonNull(c.getLevel()).getBlockState(blockPos);
-                    return !blockPos.equals(c.getBlockPos()) && !state.isAir() && !state.is(Registration.VOLT_CELL.get());
+                    return !blockPos.equals(c.getBlockPos()) && !state.isAir() && !state.is(ReactiveBlocks.VOLT_CELL.get());
                 });
         if(target.isPresent()){
+            assert c.getLevel() != null;
             DisplacedBlock.displace(c.getLevel().getBlockState(target.get()), target.get(), c.getLevel(), 200);
             for(int i = 0; i < 2; i++)
                 ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK, c.getBlockPos(), target.get(),
@@ -585,7 +620,7 @@ public class SpecialCaseMan {
                 e.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 0));
                 e.hurt(e.level().damageSources().magic(), 10);
                 if(e instanceof Player){
-                    Registration.BE_CURSED_TRIGGER.get().trigger((ServerPlayer) e);
+                    ReactiveCriterionTriggers.BE_CURSED.get().trigger((ServerPlayer) e);
                 }
             }
             c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.value(), SoundSource.BLOCKS, 1, 1);
@@ -622,7 +657,7 @@ public class SpecialCaseMan {
     private static void lightEscape(CrucibleBlockEntity c) {
         if(c.getLevel() == null || c.getLevel().isClientSide || !c.getLevel().getBlockState(c.getBlockPos().above()).isAir())
             return;
-        c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        c.getLevel().setBlock(c.getBlockPos().above(), ReactiveBlocks.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
     public static void windBomb(Level level, Vec3 position){
@@ -633,7 +668,7 @@ public class SpecialCaseMan {
         if(level == null)
             return;
         // From WindCharge.java
-        level.explode(null, (DamageSource)null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), radius, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
+        level.explode(null, null, AbstractWindCharge.EXPLOSION_DAMAGE_CALCULATOR, position.x(), position.y(), position.z(), radius, false, Level.ExplosionInteraction.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.WIND_CHARGE_BURST);
     }
 
     private static void badOmen(CrucibleBlockEntity c){
@@ -657,8 +692,80 @@ public class SpecialCaseMan {
         if(portal.isComplete()){
             portal.createSolidPortalBlocks();
             if(!l.isClientSide)
-                FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, Registration.PORTAL_FREEZE_TRIGGER.get(), p, 9);
+                FlagTrigger.triggerForNearbyPlayers((ServerLevel) l, ReactiveCriterionTriggers.PORTAL_FREEZE.get(), p, 9);
         }
+    }
+
+    private static void preventReactions(CrucibleBlockEntity crucible){
+        crucible.reactions_paused = true;
+    }
+
+    private static void expelReaction(CrucibleBlockEntity crucible, ItemEntity thread){
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
+        boolean is_reactive = false;
+        for(ReactionStatusEntry entry : crucible.getReactionStatus()){
+            if(entry.status().equals(Reaction.Status.REACTING)){
+                is_reactive = true;
+                break;
+            }
+        }
+        if(!is_reactive){
+            return;
+        }
+
+        ReactorEntity entity = new ReactorEntity(ReactiveEntityTypes.REACTOR.get(), crucible.getLevel());
+        entity.setPos(crucible.getPos().add(0, 1.0, 0));
+        entity.setPowers(crucible.getPowerMap());
+        entity.setLifespan(600);
+        crucible.expendPower();
+        crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+        crucible.getLevel().addFreshEntity(entity);
+        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS);
+        crucible.getLevel().playSound((Entity) null, crucible.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 0.7F);
+        thread.getItem().shrink(1);
+        if(thread.getItem().getCount() == 0){
+            thread.kill();
+        }
+        if(crucible.getLevel() instanceof ServerLevel slevel) {
+            FlagTrigger.triggerForNearbyPlayers(slevel, ReactiveCriterionTriggers.GOLD_THREAD_REACTION.get(), crucible.getBlockPos(), 9);
+        }
+    }
+
+    private static final int MATERIAL_CRAFT_MIN_POWER = 800;
+    private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
+        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER && !(crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10)) {
+            return;
+        }
+        ItemStack material_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItemHolder()));
+        material_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
+
+        int max_amount_used = 1;
+        int yield_multiplier = 1;
+        YieldEntry yield_entry = salt_item_entity.getItem().getItemHolder().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+        if(yield_entry != null) {
+            max_amount_used = yield_entry.max_input_items();
+            yield_multiplier = yield_entry.yield_per_input();
+        }
+        int amount_used = Math.min(salt_item_entity.getItem().getCount(), max_amount_used);
+        material_stack.setCount(amount_used * yield_multiplier);
+        salt_item_entity.getItem().shrink(amount_used);
+        if(salt_item_entity.getItem().getCount() <= 0) {
+            salt_item_entity.kill();
+        }
+
+        Vec3 in_crucible = crucible.getBlockPos().getCenter();
+        ItemEntity drop = new ItemEntity(crucible.getLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
+        crucible.getLevel().addFreshEntity(drop);
+        crucible.expendPower();
+        crucible.setDirty();
     }
 
 }

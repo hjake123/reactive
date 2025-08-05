@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.registration.ReactiveRecipes;
 import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<TransmuteRecipe>> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public TransmuteRecipeCategory() {
         slot_manager.addSlot("reactant", 1, 1);
@@ -37,12 +37,15 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
     }
     @Override
     public @Nullable ResourceLocation getRegistryName(@Nullable RecipeHolder<TransmuteRecipe> holder) {
+        if(holder == null) {
+            return null;
+        }
         return holder.id();
     }
 
     @Override
     public RecipeType<RecipeHolder<TransmuteRecipe>> getRecipeType() {
-        return RecipeType.createFromVanilla(Registration.TRANS_RECIPE_TYPE.get());
+        return RecipeType.createFromVanilla(ReactiveRecipes.TRANS_RECIPE_TYPE.get());
     }
 
     @Override
@@ -66,7 +69,7 @@ public class TransmuteRecipeCategory implements IRecipeCategory<RecipeHolder<Tra
 
     @Override
     public IDrawable getIcon() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.CRUCIBLE_ITEM.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ReactiveItems.CRUCIBLE.get().getDefaultInstance());
     }
 
     @Override

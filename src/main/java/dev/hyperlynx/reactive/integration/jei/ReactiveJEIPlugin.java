@@ -2,51 +2,51 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
+import dev.hyperlynx.reactive.registration.*;
+import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.components.ReactionFlaskContents;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
 import dev.hyperlynx.reactive.items.StaffItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
+import dev.hyperlynx.reactive.recipes.ReactionFlaskCraftingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.recipe.vanilla.IVanillaRecipeFactory;
 import mezz.jei.api.registration.IModIngredientRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.crafting.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @JeiPlugin
 public class ReactiveJEIPlugin implements IModPlugin {
     public static IJeiHelpers HELPERS;
-    public static DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
-    public static TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
-    public static PowerBottleRecipeCategory POWER_BOTTLE_CATEGORY = new PowerBottleRecipeCategory();
-    public static PowerIngredientType POWER_TYPE = new PowerIngredientType();
-    public static PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
-    public static PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
-    public static IJeiRuntime RUNTIME;
+    public static final DissolveRecipeCategory DISSOLVE_CATEGORY = new DissolveRecipeCategory();
+    public static final TransmuteRecipeCategory TRANSMUTE_CATEGORY = new TransmuteRecipeCategory();
+    public static final PowerBottleRecipeCategory POWER_BOTTLE_CATEGORY = new PowerBottleRecipeCategory();
+    public static final PowerIngredientType POWER_TYPE = new PowerIngredientType();
+    public static final PowerIngredientHandler POWER_HANDLER = new PowerIngredientHandler();
+    public static final PowerIngredientRenderer POWER_RENDERER = new PowerIngredientRenderer();
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -74,15 +74,15 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         setHelpers(registration.getJeiHelpers());
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get()));
-        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get()));
+        registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get()));
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.TRANS_RECIPE_TYPE.get()));
         addDescriptions(registration);
-        addStaffRepairRecipe(Registration.STAFF_OF_BLAZE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_LIFE_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_LIGHT_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_MIND_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_WARP_ITEM.get(), registration, registration.getVanillaRecipeFactory());
-        addStaffRepairRecipe(Registration.STAFF_OF_SOUL_ITEM.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_BLAZE.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_LIFE.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_LIGHT.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_MIND.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_WARP.get(), registration, registration.getVanillaRecipeFactory());
+        addStaffRepairRecipe(ReactiveItems.STAFF_OF_SOUL.get(), registration, registration.getVanillaRecipeFactory());
         addDisplacerRepairRecipe(registration, registration.getVanillaRecipeFactory());
         if(!ConfigMan.CLIENT.listPowersAsIngredients.get())
             registration.getIngredientManager().removeIngredientsAtRuntime(POWER_TYPE, Powers.POWER_REGISTRY.stream().toList());
@@ -90,7 +90,8 @@ public class ReactiveJEIPlugin implements IModPlugin {
         addPowerBottleRecipes(registration);
         if(ConfigMan.CLIENT.showPowerSources.get())
             addPowerSourceRecipes(registration);
-
+        addReactionFlaskRecipes(registration);
+        addMaterialRecipes(registration);
     }
 
     private void addPowerBottleRecipes(IRecipeRegistration registration){
@@ -98,11 +99,10 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 .map((power ->  power.hasBottle() ? new PowerBottleRecipe("power_bottles", power) : null)).filter((recipe) -> !(recipe == null)).toList());
     }
 
-    // TODO: this is bad! and slow!
     private void addPowerSourceRecipes(IRecipeRegistration registration){
         Set<Item> excluded = new HashSet<>();
         ClientLevel level = Objects.requireNonNull(Minecraft.getInstance().level);
-        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(Registration.DISSOLVE_RECIPE_TYPE.get());
+        List<RecipeHolder<DissolveRecipe>> purify_recipes = level.getRecipeManager().getAllRecipesFor(ReactiveRecipes.DISSOLVE_RECIPE_TYPE.get());
         for (RecipeHolder<DissolveRecipe> r : purify_recipes) {
             for(ItemStack stack: r.value().getReactant().getItems())
                 excluded.add(stack.getItem());
@@ -120,17 +120,17 @@ public class ReactiveJEIPlugin implements IModPlugin {
     }
 
     private void addDescriptions(IRecipeRegistration registration) {
-        registration.addItemStackInfo(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.crucible"));
-        registration.addItemStackInfo(Registration.SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.GOLD_FOAM_ITEM.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.MOTION_SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.SECRET_SCALE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
-        registration.addItemStackInfo(Registration.PHANTOM_RESIDUE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_input"));
-        addGenericDescriptions(registration, Registration.STAFF_OF_WARP_ITEM.get(), Registration.STAFF_OF_MIND_ITEM.get(),
-                Registration.STAFF_OF_BLAZE_ITEM.get(), Registration.STAFF_OF_LIFE_ITEM.get(), Registration.STAFF_OF_LIGHT_ITEM.get(),
-                Registration.STAFF_OF_SOUL_ITEM.get(), Registration.SOLID_PORTAL_ITEM.get(), Registration.LIGHT_BOTTLE.get(),
-                Registration.MIND_BOTTLE.get(), Registration.BODY_BOTTLE.get(), Registration.WARP_BOTTLE.get(), Registration.BLAZE_BOTTLE.get(),
-                Registration.ACID_BOTTLE.get(), Registration.VERDANT_BOTTLE.get(), Registration.SOUL_BOTTLE.get(), Registration.VITAL_BOTTLE.get());
+        registration.addItemStackInfo(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), Component.translatable("jei.reactive.crucible"));
+        registration.addItemStackInfo(ReactiveItems.SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.GOLD_FOAM.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.MOTION_SALT.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.SECRET_SCALE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_result"));
+        registration.addItemStackInfo(ReactiveItems.PHANTOM_RESIDUE.get().getDefaultInstance(), Component.translatable("jei.reactive.reaction_input"));
+        addGenericDescriptions(registration, ReactiveItems.STAFF_OF_WARP.get(), ReactiveItems.STAFF_OF_MIND.get(),
+                ReactiveItems.STAFF_OF_BLAZE.get(), ReactiveItems.STAFF_OF_LIFE.get(), ReactiveItems.STAFF_OF_LIGHT.get(),
+                ReactiveItems.STAFF_OF_SOUL.get(), ReactiveItems.SOLID_PORTAL.get(), ReactiveItems.LIGHT_BOTTLE.get(),
+                ReactiveItems.MIND_BOTTLE.get(), ReactiveItems.BODY_BOTTLE.get(), ReactiveItems.WARP_BOTTLE.get(), ReactiveItems.BLAZE_BOTTLE.get(),
+                ReactiveItems.ACID_BOTTLE.get(), ReactiveItems.VERDANT_BOTTLE.get(), ReactiveItems.SOUL_BOTTLE.get(), ReactiveItems.VITAL_BOTTLE.get());
         addPowerDescriptions(registration);
     }
 
@@ -161,13 +161,13 @@ public class ReactiveJEIPlugin implements IModPlugin {
 
     private void addComposterRecipes(IRecipeRegistration registration){
         registration.addRecipes(RecipeTypes.COMPOSTING, List.of(
-                new HyperComposterRecipe(Registration.VERDANT_BOTTLE),
-                new HyperComposterRecipe(Registration.FLOWER_VINES_ITEM)
+                new HyperComposterRecipe(ReactiveItems.VERDANT_BOTTLE),
+                new HyperComposterRecipe(ReactiveItems.FLOWER_VINES)
         ));
     }
 
     private void addDisplacerRepairRecipe(IRecipeRegistration registration, IVanillaRecipeFactory factory){
-        Item displacer = Registration.DISPLACER.get();
+        Item displacer = ReactiveItems.DISPLACER.get();
         ItemStack full_durability = new ItemStack(displacer);
         ItemStack three_quarters_durability = new ItemStack(displacer);
         three_quarters_durability.setDamageValue(full_durability.getMaxDamage() / 4);
@@ -175,20 +175,116 @@ public class ReactiveJEIPlugin implements IModPlugin {
         half_durability.setDamageValue(full_durability.getMaxDamage() / 2);
 
         IJeiAnvilRecipe sacrifice_repair_recipe = factory.createAnvilRecipe(half_durability, List.of(half_durability),  List.of(full_durability), ReactiveMod.location("displacer_sacrifice_repair"));
-        IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(Registration.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability), ReactiveMod.location("displacer_salt_repair"));
+        IJeiAnvilRecipe bottle_repair_recipe = factory.createAnvilRecipe(three_quarters_durability, List.of(ReactiveItems.MOTION_SALT.get().getDefaultInstance()),  List.of(full_durability), ReactiveMod.location("displacer_salt_repair"));
 
         registration.addRecipes(RecipeTypes.ANVIL, List.of(sacrifice_repair_recipe, bottle_repair_recipe));
     }
 
-    @Override
-    public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
-        RUNTIME = jeiRuntime;
+    private void addReactionFlaskRecipes(IRecipeRegistration registration) {
+        Map<Character, Ingredient> alphabet = Map.of(
+                'c', Ingredient.of(ReactiveItems.INERT_CRYSTAL.get()),
+                'b', Ingredient.of(ReactionFlaskCraftingRecipe.POWER_BOTTLE_TAG),
+                't', Ingredient.of(ReactiveItems.GOLD_THREAD.get())
+                );
+        String top = " c ";
+        String bottom = " t ";
+
+        ItemStack result_flask = ReactiveItems.REACTION_FLASK.get().getDefaultInstance();
+        result_flask.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), false));
+
+        ItemStack result_flask_charged = result_flask.copy();
+        result_flask_charged.set(ReactiveComponentTypes.REACTION_FLASK_CONTENTS.get(), new ReactionFlaskContents(Map.of(), true));
+
+        registration.addRecipes(RecipeTypes.CRAFTING, List.of(
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_small"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, " b ", bottom)),
+                                result_flask)),
+
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_medium"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, "bb ", bottom)),
+                                result_flask)),
+
+                new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_large"),
+                        new ShapedRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                ShapedRecipePattern.of(alphabet, List.of(top, "bbb", bottom)),
+                                result_flask)),
+
+        new RecipeHolder<>(ReactiveMod.location("special_crafting_recipe_flask_charge"),
+                new ShapelessRecipe("reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                        result_flask_charged,
+                        NonNullList.of(Ingredient.EMPTY,
+                                Ingredient.of(result_flask),
+                                Ingredient.of(ReactiveItems.VOLT_CELL.get()))))
+        ));
+    }
+
+    private void addMaterialRecipes(IRecipeRegistration registration) {
+        ItemStack salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_salt"));
+        salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack adept_salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        adept_salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_adept_salt"));
+        adept_salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack creation_salt_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        creation_salt_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_creation_salt"));
+        creation_salt_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        ItemStack wool_material_example = ReactiveItems.MATERIAL.get().getDefaultInstance();
+        wool_material_example.set(ReactiveComponentTypes.MATERIAL_ID, ReactiveMod.location("example_wool"));
+        wool_material_example.set(DataComponents.LORE, new ItemLore(List.of(Component.translatable("text.reactive.jei_material_tooltip"), Component.translatable("text.reactive.jei_material_tooltip_1"), Component.translatable("text.reactive.jei_material_tooltip_2"))));
+
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), List.of(
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.SALT_BLOCK.get()),
+                                salt_material_example,
+                                List.of(Powers.MIND_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.adept_salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.ADEPT_SALT_BLOCK.get()),
+                                adept_salt_material_example,
+                                List.of(Powers.SOUL_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.creation_salt"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(ReactiveItems.CREATION_SALT_BLOCK.get()),
+                                creation_salt_material_example,
+                                List.of(Powers.WARP_POWER.get()),
+                                10, 10, false
+                        )
+                ),
+                new RecipeHolder<>(
+                        ReactiveMod.location("material_crafting_demo.wool"),
+                        new TransmuteRecipe(
+                                "material_crafting_demo",
+                                Ingredient.of(Items.WHITE_WOOL),
+                                wool_material_example,
+                                List.of(Powers.FLOW_POWER.get()),
+                                10, 10, false
+                        )
+                )
+        ));
     }
 
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), DISSOLVE_CATEGORY.getRecipeType());
-        registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), TRANSMUTE_CATEGORY.getRecipeType());
+        registration.addRecipeCatalyst(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), DISSOLVE_CATEGORY.getRecipeType());
+        registration.addRecipeCatalyst(ReactiveItems.CRUCIBLE.get().getDefaultInstance(), TRANSMUTE_CATEGORY.getRecipeType());
     }
 }

@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.blocks.MnemonicBlock;
+import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.*;
@@ -25,9 +25,8 @@ public class MnemonicBlockEntity extends BlockEntity {
     public static final int MAX_SIGNAL_DURATION = 600; // Maximum number of ticks allowed in a given sequence step. Being at 0 this long ends the recording.
     public static final int MAX_SEQUENCE_LENGTH = 256; // Maximum number of transitions it can save at once.
 
-
     public MnemonicBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(Registration.MNEMONIC_BULB_BE_TYPE.value(), pPos, pBlockState);
+        super(ReactiveBlockEntityTypes.MNEMONIC_BULB.value(), pPos, pBlockState);
     }
 
     public void performTick(Level level, BlockPos pos, BlockState state){
@@ -144,7 +143,7 @@ public class MnemonicBlockEntity extends BlockEntity {
     }
 
     static class OutputStep {
-        public int signal;
+        public final int signal;
         public int duration;
 
         public OutputStep(int signal){

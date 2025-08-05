@@ -1,9 +1,10 @@
 package dev.hyperlynx.reactive.blocks;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
 import dev.hyperlynx.reactive.advancements.FlagTrigger;
 import dev.hyperlynx.reactive.be.DisplacedBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -53,7 +54,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
     public static boolean displace(BlockState state_to_be_displaced, BlockPos pos, Level level, int duration){
         // Trigger the research for Displacement. This should happen only once per activation, so it's not that bad.
         if(!level.isClientSide)
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, Registration.SEE_DISPLACEMENT_TRIGGER.get(), pos, 16);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) level, ReactiveCriterionTriggers.SEE_DISPLACEMENT.get(), pos, 16);
         return displaceWithChain(state_to_be_displaced, pos, level, duration, 0, null);
     }
 
@@ -65,7 +66,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
             return false;
         }
 
-        level.setBlock(pos, Registration.DISPLACED_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        level.setBlock(pos, ReactiveBlocks.DISPLACED_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
         BlockEntity be = level.getBlockEntity(pos);
         if(!(be instanceof DisplacedBlockEntity displaced)){
             System.err.println("Displaced Block Entity didn't attach...? Report this to hyperlynx!");
@@ -76,16 +77,16 @@ public class DisplacedBlock extends Block implements EntityBlock {
         displaced.chain_target = chain;
         displaced.depth = depth;
 
-        level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), duration);
+        level.scheduleTick(pos, ReactiveBlocks.DISPLACED_BLOCK.get(), duration);
         return true;
     }
 
     private boolean shouldNotReappear(ServerLevel level, BlockPos pos, DisplacedBlockEntity self_entity){
         if(self_entity.getSelfState() == null)
             return true;
-        boolean ret = level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get());
+        boolean ret = level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get());
         if(self_entity.chain_target != null)
-            ret = ret || level.getBlockState(self_entity.chain_target).is(Registration.DISPLACED_BLOCK.get());
+            ret = ret || level.getBlockState(self_entity.chain_target).is(ReactiveBlocks.DISPLACED_BLOCK.get());
         return ret;
     }
 
@@ -101,10 +102,10 @@ public class DisplacedBlock extends Block implements EntityBlock {
 
         if(shouldNotReappear(level, pos, displaced)){
             if(displaced.first_tick){
-                level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 2 + displaced.depth);
+                level.scheduleTick(pos, ReactiveBlocks.DISPLACED_BLOCK.get(), 2 + displaced.depth);
                 displaced.first_tick = false;
             }else {
-                level.scheduleTick(pos, Registration.DISPLACED_BLOCK.get(), 20);
+                level.scheduleTick(pos, ReactiveBlocks.DISPLACED_BLOCK.get(), 20);
             }
             return;
         }
@@ -128,7 +129,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
                 level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0F, 0.6F);
                 return;
             }
-            if(level.getBlockState(pos.below()).is(Registration.VOLT_CELL.get())){
+            if(level.getBlockState(pos.below()).is(ReactiveBlocks.VOLT_CELL.get())){
                 level.destroyBlock(pos.below(), true);
             }
             level.setBlockAndUpdate(pos, displaced.getSelfState());
@@ -139,7 +140,7 @@ public class DisplacedBlock extends Block implements EntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState new_state, boolean moving) {
-        if (new_state.is(Registration.DISPLACED_BLOCK.get()))
+        if (new_state.is(ReactiveBlocks.DISPLACED_BLOCK.get()))
             return;
         reform(level, pos);
         super.onRemove(state, level, pos, new_state, moving);

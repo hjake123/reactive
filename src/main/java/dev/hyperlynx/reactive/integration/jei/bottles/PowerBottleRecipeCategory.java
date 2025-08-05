@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.integration.jei.bottles;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.integration.jei.ReactiveJEIPlugin;
 import dev.hyperlynx.reactive.integration.jei.SlotManager;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRecipe> {
-    SlotManager slot_manager = new SlotManager();
+    final SlotManager slot_manager = new SlotManager();
 
     public PowerBottleRecipeCategory() {
         slot_manager.addSlot("bottle", 1, 1);
@@ -40,7 +40,7 @@ public class PowerBottleRecipeCategory implements IRecipeCategory<PowerBottleRec
 
     @Override
     public @Nullable IDrawable getIcon() {
-        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
+        return ReactiveJEIPlugin.HELPERS.getGuiHelper().createDrawableIngredient(VanillaTypes.ITEM_STACK, ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance());
     }
 
     @Override

@@ -1,8 +1,6 @@
 package dev.hyperlynx.reactive.util;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -11,17 +9,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import org.jetbrains.annotations.Nullable;
 
 public class BeamHelper {
 
     // Taken from getPOVPlayerLook()
     public static BlockHitResult playerRayTrace(Level pLevel, Player pPlayer, ClipContext.Fluid pFluidMode, ClipContext.Block pBlockMode, double range) {
-        return rayTrace(pLevel, pPlayer.getEyePosition(), pPlayer.getXRot(), pPlayer.getYRot(), pFluidMode, pBlockMode, range, pPlayer, CollisionContext.empty());
+        return rayTrace(pLevel, pPlayer.getEyePosition(), pPlayer.getXRot(), pPlayer.getYRot(), pFluidMode, pBlockMode, range, CollisionContext.empty());
     }
 
     // Taken from getPOVPlayerLook()
-    public static BlockHitResult rayTrace(Level level, Vec3 start, float xrot, float yrot, ClipContext.Fluid fluid_mode, ClipContext.Block block_mode, double range, @Nullable Player player, @Nullable CollisionContext context){
+    public static BlockHitResult rayTrace(Level level, Vec3 start, float xrot, float yrot, ClipContext.Fluid fluid_mode, ClipContext.Block block_mode, double range, CollisionContext context){
         float f2 = Mth.cos(-yrot * ((float)Math.PI / 180F) - (float)Math.PI);
         float f3 = Mth.sin(-yrot * ((float)Math.PI / 180F) - (float)Math.PI);
         float f4 = -Mth.cos(-xrot * ((float)Math.PI / 180F));

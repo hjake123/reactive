@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.DivineSymbolBlock;
 import dev.hyperlynx.reactive.blocks.PowerBottleBlock;
+import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -32,7 +32,7 @@ public class PowerBottleItem extends BlockItem implements BasePowerBottle {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        return Registration.QUARTZ_BOTTLE.get().getDefaultInstance();
+        return ReactiveItems.QUARTZ_BOTTLE.get().getDefaultInstance();
     }
 
     @Override
@@ -51,10 +51,12 @@ public class PowerBottleItem extends BlockItem implements BasePowerBottle {
                     clicked_state.setValue(PowerBottleBlock.BOTTLES, clicked_state.getValue(PowerBottleBlock.BOTTLES) + 1),
                     Block.UPDATE_CLIENTS);
             SoundType soundtype = clicked_state.getSoundType(level, clicked_pos, context.getPlayer());
-            level.playSound(context.getPlayer(), clicked_pos, this.getPlaceSound(clicked_state, level, clicked_pos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            level.gameEvent(GameEvent.BLOCK_PLACE, clicked_pos, GameEvent.Context.of(context.getPlayer(), clicked_state));
-            if (!context.getPlayer().getAbilities().instabuild) {
-                context.getItemInHand().shrink(1);
+            if(context.getPlayer() != null) {
+                level.playSound(context.getPlayer(), clicked_pos, this.getPlaceSound(clicked_state, level, clicked_pos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                level.gameEvent(GameEvent.BLOCK_PLACE, clicked_pos, GameEvent.Context.of(context.getPlayer(), clicked_state));
+                if (!context.getPlayer().getAbilities().instabuild) {
+                    context.getItemInHand().shrink(1);
+                }
             }
             return InteractionResult.SUCCESS;
         }

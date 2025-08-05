@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.mixin;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 /*
 Makes it so that lightning bolts will power the Crucible.
  */
+@SuppressWarnings("ALL")
 @Mixin(LightningBolt.class)
 public class LightningBoltMixin{
 
@@ -25,7 +26,7 @@ public class LightningBoltMixin{
     @Inject(method = "powerLightningRod", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void powerLightningRod(CallbackInfo ci, BlockPos blockpos, BlockState blockstate) {
         BlockPos cruciblePos = BlockPos.findClosestMatch(blockpos, (int) DETECTION_RADIUS, (int) DETECTION_RADIUS,
-                pos -> ((LightningBolt)(Object)this).level().getBlockState(pos).is(Registration.CRUCIBLE.get())).orElse(null);
+                pos -> ((LightningBolt)(Object)this).level().getBlockState(pos).is(ReactiveBlocks.CRUCIBLE.get())).orElse(null);
         if(cruciblePos != null){
             BlockEntity be = ((LightningBolt)(Object)this).level().getBlockEntity(cruciblePos);
             if(be instanceof CrucibleBlockEntity) { // Redundant check, but why not be extra careful in a mixin?

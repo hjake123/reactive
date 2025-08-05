@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
+import dev.hyperlynx.reactive.registration.*;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.PowerBottleItem;
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,7 @@ public class DivineSymbolBlock extends SymbolBlock{
         double d0 = source.nextDouble() * 8 - 4;
         double d1 = source.nextDouble() * 8 - 4;
         double d2 = source.nextDouble() * 8 - 4;
-        level.addParticle(Registration.STARDUST_PARTICLE, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
+        level.addParticle(ReactiveParticles.STARDUST, pos.getX()+ d0,pos.getY()+d1, pos.getZ()+d2,0,0,0);
     }
 
     @Override
@@ -58,11 +58,11 @@ public class DivineSymbolBlock extends SymbolBlock{
             player.displayClientMessage(Component.translatable("message.reactive.donate_light"), true);
             accepted = true;
         }else if(Powers.WARP_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(Registration.HIGH_STEP, 12000, 0, true, false));
+            player.addEffect(new MobEffectInstance(ReactiveMobEffects.HIGH_STEP, 12000, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_warp"), true);
             accepted = true;
         }else if(Powers.MIND_POWER.get().matchesBottle(stack)){
-            player.addEffect(new MobEffectInstance(Registration.FAR_REACH, 2800, 0, true, false));
+            player.addEffect(new MobEffectInstance(ReactiveMobEffects.FAR_REACH, 2800, 0, true, false));
             player.displayClientMessage(Component.translatable("message.reactive.donate_mind"), true);
             accepted = true;
         }else if(Powers.BLAZE_POWER.get().matchesBottle(stack)){
@@ -70,7 +70,7 @@ public class DivineSymbolBlock extends SymbolBlock{
                 player.setTicksFrozen(0);
             else {
                 player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 100, 0, true, false));
-                player.addEffect(new MobEffectInstance(Registration.FIRE_SHIELD, 1900, 0, true, false));
+                player.addEffect(new MobEffectInstance(ReactiveMobEffects.FIRE_SHIELD, 1900, 0, true, false));
                 player.setRemainingFireTicks(100);
             }
             player.displayClientMessage(Component.translatable("message.reactive.donate_blaze"), true);
@@ -83,11 +83,11 @@ public class DivineSymbolBlock extends SymbolBlock{
 
         if(!player.isCreative() && accepted) {
             player.getItemInHand(hand).shrink(1);
-            player.addItem(new ItemStack(Registration.QUARTZ_BOTTLE.get()));
+            player.addItem(new ItemStack(ReactiveItems.QUARTZ_BOTTLE.get()));
         }
 
         if(accepted){
-            ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, pos, player_start_pos, 4, 5, 0.4);
+            ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, pos, player_start_pos, 4, 5, 0.4);
             player.getCooldowns().addCooldown(stack.getItem(), 100);
         }
 

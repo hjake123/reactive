@@ -2,11 +2,10 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.world.level.Level;
 
 public class SynthesisReaction extends Reaction{
-    Power resultPower;
-    int rate;
+    final Power resultPower;
+    final int rate;
 
     public SynthesisReaction(String alias, Power resultPower, Power... reagents) {
         super(alias, reagents);

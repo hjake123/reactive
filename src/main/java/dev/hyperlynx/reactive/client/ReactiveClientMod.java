@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Mod(value = ReactiveMod.MODID, dist = Dist.CLIENT)
 public class ReactiveClientMod {
-    public static ReactionRenderers REACTION_RENDERERS = new ReactionRenderers();
+    public static final ReactionRenderers REACTION_RENDERERS = new ReactionRenderers();
 
     public ReactiveClientMod(ModContainer container) {
         ClientRegistration.init(Objects.requireNonNull(container.getEventBus()));
