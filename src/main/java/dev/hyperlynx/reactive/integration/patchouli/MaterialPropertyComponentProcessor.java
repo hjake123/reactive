@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -35,9 +36,13 @@ public class MaterialPropertyComponentProcessor implements IComponentProcessor {
             List<PropertyFormulaRequirements.Part> requirements = Objects.requireNonNull(property.getData(ReactiveDataMaps.PROPERTY_FORMULA_MAP)).requirements();
             StringBuilder formula = new StringBuilder();
             formula.append(Component.translatable("docs.reactive.formula_label").getString());
+            if(requirements.isEmpty()) {
+                formula.append(Component.translatable("docs.reactive.no_formula_requirements").getString());
+            }
             requirements.forEach(part -> {
                 formula.append(Component.translatable("docs.reactive.at_least").getString());
-                formula.append(part.lowBound(property_id) / 16);
+                int percent = part.lowBound(property_id) / 16;
+                formula.append(percent >= 1 ? percent : Component.translatable("docs.reactive.trace"));
                 formula.append("% ");
                 formula.append(Component.translatable(part.power_id().toLanguageKey("power")).getString());
                 formula.append("$(br)");

@@ -7,6 +7,10 @@
     {
       "type": "patchouli:text",
       "text": "$(mat)Warping materials will occasionally teleport to an adjacent open space, leaving empty air where they came from."
+    },
+    {
+      "type": "reactive:material_property",
+      "property": "reactive:warping"
     }
   ]
 }

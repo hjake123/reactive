@@ -7,6 +7,10 @@
     {
       "type": "patchouli:text",
       "text": "$(mat)How resistant a Material is to being broken seems to be dependent on the Powers that make it up, so I'll call that a Property."
+    },
+    {
+      "type": "reactive:material_property",
+      "property": "reactive:break_strength"
     }
   ]
 }

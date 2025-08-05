@@ -10,8 +10,7 @@
     },
     {
       "type": "reactive:material_property",
-      "property": "reactive:light",
-      "text": "$(mat)pluey"
+      "property": "reactive:light"
     }
   ]
 }

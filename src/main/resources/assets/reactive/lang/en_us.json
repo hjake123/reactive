@@ -213,6 +213,8 @@
   "docs.reactive.invalid_material": "$(4)This page specifies an invalid material name.",
   "docs.reactive.formula_label": "Formula: $(br)",
   "docs.reactive.at_least": "At least ",
+  "docs.reactive.no_formula_requirements": "Always present",
+  "docs.reactive.trace": "trace",
   "advancement.reactive.title.root": "Reactive Alchemy",
   "advancement.reactive.text.root": "Let's see what we can do...",
   "advancement.reactive.title.crucible": "Universal Medium",

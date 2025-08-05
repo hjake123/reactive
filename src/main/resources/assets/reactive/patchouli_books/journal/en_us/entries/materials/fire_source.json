@@ -7,6 +7,10 @@
     {
       "type": "patchouli:text",
       "text": "$(mat)Materials with the Fire Source property are able to sustain a flame on their surface forever, similar to $(item)Netherrack$(mind)."
+    },
+    {
+      "type": "reactive:material_property",
+      "property": "reactive:fire_source"
     }
   ]
 }

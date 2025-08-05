@@ -7,6 +7,10 @@
     {
       "type": "patchouli:text",
       "text": "$(mat)Materials with the Enchanting Power property boost the performance of nearby Enchanting Tables, similarly to $(item)Runestones$(mat) and $(item)Bookshelves$(mat).$(p)The number of levels contributed varies depending on the strength of the property."
+    },
+    {
+      "type": "reactive:material_property",
+      "property": "reactive:enchant_power"
     }
   ]
 }
