@@ -88,6 +88,8 @@ public class MaterialBlock extends Block implements EntityBlock {
                 mbe.setMaterial(level, material_id);
                 if(level instanceof ServerLevel slevel) {
                     PacketDistributor.sendToPlayersTrackingChunk(slevel, new ChunkPos(pos), new MaterialBESyncPayload(mbe.getMaterialId(), pos));
+                } else {
+                    MaterialBlockEntity.lights.setLightAt(pos, MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.LIGHT.get(), 0));
                 }
             }
             to_place_state = setModelByMaterialId(level, to_place_state, material_id);
@@ -239,12 +241,13 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) { // Working... finally!
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        int be_light = 0;
         if(level.getBlockEntity(pos) instanceof MaterialBlockEntity) {
-            return material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
-        } else {
-            return MaterialBlockEntity.lights.getLightAt(pos);
+            be_light =  material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
         }
+
+        return Math.max(be_light, MaterialBlockEntity.lights.getLightAt(pos));
     }
 
     @Override

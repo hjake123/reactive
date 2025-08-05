@@ -11,7 +11,11 @@ public class LightingMan implements AuxiliaryLightManager {
 
     @Override
     public void setLightAt(BlockPos pos, int value) {
-        lights.put(pos, (byte) value);
+        if(value == 0) {
+            lights.remove(pos);
+        } else {
+            lights.put(pos, (byte) value);
+        }
     }
 
     @Override
