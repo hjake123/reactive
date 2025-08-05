@@ -18,13 +18,18 @@ public class ClientMaterialMan {
     public static final AtomicReference<MaterialData> clientside_data = new AtomicReference<>(MaterialData.empty());
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
     private static final Semaphore response_ready = new Semaphore(0, false);
+    private static final AtomicBoolean query_active = new AtomicBoolean(false);
 
     public static MaterialData data() {
         if(initialized.get()) {
             return clientside_data.get();
         }
+        if(query_active.get()){
+            ReactiveMod.LOGGER.warn("Multiple threads are requesting material definitions at one time");
+        }
         ReactiveMod.LOGGER.debug("Requesting material definitions from server");
         try {
+            query_active.set(true);
             PacketDistributor.sendToServer(new MaterialDataSyncRequestPayload(-1));
             boolean got_result = response_ready.tryAcquire(1, 1, TimeUnit.SECONDS);
             if (got_result) {
@@ -46,6 +51,7 @@ public class ClientMaterialMan {
     public static void receiveDataAsync(MaterialData data) {
         clientside_data.set(data);
         initialized.set(true);
+        query_active.set(false);
         response_ready.release();
     }
 
