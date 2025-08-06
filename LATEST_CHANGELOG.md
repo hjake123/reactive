@@ -19,3 +19,4 @@ This is a major update, so while past worlds should work without issue, I recomm
 - Reworked visuals for the Living Staff of Power
 - Reworked visuals for the Curse Assimilation and Astral reactions
 - Required NeoForge version is now `21.1.181` or above
+- Supported KubeJS version is now `2101.7.1` or above

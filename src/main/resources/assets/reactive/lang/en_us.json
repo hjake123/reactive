@@ -45,6 +45,7 @@
   "item.reactive.force_rock": "Impulsion Stone",
   "item.reactive.secret_scale": "Secret Scale",
   "item.minecraft.potion.effect.no_gravity": "Potion of Weightlessness",
+  "item.minecraft.potion.effect.no_gravity_long": "Potion of Weightlessness",
   "item.minecraft.splash_potion.effect.no_gravity": "Splash Potion of Weightlessness",
   "item.minecraft.lingering_potion.effect.no_gravity": "Lingering Potion of Weightlessness",
   "item.minecraft.tipped_arrow.effect.no_gravity": "Arrow of Weightlessness",
