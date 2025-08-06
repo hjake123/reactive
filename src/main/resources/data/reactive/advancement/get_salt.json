@@ -6,7 +6,8 @@
         "items": [
           {
             "items": [
-              "reactive:salt"
+              "reactive:salt",
+              "reactive:salt_block"
             ]
           }
         ]

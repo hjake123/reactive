@@ -1,12 +1,14 @@
 {
   "criteria": {
-    "motion_salts": {
+    "salts": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": [
-              "reactive:motion_salt"
+              "reactive:motion_salt",
+              "reactive:adept_salt",
+              "reactive:adept_salt_block"
             ]
           }
         ]

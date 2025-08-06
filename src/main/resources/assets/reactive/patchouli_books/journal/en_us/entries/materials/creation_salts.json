@@ -15,6 +15,11 @@
       "text": "$(mind)It can also be created as an item with a simple transmutation."
     },
     {
+      "type": "patchouli:crafting",
+      "recipe": "reactive:creation_salt_block_crafting",
+      "text": "$(mind)Of course, its block and item forms are interchangeable."
+    },
+    {
       "type": "reactive:material_craft",
       "base": "reactive:creation_salt_block",
       "output_material": "reactive:example_creation_salt",

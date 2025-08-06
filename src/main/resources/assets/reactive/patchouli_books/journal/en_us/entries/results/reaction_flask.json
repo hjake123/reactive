@@ -25,7 +25,7 @@
       "input3_2": "reactive:gold_thread",
       "input3_3": "",
       "output": "reactive:reaction_flask[reactive:reaction_flask_contents={charged:false, powers:{}}]",
-      "text": "$(o)Here's the recipe. Any combination of Power Bottles will work.$(p)Of course, for this to be of use, you'll need to choose Power Bottles that, when mixed, would cause a desirable $(l:reactions)Reaction$(/l)."
+      "text": "$(o)Here's the recipe. Any combination of Power Bottles will work.$(p)Of course, you'll need to choose Power Bottles that, when mixed, would cause a desirable $(l:reactions)Reaction$(/l)."
     },
     {
       "type": "reactive:fake_crafting",
