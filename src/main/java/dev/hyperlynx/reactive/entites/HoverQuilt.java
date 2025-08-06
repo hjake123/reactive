@@ -144,7 +144,7 @@ public class HoverQuilt extends VehicleEntity {
         AABB passenger_hitbox = passenger.getBoundingBox();
         double passenger_width = passenger_hitbox.getXsize();
         AABB passenger_top_box = new AABB(passenger_hitbox.getMaxPosition().subtract(passenger_width, 1, passenger_width), passenger_hitbox.getMaxPosition().add(0, 0.1, 0));
-        return this.level().collidesWithSuffocatingBlock(null, passenger_top_box);
+        return !this.level().noBlockCollision(null, passenger_top_box);
     }
 
     private boolean isHittingRidersButt() {
@@ -158,7 +158,7 @@ public class HoverQuilt extends VehicleEntity {
         AABB passenger_hitbox = passenger.getBoundingBox();
         double passenger_width = passenger_hitbox.getXsize();
         AABB passenger_below_box = new AABB(passenger_hitbox.getMinPosition(), passenger_hitbox.getMinPosition().add(passenger_width, 1, passenger_width));
-        return this.level().collidesWithSuffocatingBlock(null, passenger_below_box);
+        return !this.level().noBlockCollision(null, passenger_below_box);
     }
 
     private double getMaxUpSpeed() {
