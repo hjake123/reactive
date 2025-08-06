@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
@@ -242,17 +243,31 @@ public class MaterialBlock extends Block implements EntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        if(level == EmptyBlockGetter.INSTANCE) {
+            ReactiveMod.LOGGER.warn("Tried to get light of a material from empty block getter.");
+            return 0;
+        }
+        ReactiveMod.LOGGER.info("Querying light for {}", pos);
         int be_light = 0;
         if(level.getBlockEntity(pos) instanceof MaterialBlockEntity) {
-            be_light =  material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
+            be_light = material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
+            ReactiveMod.LOGGER.info("Found BE with light level {}", be_light);
         }
-
+        ReactiveMod.LOGGER.info("Final light is {}", Math.max(be_light, MaterialBlockEntity.lights.getLightAt(pos)));
         return Math.max(be_light, MaterialBlockEntity.lights.getLightAt(pos));
     }
 
     @Override
     public boolean hasDynamicLightEmission(BlockState state) {
         return true;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(!(newState.getBlock() instanceof MaterialBlock)) {
+            MaterialBlockEntity.lights.setLightAt(pos, 0);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override

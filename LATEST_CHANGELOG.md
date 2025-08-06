@@ -1,10 +1,9 @@
-Welcome to the "Formulation" Update (Version 10.0.0)!
+Welcome to version 10.0.0!
 This is a major update, so while past worlds should work without issue, I recommend making a backup.
 - Added the custom Material system
   - Materials can be created by the player dynamically and are saved in the world
   - Materials can also be defined using datapacks
-    - Added the Discovery Desk
-          - Used to choose the name of discovered Materials
+  - Added the Discovery Desk
   - Added the `/reactive materials` command tree
   - Added Adept Salts
   - Added Creation Salts
@@ -18,5 +17,6 @@ This is a major update, so while past worlds should work without issue, I recomm
 - Added Nodule Growth and Cryogenesis Reactions
 - Reworked visuals for the Living Staff of Power
 - Reworked visuals for the Curse Assimilation and Astral reactions
+- Adjusted some Journal entries and organization
 - Required NeoForge version is now `21.1.181` or above
 - Supported KubeJS version is now `2101.7.1` or above

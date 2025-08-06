@@ -14,7 +14,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class MaterialBlockEntity extends BlockEntity {
     public static final LightingMan lights = new LightingMan();
@@ -48,7 +51,13 @@ public class MaterialBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         material_id = ResourceLocation.tryParse(tag.getString("material_id"));
-        MaterialBlockEntity.lights.setLightAt(this.getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
+        if(FMLEnvironment.dist.isClient() && hasLevel()) {
+            Material material = getMaterial();
+            ReactiveMod.LOGGER.info("Retrieved light info, light level is {} at {}", material.getOrDefault(MaterialProperties.LIGHT.get(), 0), getBlockPos());
+            MaterialBlockEntity.lights.setLightAt(this.getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
+        } else if(FMLEnvironment.dist.isClient()) {
+            ReactiveMod.LOGGER.warn("Loaded BE before level was ready, so light may not work");
+        }
     }
 
     @Override

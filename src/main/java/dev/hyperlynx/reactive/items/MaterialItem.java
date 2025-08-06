@@ -81,6 +81,9 @@ public class MaterialItem extends BlockItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if(level.isClientSide()){
+            return;
+        }
         if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
             ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, new Formula(Power.generateRandomPowerCombo(level), ReactiveItems.SALT_BLOCK));
             stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), random_material_id);

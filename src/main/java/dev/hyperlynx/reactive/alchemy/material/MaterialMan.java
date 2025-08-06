@@ -112,12 +112,14 @@ public class MaterialMan {
         Map<MaterialProperty<?>, Object> properties = new HashMap<>();
 
         // If this base only yields cosmetic materials, just set the color and model name and return.
-        if(yield_entry.cosmetic()) {
+        if(yield_entry.wool()) {
             properties.put(MaterialProperties.COLOR.get(), MaterialProperties.COLOR.get().instance(input_powers));
             properties.put(MaterialProperties.MODEL_NAME.get(), yield_entry.default_model());
             if(MaterialProperties.LIGHT.get().requirementsMet(input_powers)) {
                 properties.put(MaterialProperties.LIGHT.get(), MaterialProperties.LIGHT.get().instance(input_powers));
             }
+            // Since it's wool, it should be flammable,
+            properties.put(MaterialProperties.FLAMMABILITY.get(), 30);
             return properties;
         }
 

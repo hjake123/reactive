@@ -16,7 +16,7 @@ public record YieldEntry(int max_input_items, int yield_per_input, String defaul
     /**
      * @return Whether this base yields cosmetic Materials, which have no functional properties. This is true if the multiplier is 0.
      */
-    public boolean cosmetic() {
+    public boolean wool() {
         return power_effect_multiplier == 0.0F;
     }
 }
