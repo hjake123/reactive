@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialModel;

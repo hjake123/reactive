@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.blocks;
 
-import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.be.MnemonicBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;

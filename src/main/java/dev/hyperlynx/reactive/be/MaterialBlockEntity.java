@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.be;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -13,10 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class MaterialBlockEntity extends BlockEntity {
     ResourceLocation material_id;
