@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
@@ -59,15 +60,17 @@ import java.util.List;
 public class MaterialBlock extends Block implements EntityBlock {
     public static final EnumProperty<MaterialModel> MODEL = EnumProperty.create("model", MaterialModel.class);
     public static final BooleanProperty RANDOM_TICKING = BooleanProperty.create("random_ticking");
+    public static final IntegerProperty LIGHT_LEVEL = IntegerProperty.create("light", 0, 15); // You leave me no choice, AuxiliaryLightManager...
 
     public MaterialBlock() {
-        super(BlockBehaviour.Properties.of().noOcclusion());
-        registerDefaultState(this.defaultBlockState().setValue(MODEL, MaterialModel.SALT).setValue(RANDOM_TICKING, false));
+        super(BlockBehaviour.Properties.of().noOcclusion().lightLevel(state -> state.getValue(LIGHT_LEVEL)));
+        registerDefaultState(this.defaultBlockState().setValue(MODEL, MaterialModel.SALT).setValue(RANDOM_TICKING, false).setValue(LIGHT_LEVEL, 0));
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(MODEL);
         builder.add(RANDOM_TICKING);
+        builder.add(LIGHT_LEVEL);
     }
 
     @Override
@@ -75,9 +78,11 @@ public class MaterialBlock extends Block implements EntityBlock {
         return new MaterialBlockEntity(pos, state);
     }
 
-    private BlockState setModelByMaterialId(Level level, BlockState state, ResourceLocation material_id) {
-        String model_name = MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt");
-        return state.setValue(MODEL, MaterialModel.fromName(model_name));
+    private BlockState setStateByMaterialId(Level level, BlockState state, ResourceLocation material_id) {
+        Material material = MaterialMan.fetch(level, material_id);
+        String model_name = material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "salt");
+        int light_level = material.getOrDefault(MaterialProperties.LIGHT.get(), 0);
+        return state.setValue(MODEL, MaterialModel.fromName(model_name)).setValue(LIGHT_LEVEL, light_level);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class MaterialBlock extends Block implements EntityBlock {
                     MaterialBlockEntity.lights.setLightAt(pos, MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.LIGHT.get(), 0));
                 }
             }
-            to_place_state = setModelByMaterialId(level, to_place_state, material_id);
+            to_place_state = setStateByMaterialId(level, to_place_state, material_id);
             to_place_state = setRandomTicking(level, to_place_state, material_id);
             level.setBlock(pos, to_place_state, Block.UPDATE_CLIENTS);
         }
@@ -239,27 +244,6 @@ public class MaterialBlock extends Block implements EntityBlock {
     @Override
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { // Working!
         return material(level, pos).getOrDefault(MaterialProperties.FLAMMABILITY.get(), 0);
-    }
-
-    @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if(level == EmptyBlockGetter.INSTANCE) {
-            ReactiveMod.LOGGER.warn("Tried to get light of a material from empty block getter.");
-            return 0;
-        }
-        ReactiveMod.LOGGER.info("Querying light for {}", pos);
-        int be_light = 0;
-        if(level.getBlockEntity(pos) instanceof MaterialBlockEntity) {
-            be_light = material(level, pos).getOrDefault(MaterialProperties.LIGHT.get(), 0);
-            ReactiveMod.LOGGER.info("Found BE with light level {}", be_light);
-        }
-        ReactiveMod.LOGGER.info("Final light is {}", Math.max(be_light, MaterialBlockEntity.lights.getLightAt(pos)));
-        return Math.max(be_light, MaterialBlockEntity.lights.getLightAt(pos));
-    }
-
-    @Override
-    public boolean hasDynamicLightEmission(BlockState state) {
-        return true;
     }
 
     @Override
