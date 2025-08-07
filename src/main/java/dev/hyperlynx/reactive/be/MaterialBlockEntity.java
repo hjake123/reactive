@@ -4,7 +4,6 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
-import dev.hyperlynx.reactive.util.LightingMan;
 import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class MaterialBlockEntity extends BlockEntity {
-    public static final LightingMan lights = new LightingMan();
     ResourceLocation material_id;
     public int generic_delay = 0;
 
@@ -51,13 +49,6 @@ public class MaterialBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         material_id = ResourceLocation.tryParse(tag.getString("material_id"));
-        if(FMLEnvironment.dist.isClient() && hasLevel()) {
-            Material material = getMaterial();
-            ReactiveMod.LOGGER.info("Retrieved light info, light level is {} at {}", material.getOrDefault(MaterialProperties.LIGHT.get(), 0), getBlockPos());
-            MaterialBlockEntity.lights.setLightAt(this.getBlockPos(), getMaterial().getOrDefault(MaterialProperties.LIGHT.get(), 0));
-        } else if(FMLEnvironment.dist.isClient()) {
-            ReactiveMod.LOGGER.warn("Loaded BE before level was ready, so light may not work");
-        }
     }
 
     @Override

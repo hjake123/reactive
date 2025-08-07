@@ -94,8 +94,6 @@ public class MaterialBlock extends Block implements EntityBlock {
                 mbe.setMaterial(level, material_id);
                 if(level instanceof ServerLevel slevel) {
                     PacketDistributor.sendToPlayersTrackingChunk(slevel, new ChunkPos(pos), new MaterialBESyncPayload(mbe.getMaterialId(), pos));
-                } else {
-                    MaterialBlockEntity.lights.setLightAt(pos, MaterialMan.fetch(level, material_id).getOrDefault(MaterialProperties.LIGHT.get(), 0));
                 }
             }
             to_place_state = setStateByMaterialId(level, to_place_state, material_id);
@@ -244,14 +242,6 @@ public class MaterialBlock extends Block implements EntityBlock {
     @Override
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { // Working!
         return material(level, pos).getOrDefault(MaterialProperties.FLAMMABILITY.get(), 0);
-    }
-
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if(!(newState.getBlock() instanceof MaterialBlock)) {
-            MaterialBlockEntity.lights.setLightAt(pos, 0);
-        }
-        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     @Override

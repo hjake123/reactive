@@ -101,7 +101,6 @@ public class ClientMaterialMan {
         }
         if(clevel.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
             mbe.setMaterial(clevel, material_id);
-            MaterialBlockEntity.lights.setLightAt(pos, MaterialMan.fetch(clevel, material_id).getOrDefault(MaterialProperties.LIGHT.get(), 0));
         }
     }
 }
