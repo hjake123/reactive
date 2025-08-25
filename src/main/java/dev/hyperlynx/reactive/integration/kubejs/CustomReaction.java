@@ -3,14 +3,13 @@ package dev.hyperlynx.reactive.integration.kubejs;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.fx.renderers.rxn.ReactionRenderer;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEventJS;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.script.ScriptType;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;

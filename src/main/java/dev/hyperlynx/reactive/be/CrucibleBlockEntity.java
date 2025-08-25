@@ -11,7 +11,7 @@ import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.advancements.FlagCriterion;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.net.rxn.ReactionStatusMessage;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
@@ -54,13 +54,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.Target;
 import java.util.*;
-import java.util.function.Supplier;
 
 /*
     The heart of the whole mod, the Crucible's Block Entity.

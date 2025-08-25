@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.particles.ParticleOptions;

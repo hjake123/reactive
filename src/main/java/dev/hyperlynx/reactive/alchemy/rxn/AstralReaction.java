@@ -1,11 +1,8 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
-import net.minecraft.world.level.Level;
 
 public class AstralReaction extends Reaction{
     public AstralReaction(String alias){

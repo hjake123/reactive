@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;

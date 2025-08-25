@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.mixin;
 
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;

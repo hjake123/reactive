@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.net.litmus;
 
-import dev.hyperlynx.reactive.fx.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.client.gui.ScreenOpener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.network.NetworkEvent;
@@ -21,7 +21,7 @@ public record LitmusScreenMessage(UnresolvedLitmusData udata)  {
     public void handler(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> {
             if(FMLLoader.getDist().isClient()){
-                LitmusScreenOpener.open(this.udata);
+                ScreenOpener.litmus(this.udata);
             }
         });
         context.get().setPacketHandled(true);

@@ -3,7 +3,7 @@ package dev.hyperlynx.reactive.integration.iris;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.hyperlynx.reactive.be.GatewayBlockEntity;
-import dev.hyperlynx.reactive.fx.renderers.GatewayRenderer;
+import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.uniforms.SystemTimeUniforms;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,11 +11,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.TheEndPortalRenderer;
-import net.minecraft.core.Direction;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 
 // Adapted from Iris source code. (https://github.com/IrisShaders/Iris/blob/multiloader-new/common/src/main/java/net/irisshaders/iris/mixin/MixinTheEndPortalRenderer.java)

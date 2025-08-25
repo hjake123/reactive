@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

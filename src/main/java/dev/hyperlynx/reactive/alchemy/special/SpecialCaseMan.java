@@ -8,7 +8,7 @@ import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.DisplacedBlock;
 import dev.hyperlynx.reactive.blocks.IncompleteStaffBlock;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
+import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;

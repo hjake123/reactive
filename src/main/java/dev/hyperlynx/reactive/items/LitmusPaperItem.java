@@ -10,7 +10,7 @@ import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.net.litmus.LitmusData;
 import dev.hyperlynx.reactive.net.litmus.LitmusScreenMessage;
-import dev.hyperlynx.reactive.fx.gui.LitmusScreenOpener;
+import dev.hyperlynx.reactive.client.gui.ScreenOpener;
 import dev.hyperlynx.reactive.net.litmus.UnresolvedLitmusData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
@@ -100,7 +100,7 @@ public class LitmusPaperItem extends Item {
                 }
             } else {
                 ItemStack stack = player.getItemInHand(hand);
-                LitmusScreenOpener.open(new LitmusData(
+                ScreenOpener.litmus(new LitmusData(
                         buildPowerText(stack, BiomeColors.getAverageWaterColor(level, player.getOnPos()), false),
                         buildReactionText(stack, true)
                 ));

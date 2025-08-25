@@ -1,10 +1,9 @@
 package dev.hyperlynx.reactive;
 
-import dev.hyperlynx.reactive.fx.particles.*;
-import dev.hyperlynx.reactive.fx.renderers.CrucibleRenderer;
-import dev.hyperlynx.reactive.fx.renderers.SymbolRenderer;
-import dev.hyperlynx.reactive.fx.renderers.rxn.ReactionRenderers;
-import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
+import dev.hyperlynx.reactive.client.particles.*;
+import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
+import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderers;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -14,7 +13,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import dev.hyperlynx.reactive.fx.renderers.GatewayRenderer;
+import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 
 public class ClientRegistration {

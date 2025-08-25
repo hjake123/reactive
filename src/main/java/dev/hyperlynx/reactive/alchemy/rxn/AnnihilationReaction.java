@@ -3,9 +3,6 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.fx.particles.ParticleScribe;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.Level;
 
 import java.util.function.Function;
 
