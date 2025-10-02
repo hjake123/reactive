@@ -217,8 +217,8 @@ public class MaterialBlock extends Block implements EntityBlock {
             return 0.0F;
         } else {
             speed *= 0.75F;
-            int neo_check = net.neoforged.neoforge.event.EventHooks.doPlayerHarvestCheck(player, state, getter, pos) ? 30 : 100;
-            return player.getDigSpeed(state, pos) / speed / (float)neo_check;
+            int forge_check = net.minecraftforge.event.ForgeEventFactory.doPlayerHarvestCheck(player, state, true) ? 30 : 100;
+            return player.getDigSpeed(state, pos) / speed / (float)forge_check;
         }
     }
 

@@ -3,18 +3,52 @@ package dev.hyperlynx.reactive.alchemy.material.formula;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.util.NBTExtras;
+import dev.hyperlynx.reactive.util.NBTSerializer;
 import net.minecraft.core.Holder;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public record Formula(Map<Power, Integer> powers, Holder<Item> base_material) {
-    public static final Codec<Formula> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(Power.CODEC, Codec.INT).fieldOf("powers").forGetter(Formula::powers),
-            ItemStack.ITEM_NON_AIR_CODEC.fieldOf("base_material").forGetter(Formula::base_material)
-    ).apply(instance, Formula::new));
+    public static final NBTSerializer<Formula> SERIALIZER = new NBTSerializer<>() {
+        @Override
+        public CompoundTag encode(Formula data) {
+            CompoundTag tag = new CompoundTag();
+            NBTExtras.encodeMap(
+                    new NBTSerializer<>() {
+                        @Override
+                        public CompoundTag encode(Power data) {
+                            CompoundTag tag = new CompoundTag();
+                            tag.putString("power", data.getResourceLocation().toString());
+                            return tag;
+                        }
+
+                        @Override
+                        public @Nullable Power decode(Tag input) {
+                            if(input instanceof CompoundTag c) {
+                                Power.readPower(c, "power");
+                            }
+                            return null;
+                        }
+                    },
+                    NBTExtras.INT,
+                    data.powers);
+            //noinspection deprecation
+            tag.putString("base_material", data.base_material.get().builtInRegistryHolder().key().location().toString());
+            return tag;
+        }
+
+        @Override
+        public @Nullable Formula decode(Tag input) {
+            return null;
+        }
+    };
 
     public Formula copy() {
         return new Formula(new HashMap<>(powers), base_material);

@@ -43,8 +43,8 @@ public class MaterialItem extends BlockItem {
             return;
         }
         Material material = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
-        if(material.getNotes().isPresent()) {
-            String first_notes_line = material.getNotes().get().lines().findFirst().orElse("");
+        if(!material.getNotes().isEmpty()) {
+            String first_notes_line = material.getNotes().lines().findFirst().orElse("");
             if(!first_notes_line.isEmpty()) {
                 if(first_notes_line.length() > MAX_NOTES_TOOLTIP_LINE_LENGTH) {
                     first_notes_line = first_notes_line.substring(0, MAX_NOTES_TOOLTIP_LINE_LENGTH);

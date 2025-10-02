@@ -5,21 +5,19 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.net.MaterialDataSyncPayload;
+import dev.hyperlynx.reactive.util.NBTSerializer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,25 +29,27 @@ public class MaterialData extends SavedData {
     private final List<ResourceLocation> datapack_material_ids; // Remove these when reloading materials
 
     /// Bump this when there's a change in the material data format that would cause issues if not dealt with.
-    public static final int CURRENT_VERSION = 1;
+    public static final int CURRENT_VERSION = 12011;
     /*
     Version history:
-    1 - Initial version.
+    1 - Initial version for 1.21.1; not compatible
+    12011 - Initial version for the backport
      */
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, MaterialData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, Material.STREAM_CODEC), MaterialData::materials,
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), MaterialData::datapack_material_ids,
-            MaterialData::new
-    );
+    private static final NBTSerializer<MaterialData> SERIALIZER_V1 = new NBTSerializer<>() {
+        @Override
+        public CompoundTag encode(MaterialData data) {
+            return null;
+        }
 
-    private static final Codec<MaterialData> CODEC_V1 = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.unboundedMap(ResourceLocation.CODEC, Material.CODEC).fieldOf("materials").forGetter(MaterialData::materials),
-            Codec.list(ResourceLocation.CODEC).fieldOf("datapack_material_ids").orElse(List.of()).forGetter(MaterialData::datapack_material_ids)
-    ).apply(instance, MaterialData::new));
+        @Override
+        public @Nullable MaterialData decode(Tag input) {
+            return null;
+        }
+    };
 
-    public static final Map<Integer, Codec<MaterialData>> CODECS_BY_VERSION = Map.of(
-            1, CODEC_V1
+    public static final Map<Integer, NBTSerializer<MaterialData>> CODECS_BY_VERSION = Map.of(
+            1201, SERIALIZER_V1
     );
 
     public MaterialData(Map<ResourceLocation, Material> materials, List<ResourceLocation> datapack_material_ids) {
@@ -103,32 +103,26 @@ public class MaterialData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        DataResult<Tag> data = CODEC_V1.encode(this, NbtOps.INSTANCE, tag);
-        CompoundTag saved_tag = (CompoundTag) data.getOrThrow();
+    public CompoundTag save(CompoundTag tag) {
+        CompoundTag saved_tag = SERIALIZER_V1.encode(this, tag);
         saved_tag.put("version", IntTag.valueOf(CURRENT_VERSION));
         return saved_tag;
     }
 
     public static MaterialData load(CompoundTag tag, HolderLookup.Provider ignoredprovider) {
-        int version = 0;
+        int version = CURRENT_VERSION;
         if(tag.contains("version", Tag.TAG_INT)) {
             version = tag.getInt("version");
         }
         if(version != CURRENT_VERSION) {
             ReactiveMod.LOGGER.info("Attempting to load material data with mismatched version {} (current is {})", version, CURRENT_VERSION);
             if(!CODECS_BY_VERSION.containsKey(version)) {
-                ReactiveMod.LOGGER.error("No codec for this version was found, attempting load with most recent codec.");
+                ReactiveMod.LOGGER.error("No serializer for this version was found, attempting load with most recent serializer.");
             }
         }
-        Codec<MaterialData> codec = CODECS_BY_VERSION.getOrDefault(version, CODEC_V1);
+        NBTSerializer<MaterialData> serializer = CODECS_BY_VERSION.getOrDefault(version, SERIALIZER_V1);
 
-        DataResult<Pair<MaterialData, Tag>> result = codec.decode(NbtOps.INSTANCE, tag);
-        if(result.isError()) {
-            ReactiveMod.LOGGER.fatal("Failed to load material data. Materials will be lost!");
-            return null;
-        }
-        return result.getOrThrow().getFirst();
+        return serializer.decode(tag);
     }
 
     public void addMaterial(ResourceLocation id, Material material) {
@@ -153,7 +147,6 @@ public class MaterialData extends SavedData {
         super.setDirty();
         PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(new MaterialData(this)));
     }
-
 
     public int datapackIdCount() {
         return datapack_material_ids.size();

@@ -12,8 +12,7 @@ import java.util.function.Supplier;
 public class MaterialProperties {
     public static final DeferredRegister<MaterialProperty<?>> PROPERTIES = DeferredRegister.create(ReactiveMod.location("material_properties"), ReactiveMod.MODID);
     public static final Supplier<IForgeRegistry<MaterialProperty<?>>> POWER_SUPPLIER = PROPERTIES.makeRegistry(RegistryBuilder::new);
-
-
+    
     public static final RegistryObject<StringMaterialProperty> MODEL_NAME = PROPERTIES.register("model_name", StringMaterialProperty::new);
     public static final RegistryObject<ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);
     public static final RegistryObject<FlagMaterialProperty> MAGMA_STEP = PROPERTIES.register("magma_step", FlagMaterialProperty::new);

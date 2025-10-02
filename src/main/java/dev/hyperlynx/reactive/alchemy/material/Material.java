@@ -1,25 +1,24 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.util.Color;
+import dev.hyperlynx.reactive.util.NBTSerializer;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -30,25 +29,41 @@ import java.util.*;
 public class Material {
     private final Reference2ObjectMap<MaterialProperty<?>, Object> properties;
     private String custom_name;
-    private final Optional<Formula> original_formula;
-    private Optional<Discoverer> discoverer = Optional.empty();
-    private Optional<String> notes = Optional.empty();
+    private final @Nullable Formula original_formula;
+    private @Nullable Discoverer discoverer;
+    private String notes = "";
 
-    private static final Codec<Map<MaterialProperty<?>, Object>> PROPERTIES_CODEC =
-            Codec.dispatchedMap(MaterialProperties.PROPERTY_REGISTRY.byNameCodec(), MaterialProperty::codec);
+    public static final NBTSerializer<Material> SERIALIZER = new NBTSerializer<>() {
+        @Override
+        public CompoundTag encode(Material data) {
+            CompoundTag tag = new CompoundTag();
+            tag.putString("name", data.custom_name);
+            if(data.discoverer != null) {
+                tag.put("discoverer", Discoverer.SERIALIZER.encode(data.discoverer));
+            }
+            tag.putString("notes", data.notes);
+            if(data.original_formula != null) {
+                tag.put("formula", Formula.SERIALIZER.encode(data.original_formula));
+            }
+            return tag;
+        }
 
-    public static final Codec<Material> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(
-                    PROPERTIES_CODEC.fieldOf("properties").forGetter(Material::properties),
-                    Codec.STRING.fieldOf("name").orElse("").forGetter(Material::customNameRaw),
-                    Formula.CODEC.optionalFieldOf("original_formula").forGetter(Material::getOriginalFormula),
-                    Discoverer.CODEC.optionalFieldOf("discoverer").forGetter(Material::discoverer),
-                    Codec.STRING.optionalFieldOf("notes").forGetter(Material::getNotes)
-            ).apply(instance, Material::new));
+        @Override
+        public @Nullable Material decode(Tag input) {
+            if(!(input instanceof CompoundTag compound)) {
+                return null;
+            }
+            return new Material(
+                    null,
+                    compound.getString("name"),
+                    compound.contains("formula") ? Formula.SERIALIZER.decode(compound.getCompound("formula")) : null,
+                    compound.contains("discoverer") ? Discoverer.SERIALIZER.decode(compound.getCompound("discoverer")) : null
+                    compound.getString("notes")
+            );
+        }
+    };
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, Material> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
-
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Formula> original_formula, Optional<Discoverer> discoverer, Optional<String> notes) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, @Nullable Formula original_formula, @Nullable Discoverer discoverer, String notes) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
@@ -56,7 +71,7 @@ public class Material {
         this.notes = notes;
     }
 
-    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, Optional<Formula> original_formula) {
+    public Material(Map<MaterialProperty<?>, Object> properties, String custom_name, @Nullable Formula original_formula) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
         this.original_formula = original_formula;
@@ -65,10 +80,10 @@ public class Material {
     public Material(Map<MaterialProperty<?>, Object> properties, String custom_name) {
         this.properties = new Reference2ObjectArrayMap<>(properties);
         this.custom_name = custom_name;
-        this.original_formula = Optional.empty();
+        this.original_formula = null;
     }
 
-    public Optional<String> getNotes() {
+    public String getNotes() {
         return notes;
     }
 
@@ -80,11 +95,11 @@ public class Material {
         return custom_name;
     }
 
-    public Optional<Formula> getOriginalFormula() {
+    public @Nullable Formula getOriginalFormula() {
         return original_formula;
     }
 
-    private Optional<Discoverer> discoverer() { return discoverer; }
+    private @Nullable Discoverer discoverer() { return discoverer; }
 
     public boolean has(MaterialProperty<?> type) {
         return properties.containsKey(type);
@@ -109,8 +124,8 @@ public class Material {
     }
 
     public String toString() {
-        var result = CODEC.encode(this, NbtOps.INSTANCE, null);
-        return result.getOrThrow().getAsString();
+        var result = SERIALIZER.encode(this);
+        return result.getAsString();
     }
 
     public Component getNameComponent() {
@@ -126,24 +141,27 @@ public class Material {
 
     public void setDiscoverer(Player player) {
         long timestamp;
-        if(this.discoverer.isPresent()) {
-            timestamp = discoverer.get().discovery_timestamp();
+        if(discoverer != null) {
+            timestamp = discoverer.discovery_timestamp();
         } else {
             timestamp = System.currentTimeMillis();
         }
-        this.discoverer = Optional.of(new Discoverer(player.getUUID(), player.getName().getString(), timestamp));
+        discoverer = new Discoverer(player.getUUID(), player.getName().getString(), timestamp);
     }
 
     public boolean wasDiscovered() {
-        return this.discoverer.isPresent();
+        return discoverer != null;
     }
 
     public Player getDiscoverer(Level level) {
-        return this.discoverer.map(d -> level.getPlayerByUUID(d.uuid)).orElse(null);
+        if(discoverer == null) {
+            return null;
+        }
+        return level.getPlayerByUUID(discoverer.uuid);
     }
 
     public boolean playerDiscoveredThis(Player player) {
-        return this.discoverer.isPresent() && this.discoverer.get().uuid.equals(player.getUUID());
+        return discoverer != null && this.discoverer.uuid.equals(player.getUUID());
     }
 
     /// Use this only as absolutely necessary.
@@ -156,22 +174,22 @@ public class Material {
 
     /// Determines whether the formula given matches this Material, and therefore if it should be considered to be the output of the creation process.
     public boolean formulaMatches(@NotNull Formula formula) {
-        if(original_formula.isEmpty()) {
+        if(original_formula == null) {
             return false;
         }
-        if(!original_formula.get().base_material().is(formula.base_material().unwrap().orThrow())) {
+        if(!original_formula.base_material().is(formula.base_material().unwrap().orThrow())) {
             return false;
         }
         for(Power power : formula.powers().keySet()) {
-            if(!original_formula.get().powers().containsKey(power)) {
+            if(!original_formula.powers().containsKey(power)) {
                 return false;
             }
         }
-        for(Power power : original_formula.get().powers().keySet()) {
+        for(Power power : original_formula.powers().keySet()) {
             if(!(formula.powers().containsKey(power))) {
                 return false;
             }
-            if(Math.abs(formula.powers().get(power) - original_formula.get().powers().get(power)) > POWER_SAME_THRESHOLD) {
+            if(Math.abs(formula.powers().get(power) - original_formula.powers().get(power)) > POWER_SAME_THRESHOLD) {
                 return false;
             }
         }
@@ -180,10 +198,10 @@ public class Material {
 
     public void setNotes(String notes) {
         if(notes.isEmpty()) {
-            this.notes = Optional.empty();
+            this.notes = "";
             return;
         }
-        this.notes = Optional.of(notes);
+        this.notes = notes;
     }
 
     public Component getDiscovererName(Level level) {
@@ -192,32 +210,51 @@ public class Material {
         }
         Player player = getDiscoverer(level);
         if(player == null) {
-            // The discoverer is known to exist (that's what we checked with wasDiscovered()), so...
-            //noinspection OptionalGetWithoutIsPresent
-            return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer().get().name);
+            assert discoverer != null;
+            return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(discoverer.name);
         }
         setDiscoverer(player); // Resets the name of the player, so that if the player's username changes it will be up to date
         return Component.translatable("text.reactive.discovered_by").withStyle(ChatFormatting.LIGHT_PURPLE).append(player.getName());
     }
 
     public long getDiscoveryTime() {
-        return discoverer.map(Discoverer::discovery_timestamp).orElse(0L);
+        if(discoverer == null) {
+            return 0L;
+        }
+        return discoverer.discovery_timestamp;
     }
 
     public record Discoverer(UUID uuid, String name, long discovery_timestamp) {
-        public static final Codec<Discoverer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                UUIDUtil.CODEC.fieldOf("uuid").forGetter(Discoverer::uuid),
-                Codec.STRING.fieldOf("name").forGetter(Discoverer::name),
-                Codec.LONG.optionalFieldOf("discovery_timestamp",0L).forGetter(Discoverer::discovery_timestamp)
-        ).apply(instance, Discoverer::new));
+        public static final NBTSerializer<Discoverer> SERIALIZER = new NBTSerializer<>() {
+            @Override
+            public Tag encode(Discoverer data) {
+                var tag = new CompoundTag();
+                tag.putUUID("uuid", data.uuid);
+                tag.putString("name", data.name);
+                tag.putLong("timestamp", data.discovery_timestamp);
+                return tag;
+            }
+
+            @Override
+            public @Nullable Discoverer decode(Tag tag) {
+                if(!(tag instanceof CompoundTag input)) {
+                    return null;
+                }
+                try {
+                    return new Discoverer(input.getUUID("uuid"), input.getString("name"), input.getLong("timestamp"));
+                } catch (Exception e) {
+                    ReactiveMod.LOGGER.error("Failed to load discoverer object: {}", e.toString());
+                    return null;
+                }
+            }
+        };
     }
 
     public MutableComponent formulaComponent() {
-        var possible_formula = this.getOriginalFormula();
-        if(possible_formula.isEmpty()) {
+        var original_formula = this.getOriginalFormula();
+        if(original_formula == null) {
             return Component.translatable("ui.reactive.no_formula");
         }
-        Formula original_formula = possible_formula.get();
         Map<Power, Integer> original_powers = original_formula.powers();
         if(original_powers.isEmpty()) {
             return Component.translatable("ui.reactive.no_formula");
@@ -226,7 +263,7 @@ public class Material {
         formula_lines.add(original_formula.base_material().value().getName(original_formula.base_material().value().getDefaultInstance()));
         for(Power power : original_powers.keySet().stream().sorted(Comparator.comparing(original_powers::get)).toList().reversed()) {
             formula_lines.add(Component.literal(power.getName() + ": " + Math.round(original_powers.get(power) / 16.0) + "%")
-                    .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex() : 0xFFFFFF));
+                    .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex : 0xFFFFFF));
         }
         MutableComponent readout_message = Component.empty();
         for(int i = 0; i < formula_lines.size(); i++) {

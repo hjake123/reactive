@@ -101,11 +101,11 @@ public class MaterialMan {
         // Retrieve the base item's yield entry
         YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
         if(yield == null) {
-            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getRegisteredName()  +") with no defined yield! This shouldn't have been possible...");
+            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().get().getDescriptionId()  +") with no defined yield! This shouldn't have been possible...");
         }
 
         // Construct and add the new material
-        return new Material(generateProperties(formula.powers(), yield), "", Optional.of(formula.copy()));
+        return new Material(generateProperties(formula.powers(), yield), "", formula.copy());
     }
 
     private static Map<MaterialProperty<?>, Object> generateProperties(Map<Power, Integer> input_powers, YieldEntry yield_entry) {
