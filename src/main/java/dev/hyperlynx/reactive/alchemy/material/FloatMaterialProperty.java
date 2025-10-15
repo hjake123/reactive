@@ -5,7 +5,7 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.FloatFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
-import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
+import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -13,13 +13,9 @@ import java.util.Map;
 public class FloatMaterialProperty extends MaterialProperty<Float>{
     @Override
     public Float instance(Map<Power, Integer> formula) {
-        ResourceLocation id = MaterialProperties.PROPERTY_REGISTRY.getKey(this);
+        ResourceLocation id = MaterialProperties.PROPERTY_SUPPLIER.get().getKey(this);
         assert id != null;
-        var holder = MaterialProperties.PROPERTY_REGISTRY.getHolder(id);
-        if(holder.isEmpty()) {
-            throw new RuntimeException("Can't retrieve the material property registry from location " + id);
-        }
-        var outcomes = holder.get().getData(ReactiveDataMaps.FORMULA_OUTCOME_MAP);
+        var outcomes = MaterialFormulaMaps.FORMULA_OUTCOME_MAP.get(id);
         if(outcomes == null || outcomes.isEmpty()) {
             ReactiveMod.LOGGER.error("No outcome map has been defined for {}, defaulting to 0.0", id);
             return 0.0F;
@@ -33,10 +29,5 @@ public class FloatMaterialProperty extends MaterialProperty<Float>{
             value *= float_outcome.calculate(formula);
         }
         return value;
-    }
-
-    @Override
-    public Codec<Float> codec() {
-        return Codec.FLOAT;
     }
 }

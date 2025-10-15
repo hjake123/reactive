@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.*;
 
@@ -11,7 +10,7 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber
 public class MaterialProperties {
     public static final DeferredRegister<MaterialProperty<?>> PROPERTIES = DeferredRegister.create(ReactiveMod.location("material_properties"), ReactiveMod.MODID);
-    public static final Supplier<IForgeRegistry<MaterialProperty<?>>> POWER_SUPPLIER = PROPERTIES.makeRegistry(RegistryBuilder::new);
+    public static final Supplier<IForgeRegistry<MaterialProperty<?>>> PROPERTY_SUPPLIER = PROPERTIES.makeRegistry(RegistryBuilder::new);
     
     public static final RegistryObject<StringMaterialProperty> MODEL_NAME = PROPERTIES.register("model_name", StringMaterialProperty::new);
     public static final RegistryObject<ColorMaterialProperty> COLOR = PROPERTIES.register("color", ColorMaterialProperty::new);

@@ -7,6 +7,7 @@ import dev.hyperlynx.reactive.util.NBTExtras;
 import dev.hyperlynx.reactive.util.NBTSerializer;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Formula(Map<Power, Integer> powers, Holder<Item> base_material) {
+public record Formula(Map<Power, Integer> powers, ResourceKey<Item> base_material) {
     public static final NBTSerializer<Formula> SERIALIZER = new NBTSerializer<>() {
         @Override
         public CompoundTag encode(Formula data) {

@@ -3,8 +3,7 @@ package dev.hyperlynx.reactive.alchemy.material;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
-import dev.hyperlynx.reactive.registration.ReactiveCriterionTriggers;
-import dev.hyperlynx.reactive.registration.ReactiveDataMaps;
+import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,7 +25,7 @@ public class MaterialMan {
     public static MaterialData data(Level level) {
         if(level instanceof ServerLevel slevel) {
             return Objects.requireNonNull(slevel.getServer().getLevel(ServerLevel.OVERWORLD)).getDataStorage()
-                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.empty().addBuiltIns(slevel), MaterialData::load),
+                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.empty(), MaterialData::load),
                             "reactive_materials");
         } else if(level != null && level.isClientSide()) {
             return ClientMaterialMan.data();
@@ -54,7 +53,6 @@ public class MaterialMan {
     public static void reset(ServerLevel level) {
         var data = data(level);
         data.reset();
-        data.addBuiltIns(level);
     }
 
     public static boolean occupied(Level level, ResourceLocation id) {
@@ -83,7 +81,7 @@ public class MaterialMan {
 
         // Decide on the identifier for the new material.
         // Since they're being made automatically, call it "auto:#".
-        int index = data(level).materials.size() - data(level).datapackIdCount();
+        int index = data(level).materials.size();
         ResourceLocation new_material_id = ResourceLocation.fromNamespaceAndPath("auto", "" + index);
         while(occupied(level, new_material_id)) {
             // Ideally the above index will never already be taken, but in case it is for some reason we need to increment.
@@ -99,9 +97,9 @@ public class MaterialMan {
     /// Just makes a Material without adding it to the world.
     public static @NotNull Material generateMaterial(@NotNull Formula formula) {
         // Retrieve the base item's yield entry
-        YieldEntry yield  = formula.base_material().getData(ReactiveDataMaps.MATERIAL_SALT_YIELDS);
+        YieldEntry yield  = MaterialFormulaMaps.BASE_YIELDS.get(formula.base_material().location());
         if(yield == null) {
-            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().get().getDescriptionId()  +") with no defined yield! This shouldn't have been possible...");
+            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().location()  +") with no defined yield! This shouldn't have been possible...");
         }
 
         // Construct and add the new material
@@ -128,7 +126,7 @@ public class MaterialMan {
         adjusted_input_powers.replaceAll((p, v) -> (int) (adjusted_input_powers.get(p) * yield_entry.power_effect_multiplier()));
 
         // Assign the properties
-        for(MaterialProperty<?> property : MaterialProperties.PROPERTY_REGISTRY.stream().toList()) {
+        for(MaterialProperty<?> property : MaterialProperties.PROPERTY_SUPPLIER.get().getValues().stream().toList()) {
             // Check against the formula's actual inputs
             if(property.requirementsMet(adjusted_input_powers)) {
                 // Apply properties based on the adjusted powers

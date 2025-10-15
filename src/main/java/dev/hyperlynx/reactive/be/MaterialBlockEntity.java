@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +19,7 @@ public class MaterialBlockEntity extends BlockEntity {
     public int generic_delay = 0;
 
     public MaterialBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ReactiveBlockEntityTypes.MATERIAL.get(), pos, blockState);
+        super(Registration.MATERIAL.get(), pos, blockState);
     }
 
     public Material getMaterial() {

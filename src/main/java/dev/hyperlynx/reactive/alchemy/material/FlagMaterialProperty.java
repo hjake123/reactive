@@ -11,9 +11,4 @@ public class FlagMaterialProperty extends MaterialProperty<Unit> {
     public Unit instance(Map<Power, Integer> formula) {
         return Unit.INSTANCE;
     }
-
-    @Override
-    public Codec<Unit> codec() {
-        return Unit.CODEC;
-    }
 }

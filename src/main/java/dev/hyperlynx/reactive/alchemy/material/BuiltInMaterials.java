@@ -1,22 +1,44 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import dev.hyperlynx.reactive.util.Color;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DataPackRegistryEvent;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class BuiltInMaterials {
-    public static final ResourceKey<Registry<Material>> KEY = ResourceKey.createRegistryKey(ReactiveMod.location("materials"));
+    public static void addToMap(Map<ResourceLocation, Material> map) {
+        addMaterial(map, "example_salt", "Example Material", Map.of(
+                MaterialProperties.MODEL_NAME.get(), MaterialModel.CIRCLES.getSerializedName(),
+                MaterialProperties.COLOR.get(), new Color(0x7A5BB5)
+        ));
+        addMaterial(map, "example_adept_salt", "Example Material", Map.of(
+                MaterialProperties.MODEL_NAME.get(), MaterialModel.SQUARES.getSerializedName(),
+                MaterialProperties.COLOR.get(), new Color(0x60F5FA)
+        ));
+        addMaterial(map, "example_creation_salt", "Example Material", Map.of(
+                MaterialProperties.MODEL_NAME.get(), MaterialModel.STATIC.getSerializedName(),
+                MaterialProperties.COLOR.get(), new Color(0x118066)
+        ));
+        addMaterial(map, "example_wool", "Example Dyed Wool", Map.of(
+                MaterialProperties.MODEL_NAME.get(), MaterialModel.WOOL.getSerializedName(),
+                MaterialProperties.COLOR.get(), new Color(0x7A82C4)
+        ));
+    }
 
-    @SubscribeEvent
-    public static void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(
-                KEY,
-                Material.CODEC,
-                Material.CODEC
-        );
+    public static Map<ResourceLocation, Material> generate() {
+        Map<ResourceLocation, Material> mats = new HashMap<>();
+        addToMap(mats);
+        return mats;
+    }
+
+    private static void addMaterial(Map<ResourceLocation, Material> map, String id, String name, Map<MaterialProperty<?>, Object> properties) {
+        map.put(ReactiveMod.location(id), new Material(properties, name));
     }
 }
+

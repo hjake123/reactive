@@ -3,20 +3,16 @@ package dev.hyperlynx.reactive.alchemy.material;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
-import dev.hyperlynx.reactive.net.MaterialDataSyncRequestPayload;
-import dev.hyperlynx.reactive.net.MaterialRenamePayload;
-import dev.hyperlynx.reactive.registration.ReactiveBlocks;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -24,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-@EventBusSubscriber(modid=ReactiveMod.MODID, value= Dist.CLIENT)
+@Mod.EventBusSubscriber(modid=ReactiveMod.MODID, value= Dist.CLIENT)
 public class ClientMaterialMan {
     public static final AtomicReference<MaterialData> clientside_data = new AtomicReference<>(MaterialData.empty());
     private static final AtomicBoolean initialized = new AtomicBoolean(false);

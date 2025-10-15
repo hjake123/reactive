@@ -57,7 +57,7 @@ public class Material {
                     null,
                     compound.getString("name"),
                     compound.contains("formula") ? Formula.SERIALIZER.decode(compound.getCompound("formula")) : null,
-                    compound.contains("discoverer") ? Discoverer.SERIALIZER.decode(compound.getCompound("discoverer")) : null
+                    compound.contains("discoverer") ? Discoverer.SERIALIZER.decode(compound.getCompound("discoverer")) : null,
                     compound.getString("notes")
             );
         }

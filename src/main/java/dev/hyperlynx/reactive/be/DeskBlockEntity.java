@@ -1,9 +1,6 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.menu.DeskMenu;
-import dev.hyperlynx.reactive.registration.ReactiveBlockEntityTypes;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -14,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
