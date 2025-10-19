@@ -37,7 +37,7 @@ public class ReactiveKubeJSPlugin implements KubeJSPlugin {
     public void registerBuilderTypes(BuilderTypeRegistry registry){
         registry.addDefault(Powers.POWER_REGISTRY_KEY, KubePowerBuilder.class, KubePowerBuilder::new);
         registry.addDefault(Registries.TRIGGER_TYPE, FlagTriggerBuilder.class, FlagTriggerBuilder::new);
-        registry.of(Registries.ITEM, reg -> reg.add("reactive:power_bottle", CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new));
+        registry.of(Registries.ITEM, reg -> reg.add(ReactiveMod.location("power_bottle"), CustomPowerBottleItem.Builder.class, CustomPowerBottleItem.Builder::new));
     }
 
     @Override

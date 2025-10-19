@@ -1,1 +1,2 @@
 - Fix issues in the Cultivation and Inert Crystal Journal entries
+- Update compatibility range for KubeJS
