@@ -1,1 +1,1 @@
-- Added compatibility recipes and tags for MagiChem, Malum, and Wizards Reborn
+- Fixed typos in the SGA invocation in the journal (thanks to heksile on CurseForge for finding them!)
