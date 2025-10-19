@@ -1,2 +1,4 @@
+- Update compatibility range for KubeJS to allow the mod to load with its versions `2101.7.2+`
+  - The new compatibility range to all `2101.7.x` versions
 - Fix issues in the Cultivation and Inert Crystal Journal entries
-- Update compatibility range for KubeJS
+- Fixed typos in the SGA invocation in the journal (thanks to heksile on CurseForge for finding them!)
