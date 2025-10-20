@@ -80,7 +80,7 @@ config="reactive.mixins.json"
     # Does this dependency have to exist - if not, ordering below must be specified
     type="optional" #mandatory #mandatory
     # The version range of the dependency
-    versionRange="[2101.7.0,2101.7.2)" #mandatory
+    versionRange="[2101.7.0,2101.8.0)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the dependency is not mandatory
     # BEFORE - This mod is loaded BEFORE the dependency
     # AFTER - This mod is loaded AFTER the dependency

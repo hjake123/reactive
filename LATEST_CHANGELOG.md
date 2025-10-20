@@ -1,22 +1,4 @@
-Welcome to version 10.0.0!
-This is a major update, so while past worlds should work without issue, I recommend making a backup.
-- Added the custom Material system
-  - Materials can be created by the player dynamically and are saved in the world
-  - Materials can also be defined using datapacks
-  - Added the Discovery Desk
-  - Added the `/reactive materials` command tree
-  - Added Adept Salts
-  - Added Creation Salts
-- Added throwable Reaction Flasks
-    - Added Gold Thread
-    - Added Inert Crystals
-- Added Phantom Quilt
-- Improved the Rending Plinth
-  - Using a Bottle of Warp on the Gateway will create a new Linked Bottle of Warp to your current location
-  - Added new activation animation
-- Added Nodule Growth and Cryogenesis Reactions
-- Reworked visuals for the Living Staff of Power
-- Reworked visuals for the Curse Assimilation and Astral reactions
-- Adjusted some Journal entries and organization
-- Required NeoForge version is now `21.1.181` or above
-- Supported KubeJS version is now `2101.7.1` or above
+- Update compatibility range for KubeJS to allow the mod to load with its versions `2101.7.2+`
+  - The new compatibility range to all `2101.7.x` versions
+- Fix issues in the Cultivation and Inert Crystal Journal entries
+- Fixed typos in the SGA invocation in the journal (thanks to heksile on CurseForge for finding them!)
