@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialModel;
@@ -7,10 +8,6 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.MaterialItem;
-import dev.hyperlynx.reactive.net.MaterialBESyncPayload;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
-import dev.hyperlynx.reactive.registration.ReactiveParticles;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,6 +50,8 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
+import static dev.hyperlynx.reactive.items.MaterialItem.MATERIAL_ID_KEY;
+
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
 /// See [Material] and [MaterialItem]
 public class MaterialBlock extends Block implements EntityBlock {
@@ -86,8 +85,8 @@ public class MaterialBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockState to_place_state = state;
-        if(stack.has(ReactiveComponentTypes.MATERIAL_ID)) {
-            ResourceLocation material_id = stack.get(ReactiveComponentTypes.MATERIAL_ID);
+        if(MaterialItem.hasMaterialId(stack)) {
+            ResourceLocation material_id = MaterialItem.getMaterialId(stack);
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
                 if(level instanceof ServerLevel slevel) {
@@ -136,7 +135,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (!(entity instanceof LivingEntity living)) {
             return;
         }
@@ -150,25 +149,25 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         ItemStack stack = super.getCloneItemStack(state, target, level, pos, player);
         MaterialBlockEntity mbe = (MaterialBlockEntity) level.getBlockEntity(pos);
         if(mbe == null || mbe.hasNoValidMaterial()) {
-            return ReactiveItems.SALT_BLOCK.get().getDefaultInstance();
+            return Registration.SALT_BLOCK_ITEM.get().getDefaultInstance();
         }
-        stack.set(ReactiveComponentTypes.MATERIAL_ID, mbe.getMaterialId());
+        MaterialItem.setMaterialId(stack, mbe.getMaterialId());
         return stack;
     }
 
     @Override
-    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+    public List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
         BlockEntity entity = params.getParameter(LootContextParams.BLOCK_ENTITY);
         if(entity instanceof MaterialBlockEntity mbe) {
             if(mbe.hasNoValidMaterial()) {
-                return List.of(ReactiveItems.SALT_BLOCK.get().getDefaultInstance());
+                return List.of(Registration.SALT_BLOCK_ITEM.get().getDefaultInstance());
             }
-            ItemStack stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
-            stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), mbe.getMaterialId());
+            ItemStack stack = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+            MaterialItem.setMaterialId(stack, mbe.getMaterialId());
             return List.of(stack);
         }
         return super.getDrops(state, params);
@@ -193,7 +192,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected float getDestroyProgress(BlockState state, Player player, BlockGetter getter, BlockPos pos) {
+    public float getDestroyProgress(BlockState state, Player player, BlockGetter getter, BlockPos pos) {
         Material material = material(getter, pos);
         Level level = player.level();
         if(!level.isClientSide && material(getter, pos).has(MaterialProperties.SELF_DEFENSE.get()) && getter.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
@@ -202,7 +201,7 @@ public class MaterialBlock extends Block implements EntityBlock {
                 ParticleScribe.drawParticle(level, ParticleTypes.ANGRY_VILLAGER, center.x + level.random.nextFloat() - 0.5, center.y , center.z + level.random.nextFloat() - 0.5);
                 float damage = material.get(MaterialProperties.SELF_DEFENSE.get());
                 player.hurt(level.damageSources().magic(), damage);
-                ParticleScribe.drawParticleZigZag(level, ReactiveParticles.ACID_BUBBLE,
+                ParticleScribe.drawParticleZigZag(level, Registration.ACID_BUBBLE_PARTICLE,
                         center.x, center.y,center.z,
                         player.getX(), player.getEyeHeight() / 2 + player.getY(), player.getZ(), 5, 10, 0.3);
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_BURN, SoundSource.BLOCKS, 0.5F, 0.98F + player.level().random.nextFloat()*0.05F);
@@ -243,12 +242,12 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { // Works!
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) { // Works!
         return material(level, pos).getOrDefault(MaterialProperties.REDSTONE.get(), 0);
     }
 
     @Override
-    protected boolean isSignalSource(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
@@ -267,7 +266,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected boolean isRandomlyTicking(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return state.getValue(RANDOM_TICKING);
     }
 
@@ -279,7 +278,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if(!material(level, pos).has(MaterialProperties.WARPING.get())) {
             level.setBlock(pos, state.setValue(RANDOM_TICKING, false), Block.UPDATE_CLIENTS);
             return;
@@ -304,7 +303,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if(material(level, pos).has(MaterialProperties.REDSTONE_MELTING.get())) {
             if(level.getDirectSignalTo(pos) > 0) {

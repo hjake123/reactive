@@ -1,8 +1,5 @@
 package dev.hyperlynx.reactive.menu;
 
-import dev.hyperlynx.reactive.registration.ReactiveBlocks;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
-import dev.hyperlynx.reactive.registration.ReactiveMenus;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;

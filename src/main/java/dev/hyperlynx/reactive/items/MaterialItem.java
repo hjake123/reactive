@@ -3,8 +3,6 @@ package dev.hyperlynx.reactive.items;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -16,19 +14,41 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MaterialItem extends BlockItem {
+    public static final String MATERIAL_ID_KEY = "MaterialId";
+
     public MaterialItem(Block block, Properties properties) {
         super(block, properties);
     }
 
+    public static boolean hasMaterialId(ItemStack stack) {
+        return stack.hasTag() && stack.getOrCreateTag().contains(MATERIAL_ID_KEY);
+    }
+
+    public static void setMaterialId(ItemStack stack, ResourceLocation id) {
+        stack.getOrCreateTag().putString(MATERIAL_ID_KEY, id.toString());
+    }
+
+    public static void removeMaterialId(ItemStack stack) {
+        stack.removeTagKey(MATERIAL_ID_KEY);
+    }
+
+    public static @Nullable ResourceLocation getMaterialId(ItemStack stack) {
+        if(hasMaterialId(stack)) {
+            return ResourceLocation.parse(stack.getOrCreateTag().getString(MATERIAL_ID_KEY));
+        }
+        return null;
+    }
+
     @Override
     public Component getName(ItemStack stack) {
-        if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            return ClientMaterialMan.getName(Objects.requireNonNull(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())));
+        if(hasMaterialId(stack)) {
+            return ClientMaterialMan.getName(Objects.requireNonNull(getMaterialId(stack)));
         }
         return Component.translatable("block.reactive.invalid_material");
     }
@@ -36,13 +56,13 @@ public class MaterialItem extends BlockItem {
     private static final int MAX_NOTES_TOOLTIP_LINE_LENGTH = 32;
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flag) {
-        super.appendHoverText(stack, context, components, flag);
-        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
+        super.appendHoverText(stack, level, components, flag);
+        if(!hasMaterialId(stack)) {
             components.add(Component.translatable("text.reactive.random_material_tooltip"));
             return;
         }
-        Material material = MaterialMan.fetch(context.level(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
+        Material material = MaterialMan.fetch(level, getMaterialId(stack));
         if(!material.getNotes().isEmpty()) {
             String first_notes_line = material.getNotes().lines().findFirst().orElse("");
             if(!first_notes_line.isEmpty()) {
@@ -53,14 +73,14 @@ public class MaterialItem extends BlockItem {
                 components.add(Component.literal(first_notes_line).withStyle(ChatFormatting.GRAY));
             }
         }
-        if(flag.hasShiftDown()) {
-            Component discoverer = material.getDiscovererName(context.level());
-            if(!discoverer.equals(Component.empty())) {
-                components.add(discoverer);
-            }
+
+        Component discoverer = material.getDiscovererName(level);
+        if(!discoverer.equals(Component.empty())) {
+            components.add(discoverer);
         }
+
         if(flag.isAdvanced()) {
-            components.add(Component.literal("" + stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).withStyle(ChatFormatting.DARK_GRAY));
+            components.add(Component.literal("" + getMaterialId(stack)).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 
@@ -84,13 +104,13 @@ public class MaterialItem extends BlockItem {
         if(level.isClientSide()){
             return;
         }
-        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+        if(!hasMaterialId(stack)) {
             ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, new Formula(Power.generateRandomPowerCombo(level), ReactiveItems.SALT_BLOCK));
-            stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), random_material_id);
+            setMaterialId(stack, random_material_id);
         }
-        ResourceLocation id = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
+        ResourceLocation id = getMaterialId(stack);
         if(!MaterialMan.occupied(level, id)) {
-            stack.remove(ReactiveComponentTypes.MATERIAL_ID.get());
+            removeMaterialId(stack);
         }
     }
 }

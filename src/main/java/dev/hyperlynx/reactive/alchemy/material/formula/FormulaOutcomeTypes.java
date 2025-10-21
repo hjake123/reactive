@@ -4,14 +4,11 @@ import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.ReactiveMod;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.NewRegistryEvent;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class FormulaOutcomeTypes {
     public static final ResourceKey<Registry<MapCodec<? extends FormulaOutcome>>> TYPE_REGISTRY_KEY = ResourceKey.createRegistryKey(ReactiveMod.location( "formula_outcome_types"));
     public static final Registry<MapCodec<? extends FormulaOutcome>> TYPE_REGISTRY = new RegistryBuilder<>(TYPE_REGISTRY_KEY)
