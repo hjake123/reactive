@@ -46,13 +46,8 @@ public class FloatOneToValueFormulaOutcome extends FormulaOutcome implements Flo
     }
 
     @Override
-    public MapCodec<? extends FormulaOutcome> type() {
-        return FormulaOutcomeTypes.ONE_TO_VALUE_FLOAT.get();
-    }
-
-    @Override
     public float calculate(Map<Power, Integer> formula) {
-        Power power = Powers.POWER_REGISTRY.get(power());
+        Power power = Powers.POWER_SUPPLIER.get().getValue(power());
         if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
             int provided_power = Math.min((formula.get(power) - min_power), (max_power - min_power));
             float power_proportion = (float) provided_power / (max_power - min_power);

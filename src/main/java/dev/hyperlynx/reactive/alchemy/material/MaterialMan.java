@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
@@ -25,8 +26,7 @@ public class MaterialMan {
     public static MaterialData data(Level level) {
         if(level instanceof ServerLevel slevel) {
             return Objects.requireNonNull(slevel.getServer().getLevel(ServerLevel.OVERWORLD)).getDataStorage()
-                    .computeIfAbsent(new SavedData.Factory<>(() -> MaterialData.empty(), MaterialData::load),
-                            "reactive_materials");
+                    .computeIfAbsent(MaterialData::load, MaterialData::empty, "reactive_materials");
         } else if(level != null && level.isClientSide()) {
             return ClientMaterialMan.data();
         }
@@ -64,7 +64,7 @@ public class MaterialMan {
         material.setName(name);
         if(!material.wasDiscovered()) {
             material.setDiscoverer(player);
-            ReactiveCriterionTriggers.DISCOVER_MATERIAL.get().trigger((ServerPlayer) player);
+            CriteriaTriggers.DISCOVER_MATERIAL.trigger((ServerPlayer) player);
         }
         data(level).setDirty();
     }
@@ -97,9 +97,9 @@ public class MaterialMan {
     /// Just makes a Material without adding it to the world.
     public static @NotNull Material generateMaterial(@NotNull Formula formula) {
         // Retrieve the base item's yield entry
-        YieldEntry yield  = MaterialFormulaMaps.BASE_YIELDS.get(formula.base_material().location());
+        YieldEntry yield  = MaterialFormulaMaps.BASE_YIELDS.get(formula.base_material().builtInRegistryHolder().key().location());
         if(yield == null) {
-            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().location()  +") with no defined yield! This shouldn't have been possible...");
+            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getName(formula.base_material().getDefaultInstance())  +") with no defined yield! This shouldn't have been possible...");
         }
 
         // Construct and add the new material

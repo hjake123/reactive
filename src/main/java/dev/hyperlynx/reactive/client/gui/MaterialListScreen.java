@@ -1,9 +1,9 @@
 package dev.hyperlynx.reactive.client.gui;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -108,8 +108,8 @@ public class MaterialListScreen extends Screen {
 
         @Override
         public void render(@NotNull GuiGraphics graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean hovering, float partialTick) {
-            ItemStack dummy_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
-            dummy_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_id);
+            ItemStack dummy_stack = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+            MaterialItem.setMaterialId(dummy_stack, material_id);
             int top_line = top + 4;
             graphics.renderFakeItem(dummy_stack, left + 4, top_line + 2);
             graphics.drawString(Minecraft.getInstance().font, ClientMaterialMan.getName(material_id), left + 24, top_line, 0xFFFFFFFF);

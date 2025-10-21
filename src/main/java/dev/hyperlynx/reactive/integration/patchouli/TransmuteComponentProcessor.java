@@ -26,7 +26,7 @@ public class TransmuteComponentProcessor implements IComponentProcessor {
             return;
         List<TransmuteRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(Registration.TRANS_RECIPE_TYPE.get());
         for(TransmuteRecipe r : recipes){
-            if (r.getId().equals(new ResourceLocation(recipeId))) {
+            if (r.getId().equals(ResourceLocation.parse(recipeId))) {
                 recipe = r;
                 break;
             }

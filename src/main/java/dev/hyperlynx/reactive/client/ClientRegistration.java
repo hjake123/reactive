@@ -1,12 +1,18 @@
-package dev.hyperlynx.reactive;
+package dev.hyperlynx.reactive.client;
 
+import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
 import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderers;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,6 +59,17 @@ public class ClientRegistration {
         if(ModList.get().isLoaded("create")){
             ReactivePonderPlugin.clientInit();
         }
+
+        ItemProperties.register(
+                Registration.MATERIAL_ITEM.get(),
+                ReactiveMod.location("material_model_index"),
+                MaterialItem::getModelOverrideValue
+        );
+    }
+
+    @SubscribeEvent
+    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register(MaterialItem::getItemColor, Registration.MATERIAL_ITEM.get());
     }
 
 }

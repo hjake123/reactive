@@ -1,6 +1,8 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
 import dev.hyperlynx.reactive.util.NBTSerializer;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -67,12 +69,12 @@ public class MaterialData extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag tag) {
-        CompoundTag saved_tag = SERIALIZER_V1.encode(this, tag);
-        saved_tag.put("version", IntTag.valueOf(CURRENT_VERSION));
-        return saved_tag;
+        tag.put("Data", SERIALIZER_V1.encode(this));
+        tag.put("version", IntTag.valueOf(CURRENT_VERSION));
+        return tag;
     }
 
-    public static MaterialData load(CompoundTag tag, HolderLookup.Provider ignoredprovider) {
+    public static MaterialData load(CompoundTag tag) {
         int version = CURRENT_VERSION;
         if(tag.contains("version", Tag.TAG_INT)) {
             version = tag.getInt("version");
@@ -85,7 +87,7 @@ public class MaterialData extends SavedData {
         }
         NBTSerializer<MaterialData> serializer = CODECS_BY_VERSION.getOrDefault(version, SERIALIZER_V1);
 
-        return serializer.decode(tag);
+        return serializer.decode(tag.get("Data"));
     }
 
     public void addMaterial(ResourceLocation id, Material material) {
@@ -108,6 +110,6 @@ public class MaterialData extends SavedData {
     @Override
     public void setDirty() {
         super.setDirty();
-        PacketDistributor.sendToAllPlayers(new MaterialDataSyncPayload(new MaterialData(this)));
+        Registration.UPDATE_10_CHANNEL.send(PacketDistributor.ALL.noArg(), new MaterialDataSyncMessage(new MaterialData(this)));
     }
 }

@@ -23,11 +23,6 @@ public class DefaultStringFormulaOutcome extends FormulaOutcome implements Strin
     private String value() { return value; }
 
     @Override
-    public MapCodec<? extends FormulaOutcome> type() {
-        return FormulaOutcomeTypes.DEFAULT_STRING.get();
-    }
-
-    @Override
     public @Nullable ResourceLocation power() {
         return null;
     }

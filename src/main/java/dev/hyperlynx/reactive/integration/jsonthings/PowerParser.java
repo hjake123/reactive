@@ -37,8 +37,8 @@ public class PowerParser extends ThingParser<JsonPowerBuilder> {
         JsonPowerBuilder builder = new JsonPowerBuilder(this, location);
         JParse.begin(json)
                 .ifKey("color", (color) -> builder.color(parseColor(color.obj())))
-                .ifKey("bottle", (bottle) -> builder.bottle(RegistryObject.create(new ResourceLocation(bottle.string().getAsString()), ForgeRegistries.ITEMS)))
-                .ifKey("render_water_block", (water) -> builder.water(RegistryObject.create(new ResourceLocation(water.string().getAsString()), ForgeRegistries.BLOCKS)))
+                .ifKey("bottle", (bottle) -> builder.bottle(RegistryObject.create(ResourceLocation.parse(bottle.string().getAsString()), ForgeRegistries.ITEMS)))
+                .ifKey("render_water_block", (water) -> builder.water(RegistryObject.create(ResourceLocation.parse(water.string().getAsString()), ForgeRegistries.BLOCKS)))
                 .ifKey("invisible", (invisible) -> builder.setInvisible(invisible.bool().getAsBoolean()))
                 .ifKey("name_override", (custom_name) -> builder.setName(Component.literal(custom_name.string().getAsString())));
         builder_modification.accept(builder);

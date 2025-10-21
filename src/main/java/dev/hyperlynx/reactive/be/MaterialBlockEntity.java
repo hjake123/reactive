@@ -19,7 +19,7 @@ public class MaterialBlockEntity extends BlockEntity {
     public int generic_delay = 0;
 
     public MaterialBlockEntity(BlockPos pos, BlockState blockState) {
-        super(Registration.MATERIAL.get(), pos, blockState);
+        super(Registration.MATERIAL_BE.get(), pos, blockState);
     }
 
     public Material getMaterial() {
@@ -42,14 +42,14 @@ public class MaterialBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         material_id = ResourceLocation.tryParse(tag.getString("material_id"));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(material_id == null) {
             return;
         }
@@ -57,15 +57,15 @@ public class MaterialBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
+        saveAdditional(tag);
         return tag;
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-        super.handleUpdateTag(tag, registries);
+    public void handleUpdateTag(CompoundTag tag) {
+        super.handleUpdateTag(tag);
     }
 
     public ResourceLocation getMaterialId() {

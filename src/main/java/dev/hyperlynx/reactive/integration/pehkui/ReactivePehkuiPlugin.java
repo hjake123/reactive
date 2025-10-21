@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.integration.pehkui;
 
-import dev.hyperlynx.reactive.ClientRegistration;
+import dev.hyperlynx.reactive.client.ClientRegistration;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.advancements.FlagCriterion;
 import dev.hyperlynx.reactive.alchemy.Powers;

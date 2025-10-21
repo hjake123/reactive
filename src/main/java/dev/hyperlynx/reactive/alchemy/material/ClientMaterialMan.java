@@ -1,8 +1,12 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.blocks.MaterialBlock;
+import dev.hyperlynx.reactive.net.material.MaterialDataSyncRequest;
+import dev.hyperlynx.reactive.net.material.MaterialRenameMessage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -12,6 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
@@ -19,6 +24,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, value= Dist.CLIENT)
 public class ClientMaterialMan {
@@ -37,7 +43,7 @@ public class ClientMaterialMan {
         ReactiveMod.LOGGER.debug("Requesting material definitions from server");
         try {
             query_active.set(true);
-            PacketDistributor.sendToServer(new MaterialDataSyncRequestPayload(-1));
+            Registration.UPDATE_10_CHANNEL.sendToServer(new MaterialDataSyncRequest());
             boolean got_result = response_ready.tryAcquire(1, 1, TimeUnit.SECONDS);
             if (got_result) {
                 ReactiveMod.LOGGER.debug("Received material definitions from server");
@@ -79,24 +85,24 @@ public class ClientMaterialMan {
     }
 
     public static void rename(ResourceLocation material_id, String value) {
-        // clientside_data.get().get(material_id).setName(value); // Update on the client side.
-        PacketDistributor.sendToServer(new MaterialRenamePayload(material_id, value)); // Tell server to update itself.
+        Registration.UPDATE_10_CHANNEL.sendToServer(new MaterialRenameMessage(material_id, value)); // Tell server to update itself.
     }
 
     public static List<ResourceLocation> getKeysInDiscoveryOrder() {
         return data().materials.keySet().stream().sorted((left_id, right_id) ->
-                Math.clamp(data().materials.get(right_id).getDiscoveryTime() - data().materials.get(left_id).getDiscoveryTime(), -Integer.MAX_VALUE, Integer.MAX_VALUE)).toList();
+                Math.toIntExact(data().materials.get(right_id).getDiscoveryTime() - data().materials.get(left_id).getDiscoveryTime())).toList();
     }
 
-    public static void handleMaterialBESync(IPayloadContext context, ResourceLocation material_id, BlockPos pos) {
-        if(!(context.player().level() instanceof ClientLevel clevel)) {
+    public static void handleMaterialBESync(ResourceLocation material_id, BlockPos pos) {
+        if(Minecraft.getInstance().player == null) {
             return;
         }
-        if(!(clevel.getBlockState(pos).getBlock() instanceof MaterialBlock)) {
-            clevel.setBlock(pos, ReactiveBlocks.MATERIAL_BLOCK.get().defaultBlockState(), Block.UPDATE_NONE);
+        ClientLevel level = (ClientLevel) Minecraft.getInstance().player.level();
+        if(!(level.getBlockState(pos).getBlock() instanceof MaterialBlock)) {
+            level.setBlock(pos, Registration.MATERIAL_BLOCK.get().defaultBlockState(), Block.UPDATE_NONE);
         }
-        if(clevel.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
-            mbe.setMaterial(clevel, material_id);
+        if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
+            mbe.setMaterial(level, material_id);
         }
     }
 }

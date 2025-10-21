@@ -45,13 +45,8 @@ public class IntegerZeroToMaxFormulaOutcome extends FormulaOutcome implements In
         return power;
     }
 
-    @Override
-    public MapCodec<? extends FormulaOutcome> type() {
-        return FormulaOutcomeTypes.ZERO_TO_MAX_INT.get();
-    }
-
     public int calculate(Map<Power, Integer> formula) {
-        Power power = Powers.POWER_REGISTRY.get(power());
+        Power power = Powers.POWER_SUPPLIER.get().getValue(power());
         if(formula.containsKey(power) && formula.get(power) > getMinPower()) {
             int provided_power = Math.min(formula.get(power) - getMinPower(), getMaxPower());
             double power_proportion = (double) provided_power / getMaxPower();

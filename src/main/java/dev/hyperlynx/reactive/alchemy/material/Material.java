@@ -177,7 +177,7 @@ public class Material {
         if(original_formula == null) {
             return false;
         }
-        if(!original_formula.base_material().is(formula.base_material().unwrap().orThrow())) {
+        if(!original_formula.base_material().equals(formula.base_material())) {
             return false;
         }
         for(Power power : formula.powers().keySet()) {
@@ -260,7 +260,7 @@ public class Material {
             return Component.translatable("ui.reactive.no_formula");
         }
         List<Component> formula_lines = new ArrayList<>();
-        formula_lines.add(original_formula.base_material().value().getName(original_formula.base_material().value().getDefaultInstance()));
+        formula_lines.add(original_formula.base_material().getName(original_formula.base_material().getDefaultInstance()));
         for(Power power : original_powers.keySet().stream().sorted(Comparator.comparing(original_powers::get)).toList().reversed()) {
             formula_lines.add(Component.literal(power.getName() + ": " + Math.round(original_powers.get(power) / 16.0) + "%")
                     .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex : 0xFFFFFF));

@@ -25,8 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock {
@@ -59,16 +58,9 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
             BASE_SHAPE, Z_BOOK
     );
 
-    public static final MapCodec<DeskBlock> CODEC = simpleCodec(DeskBlock::new);
-
     public DeskBlock(Properties properties) {
         super(properties);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package dev.hyperlynx.reactive.client.renderers;
 
-import dev.hyperlynx.reactive.ClientRegistration;
+import dev.hyperlynx.reactive.client.ClientRegistration;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;

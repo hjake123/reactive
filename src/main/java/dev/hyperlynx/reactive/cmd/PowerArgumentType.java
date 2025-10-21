@@ -24,7 +24,7 @@ public class PowerArgumentType implements ArgumentType<ResourceLocation> {
         if(!input.contains(":")){
             input = "reactive:" + input;
         }
-        return new ResourceLocation(input);
+        return ResourceLocation.parse(input);
     }
 
     @Override

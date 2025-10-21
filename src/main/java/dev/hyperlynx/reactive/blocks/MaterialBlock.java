@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.be.MaterialBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.MaterialItem;
+import dev.hyperlynx.reactive.net.material.MaterialBESyncMessage;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,8 +51,6 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-import static dev.hyperlynx.reactive.items.MaterialItem.MATERIAL_ID_KEY;
-
 /// A block whose properties are determined by its associated BlockEntity and the Material it is attached to.
 /// See [Material] and [MaterialItem]
 public class MaterialBlock extends Block implements EntityBlock {
@@ -90,7 +89,7 @@ public class MaterialBlock extends Block implements EntityBlock {
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
                 if(level instanceof ServerLevel slevel) {
-                    PacketDistributor.sendToPlayersTrackingChunk(slevel, new ChunkPos(pos), new MaterialBESyncPayload(mbe.getMaterialId(), pos));
+                    Registration.UPDATE_10_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> slevel.getChunkAt(pos)), new MaterialBESyncMessage(mbe.getMaterialId(), pos));
                 }
             }
             to_place_state = setStateByMaterialId(level, to_place_state, material_id);
@@ -291,7 +290,7 @@ public class MaterialBlock extends Block implements EntityBlock {
                 level.setBlock(adjacent_pos, state, Block.UPDATE_CLIENTS);
                 if(level.getBlockEntity(pos) instanceof MaterialBlockEntity old_mbe && level.getBlockEntity(adjacent_pos) instanceof MaterialBlockEntity new_mbe) {
                     new_mbe.setMaterial(level, old_mbe.getMaterialId());
-                    PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(adjacent_pos), new MaterialBESyncPayload(old_mbe.getMaterialId(), adjacent_pos));
+                    Registration.UPDATE_10_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(adjacent_pos)), new MaterialBESyncMessage(old_mbe.getMaterialId(), adjacent_pos));
                 }
                 level.removeBlock(pos, false);
                 level.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS);

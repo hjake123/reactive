@@ -12,13 +12,17 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 // This class represents one of the kinds of Alchemical Power that items can produce when put into the crucible. It's similar to Item.
@@ -147,6 +151,19 @@ public class Power {
         if(hasBottle())
             return bottle.get().getDefaultInstance();
         return ItemStack.EMPTY;
+    }
+
+    public static Map<Power, Integer> generateRandomPowerCombo(Level level) {
+        Map<Power, Integer> powers = new HashMap<>();
+        RandomSource random = level.random;
+        for(int i = 0; i < random.nextIntBetweenInclusive(1, 3); i++) {
+            Power power = Powers.POWER_SUPPLIER.get().getValues().stream().toList().get(level.random.nextInt(0, Powers.POWER_SUPPLIER.get().getValues().size()));
+            while(power.equals(Powers.ASTRAL_POWER.get())) {
+                power = Powers.POWER_SUPPLIER.get().getValues().stream().toList().get(level.random.nextInt(0, Powers.POWER_SUPPLIER.get().getValues().size()));
+            }
+            powers.put(power, random.nextInt(200, 500));
+        }
+        return powers;
     }
 
     @Override

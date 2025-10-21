@@ -1,14 +1,11 @@
 package dev.hyperlynx.reactive.integration.kubejs.net;
 
-import dev.hyperlynx.reactive.ClientRegistration;
-import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.client.ClientRegistration;
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.integration.kubejs.CustomReaction;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.items;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.model.ForgeItemModelShaper;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -85,17 +88,17 @@ public class MaterialItem extends BlockItem {
     }
 
     public static int getItemColor(ItemStack stack, int ignored) {
-        if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            return ClientMaterialMan.data().get(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getOrDefault(MaterialProperties.COLOR.get(), Color.white()).hex();
+        if(hasMaterialId(stack)) {
+            return ClientMaterialMan.data().get(getMaterialId(stack)).getOrDefault(MaterialProperties.COLOR.get(), Color.white()).hex();
         }
         return 0;
     }
 
     public static float getModelOverrideValue(ItemStack stack, Level level, LivingEntity ignored, long ignoredSeed) {
-        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+        if(!hasMaterialId(stack)) {
             return 0.0F;
         }
-        Material material = MaterialMan.fetch(level, stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
+        Material material = MaterialMan.fetch(level, getMaterialId(stack));
         return MaterialModel.fromName(material.getOrDefault(MaterialProperties.MODEL_NAME.get(), "SALT")).getModelIndex();
     }
 
@@ -105,7 +108,7 @@ public class MaterialItem extends BlockItem {
             return;
         }
         if(!hasMaterialId(stack)) {
-            ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, new Formula(Power.generateRandomPowerCombo(level), ReactiveItems.SALT_BLOCK));
+            ResourceLocation random_material_id = MaterialMan.createOrFetchByFormula(level, new Formula(Power.generateRandomPowerCombo(level), Registration.SALT_BLOCK_ITEM.get()));
             setMaterialId(stack, random_material_id);
         }
         ResourceLocation id = getMaterialId(stack);

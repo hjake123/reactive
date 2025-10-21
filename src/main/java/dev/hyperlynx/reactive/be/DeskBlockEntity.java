@@ -48,18 +48,18 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if(tag.contains("stack")) {
             stack = ItemStack.parseOptional(registries, tag.getCompound("stack"));
         }
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(!stack.isEmpty()) {
-            tag.put("stack", stack.save(registries));
+            tag.put("stack", stack.save(new CompoundTag()));
         }
     }
 

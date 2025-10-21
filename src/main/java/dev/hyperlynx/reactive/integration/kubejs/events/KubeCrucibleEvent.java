@@ -11,7 +11,7 @@ public interface KubeCrucibleEvent {
 
     default int getPowerLevel(String power_rl){
         var crucible = getCrucible().crucible;
-        return crucible.getPowerLevel(Powers.POWER_SUPPLIER.get().getValue(new ResourceLocation(power_rl)));
+        return crucible.getPowerLevel(Powers.POWER_SUPPLIER.get().getValue(ResourceLocation.parse(power_rl)));
     }
 
     default boolean hasPower(String power_rl){

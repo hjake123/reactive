@@ -1,10 +1,10 @@
 package dev.hyperlynx.reactive.client.gui;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class MaterialRenameScreen extends Screen {
     final ResourceLocation material_to_rename;
-    final EditBox name_box = new EditBox(Minecraft.getInstance().font,142, 20, Component.empty());
+    final EditBox name_box = new EditBox(Minecraft.getInstance().font, 0, 0, 142, 20, Component.empty());
     final Button name_set_button;
 
     protected MaterialRenameScreen(ResourceLocation material_to_rename) {
@@ -58,8 +58,8 @@ public class MaterialRenameScreen extends Screen {
         if(Minecraft.getInstance().level == null) {
             return;
         }
-        ItemStack dummy_stack = ReactiveItems.MATERIAL.get().getDefaultInstance();
-        dummy_stack.set(ReactiveComponentTypes.MATERIAL_ID.get(), material_to_rename);
+        ItemStack dummy_stack = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        MaterialItem.setMaterialId(dummy_stack, material_to_rename);
         graphics.pose().pushPose();
         graphics.pose().scale(4, 4, 4); // Zoom in to make the material block preview bigger
         graphics.renderFakeItem(dummy_stack, this.width / 8 - 8, this.height / 8 - 17); // The pixel scaling is also altered by the zoom in

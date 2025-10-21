@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public record Formula(Map<Power, Integer> powers, ResourceKey<Item> base_material) {
+public record Formula(Map<Power, Integer> powers, Item base_material) {
     public static final NBTSerializer<Formula> SERIALIZER = new NBTSerializer<>() {
         @Override
         public CompoundTag encode(Formula data) {
@@ -41,7 +41,7 @@ public record Formula(Map<Power, Integer> powers, ResourceKey<Item> base_materia
                     NBTExtras.INT,
                     data.powers);
             //noinspection deprecation
-            tag.putString("base_material", data.base_material.get().builtInRegistryHolder().key().location().toString());
+            tag.putString("base_material", data.base_material.builtInRegistryHolder().key().location().toString());
             return tag;
         }
 

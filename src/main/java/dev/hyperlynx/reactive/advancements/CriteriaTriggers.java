@@ -28,6 +28,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion BE_TELEPORTED_TRIGGER = new FlagCriterion(ReactiveMod.location("be_teleported_criterion"));
     public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(ReactiveMod.location("see_blaze_gather_criterion"));
     public static final FlagCriterion UNDEAD_PLAYER_DIVINE_HURT = new FlagCriterion(ReactiveMod.location("undead_player_divine_hurt_criterion"));
+    public static final FlagCriterion DISCOVER_MATERIAL = new FlagCriterion(ReactiveMod.location("discover_material"));
 
     public static final ReactionCriterion REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("reaction"));
     public static final ReactionCriterion PERFECT_REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("perfect_reaction"));

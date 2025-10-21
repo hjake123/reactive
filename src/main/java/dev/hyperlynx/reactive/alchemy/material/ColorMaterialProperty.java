@@ -24,9 +24,4 @@ public class ColorMaterialProperty extends MaterialProperty<Color> {
         mix_color.setMixColor(Color.white(), formula, totalpp, Math.max(1600, totalpp));
         return mix_color;
     }
-
-    @Override
-    public Codec<Color> codec() {
-        return Color.CODEC;
-    }
 }

@@ -19,6 +19,10 @@ import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerialize
 import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
+import dev.hyperlynx.reactive.net.material.MaterialBESyncMessage;
+import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
+import dev.hyperlynx.reactive.net.material.MaterialDataSyncRequest;
+import dev.hyperlynx.reactive.net.material.MaterialRenameMessage;
 import dev.hyperlynx.reactive.net.rxn.*;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.items.*;
@@ -84,8 +88,8 @@ public class Registration {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ReactiveMod.MODID);
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, ReactiveMod.MODID);
 
-    public static void init() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void init(FMLJavaModLoadingContext context) {
+        IEventBus bus = context.getModEventBus();
         BLOCKS.register(bus);
         ITEMS.register(bus);
         CREATIVE_TABS.register(bus);
@@ -499,8 +503,8 @@ public class Registration {
     public static final RegistryObject<ArgumentTypeInfo<PowerArgumentType, PowerArgumentInfo.Template>> POWER_ARGUMENT =
             COMMAND_ARGUMENTS.register("power_argument", PowerArgumentInfo::new);
 
-    // Register the networking stuff for Litmus GUI.
-    private static final String PROTOCOL_VERSION = "1";
+    // Register the networking stuff.
+    private static final String PROTOCOL_VERSION = "2";
     public static final SimpleChannel LITMUS_CHANNEL = NetworkRegistry.newSimpleChannel(
         ReactiveMod.location("litmus_gui"),
         () -> PROTOCOL_VERSION,
@@ -515,6 +519,14 @@ public class Registration {
             PROTOCOL_VERSION::equals
     );
 
+    public static final SimpleChannel UPDATE_10_CHANNEL = NetworkRegistry.newSimpleChannel(
+            ReactiveMod.location("update_10"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals
+    );
+
+
     // Register the creative mode tab.
     public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
             () -> CreativeModeTab.builder()
@@ -526,6 +538,15 @@ public class Registration {
                         }
                     })
                     .build());
+
+    // Register 10.0.0 content.
+    public static final RegistryObject<MaterialBlock> MATERIAL_BLOCK = BLOCKS.register("material", MaterialBlock::new);
+    public static final RegistryObject<MaterialItem> MATERIAL_ITEM = ITEMS.register("material", () ->
+            new MaterialItem(MATERIAL_BLOCK.get(), new Item.Properties()));
+
+    public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> MATERIAL_BE = TILES.register("material_be",
+            () -> BlockEntityType.Builder.of(MaterialBlockEntity::new, MATERIAL_BLOCK.get()).build(null));
+
 
     // ----------------------- METHODS ------------------------
 
@@ -546,25 +567,48 @@ public class Registration {
             ReactiveKubeJSPlugin.registerMessages();
         }
         CriteriaTriggers.enqueue(evt);
-        LITMUS_CHANNEL.registerMessage(42, LitmusScreenMessage.class,
+        int index = 0;
+        LITMUS_CHANNEL.registerMessage(index++, LitmusScreenMessage.class,
                 LitmusScreenMessage::encoder,
                 LitmusScreenMessage::decoder,
                 LitmusScreenMessage::handler);
 
-        REACTION_SYNC_CHANNEL.registerMessage(1, ReactionStatusMessage.class,
+        REACTION_SYNC_CHANNEL.registerMessage(index++, ReactionStatusMessage.class,
                 ReactionStatusMessage::encoder,
                 ReactionStatusMessage::decoder,
                 ReactionStatusMessage::handler);
 
-        REACTION_SYNC_CHANNEL.registerMessage(10, ReactionPageFetcher.ReactionFormulaRequest.class,
+        REACTION_SYNC_CHANNEL.registerMessage(index++, ReactionPageFetcher.ReactionFormulaRequest.class,
                 ReactionPageFetcher.ReactionFormulaRequest::encoder,
                 ReactionPageFetcher.ReactionFormulaRequest::decoder,
                 ReactionPageServer::handlePageRequest);
 
-        REACTION_SYNC_CHANNEL.registerMessage(11, ReactionPageServer.ReactionFormulaResponse.class,
+        REACTION_SYNC_CHANNEL.registerMessage(index++, ReactionPageServer.ReactionFormulaResponse.class,
                 ReactionPageServer.ReactionFormulaResponse::encoder,
                 ReactionPageServer.ReactionFormulaResponse::decoder,
                 ReactionPageFetcher::handleFormulaResponse);
+
+        UPDATE_10_CHANNEL.registerMessage(index++, MaterialBESyncMessage.class,
+                MaterialBESyncMessage::encoder,
+                MaterialBESyncMessage::decoder,
+                MaterialBESyncMessage::handler);
+
+        UPDATE_10_CHANNEL.registerMessage(index++, MaterialRenameMessage.class,
+                MaterialRenameMessage::encoder,
+                MaterialRenameMessage::decoder,
+                MaterialRenameMessage::handler);
+
+        UPDATE_10_CHANNEL.registerMessage(index++, MaterialDataSyncRequest.class,
+                MaterialDataSyncRequest::encoder,
+                MaterialDataSyncRequest::decoder,
+                MaterialDataSyncRequest::handler);
+
+        UPDATE_10_CHANNEL.registerMessage(index++, MaterialDataSyncMessage.class,
+                MaterialDataSyncMessage::encoder,
+                MaterialDataSyncMessage::decoder,
+                MaterialDataSyncMessage::handler);
+
+        ReactiveMod.LOGGER.debug("Registered {} messages", index);
     }
 
     // Set up the potion items.

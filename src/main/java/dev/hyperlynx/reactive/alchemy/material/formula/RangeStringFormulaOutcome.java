@@ -36,11 +36,6 @@ public class RangeStringFormulaOutcome extends FormulaOutcome implements StringF
     private int threshold() { return threshold; }
     private Optional<Integer> max_power() { return max_power; }
 
-    @Override
-    public MapCodec<? extends FormulaOutcome> type() {
-        return FormulaOutcomeTypes.STRING_OPTIONS.get();
-    }
-
     public String calculate(Map<Power, Integer> formula) {
         Power power = Powers.POWER_SUPPLIER.get().getValue(power_id);
         if(power == null) {

@@ -4,10 +4,9 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.menu.DeskMenu;
-import dev.hyperlynx.reactive.registration.ReactiveComponentTypes;
 import dev.hyperlynx.reactive.util.Color;
-import net.createmod.catnip.gui.ScreenOpener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -32,7 +31,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
             button -> {
                 if(this.getMenu().getSlot(0).hasItem()) {
                     ItemStack stack = this.getMenu().getSlot(0).getItem();
-                    ResourceLocation location = stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
+                    ResourceLocation location = MaterialItem.getMaterialId(stack);
                     if(location != null) {
                         ScreenOpener.materialRename(location);
                     }
@@ -74,10 +73,10 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
     private ResourceLocation getMaterialId() {
         ItemStack stack = this.getMenu().getSlot(0).getItem();
-        if(!stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
+        if(!MaterialItem.hasMaterialId(stack)) {
             return null;
         }
-        return stack.get(ReactiveComponentTypes.MATERIAL_ID.get());
+        return MaterialItem.getMaterialId(stack);
     }
 
     @Override
