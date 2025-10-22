@@ -22,7 +22,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "minecraft:soul_sand",
-      "text": "$(item)Soul Sand$(0) should be a perfect source of Soul power -- it's right in the Name, after all! But, something seems... $(l:intro/curse)off$(/l) about the resulting substance. I recommend that Soul Sand is not used in any further Alchemical Experimentation. $(p)$(o)Actual sources coat the ruins of the seas and the darkest depths."
+      "text": "$(item)Soul Sand$(0) should be a perfect source of Soul power -- it's right in the Name, after all! But, something seems... $(l:objects_of_study/omen)odd$(/l) about the resulting substance. I recommend that Soul Sand is not used in any further Alchemical Experimentation. $(p)$(o)Actual sources coat the ruins of the seas and the darkest depths."
     },
     {
       "type": "reactive:dissolve",
