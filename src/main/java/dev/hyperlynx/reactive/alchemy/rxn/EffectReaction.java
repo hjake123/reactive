@@ -34,4 +34,9 @@ public class EffectReaction extends FreeEffectReaction{
             crucible.setDirty();
         }
     }
+
+    public Reaction setCost(int i) {
+        cost = i;
+        return this;
+    }
 }

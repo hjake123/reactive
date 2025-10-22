@@ -355,56 +355,6 @@ public class ReactionEffects {
         return points;
     }
 
-    private static void resizeNearby(Reactor reactor, double new_scale, double new_step_height, ResizeMode mode, ParticleOptions particle) {
-        if (Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.4) {
-            AABB aoe = new AABB(reactor.getBlockPos());
-            aoe = aoe.inflate(3);
-            List<LivingEntity> victims = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
-            for (LivingEntity victim : victims) {
-                if (CrystalIronItem.effectNotBlocked(victim, 2)) {
-                    double current_scale = victim.getAttributeValue(Attributes.SCALE);
-                    if(mode == ResizeMode.ENLARGE && current_scale < new_scale
-                            || mode == ResizeMode.REDUCE && current_scale > new_scale){
-                        Objects.requireNonNull(victim.getAttribute(Attributes.SCALE)).setBaseValue(new_scale);
-                        Objects.requireNonNull(victim.getAttribute(Attributes.STEP_HEIGHT)).setBaseValue(new_step_height);
-                        ParticleScribe.drawParticleZigZag(reactor.getLevel(), particle,
-                                reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
-                                victim.getEyePosition().x, victim.getEyePosition().y, victim.getEyePosition().z, 20, 5, 0.9);
-                        reactor.getLevel().playSound(null, reactor.getBlockPos(), ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS);
-                        reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.getLevel().random.nextFloat()*0.2F);
-                        victim.hurt(reactor.getLevel().damageSources().magic(), 1);
-                        if(victim instanceof ServerPlayer splayer){
-                            if (new_scale == 1.0) {
-                                ReactiveCriterionTriggers.SIZE_REVERTED.get().trigger(splayer);
-                            } else {
-                                ReactiveCriterionTriggers.SIZE_CHANGED.get().trigger(splayer);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    enum ResizeMode {
-        ENLARGE,
-        REDUCE
-    }
-
-    public static void lightning(Reactor reactor) {
-        Level level = reactor.getLevel();
-        assert level != null;
-        LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-        if(reactor.getAreaMemory().exists(level, Blocks.LIGHTNING_ROD)){
-            bolt.setPos(Vec3.atCenterOf(reactor.getAreaMemory().fetch(level, Blocks.LIGHTNING_ROD)));
-        } else {
-            bolt.setPos(Vec3.atCenterOf(reactor.getBlockPos()));
-        }
-        level.addFreshEntity(bolt);
-        reactor.expendPower(Powers.LIGHT_POWER.get(), reactor.maxPower());
-        reactor.setDirty();
-    }
-
     public static void cryo(Reactor reactor) {
         Level level = reactor.getLevel();
         if(level == null)

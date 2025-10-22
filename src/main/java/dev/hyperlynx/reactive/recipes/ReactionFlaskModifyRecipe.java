@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.items.ReactionFlaskItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -16,9 +17,8 @@ import java.util.Map;
 
 public class ReactionFlaskModifyRecipe extends CustomRecipe {
 
-    @SuppressWarnings("unused")
-    public ReactionFlaskModifyRecipe(CraftingBookCategory category) {
-        super(category);
+    public ReactionFlaskModifyRecipe(ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
     @Override

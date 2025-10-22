@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.entities;
 
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltHeightMessage;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltVelocityMessage;
 import net.minecraft.client.player.LocalPlayer;
@@ -96,7 +97,7 @@ public class HoverQuilt extends Entity {
                     if(rider.input.down) {
                         velocity = -0.03F;
                     }
-                    PacketDistributor.sendToServer(new HoverQuiltVelocityPayload(velocity));
+                    Registration.GENERAL_CHANNEL.sendToServer(new HoverQuiltVelocityMessage(velocity));
                 }
                 client_position_lock = false;
             } else {
@@ -108,7 +109,7 @@ public class HoverQuilt extends Entity {
                 position_force_timer = 10;
             }
             if(position_force_timer > 0) {
-                PacketDistributor.sendToPlayersTrackingEntity(this, new HoverQuiltHeightPayload(this.getId(), this.getY()));
+                Registration.GENERAL_CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> this), new HoverQuiltHeightMessage(this.getId(), this.getY()));
                 position_force_timer--;
             }
             ridden_last_tick = false;
@@ -135,8 +136,11 @@ public class HoverQuilt extends Entity {
         }
         AABB passenger_hitbox = passenger.getBoundingBox();
         double passenger_width = passenger_hitbox.getXsize();
-        AABB passenger_top_box = new AABB(passenger_hitbox.getMaxPosition().subtract(passenger_width, 1, passenger_width), passenger_hitbox.getMaxPosition().add(0, 0.1, 0));
-        return !this.level().noBlockCollision(null, passenger_top_box);
+        AABB passenger_top_box = new AABB(
+                passenger_hitbox.maxX - passenger_width, passenger_hitbox.maxY - 1, passenger_hitbox.maxZ - passenger_width,
+                passenger_hitbox.maxX, passenger_hitbox.maxY + 0.1, passenger_hitbox.maxZ
+                );
+        return this.level().getBlockCollisions(this, passenger_top_box).iterator().hasNext();
     }
 
     private boolean isHittingRidersButt() {
@@ -149,8 +153,11 @@ public class HoverQuilt extends Entity {
         }
         AABB passenger_hitbox = passenger.getBoundingBox();
         double passenger_width = passenger_hitbox.getXsize();
-        AABB passenger_below_box = new AABB(passenger_hitbox.getMinPosition(), passenger_hitbox.getMinPosition().add(passenger_width, 1, passenger_width));
-        return !this.level().noBlockCollision(null, passenger_below_box);
+        AABB passenger_below_box = new AABB(
+                passenger_hitbox.minX, passenger_hitbox.minY, passenger_hitbox.minZ,
+                passenger_hitbox.minX + passenger_width, passenger_hitbox.minY + 1, passenger_hitbox.minZ + passenger_width
+        );
+        return this.level().getBlockCollisions(this, passenger_below_box).iterator().hasNext();
     }
 
     private double getMaxUpSpeed() {
@@ -184,7 +191,9 @@ public class HoverQuilt extends Entity {
             }
             var vehicle = Objects.requireNonNull(context.get().getSender()).getVehicle();
             if(vehicle instanceof HoverQuilt quilt) {
-                quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, quilt.getMaxDownSpeed(), quilt.getMaxUpSpeed()), 0);
+                double unadjusted_y_vel = payload.velocity() + quilt.getDeltaMovement().y;
+                double clamped_y_vel = Math.min(Math.max(unadjusted_y_vel, quilt.getMaxDownSpeed()), quilt.getMaxUpSpeed());
+                quilt.setDeltaMovement(0, clamped_y_vel, 0);
             }
         });
 

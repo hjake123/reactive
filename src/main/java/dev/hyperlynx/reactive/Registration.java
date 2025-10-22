@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
@@ -16,6 +17,7 @@ import dev.hyperlynx.reactive.entities.ReactorData;
 import dev.hyperlynx.reactive.entities.ReactorEntity;
 import dev.hyperlynx.reactive.entities.ThrownReactionFlask;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
+import dev.hyperlynx.reactive.menu.DeskMenu;
 import dev.hyperlynx.reactive.net.litmus.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
@@ -36,6 +38,7 @@ import dev.hyperlynx.reactive.recipes.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -49,15 +52,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -100,6 +102,7 @@ public class Registration {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, ReactiveMod.MODID);
     public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.ENTITY_DATA_SERIALIZERS.get(), ReactiveMod.MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ReactiveMod.MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, ReactiveMod.MODID);
 
     public static void init(FMLJavaModLoadingContext context) {
         IEventBus bus = context.getModEventBus();
@@ -587,6 +590,10 @@ public class Registration {
 
     public static final RegistryObject<Item> DESK_ITEM = fromBlock(DESK);
 
+    public static final RegistryObject<BlockEntityType<DeskBlockEntity>> DESK_BE =
+            TILES.register("desk",
+                    () -> BlockEntityType.Builder.of(DeskBlockEntity::new, DESK.get()).build(null));
+
     public static final RegistryObject<Item> ADEPT_SALT_ITEM = ITEMS.register("adept_salt", () ->
             new Item(new Item.Properties()));
 
@@ -618,6 +625,20 @@ public class Registration {
                     .fireImmune()
                     .updateInterval(1)
                     .build("hover_quilt"));
+
+    public static final ParticleType<EnergyParticle.Options> ENERGY = new EnergyParticle.Type();
+    public static final RegistryObject<ParticleType<EnergyParticle.Options>> ENERGY_PARTICLE_TYPE = PARTICLES.register("energy",
+            () -> ENERGY);
+
+    public static final RegistryObject<RecipeType<ReactionFlaskModifyRecipe>> REACTION_FLASK_MODIFY_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask_modify", () -> getRecipeType("crafting_special_reaction_flask_modify"));
+    public static final RegistryObject<RecipeSerializer<ReactionFlaskModifyRecipe>> REACTION_FLASK_MODIFY_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask_modify", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskModifyRecipe::new));
+
+    public static final RegistryObject<RecipeType<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask", () -> getRecipeType("crafting_special_reaction_flask"));
+    public static final RegistryObject<RecipeSerializer<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskCraftingRecipe::new));
+
+
+    public static final RegistryObject<MenuType<DeskMenu>> DESK_MENU = MENUS.register("desk", () ->
+            new MenuType<>(DeskMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     // ----------------------- METHODS ------------------------
 

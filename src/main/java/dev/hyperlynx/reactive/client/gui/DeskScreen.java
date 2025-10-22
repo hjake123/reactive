@@ -38,8 +38,8 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
                 }
             }).build();
 
-    final Button discoveries_button = new ImageButton(20, 20, new WidgetSprites(VIEW_DISCOVERIES_BUTTON, VIEW_DISCOVERIES_BUTTON_INACTIVE, VIEW_DISCOVERIES_BUTTON_FOCUSED),
-            button -> ScreenOpener.materialList(), Component.empty());
+    final Button discoveries_button = new ImageButton(0, 0, 20, 20, 0, 0, VIEW_DISCOVERIES_BUTTON,
+            button -> ScreenOpener.materialList());
     BetterFittingMultiLineTextWidget readout;
     int slot_x;
     int slot_y;
@@ -132,7 +132,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+        this.renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTick);
         this.renderTooltip(graphics, mouseX, mouseY);
     }

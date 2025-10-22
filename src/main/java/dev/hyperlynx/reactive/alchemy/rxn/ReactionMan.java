@@ -55,6 +55,8 @@ public class ReactionMan {
         ReactionAdvancementGenerator.add("astral_synthesis");
         ReactionAdvancementGenerator.add("astral");
         ReactionAdvancementGenerator.add("astral_curse_annihilation");
+        ReactionAdvancementGenerator.add("cryo");
+        ReactionAdvancementGenerator.add("nodule");
     }
 
     public List<Reaction> getReactions(){
@@ -168,6 +170,10 @@ public class ReactionMan {
         REACTIONS.add(new AstralSynthesisReaction("astral_synthesis", Powers.ASTRAL_POWER.get(), Powers.X_POWER.get(), Powers.Y_POWER.get(), Powers.Z_POWER.get()).markAlwaysPerfect());
         REACTIONS.add(new AstralReaction("astral"));
         REACTIONS.add(new AnnihilationReaction("astral_curse_annihilation", Powers.ASTRAL_POWER.get(), Powers.CURSE_POWER.get(), ReactionEffects::creation).setStimulus(Reaction.Stimulus.NO_ELECTRIC));
+
+        REACTIONS.add(new EffectReaction("cryo", ReactionEffects::cryo, Powers.ACID_POWER.get(), Powers.BLAZE_POWER.get()));
+        REACTIONS.add(new EffectReaction("nodule", ReactionEffects::noduleGrowth, Powers.Z_POWER.get(), Powers.WARP_POWER.get()).setCost(4));
+
 
         MinecraftForge.EVENT_BUS.post(new ReactionConstructEvent());
 

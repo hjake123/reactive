@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.items.ReactionFlaskItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -25,8 +26,8 @@ import java.util.Map;
 public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     public static final TagKey<Item> POWER_BOTTLE_TAG = ItemTags.create(ReactiveMod.location("power_bottles"));
 
-    public ReactionFlaskCraftingRecipe(CraftingBookCategory category) {
-        super(category);
+    public ReactionFlaskCraftingRecipe(ResourceLocation id, CraftingBookCategory category) {
+        super(id, category);
     }
 
     private static Map<Power, Integer> getPowerBalance(CraftingContainer input){

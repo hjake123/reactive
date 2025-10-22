@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.util;
 
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
 import org.joml.Vector3f;
 
@@ -25,6 +28,23 @@ public class Color {
         updateHexFromRGB();
     }
 
+    public static final Codec<Color> RGB_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                    Codec.INT.fieldOf("red").forGetter(Color::red),
+                    Codec.INT.fieldOf("green").forGetter(Color::green),
+                    Codec.INT.fieldOf("blue").forGetter(Color::blue))
+            .apply(instance, Color::new)
+    );
+
+    public static final Codec<Color> HEX_CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                    Codec.INT.fieldOf("color").forGetter(Color::hex))
+            .apply(instance, Color::new)
+    );
+
+    public static final Codec<Color> CODEC = Codec.either(RGB_CODEC, HEX_CODEC).xmap(
+            either -> either.left().orElseGet(() -> either.right().orElseThrow()),
+            Either::left
+    );
+
     public static Color black() {
         return new Color(0);
     }
@@ -36,6 +56,11 @@ public class Color {
     public int hex() {
         return hex;
     }
+
+    private int red() { return red; }
+    private int green() { return green; }
+    private int blue() { return blue; }
+
 
     public void reset() {
         red = 0;

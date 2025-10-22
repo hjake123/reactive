@@ -24,26 +24,12 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
     private @NotNull ItemStack stack = ItemStack.EMPTY;
 
     public DeskBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ReactiveBlockEntityTypes.DESK.get(), pos, blockState);
+        super(Registration.DESK_BE.get(), pos, blockState);
     }
 
     @Override
     protected @NotNull Component getDefaultName() {
         return Component.translatable("block.reactive.desk");
-    }
-
-    @Override
-    protected @NotNull NonNullList<ItemStack> getItems() {
-        return NonNullList.of(ItemStack.EMPTY, stack);
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> items) {
-        stack = items.get(0);
-        if(items.size() > 1) {
-            throw new IllegalArgumentException("Desk block entity cannot accept more then one ItemStack.");
-        }
-        this.setChanged();
     }
 
     @Override
@@ -55,7 +41,7 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
     public void load(CompoundTag tag) {
         super.load(tag);
         if(tag.contains("stack")) {
-            stack = ItemStack.parseOptional(registries, tag.getCompound("stack"));
+            stack = ItemStack.of(tag.getCompound("stack"));
         }
     }
 
@@ -78,28 +64,34 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
     }
 
     @Override
-    public ItemStack getItem(int pSlot) {
-        return null;
+    public ItemStack getItem(int slot) {
+        if(slot > 0) {
+            return ItemStack.EMPTY;
+        }
+        return stack;
     }
 
     @Override
-    public ItemStack removeItem(int pSlot, int pAmount) {
-        return null;
+    public ItemStack removeItem(int slot, int amount) {
+        return extractItem(slot, amount,  false);
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return null;
+    public ItemStack removeItemNoUpdate(int slot) {
+        if(slot > 0) {
+            return ItemStack.EMPTY;
+        }
+        return stack.copy();
     }
 
     @Override
-    public void setItem(int pSlot, ItemStack pStack) {
-
+    public void setItem(int slot, ItemStack stack) {
+        setStackInSlot(slot, stack);
     }
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return false;
+        return true;
     }
 
     @Override
@@ -168,11 +160,11 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
         if(slot != 0) {
             return;
         }
-        setItems(NonNullList.of(ItemStack.EMPTY, stack));
+        this.stack = stack.copy();
     }
 
     @Override
     public void clearContent() {
-
+        stack = ItemStack.EMPTY;
     }
 }

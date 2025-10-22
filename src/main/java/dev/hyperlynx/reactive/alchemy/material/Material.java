@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -261,9 +262,10 @@ public class Material {
         }
         List<Component> formula_lines = new ArrayList<>();
         formula_lines.add(original_formula.base_material().getName(original_formula.base_material().getDefaultInstance()));
-        for(Power power : original_powers.keySet().stream().sorted(Comparator.comparing(original_powers::get)).toList().reversed()) {
+        //noinspection SuspiciousMethodCalls
+        for(Power power : original_powers.keySet().stream().sorted(Comparator.comparing(original_powers::get).reversed()).toList()) {
             formula_lines.add(Component.literal(power.getName() + ": " + Math.round(original_powers.get(power) / 16.0) + "%")
-                    .withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex : 0xFFFFFF));
+                    .withStyle(Style.EMPTY.withColor(shouldColorizeAgainstBlack(power.getColor()) ? power.getColor().hex : 0xFFFFFF)));
         }
         MutableComponent readout_message = Component.empty();
         for(int i = 0; i < formula_lines.size(); i++) {

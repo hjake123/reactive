@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.menu;
 
+import dev.hyperlynx.reactive.Registration;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,7 +22,7 @@ public class DeskMenu extends AbstractContainerMenu {
     }
 
     public DeskMenu(int containerId, Inventory player_inventory, IItemHandler desk_inventory, ContainerLevelAccess access) {
-        super(ReactiveMenus.DESK_MENU.get(), containerId);
+        super(Registration.DESK_MENU.get(), containerId);
         this.access = access;
         this.addSlot(new SlotItemHandler(desk_inventory, CONTAINER_SLOT_INDEX, 26, 25));
 
@@ -38,7 +39,7 @@ public class DeskMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(@NotNull Player player) {
-        return AbstractContainerMenu.stillValid(access, player, ReactiveBlocks.DESK.get());
+        return AbstractContainerMenu.stillValid(access, player, Registration.DESK.get());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class DeskMenu extends AbstractContainerMenu {
 
         if(from_slot.hasItem()) {
             ItemStack from_stack = from_slot.getItem();
-            if(!from_stack.is(ReactiveItems.MATERIAL.get())) {
+            if(!from_stack.is(Registration.MATERIAL_ITEM.get())) {
                 return ItemStack.EMPTY;
             }
 

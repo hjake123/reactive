@@ -50,7 +50,7 @@ public class NoduleBlock extends DirectionalBlock {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         switch(state.getValue(FACING)) {
             case UP -> {
                 return isSmall() ? SMALL_CEILING_SHAPE : CEILING_SHAPE;

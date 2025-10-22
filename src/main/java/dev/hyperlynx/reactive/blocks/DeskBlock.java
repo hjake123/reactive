@@ -1,12 +1,12 @@
 package dev.hyperlynx.reactive.blocks;
 
-import com.mojang.serialization.MapCodec;
 import dev.hyperlynx.reactive.be.DeskBlockEntity;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -25,6 +25,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,11 +86,11 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-        if(handler != null) {
+        LazyOptional<IItemHandler> handler = level.getCapability(ForgeCapabilities.ITEM_HANDLER);
+        if(handler.isPresent()) {
             return new SimpleMenuProvider(
                     ((container_id, player_inventory, player) ->
-                            new DeskMenu(container_id, player_inventory, handler, ContainerLevelAccess.create(level, pos))),
+                            new DeskMenu(container_id, player_inventory, handler.orElseThrow(() -> new RuntimeException("Failed to retrieve item handler capability.")), ContainerLevelAccess.create(level, pos))),
                     Component.translatable("menu.title.reactive.desk")
             );
         }
@@ -96,7 +98,7 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(player instanceof ServerPlayer splayer) {
             splayer.openMenu(state.getMenuProvider(level, pos));
             return InteractionResult.sidedSuccess(level.isClientSide);

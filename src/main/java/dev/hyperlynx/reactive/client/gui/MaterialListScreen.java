@@ -27,8 +27,8 @@ public class MaterialListScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        list_panel = new MaterialsList(Minecraft.getInstance(), 165, this.getRectangle().height() - 40, 10, 32);
-        list_panel.setPosition(this.getRectangle().getCenterInAxis(ScreenAxis.HORIZONTAL) - 165, this.getRectangle().top() + 20);
+        list_panel = new MaterialsList(Minecraft.getInstance(), 165, this.getRectangle().height() - 40, 10, this.getRectangle().top() + 20, 32);
+        list_panel.setLeftPos(this.getRectangle().getCenterInAxis(ScreenAxis.HORIZONTAL) - 165);
         this.addRenderableWidget(list_panel);
         formula_box = new BetterFittingMultiLineTextWidget(this.getRectangle().getCenterInAxis(ScreenAxis.HORIZONTAL) + 25, this.getRectangle().top() + 20, 150, this.getRectangle().height() - 40, Component.empty(), getMinecraft().font);
         formula_box.visible = false;
@@ -72,8 +72,8 @@ public class MaterialListScreen extends Screen {
     }
 
     private static class MaterialsList extends ObjectSelectionList<MaterialEntry> {
-        public MaterialsList(Minecraft client, int width, int height, int y, int item_height) {
-            super(client, width, height, y, item_height);
+        public MaterialsList(Minecraft client, int width, int height, int y, int y_1, int item_height) {
+            super(client, width, height, y, y_1, item_height);
             for(ResourceLocation material_id : ClientMaterialMan.getKeysInDiscoveryOrder()) {
                 if(ClientMaterialMan.data().get(material_id).wasDiscovered()) {
                     this.addEntry(new MaterialEntry(material_id));

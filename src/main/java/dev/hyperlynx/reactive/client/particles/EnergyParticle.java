@@ -1,5 +1,7 @@
 package dev.hyperlynx.reactive.client.particles;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,7 +11,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.DustParticleOptionsBase;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,7 +108,7 @@ public class EnergyParticle extends TextureSheetParticle {
 
         protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                         Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
-                        Color.CODEC.fieldOf("color").forGetter(Options::getColor),
+                        Color.CODEC.fieldOf("color").forGetter(Options::getHyperColor),
                         Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
                         Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed),
                         Codec.BOOL.fieldOf("orbit").forGetter(Options::isOrbiting)
@@ -116,6 +120,8 @@ public class EnergyParticle extends TextureSheetParticle {
         public @NotNull ParticleType<?> getType() {
             return Registration.ENERGY_PARTICLE_TYPE.get();
         }
+
+        private Color getHyperColor() { return color; }
 
         public float getSpeed() {
             return this.speed;
@@ -134,14 +140,31 @@ public class EnergyParticle extends TextureSheetParticle {
 
     public static class Type extends ParticleType<Options> {
         public Type() {
-            super(false);
+            super(false, DESERIALIZER);
         }
 
         @Override
-        public Codec<Options> codec() {
+        public @NotNull Codec<Options> codec() {
             return Options.CODEC.codec();
         }
     }
+
+    public static final ParticleOptions.Deserializer<Options> DESERIALIZER = new ParticleOptions.Deserializer<>() {
+        @Override
+        public Options fromCommand(ParticleType<Options> type, StringReader reader) throws CommandSyntaxException {
+            try {
+                return new Options(reader.readFloat(), new Color(reader.readInt()), new Vec3(reader.readDouble(), reader.readDouble(), reader.readDouble()),
+                        reader.readBoolean(), reader.readBoolean());
+            } catch (Exception e) {
+                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherParseException().create(e);
+            }
+        }
+
+        @Override
+        public Options fromNetwork(ParticleType<Options> type, FriendlyByteBuf buf) {
+            return new Options(buf.readFloat(), new Color(buf.readInt()), new Vec3(buf.readVector3f()), buf.readBoolean(), buf.readBoolean());
+        }
+    };
 
     public static class Provider implements ParticleProvider<Options> {
         private final SpriteSet sprites;
