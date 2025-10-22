@@ -10,19 +10,19 @@ public class AstralReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return true;
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         crucible.addPower(Powers.ASTRAL_POWER.get(), CrucibleBlockEntity.CRUCIBLE_MAX_POWER);
         crucible.expendPower(Powers.CURSE_POWER.get(), WorldSpecificValues.CURSE_RATE.get());
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(Reactor crucible){
         if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
             return Status.REACTING;
         return Status.STABLE;

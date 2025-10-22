@@ -19,7 +19,7 @@ public class DecomposeReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         reagents.forEach(crucible::expendPower);
         results.forEach((Power result) -> {
@@ -28,7 +28,7 @@ public class DecomposeReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         for(Power p: crucible.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !results.contains(p)){
                 return false;

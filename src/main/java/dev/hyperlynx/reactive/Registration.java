@@ -11,6 +11,10 @@ import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.FastStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.StrongStaffEnchantment;
 import dev.hyperlynx.reactive.enchants.WorldPiercerEnchantment;
+import dev.hyperlynx.reactive.entities.HoverQuilt;
+import dev.hyperlynx.reactive.entities.ReactorData;
+import dev.hyperlynx.reactive.entities.ReactorEntity;
+import dev.hyperlynx.reactive.entities.ThrownReactionFlask;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.net.litmus.LitmusScreenMessage;
 import dev.hyperlynx.reactive.integration.create.ReactiveCreatePlugin;
@@ -30,14 +34,18 @@ import dev.hyperlynx.reactive.recipes.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.food.FoodProperties;
@@ -72,6 +80,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
 public class Registration {
@@ -87,6 +97,8 @@ public class Registration {
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, ReactiveMod.MODID);
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, ReactiveMod.MODID);
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> COMMAND_ARGUMENTS = DeferredRegister.create(ForgeRegistries.COMMAND_ARGUMENT_TYPES, ReactiveMod.MODID);
+    public static final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.ENTITY_DATA_SERIALIZERS.get(), ReactiveMod.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ReactiveMod.MODID);
 
     public static void init(FMLJavaModLoadingContext context) {
         IEventBus bus = context.getModEventBus();
@@ -103,6 +115,8 @@ public class Registration {
         RECIPE_SERIALIZERS.register(bus);
         SOUND_EVENTS.register(bus);
         COMMAND_ARGUMENTS.register(bus);
+        ENTITY_DATA_SERIALIZERS.register(bus);
+        ENTITY_TYPES.register(bus);
         bus.register(Registration.class);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
@@ -547,6 +561,70 @@ public class Registration {
     public static final RegistryObject<BlockEntityType<MaterialBlockEntity>> MATERIAL_BE = TILES.register("material_be",
             () -> BlockEntityType.Builder.of(MaterialBlockEntity::new, MATERIAL_BLOCK.get()).build(null));
 
+    public static final RegistryObject<Item> GOLD_THREAD = ITEMS.register("gold_thread",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> INERT_CRYSTAL = ITEMS.register("inert_crystal",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<ReactionFlaskItem> REACTION_FLASK_ITEM = ITEMS.register("reaction_flask",
+            () -> new ReactionFlaskItem(new Item.Properties().stacksTo(16)));
+
+    public static final RegistryObject<Block> ADEPT_SALT_BLOCK = BLOCKS.register("adept_salt_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.QUARTZ_BLOCK)));
+
+    public static final RegistryObject<Block> CREATION_SALT_BLOCK = BLOCKS.register("creation_salt_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.SAND).sound(SoundType.SOUL_SOIL).lightLevel(state -> 12)));
+
+    public static final RegistryObject<NoduleBlock> UNGROWN_NODULE = BLOCKS.register("ungrown_nodule",
+            () -> new NoduleBlock(BlockBehaviour.Properties.copy(Blocks.TUFF), true));
+
+    public static final RegistryObject<Item> UNGROWN_NODULE_ITEM = fromBlock(NODULE);
+
+    public static final RegistryObject<NoduleBlock> NODULE = BLOCKS.register("nodule",
+            () -> new NoduleBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).lightLevel((state) -> 8), false));
+
+    public static final RegistryObject<Item> NODULE_ITEM = fromBlock(NODULE);
+
+    public static final RegistryObject<PhantomQuiltItem> PHANTOM_QUILT_ITEM = ITEMS.register("phantom_quilt", () ->
+            new PhantomQuiltItem(new Item.Properties()));
+
+    public static final RegistryObject<DeskBlock> DESK = BLOCKS.register("desk",
+            () -> new DeskBlock(BlockBehaviour.Properties.copy(Blocks.JUNGLE_PLANKS)));
+
+    public static final RegistryObject<Item> DESK_ITEM = fromBlock(DESK);
+
+    public static final RegistryObject<Item> ADEPT_SALT_ITEM = ITEMS.register("adept_salt", () ->
+            new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ADEPT_SALT_BLOCK_ITEM = fromBlock(ADEPT_SALT_BLOCK);
+
+    public static final RegistryObject<Item> CREATION_SALT_ITEM = ITEMS.register("creation_salt", () ->
+            new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> CREATION_SALT_BLOCK_ITEM = fromBlock(CREATION_SALT_BLOCK);
+
+    public static final RegistryObject<EntityDataSerializer<?>> REACTOR_DATA_SERIALIZER =
+            ENTITY_DATA_SERIALIZERS.register("reactor_data", ReactorData.Serializer::new);
+
+    public static final Supplier<EntityType<ThrownReactionFlask>> THROWN_REACTION_FLASK = ENTITY_TYPES.register("thrown_reaction_flask", () ->
+            EntityType.Builder.of(ThrownReactionFlask::new, MobCategory.MISC)
+                    .sized(0.4F, 0.4F)
+                    .fireImmune()
+                    .build("thrown_reaction_flask"));
+
+    public static final Supplier<EntityType<ReactorEntity>> REACTOR = ENTITY_TYPES.register("reactor", () ->
+            EntityType.Builder.of(ReactorEntity::new, MobCategory.MISC)
+                    .sized(0.2F, 0.2F)
+                    .fireImmune()
+                    .build("reactor"));
+
+    public static final Supplier<EntityType<HoverQuilt>> HOVER_QUILT = ENTITY_TYPES.register("hover_quilt", () ->
+            EntityType.Builder.of(HoverQuilt::new, MobCategory.MISC)
+                    .sized(1.0F, 0.1F)
+                    .fireImmune()
+                    .updateInterval(1)
+                    .build("hover_quilt"));
 
     // ----------------------- METHODS ------------------------
 

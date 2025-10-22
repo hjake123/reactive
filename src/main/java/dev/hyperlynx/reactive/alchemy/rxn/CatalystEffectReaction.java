@@ -7,12 +7,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class CatalystEffectReaction extends EffectReaction{
     Item reactant;
 
-    public CatalystEffectReaction(String alias, Function<CrucibleBlockEntity, CrucibleBlockEntity> function, Power required_power, Item reactant) {
+    public CatalystEffectReaction(String alias, Consumer<Reactor> function, Power required_power, Item reactant) {
         super(alias, function, required_power);
         this.reactant = reactant;
     }
@@ -22,7 +23,7 @@ public class CatalystEffectReaction extends EffectReaction{
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible) {
+    public Status conditionsMet(Reactor crucible) {
         Status reaction_status = super.conditionsMet(crucible);
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())) {
             if (entity_inside instanceof ItemEntity item_ent && item_ent.getItem().is(reactant)) {

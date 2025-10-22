@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
 import dev.hyperlynx.reactive.alchemy.special.EmptyEvent;
-import dev.hyperlynx.reactive.integration.kubejs.KubeCrucible;
+import dev.hyperlynx.reactive.integration.kubejs.KubeReactor;
 import dev.latvian.mods.kubejs.event.EventJS;
 
 public class EmptyEventJS extends EventJS implements KubeCrucibleEvent {
@@ -11,7 +11,7 @@ public class EmptyEventJS extends EventJS implements KubeCrucibleEvent {
         this.event = event;
     }
 
-    public KubeCrucible getCrucible(){
-        return new KubeCrucible(event.crucible);
+    public KubeReactor getCrucible(){
+        return new KubeReactor(event.crucible);
     }
 }

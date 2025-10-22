@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.be;
 
+import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.material.Material;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -35,7 +38,7 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
 
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
-        stack = items.getFirst();
+        stack = items.get(0);
         if(items.size() > 1) {
             throw new IllegalArgumentException("Desk block entity cannot accept more then one ItemStack.");
         }
@@ -90,7 +93,7 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
             stack = stack_to_insert.copy();
             return ItemStack.EMPTY;
         }
-        if(!Objects.equals(stack_to_insert.get(ReactiveComponentTypes.MATERIAL_ID.get()), stack.get(ReactiveComponentTypes.MATERIAL_ID.get()))) {
+        if(!Objects.equals(MaterialItem.getMaterialId(stack_to_insert), MaterialItem.getMaterialId(stack))) {
             return stack_to_insert;
         }
         int number_to_move = Math.min(stack.getMaxStackSize() - stack.getCount(), stack_to_insert.getCount());
@@ -126,7 +129,7 @@ public class DeskBlockEntity extends BaseContainerBlockEntity implements IItemHa
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return slot == 0 && stack.is(ReactiveItems.MATERIAL.get());
+        return slot == 0 && stack.is(Registration.MATERIAL_ITEM.get());
     }
 
     @Override

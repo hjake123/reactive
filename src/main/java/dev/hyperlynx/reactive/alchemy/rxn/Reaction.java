@@ -83,13 +83,13 @@ public abstract class Reaction {
     }
 
     // Note that this also sets the reaction status, so all overrides should do that too.
-    public Status conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(Reactor reactor){
         boolean missing_a_power = false;
         boolean too_little_power = false;
         for(Power p : reagents.keySet()){
-            if(!p.checkReactivity(crucible.getPowerLevel(p), reagents.get(p))){
+            if(!p.checkReactivity(reactor.getPowerLevel(p), reagents.get(p))){
                 too_little_power = true;
-                if(crucible.getPowerLevel(p) == 0){
+                if(reactor.getPowerLevel(p) == 0){
                     missing_a_power = true;
                     break;
                 }
@@ -101,9 +101,9 @@ public abstract class Reaction {
             }
             return Status.POWER_TOO_WEAK;
         }
-        boolean met_conditions = checkStimulus(crucible);
+        boolean met_conditions = checkStimulus(reactor);
         if(met_conditions) {
-            if(crucible.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
+            if(reactor.getPowerLevel(Powers.BODY_POWER.get()) > WorldSpecificValue.get("body_inhibition_threshold", 20, 200)
             && !(reagents.containsKey(Powers.BODY_POWER.get()))) {
                 return Status.INHIBITED;
             }
@@ -118,21 +118,20 @@ public abstract class Reaction {
         return Status.MISSING_STIMULUS;
     }
 
-    private boolean checkStimulus(CrucibleBlockEntity crucible){
+    private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
-            case END_CRYSTAL -> checkEndCrystal(crucible);
-            case GOLD_SYMBOL -> crucible.areaMemory.exists(crucible.getLevel(), Registration.GOLD_SYMBOL.get());
-            case ELECTRIC -> crucible.electricCharge > 0;
-            case NO_ELECTRIC -> crucible.electricCharge == 0;
-            case SACRIFICE -> crucible.sacrificeCount >= 10;
+            case END_CRYSTAL -> checkEndCrystal(reactor);
+            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case ELECTRIC -> reactor.getElectricCharge() > 0;
+            case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
             default -> true;
         };
     }
 
-    private boolean checkEndCrystal(CrucibleBlockEntity crucible){
-        Level level = crucible.getLevel();
-        if(crucible.linked_crystal != null && !crucible.linked_crystal.isRemoved()) {
-            crucible.used_crystal_this_cycle = true;
+    private boolean checkEndCrystal(Reactor reactor){
+        Level level = reactor.getLevel();
+        if(reactor.getLinkedCrystal() != null && !reactor.getLinkedCrystal().isRemoved()) {
+            reactor.setUsedCrystalThisCycle(true);
             return true;
         }
         if(level.isClientSide) {
@@ -143,33 +142,33 @@ public abstract class Reaction {
         }
 
         int range = ConfigMan.COMMON.crucibleRange.get();
-        AABB aoe = new AABB(crucible.getBlockPos().offset(-range, -range, -range), crucible.getBlockPos().offset(range, range, range));
+        AABB aoe = new AABB(reactor.getBlockPos().offset(-range, -range, -range), reactor.getBlockPos().offset(range, range, range));
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;
-        end_crystals.get(0).setBeamTarget(crucible.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
-        crucible.linked_crystal = end_crystals.get(0);
-        crucible.used_crystal_this_cycle = true;
+        end_crystals.get(0).setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        reactor.setLinkedCrystal(end_crystals.get(0));
+        reactor.setUsedCrystalThisCycle(true);
         return true;
     }
 
-    public void run(CrucibleBlockEntity crucible){
-        if(!(crucible.getLevel() instanceof ServerLevel server))
+    public void run(Reactor reactor){
+        if(!(reactor.getLevel() instanceof ServerLevel server))
             return;
-        crucible.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
+        reactor.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, reactor.getBlockPos(), GameEvent.Context.of(reactor.getBlockState()));
         // Award the completion criteria.
-        ReactionCriterion.triggerForNearbyPlayers(server, alias, crucible.getBlockPos(), 6);
+        ReactionCriterion.triggerForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
 
-        if(always_perfect || isPerfect(crucible)){
+        if(always_perfect || isPerfect(reactor)){
             // Award the perfect criterion.
-            ReactionCriterion.triggerPerfectForNearbyPlayers(server, alias, crucible.getBlockPos(), 6);
+            ReactionCriterion.triggerPerfectForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
         }
     }
 
-    public boolean isPerfect(CrucibleBlockEntity crucible){
-        // If crucible only has the same number of powers as the reagents, and the reaction could run, then it would be running with nothing extra.
+    public boolean isPerfect(Reactor reactor){
+        // If reactor only has the same number of powers as the reagents, and the reaction could run, then it would be running with nothing extra.
         // Therefore, it is running 'perfectly'.
-        return crucible.getPowerMap().keySet().size() == reagents.size();
+        return reactor.getPowerMap().keySet().size() == reagents.size();
     }
 
     public MutableComponent getName() {
@@ -181,7 +180,6 @@ public abstract class Reaction {
         GOLD_SYMBOL,
         ELECTRIC,
         NO_ELECTRIC,
-        SACRIFICE,
         END_CRYSTAL,
         NO_END_CRYSTAL
     }

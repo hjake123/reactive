@@ -20,14 +20,14 @@ public class AssimilationReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         crucible.expendPower(consumedPower, rate);
         crucible.addPower(producedPower, rate);
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return true;
     }
 

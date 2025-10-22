@@ -20,12 +20,12 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         return true;
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         crucible.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
         crucible.addPower(Powers.CURSE_POWER.get(), rate);
@@ -44,7 +44,7 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible){
+    public Status conditionsMet(Reactor crucible){
         boolean has_curse = crucible.getPowerLevel(Powers.CURSE_POWER.get()) > rate;
         if (crucible.getTotalPowerLevel() > (crucible.getPowerLevel(Powers.CURSE_POWER.get()) + rate) && has_curse)
             return Status.REACTING;

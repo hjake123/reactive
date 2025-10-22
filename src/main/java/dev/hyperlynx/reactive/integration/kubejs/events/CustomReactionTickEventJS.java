@@ -1,21 +1,20 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.integration.kubejs.CustomReaction;
-import dev.hyperlynx.reactive.integration.kubejs.KubeCrucible;
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
+import dev.hyperlynx.reactive.integration.kubejs.KubeReactor;
 import dev.latvian.mods.kubejs.event.EventJS;
 
 public class CustomReactionTickEventJS extends EventJS implements KubeCrucibleEvent {
-    KubeCrucible crucible;
+    KubeReactor crucible;
     String alias;
 
-    public CustomReactionTickEventJS(String alias, CrucibleBlockEntity crucible){
-        this.crucible = new KubeCrucible(crucible);
+    public CustomReactionTickEventJS(String alias, Reactor crucible){
+        this.crucible = new KubeReactor(crucible);
         this.alias = alias;
     }
 
     @Override
-    public KubeCrucible getCrucible() {
+    public KubeReactor getCrucible() {
         return crucible;
     }
 

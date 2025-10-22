@@ -16,7 +16,7 @@ public class AnnihilationReaction extends EffectReaction{
     }
 
     @Override
-    public Status conditionsMet(CrucibleBlockEntity crucible) {
+    public Status conditionsMet(Reactor crucible) {
         if (super.conditionsMet(crucible) == Status.REACTING){
             if(crucible.getTotalPowerLevel() > WorldSpecificValues.ANNIHILATION_THRESHOLD.get()){
                 return Status.REACTING;

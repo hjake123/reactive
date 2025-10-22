@@ -1,7 +1,7 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
 import dev.hyperlynx.reactive.alchemy.special.DissolveEvent;
-import dev.hyperlynx.reactive.integration.kubejs.KubeCrucible;
+import dev.hyperlynx.reactive.integration.kubejs.KubeReactor;
 import dev.latvian.mods.kubejs.event.EventJS;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public class DissolveEventJS extends EventJS implements KubeCrucibleEvent {
         return event.to_be_dissolved.getItem();
     }
 
-    public KubeCrucible getCrucible(){
-        return new KubeCrucible(event.crucible);
+    public KubeReactor getCrucible(){
+        return new KubeReactor(event.crucible);
     }
 }

@@ -1,5 +1,8 @@
 package dev.hyperlynx.reactive.client.particles;
 
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.entities.ReactorEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +18,16 @@ public class ParticleScribe {
             level.addParticle(opt, x, y, z, 0, 0, 0);
         } else {
             ((ServerLevel) level).sendParticles(opt, x, y, z, 1, 0, 0, 0, 0.0);
+        }
+    }
+
+    public static void drawParticle(Level level, ParticleOptions opt, double x, double y, double z, float odds, double xspeed, double yspeed, double zspeed) {
+        if(level.random.nextFloat() < odds){
+            if (level.isClientSide()) {
+                level.addParticle(opt, x, y, z, xspeed, yspeed, zspeed);
+            } else {
+                ((ServerLevel) level).sendParticles(opt, x, y, z, 1, xspeed, yspeed, zspeed, 0.0);
+            }
         }
     }
 
@@ -132,19 +145,21 @@ public class ParticleScribe {
         double center_x = pos.getX() + 0.5;
         double center_z = pos.getZ() + 0.5;
 
-        if(level.isClientSide()){
-            for(int i = 0; i < frequency; i++){
-                double x = level.random.nextGaussian();
-                double y = level.random.nextGaussian();
-                double z = level.random.nextGaussian();
-                double normalizer = 1 / Math.sqrt(x * x + y * y + z * z);
+        drawExactParticleSphere(level, opt, new Vec3(center_x, pos.getY(), center_z), height, radius, frequency);
+    }
 
-                x = x * normalizer * radius;
-                y = y * normalizer * radius;
-                z = z * normalizer * radius;
+    public static void drawExactParticleSphere(Level level, ParticleOptions opt, Vec3 pos, double height, double radius, int frequency) {
+        for(int i = 0; i < frequency; i++){
+            double x = level.random.nextGaussian();
+            double y = level.random.nextGaussian();
+            double z = level.random.nextGaussian();
+            double normalizer = 1 / Math.sqrt(x * x + y * y + z * z);
 
-                level.addParticle(opt, center_x + x, pos.getY() + height + y, center_z + z, 0, 0, 0);
-            }
+            x = x * normalizer * radius;
+            y = y * normalizer * radius;
+            z = z * normalizer * radius;
+
+            drawParticle(level, opt, pos.x + x, pos.y + height + y, pos.z + z);
         }
     }
 
@@ -172,11 +187,21 @@ public class ParticleScribe {
         }
     }
 
-    public static void drawParticleStream(Level level, ParticleOptions opt, Vec3 start, Vec3 angle, int frequency){
-        angle.normalize();
-        angle.multiply(0.0003, 0.0003, 0.0003);
-        for(int i = 0; i < frequency; i++){
-            level.addParticle(opt, start.x, start.y, start.z, angle.x, angle.y, angle.z);
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor){
+        drawParticleReactionSurface(level, opt, reactor, 1, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds){
+        drawParticleReactionSurface(level, opt, reactor, odds, 0, 0, 0);
+    }
+
+    public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds, double xspeed, double yspeed, double zspeed){
+        if(reactor instanceof CrucibleBlockEntity) {
+            drawParticleCrucibleTop(level, opt, reactor.getBlockPos(), odds, xspeed, yspeed, zspeed);
+        } else if(reactor instanceof ReactorEntity) {
+            drawParticle(level, opt, reactor.getPos().x, reactor.getPos().y, reactor.getPos().z, odds, xspeed, yspeed, zspeed);
+        } else {
+            throw new UnsupportedOperationException("No reaction surface defined for reactor type '" + reactor.getClass() + "' !");
         }
     }
 }

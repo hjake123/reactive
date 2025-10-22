@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.be;
 import dev.hyperlynx.reactive.alchemy.*;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
@@ -71,7 +72,7 @@ import java.util.*;
         - Check for special cases along the way.
  */
 
-public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
+public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Reactor {
     public static final int CRUCIBLE_MAX_POWER = 1600; // The maximum power the Crucible can hold.
     // Don't change the max power without updating the recipes.
     private final HashMap<Power, Integer> powers = new HashMap<>(); // A map of Powers to their amounts.
@@ -182,7 +183,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                     case 3 -> {
                         // Perform applicable reactions.
                         if (!level.isClientSide() && state.getValue(CrucibleBlock.FULL)) {
-                            react(level, crucible);
+                            crucible.react((ServerLevel) level);
                         }
 
                         // Spread Sculk, if applicable
@@ -219,6 +220,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 crucible.powers.remove(p);
             }
         }
+    }
+
+    @Override
+    public int maxPower() {
+        return CRUCIBLE_MAX_POWER;
     }
 
     public int getTickCount(){
@@ -322,6 +328,31 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
     }
 
+    @Override
+    public List<ReactionStatusEntry> getReactionStatus() {
+        return reaction_status;
+    }
+
+    @Override
+    public void resetReactionStatus() {
+        reaction_status.clear();
+    }
+
+    @Override
+    public boolean hasUsedCrystalThisCycle() {
+        return used_crystal_this_cycle;
+    }
+
+    @Override
+    public void setUsedCrystalThisCycle(boolean used) {
+        used_crystal_this_cycle = true;
+    }
+
+    @Override
+    public Vec3 getPos() {
+        return getBlockPos().getCenter().add(0, 0.0625, 0);
+    }
+
     // Only call this method when linked_crystal isn't null please and thank you.
     public void unlinkCrystal(Level level, BlockPos pos, BlockState state) {
         linked_crystal.setBeamTarget(null);
@@ -408,39 +439,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
                 crucible.addPower(Powers.LIGHT_POWER.get(), 5);
                 ParticleScribe.drawParticleLine(level, ParticleTypes.END_ROD, crucible.getBlockPos(), crucible.getBlockPos().above(15), 5, 0);
             }
-        }
-    }
-
-    // The method that performs reactions.
-    private static void react(Level level, CrucibleBlockEntity crucible){
-        crucible.used_crystal_this_cycle = false;
-        crucible.reaction_status.clear();
-        for(Reaction r : ReactiveMod.REACTION_MAN.getReactions()) {
-            Reaction.Status reaction_status = r.conditionsMet(crucible);
-            // If the reaction should occur, conditionsMet will return REACTING.
-            if (reaction_status == Reaction.Status.REACTING) {
-                r.run(crucible);
-                crucible.setDirty();
-            }
-            if (!(reaction_status == Reaction.Status.STABLE)) {
-                crucible.reaction_status.add(ReactionStatusEntry.of(reaction_status.toString(), r.getAlias()));
-            }
-        }
-
-        // Update clients each reaction tick about what to display.
-        BlockPos pos = crucible.getBlockPos();
-        Registration.REACTION_SYNC_CHANNEL.send(
-                PacketDistributor.NEAR.with(() ->
-                        PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 32, crucible.getLevel().dimension()).get()
-                ),
-                new ReactionStatusMessage(pos, crucible.reaction_status));
-
-        if(crucible.reaction_status.isEmpty()){
-            crucible.reaction_status.add(ReactionStatusEntry.stable());
-        }
-
-        if(!crucible.used_crystal_this_cycle && crucible.linked_crystal != null) {
-            crucible.unlinkCrystal(level, crucible.getBlockPos(), crucible.getBlockState());
         }
     }
 
@@ -549,6 +547,51 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
     }
 
+    @Override
+    public AreaMemory getAreaMemory() {
+        return areaMemory;
+    }
+
+    @Override
+    public int getElectricCharge() {
+        return electricCharge;
+    }
+
+    @Override
+    public EndCrystal getLinkedCrystal() {
+        return linked_crystal;
+    }
+
+    @Override
+    public void setLinkedCrystal(EndCrystal end_crystal) {
+        linked_crystal = end_crystal;
+    }
+
+    @Override
+    public Iterable<String> getRenderReactions() {
+        return reactions_to_render;
+    }
+
+    @Override
+    public void setElectricCharge(int i) {
+        electricCharge = i;
+    }
+
+    @Override
+    public void clearRenderReactions() {
+        reactions_to_render.clear();
+    }
+
+    @Override
+    public void addRenderReaction(String id) {
+        reactions_to_render.add(id);
+    }
+
+    @Override
+    public ReactionStatusMessage getStatusMessage() {
+        return new ReactionStatusMessage(getBlockPos(), getReactionStatus());
+    }
+
     public void beHitByLightning(){
         electricCharge = 50;
         setDirty();
@@ -635,91 +678,12 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
         }
     }
 
-    // These methods manage power in the Crucible. They might be extracted to an interface later.
-
-    @Override
-    public boolean addPower(Power p, int amount) {
-        if(p == null){
-            return false;
-        }
-        if(getPowerLevel(p) == CRUCIBLE_MAX_POWER){
-            return false;
-        }
-        if(getTotalPowerLevel() + amount > CRUCIBLE_MAX_POWER) {
-            int excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            expendAnyPowerExcept(p, excess); // Replace other powers if needed.
-            excess = getTotalPowerLevel() + amount - CRUCIBLE_MAX_POWER;
-            if(excess > 0) {
-                amount -= excess;
-            }
-        }
-
-        int prev = powers.getOrDefault(p, 0);
-        if(prev > 0)
-            powers.replace(p, amount + prev);
-        else
-            powers.put(p, amount);
-
-//        if(this.getLevel() != null && !this.getLevel().isClientSide)
-//            System.out.println("Tried to add " + amount + " " + p.getName() + ".");
-
-        return true;
-    }
-
-    @Override
-    public int getPowerLevel(Power t) {
-        if(powers.isEmpty() || powers.get(t) == null){
-            return 0;
-        }
-        return powers.get(t);
-    }
-
-    @Override
-    public boolean expendPower(Power t, int amount) {
-        if(powers.isEmpty() || !powers.containsKey(t)){
-            return false;
-        }
-        int level = powers.get(t);
-        if(level > amount){
-            powers.put(t, level-amount);
-            return true;
-        }
-        if (level == amount) {
-            powers.put(t, 0);
-            return true;
-        }
-
-        // This implies that all power t wasn't enough to meet amount.
-        powers.put(t, 0);
-        return false;
-    }
-
-
-    public void expendAnyPowerExcept(Power immune_power, int amount) {
-        boolean expended = false;
-        for(Power p : powers.keySet()){
-            if(p != immune_power && p != Powers.CURSE_POWER.get()){
-                expended = expendPower(p, amount);
-            }
-            if(expended) return;
-        }
-    }
-
     public void expendPower() {
         powers.clear();
         color_changed = true;
         mix_color.reset();
         next_mix_color.reset();
         color_initialized = false;
-    }
-
-    public int getTotalPowerLevel(){
-        int totalpp = 0;
-        if(powers == null) return 0;
-        for (Power p : powers.keySet()) {
-            totalpp += powers.get(p);
-        }
-        return totalpp;
     }
 
     // Manually decides the initial color of the mixture to prevent fading from water.
@@ -729,7 +693,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer {
     }
 
     // These methods calculate and return the combined color of the cauldron's mixture, based on the given water color.
-    @Override
     public Color getCombinedColor(int water_color_number) {
         Color water_color = new Color(water_color_number);
         if(powers == null || powers.isEmpty() || getTotalPowerLevel() == 0){

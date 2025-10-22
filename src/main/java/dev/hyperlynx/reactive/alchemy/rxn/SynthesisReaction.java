@@ -21,7 +21,7 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public void run(CrucibleBlockEntity crucible) {
+    public void run(Reactor crucible) {
         super.run(crucible);
         for(Power p : reagents.keySet()){
             crucible.expendPower(p, rate);
@@ -32,7 +32,7 @@ public class SynthesisReaction extends Reaction{
     }
 
     @Override
-    public boolean isPerfect(CrucibleBlockEntity crucible) {
+    public boolean isPerfect(Reactor crucible) {
         for(Power p: crucible.getPowerMap().keySet()){
             if(!reagents.containsKey(p) && !p.equals(resultPower)){
                 return false;
