@@ -34,12 +34,25 @@ public class ReactionRenderers {
         RENDERERS.put("smoke_annihilation", this::smoke);
         RENDERERS.put("growth", this::growth);
         RENDERERS.put("flames", this::flamethrower);
-        RENDERERS.put("size_shrink_effect", this::acid_based);
-        RENDERERS.put("size_grow_effect", this::verdant_based);
         RENDERERS.put("astral_curse_annihilation", this::creation);
         RENDERERS.put("cryo", this::snow);
         RENDERERS.put("nodule", this::warpEnergy);
         RENDERERS.put("astral", this::astralRing);
+    }
+
+    public static void handleReactionStatusMessage(ReactionStatusMessage message) {
+        Level level = Minecraft.getInstance().level;
+        Reactor reactor = message.target().getReactor(level);
+        if(reactor == null){
+            return;
+        }
+
+        reactor.clearRenderReactions();
+        for(ReactionStatusEntry entry : message.statuses()){
+            if(entry.status() == Reaction.Status.REACTING){
+                reactor.addRenderReaction(entry.reaction_alias());
+            }
+        }
     }
 
     public Iterable<ReactionRenderer> getRenderers(Iterable<String> aliases){
@@ -68,7 +81,7 @@ public class ReactionRenderers {
         RandomSource random = reactor.getLevel().random;
         if(random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
@@ -76,7 +89,7 @@ public class ReactionRenderers {
         RandomSource random = reactor.getLevel().random;
         if (random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
@@ -101,18 +114,6 @@ public class ReactionRenderers {
             if(reactor.getLevel().getBlockState(pos).isAir())
                 ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
         }
-    }
-
-    public void acid_based(Reactor reactor) {
-        Level level = reactor.getLevel();
-        if(level.random.nextFloat() < 0.1F)
-            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ReactiveParticles.ACID_BUBBLE.getType(), reactor);
-    }
-
-    public void verdant_based(Reactor reactor) {
-        Level level = reactor.getLevel();
-        if(level.random.nextFloat() < 0.1F)
-            ParticleScribe.drawParticleReactionSurface(level, ParticleTypes.HAPPY_VILLAGER, reactor);
     }
 
     public void snow(Reactor reactor) {

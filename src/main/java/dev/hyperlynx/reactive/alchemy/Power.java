@@ -1,11 +1,14 @@
 package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
@@ -93,6 +96,29 @@ public class Power {
         Power ret = Powers.POWER_SUPPLIER.get().getValue(location);
         if(ret == null) System.err.println("Failed to read power. This will break things.");
         return ret;
+    }
+
+    /// Read a standard map of Power to Integer from a tag.
+    public static Map<Power, Integer> readPowerLevelMap(ListTag power_list) {
+        Map<Power, Integer> powers = new HashMap<>();
+        for(Tag power_t : power_list) {
+            if(power_t instanceof CompoundTag power_tag) {
+                powers.put(Power.readPower(power_tag, "p"), power_tag.getInt("a"));
+            }
+        }
+        return powers;
+    }
+
+    /// Write a standard map of Power to Integer to a tag.
+    public static ListTag writePowerLevelMap(Map<Power, Integer> powers) {
+        ListTag power_list = new ListTag();
+        for(Power power : powers.keySet()) {
+            CompoundTag power_tag = new CompoundTag();
+            power_tag.putString("p", power.getResourceLocation().toString());
+            power_tag.putInt("a", powers.get(power));
+            power_list.add(power_tag);
+        }
+        return power_list;
     }
 
     public Block getRenderBlock(){ return render_water_block.get(); }

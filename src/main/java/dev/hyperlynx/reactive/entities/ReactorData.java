@@ -1,11 +1,10 @@
 package dev.hyperlynx.reactive.entities;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -16,31 +15,38 @@ import java.util.List;
 import java.util.Map;
 
 public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> statuses) {
-    public static final StreamCodec<FriendlyByteBuf, ReactorData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(HashMap::new, Power.STREAM_CODEC, ByteBufCodecs.INT), ReactorData::powers,
-            ReactionStatusEntry.STREAM_CODEC.apply(ByteBufCodecs.list()), ReactorData::statuses,
-            ReactorData::new
-    );
+    private static final String POWERS_TAG = "Powers";
+    private static final String STATUSES_TAG = "Statuses";
 
-    public static final Codec<ReactorData> CODEC = RecordCodecBuilder.create((instance) ->
-        instance.group(
-                Codec.unboundedMap(Power.CODEC, Codec.INT).xmap(ReactiveVanillaCodecs::makeMapMutable, ReactiveVanillaCodecs::doNothing)
-                        .fieldOf("powers").forGetter(ReactorData::powers),
-                Codec.list(ReactionStatusEntry.CODEC).xmap(ReactiveVanillaCodecs::makeListMutable, ReactiveVanillaCodecs::doNothing)
-                        .fieldOf("statuses").forGetter(ReactorData::statuses)
-        ).apply(instance, ReactorData::new)
-    );
+    public CompoundTag toTag() {
+        ListTag power_list = Power.writePowerLevelMap(powers);
 
-    public Tag toTag() {
-        return CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
+        ListTag status_list = new ListTag();
+        for(ReactionStatusEntry status : statuses) {
+            CompoundTag status_tag = new CompoundTag();
+            status_tag.putString("s", status.getStatusAsString());
+            status_tag.putString("r", status.reaction_alias());
+            status_list.add(status_tag);
+        }
+
+        CompoundTag tag = new CompoundTag();
+        tag.put(POWERS_TAG, power_list);
+        tag.put(STATUSES_TAG, status_list);
+        return tag;
     }
 
     public static ReactorData fromTag(CompoundTag tag){
-        var result = CODEC.decode(NbtOps.INSTANCE, tag);
-        if (result.isError()) {
-            return new ReactorData(new HashMap<>(), new ArrayList<>());
+        ListTag power_list = tag.getList(POWERS_TAG, Tag.TAG_COMPOUND);
+        Map<Power, Integer> powers = Power.readPowerLevelMap(power_list);
+
+        ListTag status_list = tag.getList(STATUSES_TAG, Tag.TAG_COMPOUND);
+        List<ReactionStatusEntry> entries = new ArrayList<>();
+        for(Tag status_t : status_list) {
+            if(status_t instanceof CompoundTag status_tag) {
+                entries.add(new ReactionStatusEntry(Reaction.Status.valueOf(status_tag.getString("s")), status_tag.getString("r")));
+            }
         }
-        return result.getOrThrow().getFirst();
+        return new ReactorData(powers, entries);
     }
 
     public ReactorData copy() {
@@ -49,8 +55,14 @@ public record ReactorData(Map<Power, Integer> powers, List<ReactionStatusEntry> 
 
     public static class Serializer implements EntityDataSerializer<ReactorData> {
         @Override
-        public StreamCodec<? super RegistryFriendlyByteBuf, ReactorData> codec() {
-            return ReactorData.STREAM_CODEC;
+        public void write(FriendlyByteBuf buf, ReactorData data) {
+            buf.writeNbt(data.toTag());
+        }
+
+        @Override
+        public ReactorData read(FriendlyByteBuf buf) {
+            CompoundTag tag = buf.readNbt();
+            return ReactorData.fromTag(tag);
         }
 
         @Override

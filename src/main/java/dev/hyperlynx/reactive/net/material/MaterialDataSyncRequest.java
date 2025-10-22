@@ -5,7 +5,6 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialData;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -23,7 +22,7 @@ public class MaterialDataSyncRequest {
             if(!(context.get().getSender().level() instanceof ServerLevel slevel)) {
                 return;
             }
-            Registration.UPDATE_10_CHANNEL.send(PacketDistributor.PLAYER.with(context.get()::getSender), new MaterialDataSyncMessage(new MaterialData(MaterialMan.data(slevel))));
+            Registration.GENERAL_CHANNEL.send(PacketDistributor.PLAYER.with(context.get()::getSender), new MaterialDataSyncMessage(new MaterialData(MaterialMan.data(slevel))));
         });
         context.get().setPacketHandled(true);
     }

@@ -27,7 +27,7 @@ public class PowerArgumentInfo implements ArgumentTypeInfo<PowerArgumentType, Po
         return new Template();
     }
 
-    public final class Template implements ArgumentTypeInfo.Template<PowerArgumentType> {
+    public final static class Template implements ArgumentTypeInfo.Template<PowerArgumentType> {
         @Override
         public PowerArgumentType instantiate(CommandBuildContext context) {
             return new PowerArgumentType();

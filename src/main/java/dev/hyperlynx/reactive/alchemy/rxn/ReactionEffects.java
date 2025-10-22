@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
+import dev.hyperlynx.reactive.blocks.NoduleBlock;
 import dev.hyperlynx.reactive.blocks.ShulkerCrucibleBlock;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
@@ -105,7 +106,7 @@ public class ReactionEffects {
         if(reactor.getTotalPowerLevel() < WorldSpecificValue.get("salt_overflow_threshold", 1000, 1300)){
             ItemEntity salt_drop = new ItemEntity(reactor.getLevel(), reactor.getBlockPos().getX() + 0.5,
                     reactor.getBlockPos().getY() + 0.5,
-                    reactor.getBlockPos().getZ() + 0.6, ReactiveItems.SALT.get().getDefaultInstance());
+                    reactor.getBlockPos().getZ() + 0.6, Registration.SALT.get().getDefaultInstance());
             reactor.getLevel().addFreshEntity(salt_drop);
         }else{
             if(reactor instanceof CrucibleBlockEntity crucible){
@@ -137,7 +138,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(level, ParticleTypes.ELECTRIC_SPARK,
                             reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             potential_rod.getX()+0.5, potential_rod.getY()+0.5, potential_rod.getZ()+0.5, 8, 10,0.6);
-                    reactor.getLevel().playSound(null, potential_rod, ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS, 0.5F, 1F);
+                    reactor.getLevel().playSound(null, potential_rod, Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 1F);
                 }
             } else {
                 AABB aoe = new AABB(reactor.getBlockPos());
@@ -162,7 +163,7 @@ public class ReactionEffects {
                     ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.ELECTRIC_SPARK,
                             reactor.getPos().x, reactor.getPos().y, reactor.getPos().z,
                             victim.getX(), victim.getEyeHeight() / 2 + victim.getY(), victim.getZ(), 8, 10, 0.3);
-                    reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), ReactiveSoundEvents.ZAP.get(), SoundSource.BLOCKS, 0.5F, 0.98F + reactor.getLevel().random.nextFloat()*0.05F);
+                    reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS, 0.5F, 0.98F + reactor.getLevel().random.nextFloat()*0.05F);
                 }
             }
             reactor.setElectricCharge(0);
@@ -180,7 +181,7 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    ReactiveCriterionTriggers.BE_LEVITATED.get().trigger(player);
+                    CriteriaTriggers.BE_LEVITATED_TRIGGER.trigger(player);
                 }
             }
             ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.END_ROD,
@@ -202,10 +203,10 @@ public class ReactionEffects {
             if(CrystalIronItem.effectNotBlocked(victim, 1)) {
                 victim.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 200, 1));
                 if(victim instanceof ServerPlayer player){
-                    ReactiveCriterionTriggers.BE_SLOWFALLED.get().trigger(player);
+                    CriteriaTriggers.BE_SLOWFALLED_TRIGGER.trigger(player);
                 }
             }
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos(), 0.6, 1);
+            ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos(), 0, 0.6, 1);
             reactor.getLevel().playSound(null, victim.getX(), victim.getY(), victim.getZ(), SoundEvents.CONDUIT_AMBIENT_SHORT, SoundSource.BLOCKS, 0.1F, 1.2F);
 
         }
@@ -218,7 +219,7 @@ public class ReactionEffects {
 
     private static void craftSecretScale(Reactor reactor) {
         for(Entity entity : CrucibleBlock.getEntitesInside(reactor.getBlockPos(), reactor.getLevel())){
-            if(entity instanceof ItemEntity item_entity && item_entity.getItem().is(ReactiveItems.PHANTOM_RESIDUE.get())) {
+            if(entity instanceof ItemEntity item_entity && item_entity.getItem().is(Registration.PHANTOM_RESIDUE.get())) {
                 ParticleScribe.drawParticleZigZag(reactor.getLevel(), ParticleTypes.END_ROD,
                         reactor.getBlockPos().getX(), reactor.getBlockPos().getY(), reactor.getBlockPos().getZ(),
                         entity.getX(), entity.getY(), entity.getZ(), 25, 10, 0.9);
@@ -226,7 +227,7 @@ public class ReactionEffects {
                         0.8F, 0.8F);
                 int count = item_entity.getItem().getCount();
                 item_entity.kill();
-                ItemStack drop_stack = ReactiveItems.SECRET_SCALE.get().getDefaultInstance();
+                ItemStack drop_stack = Registration.SECRET_SCALE.get().getDefaultInstance();
                 drop_stack.setCount(count);
                 ItemEntity secret_scale = new ItemEntity(reactor.getLevel(), reactor.getBlockPos().getX() + 0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ() + 0.5, drop_stack);
                 secret_scale.setPickUpDelay(20);
@@ -275,7 +276,7 @@ public class ReactionEffects {
             }
         }
 
-        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos().add(0, 0.1, 0), 12F, 20);
+        ParticleScribe.drawExactParticleRing(reactor.getLevel(), ParticleTypes.END_ROD, reactor.getPos().add(0, 0.1, 0), 0,12F, 20);
     }
 
     // Cause blocks to fall down near the Symbol.
@@ -294,7 +295,7 @@ public class ReactionEffects {
                 FallingBlockEntity.fall(level, target, target_state);
                 ParticleScribe.drawParticleZigZag(level, ParticleTypes.END_ROD, reactor.getBlockPos(), target, 8, 32, 0.7F);
                 ItemEntity drop = new ItemEntity(level, reactor.getBlockPos().getX()+0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ()+0.5,
-                        ReactiveItems.MOTION_SALT.get().getDefaultInstance());
+                        Registration.MOTION_SALT.get().getDefaultInstance());
                 level.addFreshEntity(drop);
             }
         }
@@ -316,7 +317,7 @@ public class ReactionEffects {
                     MobEffectInstance stop = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50);
                     player.addEffect(stop);
                 }else {
-                    MobEffectInstance stop = new MobEffectInstance(ReactiveMobEffects.IMMOBILE, 50, 0, true, false, true);
+                    MobEffectInstance stop = new MobEffectInstance(Registration.IMMOBILE.get(), 50, 0, true, false, true);
                     living.addEffect(stop);
                 }
             }
@@ -335,7 +336,7 @@ public class ReactionEffects {
                         level.setBlock(creation_point, Registration.UNFORMED_MATTER.get().defaultBlockState(), Block.UPDATE_CLIENTS);
                         level.updateNeighborsAt(creation_point, Registration.UNFORMED_MATTER.get());
                     }
-                    ParticleScribe.drawParticleZigZag(level, ReactiveParticles.STARDUST, reactor.getBlockPos(), creation_point, 10, 5, 0.5F);
+                    ParticleScribe.drawParticleZigZag(level, Registration.STARDUST_PARTICLE, reactor.getBlockPos(), creation_point, 10, 5, 0.5F);
                     break;
                 }
             }
@@ -352,60 +353,6 @@ public class ReactionEffects {
                     wsv_source.nextInt(0, 3) * 2 - 3));
         }
         return points;
-    }
-
-    public static void flowTooStrong(Reactor reactor){
-        int flow = reactor.getPowerLevel(Powers.FLOW_POWER.get());
-        reactor.expendPower(Powers.FLOW_POWER.get(), flow);
-        reactor.addPower(Powers.LIGHT_POWER.get(), flow / 3);
-        reactor.setElectricCharge(reactor.getElectricCharge() + 20);
-        SpecialCaseMan.windBomb(reactor.getLevel(), Vec3.atCenterOf(reactor.getBlockPos()));
-    }
-
-    public static void omenSettling(Reactor reactor){
-        if(reactor.getLevel().random.nextFloat() < 0.1F){
-            reactor.addPower(Powers.CURSE_POWER.get(), 1);
-        }
-        reactor.addPower(Powers.SOUL_POWER.get(), 2);
-    }
-
-    public static void chomp(Reactor reactor) {
-        var level = reactor.getLevel();
-        assert level != null;
-        for(Entity entity : CrucibleBlock.getEntitesInside(reactor.getBlockPos(), level)){
-            if(entity instanceof ItemEntity item && item.getItem().is(Items.IRON_INGOT)){
-                item.kill();
-            }
-        }
-        var pos = Vec3.atCenterOf(reactor.getBlockPos());
-        @SuppressWarnings("DataFlowIssue") // The constructor isn't annotated Nullable, but the method it passed owner to is, so null should be fine here.
-        EvokerFangs fangs = new EvokerFangs(level, pos.x, pos.y + 0.48, pos.z, 0F, 10, null);
-        reactor.getLevel().addFreshEntity(fangs);
-
-        AABB aoe = new AABB(reactor.getBlockPos());
-        aoe = aoe.inflate(4);
-        List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, aoe);
-        for(LivingEntity living : nearby){
-            @SuppressWarnings("DataFlowIssue") // The constructor isn't annotated Nullable, but the method it passed owner to is, so null should be fine here.
-            EvokerFangs targeted_fangs = new EvokerFangs(level, living.position().x, living.position().y, living.position().z, 0F, 10, null);
-            reactor.getLevel().addFreshEntity(targeted_fangs);
-        }
-    }
-
-    public static void shrink(Reactor reactor) {
-        resizeNearby(reactor, ConfigMan.SERVER.shrinkSmallSize.get(), ConfigMan.SERVER.shrinkSmallStep.get(), ResizeMode.REDUCE, ReactiveParticles.ACID_BUBBLE);
-    }
-
-    public static void grow(Reactor reactor) {
-        resizeNearby(reactor, ConfigMan.SERVER.growLargeSize.get(), ConfigMan.SERVER.growLargeStep.get(), ResizeMode.ENLARGE, ParticleTypes.HAPPY_VILLAGER);
-    }
-
-    public static void revert_from_large(Reactor reactor) {
-        resizeNearby(reactor, 1.0, 0.6, ResizeMode.REDUCE, ParticleTypes.ELECTRIC_SPARK);
-    }
-
-    public static void revert_from_small(Reactor reactor) {
-        resizeNearby(reactor, 1.0, 0.6, ResizeMode.ENLARGE, ParticleTypes.ELECTRIC_SPARK);
     }
 
     private static void resizeNearby(Reactor reactor, double new_scale, double new_step_height, ResizeMode mode, ParticleOptions particle) {

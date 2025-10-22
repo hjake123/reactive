@@ -1,28 +1,26 @@
 package dev.hyperlynx.reactive.entities;
 
-import dev.hyperlynx.reactive.net.HoverQuiltHeightPayload;
-import dev.hyperlynx.reactive.net.HoverQuiltVelocityPayload;
-import dev.hyperlynx.reactive.registration.ReactiveItems;
+import dev.hyperlynx.reactive.net.quilt.HoverQuiltHeightMessage;
+import dev.hyperlynx.reactive.net.quilt.HoverQuiltVelocityMessage;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.VehicleEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
-public class HoverQuilt extends VehicleEntity {
+public class HoverQuilt extends Entity {
     public final AnimationState hovering = new AnimationState();
     public long animation_timer = 0;
     private boolean ridden_last_tick = false;
@@ -36,6 +34,11 @@ public class HoverQuilt extends VehicleEntity {
     }
 
     @Override
+    protected void defineSynchedData() {
+
+    }
+
+    @Override
     public boolean canBeCollidedWith() {
         return true;
     }
@@ -45,25 +48,14 @@ public class HoverQuilt extends VehicleEntity {
         return true;
     }
 
-
     @Override
     public boolean isPickable() {
         return true;
     }
 
     @Override
-    protected @NotNull Item getDropItem() {
-        return ReactiveItems.PHANTOM_QUILT_ITEM.get();
-    }
-
-    @Override
-    protected @NotNull Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
-        return getDefaultPassengerAttachmentPoint(this, entity, dimensions.attachments()).add(0, 0.05, 0);
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
+    public double getPassengersRidingOffset() {
+        return 0.05;
     }
 
     @Override
@@ -185,11 +177,17 @@ public class HoverQuilt extends VehicleEntity {
         return -MAX_SPEED;
     }
 
-    public static void handleInputPacket(HoverQuiltVelocityPayload payload, IPayloadContext context) {
-        var vehicle = context.player().getVehicle();
-        if(vehicle instanceof HoverQuilt quilt) {
-            quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, quilt.getMaxDownSpeed(), quilt.getMaxUpSpeed()), 0);
-        }
+    public static void handleInputPacket(HoverQuiltVelocityMessage payload, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            if(context.get().getSender() == null) {
+                return;
+            }
+            var vehicle = Objects.requireNonNull(context.get().getSender()).getVehicle();
+            if(vehicle instanceof HoverQuilt quilt) {
+                quilt.setDeltaMovement(0, Math.clamp(payload.velocity() + quilt.getDeltaMovement().y, quilt.getMaxDownSpeed(), quilt.getMaxUpSpeed()), 0);
+            }
+        });
+
     }
 
     @Override
@@ -209,20 +207,22 @@ public class HoverQuilt extends VehicleEntity {
     }
 
     @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public @NotNull Vec3 getDismountLocationForPassenger(@NotNull LivingEntity passenger) {
         return super.getDismountLocationForPassenger(passenger);
     }
 
-    public static void handleHeightPacket(HoverQuiltHeightPayload payload, IPayloadContext context) {
-        var vehicle = context.player().level().getEntity(payload.id());
-        if(vehicle instanceof HoverQuilt quilt) {
-            quilt.client_position_lock = false;
-            quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
-            quilt.client_position_lock = true;
-            quilt.setDeltaMovement(0, 0, 0);
-            quilt.setOldPosAndRot();
-            quilt.lerpPositionAndRotationStep(1, quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot());
-        }
+    public static void handleHeightPacket(HoverQuiltHeightMessage payload, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            var vehicle = context.get().getSender().level().getEntity(payload.id());
+            if(vehicle instanceof HoverQuilt quilt) {
+                quilt.client_position_lock = false;
+                quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
+                quilt.client_position_lock = true;
+                quilt.setDeltaMovement(0, 0, 0);
+                quilt.setOldPosAndRot();
+                quilt.lerpTo(quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot(), 1, false);
+            }
+        });
     }
 
     @Override

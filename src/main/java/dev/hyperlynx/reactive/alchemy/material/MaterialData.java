@@ -4,7 +4,6 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
 import dev.hyperlynx.reactive.util.NBTSerializer;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
@@ -110,6 +109,6 @@ public class MaterialData extends SavedData {
     @Override
     public void setDirty() {
         super.setDirty();
-        Registration.UPDATE_10_CHANNEL.send(PacketDistributor.ALL.noArg(), new MaterialDataSyncMessage(new MaterialData(this)));
+        Registration.GENERAL_CHANNEL.send(PacketDistributor.ALL.noArg(), new MaterialDataSyncMessage(new MaterialData(this)));
     }
 }

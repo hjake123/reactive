@@ -89,7 +89,7 @@ public class MaterialBlock extends Block implements EntityBlock {
             if(level.getBlockEntity(pos) instanceof MaterialBlockEntity mbe) {
                 mbe.setMaterial(level, material_id);
                 if(level instanceof ServerLevel slevel) {
-                    Registration.UPDATE_10_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> slevel.getChunkAt(pos)), new MaterialBESyncMessage(mbe.getMaterialId(), pos));
+                    Registration.GENERAL_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> slevel.getChunkAt(pos)), new MaterialBESyncMessage(mbe.getMaterialId(), pos));
                 }
             }
             to_place_state = setStateByMaterialId(level, to_place_state, material_id);
@@ -290,7 +290,7 @@ public class MaterialBlock extends Block implements EntityBlock {
                 level.setBlock(adjacent_pos, state, Block.UPDATE_CLIENTS);
                 if(level.getBlockEntity(pos) instanceof MaterialBlockEntity old_mbe && level.getBlockEntity(adjacent_pos) instanceof MaterialBlockEntity new_mbe) {
                     new_mbe.setMaterial(level, old_mbe.getMaterialId());
-                    Registration.UPDATE_10_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(adjacent_pos)), new MaterialBESyncMessage(old_mbe.getMaterialId(), adjacent_pos));
+                    Registration.GENERAL_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(adjacent_pos)), new MaterialBESyncMessage(old_mbe.getMaterialId(), adjacent_pos));
                 }
                 level.removeBlock(pos, false);
                 level.playSound(null, pos, SoundEvents.ENDERMAN_TELEPORT, SoundSource.BLOCKS);

@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.integration.pehkui;
 
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
@@ -19,43 +20,39 @@ import java.util.List;
 import java.util.Objects;
 
 public class ResizeReactionEffects {
-    public static CrucibleBlockEntity shrink(CrucibleBlockEntity crucible) {
+    public static void shrink(Reactor crucible) {
         resizeNearby(crucible, (float) ConfigMan.SERVER.pehkuiSmallSize.get().doubleValue(), Mode.REDUCE, Registration.ACID_BUBBLE_PARTICLE);
-        return crucible;
     }
 
-    public static CrucibleBlockEntity grow(CrucibleBlockEntity crucible) {
+    public static void grow(Reactor crucible) {
         resizeNearby(crucible, (float) ConfigMan.SERVER.pehkuiLargeSize.get().doubleValue(), Mode.ENLARGE, ParticleTypes.HAPPY_VILLAGER);
-        return crucible;
     }
 
-    public static CrucibleBlockEntity revert_from_large(CrucibleBlockEntity crucible) {
+    public static void revert_from_large(Reactor crucible) {
         resizeNearby(crucible, 1.0F, Mode.REDUCE, ParticleTypes.ELECTRIC_SPARK);
-        return crucible;
     }
 
-    public static CrucibleBlockEntity revert_from_small(CrucibleBlockEntity crucible) {
+    public static void revert_from_small(Reactor crucible) {
         resizeNearby(crucible, 1.0F, Mode.ENLARGE, ParticleTypes.ELECTRIC_SPARK);
-        return crucible;
     }
 
-    private static void resizeNearby(CrucibleBlockEntity crucible, float new_scale, Mode mode, ParticleOptions particle) {
-        if (Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.4) {
-            AABB aoe = new AABB(crucible.getBlockPos());
+    private static void resizeNearby(Reactor reactor, float new_scale, Mode mode, ParticleOptions particle) {
+        if (Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.4) {
+            AABB aoe = new AABB(reactor.getBlockPos());
             aoe = aoe.inflate(3);
-            List<LivingEntity> victims = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            List<LivingEntity> victims = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : victims) {
                 if (CrystalIronItem.effectNotBlocked(victim, 2)) {
                     ScaleData victim_scale_data = ScaleTypes.BASE.getScaleData(victim);
                     if(mode == Mode.ENLARGE && victim_scale_data.getScale() < new_scale
                             || mode == Mode.REDUCE && victim_scale_data.getScale() > new_scale){
                         victim_scale_data.setTargetScale(new_scale);
-                        ParticleScribe.drawParticleZigZag(crucible.getLevel(), particle,
-                                crucible.getBlockPos().getX()+0.5, crucible.getBlockPos().getY()+0.6, crucible.getBlockPos().getZ()+0.5,
+                        ParticleScribe.drawParticleZigZag(reactor.getLevel(), particle,
+                                reactor.getBlockPos().getX()+0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ()+0.5,
                                 victim.getEyePosition().x, victim.getEyePosition().y, victim.getEyePosition().z, 20, 5, 0.9);
-                        crucible.getLevel().playSound(null, crucible.getBlockPos(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS);
-                        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + crucible.getLevel().random.nextFloat()*0.2F);
-                        victim.hurt(crucible.getLevel().damageSources().magic(), 1);
+                        reactor.getLevel().playSound(null, reactor.getBlockPos(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS);
+                        reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.getLevel().random.nextFloat()*0.2F);
+                        victim.hurt(reactor.getLevel().damageSources().magic(), 1);
                         if(victim instanceof ServerPlayer splayer){
                             if (new_scale == 1.0) {
                                 ReactivePehkuiPlugin.SIZE_REVERTED.trigger(splayer);

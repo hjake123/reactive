@@ -27,6 +27,8 @@ import dev.hyperlynx.reactive.net.material.MaterialBESyncMessage;
 import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
 import dev.hyperlynx.reactive.net.material.MaterialDataSyncRequest;
 import dev.hyperlynx.reactive.net.material.MaterialRenameMessage;
+import dev.hyperlynx.reactive.net.quilt.HoverQuiltHeightMessage;
+import dev.hyperlynx.reactive.net.quilt.HoverQuiltVelocityMessage;
 import dev.hyperlynx.reactive.net.rxn.*;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.items.*;
@@ -34,7 +36,6 @@ import dev.hyperlynx.reactive.recipes.*;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataSerializer;
@@ -519,8 +520,8 @@ public class Registration {
 
     // Register the networking stuff.
     private static final String PROTOCOL_VERSION = "2";
-    public static final SimpleChannel LITMUS_CHANNEL = NetworkRegistry.newSimpleChannel(
-        ReactiveMod.location("litmus_gui"),
+    public static final SimpleChannel GENERAL_CHANNEL = NetworkRegistry.newSimpleChannel(
+        ReactiveMod.location("general"),
         () -> PROTOCOL_VERSION,
         PROTOCOL_VERSION::equals,
         PROTOCOL_VERSION::equals
@@ -532,14 +533,6 @@ public class Registration {
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
-
-    public static final SimpleChannel UPDATE_10_CHANNEL = NetworkRegistry.newSimpleChannel(
-            ReactiveMod.location("update_10"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
-
 
     // Register the creative mode tab.
     public static final RegistryObject<CreativeModeTab> REACTIVE_TAB = CREATIVE_TABS.register("reactive_tab",
@@ -579,7 +572,7 @@ public class Registration {
     public static final RegistryObject<NoduleBlock> UNGROWN_NODULE = BLOCKS.register("ungrown_nodule",
             () -> new NoduleBlock(BlockBehaviour.Properties.copy(Blocks.TUFF), true));
 
-    public static final RegistryObject<Item> UNGROWN_NODULE_ITEM = fromBlock(NODULE);
+    public static final RegistryObject<Item> UNGROWN_NODULE_ITEM = fromBlock(UNGROWN_NODULE);
 
     public static final RegistryObject<NoduleBlock> NODULE = BLOCKS.register("nodule",
             () -> new NoduleBlock(BlockBehaviour.Properties.copy(Blocks.TUFF).lightLevel((state) -> 8), false));
@@ -646,7 +639,7 @@ public class Registration {
         }
         CriteriaTriggers.enqueue(evt);
         int index = 0;
-        LITMUS_CHANNEL.registerMessage(index++, LitmusScreenMessage.class,
+        GENERAL_CHANNEL.registerMessage(index++, LitmusScreenMessage.class,
                 LitmusScreenMessage::encoder,
                 LitmusScreenMessage::decoder,
                 LitmusScreenMessage::handler);
@@ -666,25 +659,35 @@ public class Registration {
                 ReactionPageServer.ReactionFormulaResponse::decoder,
                 ReactionPageFetcher::handleFormulaResponse);
 
-        UPDATE_10_CHANNEL.registerMessage(index++, MaterialBESyncMessage.class,
+        GENERAL_CHANNEL.registerMessage(index++, MaterialBESyncMessage.class,
                 MaterialBESyncMessage::encoder,
                 MaterialBESyncMessage::decoder,
                 MaterialBESyncMessage::handler);
 
-        UPDATE_10_CHANNEL.registerMessage(index++, MaterialRenameMessage.class,
+        GENERAL_CHANNEL.registerMessage(index++, MaterialRenameMessage.class,
                 MaterialRenameMessage::encoder,
                 MaterialRenameMessage::decoder,
                 MaterialRenameMessage::handler);
 
-        UPDATE_10_CHANNEL.registerMessage(index++, MaterialDataSyncRequest.class,
+        GENERAL_CHANNEL.registerMessage(index++, MaterialDataSyncRequest.class,
                 MaterialDataSyncRequest::encoder,
                 MaterialDataSyncRequest::decoder,
                 MaterialDataSyncRequest::handler);
 
-        UPDATE_10_CHANNEL.registerMessage(index++, MaterialDataSyncMessage.class,
+        GENERAL_CHANNEL.registerMessage(index++, MaterialDataSyncMessage.class,
                 MaterialDataSyncMessage::encoder,
                 MaterialDataSyncMessage::decoder,
                 MaterialDataSyncMessage::handler);
+
+        GENERAL_CHANNEL.registerMessage(index++, HoverQuiltVelocityMessage.class,
+                HoverQuiltVelocityMessage::encoder,
+                HoverQuiltVelocityMessage::decoder,
+                HoverQuilt::handleInputPacket);
+
+        GENERAL_CHANNEL.registerMessage(index++, HoverQuiltHeightMessage.class,
+                HoverQuiltHeightMessage::encoder,
+                HoverQuiltHeightMessage::decoder,
+                HoverQuilt::handleHeightPacket);
 
         ReactiveMod.LOGGER.debug("Registered {} messages", index);
     }

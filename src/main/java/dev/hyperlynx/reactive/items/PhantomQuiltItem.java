@@ -1,8 +1,7 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.entites.HoverQuilt;
-import dev.hyperlynx.reactive.registration.ReactiveEntityTypes;
+import dev.hyperlynx.reactive.entities.HoverQuilt;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -29,7 +28,8 @@ public class PhantomQuiltItem extends Item {
         }
         quilt.setPos(summon_pos);
         level.addFreshEntity(quilt);
-        context.getItemInHand().consume(1, player);
+        if(!player.getAbilities().instabuild)
+            context.getItemInHand().shrink(1);
         return InteractionResult.SUCCESS;
     }
 
@@ -41,7 +41,8 @@ public class PhantomQuiltItem extends Item {
         }
         quilt.setPos(player.getEyePosition().add(player.getLookAngle().scale(1.5)));
         level.addFreshEntity(quilt);
-        player.getItemInHand(hand).consume(1, player);
+        if(!player.getAbilities().instabuild)
+            player.getItemInHand(hand).shrink(1);
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 }

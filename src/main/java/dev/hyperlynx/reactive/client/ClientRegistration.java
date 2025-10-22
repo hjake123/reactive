@@ -4,9 +4,9 @@ import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.*;
-import dev.hyperlynx.reactive.client.renderers.CrucibleRenderer;
-import dev.hyperlynx.reactive.client.renderers.SymbolRenderer;
+import dev.hyperlynx.reactive.client.renderers.*;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderers;
+import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import dev.hyperlynx.reactive.client.renderers.GatewayRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 
 public class ClientRegistration {
@@ -44,7 +43,7 @@ public class ClientRegistration {
     }
 
     @SubscribeEvent
-    public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers evt) {
         evt.registerBlockEntityRenderer(Registration.CRUCIBLE_BE.get(), CrucibleRenderer::new);
         evt.registerBlockEntityRenderer(Registration.SYMBOL_BE.get(), SymbolRenderer::new);
         if(IRIS_MODE && ConfigMan.CLIENT.irisCompat.get()) {
@@ -52,6 +51,9 @@ public class ClientRegistration {
         } else {
             evt.registerBlockEntityRenderer(Registration.GATEWAY_BE.get(), GatewayRenderer::new);
         }
+
+        evt.registerEntityRenderer(Registration.REACTOR.get(), ReactorEntityRenderer::new);
+        evt.registerEntityRenderer(Registration.HOVER_QUILT.get(), HoverQuiltRenderer::new);
     }
 
     @SubscribeEvent

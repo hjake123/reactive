@@ -43,7 +43,6 @@ public class ReactionPageServer {
                 case NONE -> formula.append(Component.translatable("text.reactive.none").getString());
                 case GOLD_SYMBOL -> formula.append(Component.translatable("block.reactive.gold_symbol").getString());
                 case ELECTRIC -> formula.append(Component.translatable("text.reactive.electric_charge").getString());
-                case SACRIFICE -> formula.append(Component.translatable("text.reactive.sacrificial").getString());
                 case END_CRYSTAL -> formula.append(Component.translatable("item.minecraft.end_crystal").getString());
                 case NO_ELECTRIC ->
                         formula.append(Component.translatable("text.reactive.lack_of").getString()).append(Component.translatable("text.reactive.electric_charge").getString());

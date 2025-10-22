@@ -16,15 +16,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, value= Dist.CLIENT)
 public class ClientMaterialMan {
@@ -43,7 +40,7 @@ public class ClientMaterialMan {
         ReactiveMod.LOGGER.debug("Requesting material definitions from server");
         try {
             query_active.set(true);
-            Registration.UPDATE_10_CHANNEL.sendToServer(new MaterialDataSyncRequest());
+            Registration.GENERAL_CHANNEL.sendToServer(new MaterialDataSyncRequest());
             boolean got_result = response_ready.tryAcquire(1, 1, TimeUnit.SECONDS);
             if (got_result) {
                 ReactiveMod.LOGGER.debug("Received material definitions from server");
@@ -85,7 +82,7 @@ public class ClientMaterialMan {
     }
 
     public static void rename(ResourceLocation material_id, String value) {
-        Registration.UPDATE_10_CHANNEL.sendToServer(new MaterialRenameMessage(material_id, value)); // Tell server to update itself.
+        Registration.GENERAL_CHANNEL.sendToServer(new MaterialRenameMessage(material_id, value)); // Tell server to update itself.
     }
 
     public static List<ResourceLocation> getKeysInDiscoveryOrder() {

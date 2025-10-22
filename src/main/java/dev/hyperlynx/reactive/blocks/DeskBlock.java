@@ -75,7 +75,7 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if(state.getValue(FACING).getAxis().equals(Direction.Axis.X)) {
             return X_SHAPE;
         }

@@ -188,7 +188,7 @@ public class LitmusPaperItem extends Item {
             stack.getTag().remove(TAG_UNRESOLVED_STATUS);
 
             // Send packet to open the screen.
-            Registration.LITMUS_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
+            Registration.GENERAL_CHANNEL.send(PacketDistributor.PLAYER.with(() -> player),
                     new LitmusScreenMessage(new UnresolvedLitmusData(stack)));
         }
     }
