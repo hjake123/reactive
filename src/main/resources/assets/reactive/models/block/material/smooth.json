@@ -1,0 +1,7 @@
+{
+	"parent": "reactive:block/material/base",
+	"textures": {
+		"all": "reactive:block/material/smooth",
+		"particle": "reactive:block/material/smooth"
+	}
+}

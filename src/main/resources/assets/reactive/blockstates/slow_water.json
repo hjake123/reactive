@@ -1,0 +1,7 @@
+{
+  "variants":{
+    "":{
+      "model": "reactive:block/slow_water"
+    }
+  }
+}

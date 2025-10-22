@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "weighed=false": {
+      "model": "reactive:block/phantom_quilt"
+    },
+    "weighed=true": {
+      "model": "reactive:block/phantom_quilt_low"
+    }
+  }
+}
