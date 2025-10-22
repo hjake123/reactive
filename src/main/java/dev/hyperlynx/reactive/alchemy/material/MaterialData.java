@@ -51,6 +51,7 @@ public class MaterialData extends SavedData {
         materials.putAll(data.materials);
     }
 
+    /// Warning! This must NOT be called before the registries are frozen!
     public static MaterialData empty() {
         return new MaterialData();
     }

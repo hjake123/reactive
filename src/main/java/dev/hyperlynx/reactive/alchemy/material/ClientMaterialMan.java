@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Mod.EventBusSubscriber(modid=ReactiveMod.MODID, value= Dist.CLIENT)
 public class ClientMaterialMan {
-    public static final AtomicReference<MaterialData> clientside_data = new AtomicReference<>(MaterialData.empty());
+    public static AtomicReference<MaterialData> clientside_data; // Initialized in ClientRegistration.
     private static final AtomicBoolean initialized = new AtomicBoolean(false);
     private static final Semaphore response_ready = new Semaphore(0, false);
     private static final AtomicBoolean query_active = new AtomicBoolean(false);

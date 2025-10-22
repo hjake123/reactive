@@ -3,12 +3,16 @@ package dev.hyperlynx.reactive.client;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.MaterialData;
+import dev.hyperlynx.reactive.client.models.HoverQuiltModel;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.*;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderers;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -20,6 +24,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public class ClientRegistration {
     public static final ReactionRenderers REACTION_RENDERERS = new ReactionRenderers();
     public static boolean IRIS_MODE = false;
@@ -30,6 +36,11 @@ public class ClientRegistration {
             // Enable special handling for Iris shaders to draw the Gateway block correctly.
             IRIS_MODE = true;
         }
+    }
+
+    @SubscribeEvent
+    public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(HoverQuiltModel.LAYER_LOCATION, HoverQuiltModel::createBodyLayer);
     }
 
     @SubscribeEvent
@@ -66,6 +77,8 @@ public class ClientRegistration {
                 ReactiveMod.location("material_model_index"),
                 MaterialItem::getModelOverrideValue
         );
+
+        ClientMaterialMan.clientside_data = new AtomicReference<>(MaterialData.empty());
     }
 
     @SubscribeEvent
