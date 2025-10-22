@@ -3,10 +3,12 @@ package dev.hyperlynx.reactive.client.particles;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.core.particles.DustParticleOptionsBase;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +26,9 @@ public class EnergyParticle extends TextureSheetParticle {
         this.sprites = sprites;
         this.target = options.getTarget();
         this.scale(options.getScale());
-        this.rCol = options.getColor().red / 255.0F;
-        this.gCol = options.getColor().green / 255.0F;
-        this.bCol = options.getColor().blue / 255.0F;
+        this.rCol = options.getColor().x / 255.0F;
+        this.gCol = options.getColor().y / 255.0F;
+        this.bCol = options.getColor().z / 255.0F;
         this.hasPhysics = false;
         this.reversed = options.reverse_motion;
         this.orbit = options.orbit;
@@ -72,29 +74,12 @@ public class EnergyParticle extends TextureSheetParticle {
         super.move(move_step.x, move_step.y, move_step.z);
     }
 
-    public static class Options extends ScalableParticleOptionsBase {
+    public static class Options extends DustParticleOptionsBase {
         final float speed;
         final Color color;
         final Vec3 target;
         final boolean reverse_motion;
         final boolean orbit;
-
-        protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-                    Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
-                    Color.CODEC.fieldOf("color").forGetter(Options::getColor),
-                    Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
-                    Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed),
-                    Codec.BOOL.fieldOf("orbit").forGetter(Options::isOrbiting)
-                ).apply(instance, Options::new)
-        );
-
-        protected static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.FLOAT, Options::getSpeed,
-                Color.STREAM_CODEC, Options::getColor,
-                ReactiveVanillaCodecs.VEC3_STREAM_CODEC, Options::getTarget,
-
-                Options::new
-        );
 
         public Options(Color color, Vec3 target) {
             this(0.05F, color, target);
@@ -109,7 +94,7 @@ public class EnergyParticle extends TextureSheetParticle {
         }
 
         public Options(float speed, Color color, Vec3 target, boolean reverse, boolean orbit) {
-            super(0.1F);
+            super(color.toVector3f(), 0.1F);
             this.speed = speed;
             this.color = color;
             this.target = target;
@@ -117,17 +102,23 @@ public class EnergyParticle extends TextureSheetParticle {
             this.orbit = orbit;
         }
 
+        protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+                        Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
+                        Color.CODEC.fieldOf("color").forGetter(Options::getColor),
+                        Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
+                        Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed),
+                        Codec.BOOL.fieldOf("orbit").forGetter(Options::isOrbiting)
+                ).apply(instance, Options::new)
+        );
+
+
         @Override
         public @NotNull ParticleType<?> getType() {
-            return ReactiveParticles.ENERGY_PARTICLE_TYPE.get();
+            return Registration.ENERGY_PARTICLE_TYPE.get();
         }
 
         public float getSpeed() {
             return this.speed;
-        }
-
-        public Color getColor() {
-            return this.color;
         }
 
         public Vec3 getTarget() {
@@ -147,13 +138,8 @@ public class EnergyParticle extends TextureSheetParticle {
         }
 
         @Override
-        public MapCodec<Options> codec() {
-            return Options.CODEC;
-        }
-
-        @Override
-        public StreamCodec<? super RegistryFriendlyByteBuf, Options> streamCodec() {
-            return Options.STREAM_CODEC;
+        public Codec<Options> codec() {
+            return Options.CODEC.codec();
         }
     }
 

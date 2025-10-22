@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.entities;
 
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
@@ -29,7 +30,7 @@ import java.util.*;
 public class ReactorEntity extends Entity implements Reactor {
     public static final int MAX_POWER = 10000;
 
-    private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, ReactiveEntityDataSerializers.REACTOR_DATA_SERIALIZER.get());
+    private static final EntityDataAccessor<ReactorData> SYNCED_REACTOR_DATA = SynchedEntityData.defineId(ReactorEntity.class, Registration.REACTOR_DATA_SERIALIZER.get());
 
     private static final EntityDataAccessor<Boolean> FORCE_GOLD_SYMBOL = SynchedEntityData.defineId(ReactorEntity.class, EntityDataSerializers.BOOLEAN);
     private static final String FORCE_GOLD_SYMBOL_KEY = "force_gold_symbol_key";

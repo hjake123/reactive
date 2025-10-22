@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.util;
 
 import dev.hyperlynx.reactive.alchemy.Power;
+import org.joml.Vector3f;
 
 import java.util.Map;
 
@@ -87,5 +88,9 @@ public class Color {
     @Override
     public String toString() {
         return String.format("%02x", hex());
+    }
+
+    public Vector3f toVector3f() {
+        return new Vector3f(red, green, blue);
     }
 }

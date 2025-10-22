@@ -2,6 +2,7 @@ package dev.hyperlynx.reactive.advancements;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
@@ -29,9 +30,12 @@ public class CriteriaTriggers {
     public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(ReactiveMod.location("see_blaze_gather_criterion"));
     public static final FlagCriterion UNDEAD_PLAYER_DIVINE_HURT = new FlagCriterion(ReactiveMod.location("undead_player_divine_hurt_criterion"));
     public static final FlagCriterion DISCOVER_MATERIAL = new FlagCriterion(ReactiveMod.location("discover_material"));
+    public static final FlagCriterion GOLD_THREAD_REACTION = new FlagCriterion(ReactiveMod.location("see_gold_thread_reaction_criterion"));
+    public static final FlagCriterion THROW_FLASK = new FlagCriterion(ReactiveMod.location("throw_flask_criterion"));
 
     public static final ReactionCriterion REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("reaction"));
     public static final ReactionCriterion PERFECT_REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("perfect_reaction"));
+
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {

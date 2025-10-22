@@ -604,7 +604,7 @@ public class Registration {
 
     public static final RegistryObject<Item> CREATION_SALT_BLOCK_ITEM = fromBlock(CREATION_SALT_BLOCK);
 
-    public static final RegistryObject<EntityDataSerializer<?>> REACTOR_DATA_SERIALIZER =
+    public static final RegistryObject<EntityDataSerializer<ReactorData>> REACTOR_DATA_SERIALIZER =
             ENTITY_DATA_SERIALIZERS.register("reactor_data", ReactorData.Serializer::new);
 
     public static final Supplier<EntityType<ThrownReactionFlask>> THROWN_REACTION_FLASK = ENTITY_TYPES.register("thrown_reaction_flask", () ->
