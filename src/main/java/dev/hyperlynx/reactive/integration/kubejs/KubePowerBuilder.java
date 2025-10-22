@@ -12,10 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.registries.RegistryObject;
-import org.apache.logging.log4j.Level;
-
-import java.util.function.Supplier;
 
 public class KubePowerBuilder extends BuilderBase<Power> {
     private final PowerBuilder builder;

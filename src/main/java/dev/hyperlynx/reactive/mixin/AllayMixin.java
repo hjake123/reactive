@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.animal.allay.Allay;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,9 +20,16 @@ import java.util.Optional;
 
 @Mixin(Allay.class)
 public abstract class AllayMixin {
+    @Unique
     Optional<BlockPos> symbol_maybe = Optional.empty();
+
+    @Unique
     private static final EntityDataAccessor<Boolean> DATA_CAN_DONATE = SynchedEntityData.defineId(Allay.class, EntityDataSerializers.BOOLEAN);
+
+    @Unique
     int symbol_cache_ticker = 0;
+
+    @Unique
     boolean unredeemed_duplication = false;
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))

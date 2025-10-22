@@ -32,7 +32,7 @@ public class SecretScaleItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         // When the player shift-clicks on a boat, it becomes antigravity and the item is used up.
         if(!player.isCrouching())
-            return InteractionResultHolder.pass(player.getItemInHand(hand));;
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
 
         Vec3 start = player.getEyePosition();
         Vec3 end = start.add(player.getLookAngle().scale(player.getEntityReach()));

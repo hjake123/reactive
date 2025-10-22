@@ -4,7 +4,6 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.advancements.ReactionCriterion;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.network.chat.Component;

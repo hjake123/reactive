@@ -2,12 +2,10 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.util.Color;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Mod.EventBusSubscriber

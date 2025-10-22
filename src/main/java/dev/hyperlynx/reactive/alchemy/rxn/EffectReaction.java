@@ -1,11 +1,9 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 // This reaction runs a particular effect function each reaction tick and removes power according to the cost when it does
 public class EffectReaction extends FreeEffectReaction{

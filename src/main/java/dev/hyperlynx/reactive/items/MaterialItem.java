@@ -15,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.ForgeItemModelShaper;
-import net.minecraftforge.client.model.generators.ItemModelProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

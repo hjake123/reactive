@@ -1,12 +1,9 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.world.level.Level;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 // This reaction runs a particular effect function each reaction tick.
 public class FreeEffectReaction extends Reaction{

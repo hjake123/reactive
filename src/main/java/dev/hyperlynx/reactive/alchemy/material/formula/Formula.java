@@ -1,16 +1,10 @@
 package dev.hyperlynx.reactive.alchemy.material.formula;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.NBTExtras;
 import dev.hyperlynx.reactive.util.NBTSerializer;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.*;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

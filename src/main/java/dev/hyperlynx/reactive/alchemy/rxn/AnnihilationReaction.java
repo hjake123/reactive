@@ -2,10 +2,8 @@ package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 // A reaction in which each tick the reactants destroy each other.
 public class AnnihilationReaction extends EffectReaction{

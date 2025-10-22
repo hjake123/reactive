@@ -1,12 +1,9 @@
 package dev.hyperlynx.reactive.be;
 
 import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.alchemy.material.Material;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;

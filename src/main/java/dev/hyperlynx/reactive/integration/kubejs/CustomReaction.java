@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.integration.kubejs;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderer;
 import dev.hyperlynx.reactive.integration.kubejs.events.CustomReactionTickEventJS;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;

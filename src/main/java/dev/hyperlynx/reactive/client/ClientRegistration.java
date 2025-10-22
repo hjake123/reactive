@@ -6,7 +6,6 @@ import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.client.particles.*;
 import dev.hyperlynx.reactive.client.renderers.*;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactionRenderers;
-import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;

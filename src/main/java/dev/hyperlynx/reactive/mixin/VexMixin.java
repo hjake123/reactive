@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.monster.Vex;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -14,7 +15,10 @@ import java.util.Optional;
 @Mixin(Vex.class)
 public class VexMixin {
 
+    @Unique
     Optional<BlockPos> symbol_maybe = Optional.empty();
+
+    @Unique
     int symbol_cache_ticker = 0;
 
     @Inject(method = "tick", at = @At("RETURN"))

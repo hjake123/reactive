@@ -15,11 +15,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 
 public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
 
-    private final BlockRenderDispatcher blockRenderDispatcher;
     ItemRenderer itemRenderer;
 
-    public SymbolRenderer(BlockEntityRendererProvider.Context context){
-        this.blockRenderDispatcher = context.getBlockRenderDispatcher();
+    public SymbolRenderer(BlockEntityRendererProvider.Context ignored){
         Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
     }
@@ -47,10 +45,5 @@ public class SymbolRenderer implements BlockEntityRenderer<SymbolBlockEntity> {
 
         itemRenderer.renderStatic(symbol.symbol_item.getDefaultInstance(), ItemDisplayContext.FIXED, light, overlay, pose_stack, mbs, symbol.getLevel(), 0);
         pose_stack.popPose();
-    }
-
-    @Override
-    public int getViewDistance() {
-        return BlockEntityRenderer.super.getViewDistance();
     }
 }

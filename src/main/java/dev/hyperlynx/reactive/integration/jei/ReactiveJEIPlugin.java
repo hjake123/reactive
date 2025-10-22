@@ -101,7 +101,7 @@ public class ReactiveJEIPlugin implements IModPlugin {
         }
 
         for(ItemStack i : registration.getIngredientManager().getAllIngredients(VanillaTypes.ITEM_STACK)){
-            if(Power.getSourcePower(i).size() > 0 && !excluded.contains(i.getItem())) {
+            if(!Power.getSourcePower(i).isEmpty() && !excluded.contains(i.getItem())) {
                 registration.addRecipes(DISSOLVE_CATEGORY.getRecipeType(), List.of(new DissolveRecipe(
                         null,
                         "power_source",

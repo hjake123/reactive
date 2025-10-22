@@ -82,12 +82,6 @@ public class SymbolBlock extends WaterloggableBlock implements EntityBlock {
         return symbol;
     }
 
-//    @Nullable
-//    @Override
-//    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-//        return null;
-//    }
-
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.INVISIBLE;

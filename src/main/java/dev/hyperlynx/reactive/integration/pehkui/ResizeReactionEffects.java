@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.integration.pehkui;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import net.minecraft.core.particles.ParticleOptions;

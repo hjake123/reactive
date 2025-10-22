@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,8 +18,12 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityHarmUndeadMixin {
+    @Unique
     Optional<BlockPos> symbol_maybe = Optional.empty();
+
+    @Unique
     int symbol_cache_ticker = 0;
+
     @Inject(method = "tick", at = @At("RETURN"))
     public void hurtUndeadWithDivineSymbolOnTick(CallbackInfo ci) {
         if(((LivingEntity)(Object)this).isInvertedHealAndHarm()){

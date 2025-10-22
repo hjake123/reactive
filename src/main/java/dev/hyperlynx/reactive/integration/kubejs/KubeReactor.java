@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.alchemy.rxn.Reactor;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.NativeJavaObject;
 import dev.latvian.mods.rhino.Scriptable;

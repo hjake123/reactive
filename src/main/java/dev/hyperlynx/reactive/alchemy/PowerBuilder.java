@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

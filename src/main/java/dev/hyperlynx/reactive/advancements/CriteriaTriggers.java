@@ -1,9 +1,6 @@
 package dev.hyperlynx.reactive.advancements;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {

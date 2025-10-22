@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
-import com.mojang.serialization.Codec;
 import dev.hyperlynx.reactive.alchemy.Power;
 import net.minecraft.util.Unit;
 

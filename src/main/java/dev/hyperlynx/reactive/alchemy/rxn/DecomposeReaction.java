@@ -1,9 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
-import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
-import net.minecraft.world.level.Level;
 
 import java.util.List;
 

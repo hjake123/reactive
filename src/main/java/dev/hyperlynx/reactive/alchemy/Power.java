@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.alchemy;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.util.Color;
 import dev.hyperlynx.reactive.util.PrimedWSV;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -18,7 +17,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 

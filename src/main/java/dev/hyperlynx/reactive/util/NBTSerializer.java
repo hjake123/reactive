@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.util;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 

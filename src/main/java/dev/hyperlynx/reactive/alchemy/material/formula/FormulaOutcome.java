@@ -1,11 +1,8 @@
 package dev.hyperlynx.reactive.alchemy.material.formula;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.function.Function;
 
 /// Defines a way that a Formula can produce an instance for a particular MaterialProperty
 public abstract class FormulaOutcome {

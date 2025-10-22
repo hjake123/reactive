@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -22,8 +23,8 @@ public class LightningBoltMixin{
 
     @Shadow @Final private static double DETECTION_RADIUS;
 
-    @Inject(method = "powerLightningRod", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void powerLightningRod(CallbackInfo ci, BlockPos blockpos, BlockState blockstate) {
+    @Inject(method = "powerLightningRod", at = @At("RETURN"))
+    private void powerLightningRod(CallbackInfo ci, @Local BlockPos blockpos) {
         BlockPos cruciblePos = BlockPos.findClosestMatch(blockpos, (int) DETECTION_RADIUS, (int) DETECTION_RADIUS,
                 pos -> ((LightningBolt)(Object)this).level().getBlockState(pos).is(Registration.CRUCIBLE.get())).orElse(null);
         if(cruciblePos != null){

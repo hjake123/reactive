@@ -45,9 +45,6 @@ public class WarpStaffItem extends StaffItem{
     public static final String TAG_TUTORIAL_FINISHED = "TutorialFinished";
     public static final String TAG_BOUND_ENTITY_NAME = "BoundEntityName";
 
-    // public static final String TAG_BOUND_ENTITY_ID = "BoundEntityId";
-    // private static final int RANGE_SQUARED = 40000;
-
     public WarpStaffItem(Block block, Properties props, Item repair_item) {
         super(block, props, null, false, () -> 1, repair_item);
     }

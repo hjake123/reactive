@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
-import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.net.CustomReactionAliasRequest;
 import dev.latvian.mods.kubejs.event.EventExit;
@@ -8,7 +7,6 @@ import dev.latvian.mods.kubejs.event.EventJS;
 import dev.latvian.mods.kubejs.event.EventResult;
 import dev.latvian.mods.kubejs.event.IEventHandler;
 import dev.latvian.mods.kubejs.script.ScriptType;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.time.Instant;

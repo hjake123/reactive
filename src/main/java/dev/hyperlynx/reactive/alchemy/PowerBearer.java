@@ -1,6 +1,5 @@
 package dev.hyperlynx.reactive.alchemy;
 
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
