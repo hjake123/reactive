@@ -26,7 +26,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion BE_TELEPORTED_TRIGGER = new FlagCriterion(ReactiveMod.location("be_teleported_criterion"));
     public static final FlagCriterion SEE_BLAZE_GATHER_TRIGGER = new FlagCriterion(ReactiveMod.location("see_blaze_gather_criterion"));
     public static final FlagCriterion UNDEAD_PLAYER_DIVINE_HURT = new FlagCriterion(ReactiveMod.location("undead_player_divine_hurt_criterion"));
-    public static final FlagCriterion DISCOVER_MATERIAL = new FlagCriterion(ReactiveMod.location("discover_material"));
+    public static final FlagCriterion DISCOVER_MATERIAL = new FlagCriterion(ReactiveMod.location("discover_material_criterion"));
     public static final FlagCriterion GOLD_THREAD_REACTION = new FlagCriterion(ReactiveMod.location("see_gold_thread_reaction_criterion"));
     public static final FlagCriterion THROW_FLASK = new FlagCriterion(ReactiveMod.location("throw_flask_criterion"));
 
@@ -59,5 +59,8 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(UNDEAD_PLAYER_DIVINE_HURT));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(REACTION_TRIGGER));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(PERFECT_REACTION_TRIGGER));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(DISCOVER_MATERIAL));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(GOLD_THREAD_REACTION));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(THROW_FLASK));
     }
 }

@@ -1,0 +1,31 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:material",
+      "components": {
+        "reactive:material_id": "reactive:example_salt"
+      }
+    },
+    "title": {
+      "translate": "advancement.reactive.title.get_material"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.get_material"
+    }
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:material"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "parent": "reactive:make_crucible"
+}

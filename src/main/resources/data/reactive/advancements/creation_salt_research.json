@@ -1,0 +1,31 @@
+{
+  "criteria": {
+    "astral": {
+      "conditions": {
+        "reaction_alias": "astral"
+      },
+      "trigger": "reactive:reaction"
+    },
+    "material_discover": {
+      "trigger": "reactive:discover_material_criterion"
+    },
+    "salts": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:creation_salt",
+              "reactive:creation_salt_block"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["astral", "material_discover"],
+    ["salts", "material_discover"]
+  ],
+  "parent": "reactive:activate_eye"
+}

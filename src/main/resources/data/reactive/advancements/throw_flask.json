@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "reactive:reaction_flask"
+    },
+    "title": {
+      "translate": "advancement.reactive.title.throw_flask"
+    },
+    "description": {
+      "translate": "advancement.reactive.text.throw_flask"
+    },
+    "hidden": true
+  },
+  "criteria": {
+    "criterion": {
+      "trigger": "reactive:throw_flask_criterion"
+    }
+  },
+  "parent": "reactive:see_thread_reaction"
+}

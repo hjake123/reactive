@@ -1,0 +1,17 @@
+{
+  "criteria": {
+    "criterion": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "reactive:salt",
+              "reactive:salt_block"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
