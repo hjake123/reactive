@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "minecraft:iron_ingot"
+  },
+  "product": {
+    "item": "reactive:inert_crystal"
+  },
+  "reagents": ["reactive:body", "reactive:warp"],
+  "min": 200,
+  "cost": 50
+}

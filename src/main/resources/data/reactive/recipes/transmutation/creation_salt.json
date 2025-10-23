@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:stardust"
+  },
+  "product": {
+    "item": "reactive:creation_salt"
+  },
+  "reagents": ["reactive:astral"],
+  "min": 1,
+  "cost": 0
+}

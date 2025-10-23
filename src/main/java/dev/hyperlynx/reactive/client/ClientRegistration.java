@@ -15,6 +15,7 @@ import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -52,6 +53,7 @@ public class ClientRegistration {
         Minecraft.getInstance().particleEngine.register(Registration.SMALL_RUNE_PARTICLE_TYPE.get(), SmallRuneParticle.SmallRuneParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(Registration.SMALL_BLACK_RUNE_PARTICLE_TYPE.get(), SmallBlackRuneParticle.SmallBlackRuneParticleProvider::new);
         Minecraft.getInstance().particleEngine.register(Registration.ACID_BUBBLE_PARTICLE_TYPE.get(), AcidBubbleParticle.AcidBubbleParticleProvider::new);
+        Minecraft.getInstance().particleEngine.register(Registration.ENERGY_PARTICLE_TYPE.get(), EnergyParticle.Provider::new);
     }
 
     @SubscribeEvent
@@ -66,6 +68,7 @@ public class ClientRegistration {
 
         evt.registerEntityRenderer(Registration.REACTOR.get(), ReactorEntityRenderer::new);
         evt.registerEntityRenderer(Registration.HOVER_QUILT.get(), HoverQuiltRenderer::new);
+        evt.registerEntityRenderer(Registration.THROWN_REACTION_FLASK.get(), ThrownItemRenderer::new);
     }
 
     @SubscribeEvent

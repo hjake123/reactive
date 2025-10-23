@@ -1,0 +1,12 @@
+{
+  "type": "reactive:transmutation",
+  "reactant": {
+    "item": "reactive:ungrown_nodule"
+  },
+  "product": {
+    "item": "reactive:nodule"
+  },
+  "reagents": ["reactive:warp", "reactive:esoteric_z"],
+  "min": 1000,
+  "cost": 10
+}
