@@ -137,6 +137,7 @@ public class ConfigMan {
         public ForgeConfigSpec.DoubleValue pehkuiSmallSize;
         public ForgeConfigSpec.DoubleValue pehkuiLargeSize;
         public ForgeConfigSpec.ConfigValue<List<String>> disabledReactions;
+        public ForgeConfigSpec.BooleanValue allowMaterialDeletion;
 
 
         Server(ForgeConfigSpec.Builder builder){
@@ -158,6 +159,8 @@ public class ConfigMan {
                     .push("other");
             disabledReactions = builder.comment("A list of reaction aliases to disable. To see the reaction aliases, use /reactive reaction list [Default: []]")
                     .define("disabledReactions", Lists.newArrayList());
+            allowMaterialDeletion = builder.comment("If set to true, will permit the use of the /reactive material remove and reset commands, which permanently erase materials from the world. THIS CANNOT BE REVERSED without a backup, use only if necessary! [Default: false]")
+                    .define("allowMaterialDeletion", false);
             builder.pop();
         }
     }

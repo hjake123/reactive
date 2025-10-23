@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.blocks;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.be.DeskBlockEntity;
 import dev.hyperlynx.reactive.menu.DeskMenu;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -86,14 +89,14 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
 
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        LazyOptional<IItemHandler> handler = level.getCapability(ForgeCapabilities.ITEM_HANDLER);
-        if(handler.isPresent()) {
+        if (level.getBlockEntity(pos) instanceof DeskBlockEntity desk) {
             return new SimpleMenuProvider(
                     ((container_id, player_inventory, player) ->
-                            new DeskMenu(container_id, player_inventory, handler.orElseThrow(() -> new RuntimeException("Failed to retrieve item handler capability.")), ContainerLevelAccess.create(level, pos))),
+                            new DeskMenu(container_id, player_inventory, desk, ContainerLevelAccess.create(level, pos))),
                     Component.translatable("menu.title.reactive.desk")
             );
         }
+        ReactiveMod.LOGGER.error("Invalid desk block entity at {}", pos);
         return null;
     }
 
@@ -103,7 +106,7 @@ public class DeskBlock extends HorizontalDirectionalBlock implements EntityBlock
             splayer.openMenu(state.getMenuProvider(level, pos));
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
-        return InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
 
     @Override

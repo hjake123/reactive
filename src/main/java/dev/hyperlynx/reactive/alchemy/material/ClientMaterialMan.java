@@ -87,7 +87,17 @@ public class ClientMaterialMan {
 
     public static List<ResourceLocation> getKeysInDiscoveryOrder() {
         return data().materials.keySet().stream().sorted((left_id, right_id) ->
-                Math.toIntExact(data().materials.get(right_id).getDiscoveryTime() - data().materials.get(left_id).getDiscoveryTime())).toList();
+                toClampedInt(data().materials.get(right_id).getDiscoveryTime() - data().materials.get(left_id).getDiscoveryTime())).toList();
+    }
+
+    private static int toClampedInt(long value) {
+        if (value > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        } else if (value < Integer.MIN_VALUE) {
+            return Integer.MIN_VALUE;
+        } else {
+            return Math.toIntExact(value);
+        }
     }
 
     public static void handleMaterialBESync(ResourceLocation material_id, BlockPos pos) {

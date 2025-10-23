@@ -2,9 +2,6 @@ package dev.hyperlynx.reactive;
 
 import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.alchemy.Powers;
-import dev.hyperlynx.reactive.alchemy.material.BuiltInMaterials;
-import dev.hyperlynx.reactive.alchemy.material.MaterialData;
-import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
@@ -30,10 +27,7 @@ import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeSerialize
 import dev.hyperlynx.reactive.integration.jsonthings.ReactiveJsonThingsPlugin;
 import dev.hyperlynx.reactive.integration.kubejs.events.EventTransceiver;
 import dev.hyperlynx.reactive.integration.pehkui.ReactivePehkuiPlugin;
-import dev.hyperlynx.reactive.net.material.MaterialBESyncMessage;
-import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
-import dev.hyperlynx.reactive.net.material.MaterialDataSyncRequest;
-import dev.hyperlynx.reactive.net.material.MaterialRenameMessage;
+import dev.hyperlynx.reactive.net.material.*;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltHeightMessage;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltVelocityMessage;
 import dev.hyperlynx.reactive.net.rxn.*;
@@ -126,6 +120,7 @@ public class Registration {
         ENTITY_DATA_SERIALIZERS.register(bus);
         ENTITY_TYPES.register(bus);
         MaterialProperties.PROPERTIES.register(bus);
+        MENUS.register(bus);
         bus.register(Registration.class);
         if(ModList.get().isLoaded("jsonthings")){
             ReactiveJsonThingsPlugin.registerParser(bus);
@@ -715,6 +710,12 @@ public class Registration {
                 HoverQuiltHeightMessage::encoder,
                 HoverQuiltHeightMessage::decoder,
                 HoverQuilt::handleHeightPacket);
+
+
+        GENERAL_CHANNEL.registerMessage(index++, MaterialRenameScreenMessage.class,
+                MaterialRenameScreenMessage::encoder,
+                MaterialRenameScreenMessage::decoder,
+                MaterialRenameScreenMessage::handler);
 
         ReactiveMod.LOGGER.debug("Registered {} messages", index);
     }
