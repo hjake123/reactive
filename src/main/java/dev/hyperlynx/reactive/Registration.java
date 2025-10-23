@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
+import dev.hyperlynx.reactive.client.renderers.HoverQuiltRenderer;
 import dev.hyperlynx.reactive.cmd.PowerArgumentInfo;
 import dev.hyperlynx.reactive.cmd.PowerArgumentType;
 import dev.hyperlynx.reactive.enchants.AOEStaffEnchantment;
@@ -709,7 +710,7 @@ public class Registration {
         GENERAL_CHANNEL.registerMessage(index++, HoverQuiltHeightMessage.class,
                 HoverQuiltHeightMessage::encoder,
                 HoverQuiltHeightMessage::decoder,
-                HoverQuilt::handleHeightPacket);
+                HoverQuiltRenderer::handleHeightPacket);
 
 
         GENERAL_CHANNEL.registerMessage(index++, MaterialRenameScreenMessage.class,

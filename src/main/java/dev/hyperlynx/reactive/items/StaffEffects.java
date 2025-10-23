@@ -1,7 +1,9 @@
 package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.blocks.AirLightBlock;
+import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.ConfigMan;
@@ -187,9 +189,9 @@ public class StaffEffects {
     }
 
     public static void living(Player user){
+        AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
+        aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
         if (user.level().random.nextFloat() < 0.4) {
-            AABB aoe = new AABB(user.position().subtract(1, 1, 1), user.position().add(1, 1, 1));
-            aoe = aoe.inflate(ConfigMan.COMMON.vitalStaffRange.get());
             List<LivingEntity> nearby_ents = user.level().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : nearby_ents) {
                 boolean has_regen = false, has_hp_up = false;
@@ -210,10 +212,7 @@ public class StaffEffects {
             }
         }
 
-        for(int i = 0; i < 10; i++){
-            user.level().addParticle(ParticleTypes.CRIMSON_SPORE, user.getRandomX(5.0), user.getY(),
-                    user.getRandomZ(5.0), 0, 0, 0);
-        }
-        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.PLAYERS, 1F, 1f);
+        ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), user.level().random.nextFloat() > 0.2, true), aoe.deflate(3.0), 5);
+        user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.7F, 1.3f);
     }
 }

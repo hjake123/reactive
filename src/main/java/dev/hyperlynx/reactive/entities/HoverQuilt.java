@@ -219,18 +219,16 @@ public class HoverQuilt extends Entity {
         return super.getDismountLocationForPassenger(passenger);
     }
 
-    public static void handleHeightPacket(HoverQuiltHeightMessage payload, Supplier<NetworkEvent.Context> context) {
-        context.get().enqueueWork(() -> {
-            var vehicle = context.get().getSender().level().getEntity(payload.id());
-            if(vehicle instanceof HoverQuilt quilt) {
-                quilt.client_position_lock = false;
-                quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
-                quilt.client_position_lock = true;
-                quilt.setDeltaMovement(0, 0, 0);
-                quilt.setOldPosAndRot();
-                quilt.lerpTo(quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot(), 1, false);
-            }
-        });
+    public static void handleHeightUpdate(HoverQuiltHeightMessage payload, Level level) {
+        var vehicle = level.getEntity(payload.id());
+        if(vehicle instanceof HoverQuilt quilt) {
+            quilt.client_position_lock = false;
+            quilt.setPos(quilt.getX(), payload.height(), quilt.getZ());
+            quilt.client_position_lock = true;
+            quilt.setDeltaMovement(0, 0, 0);
+            quilt.setOldPosAndRot();
+            quilt.lerpTo(quilt.getX(), payload.height(), quilt.getZ(), quilt.getYRot(), quilt.getXRot(), 1, false);
+        }
     }
 
     @Override
