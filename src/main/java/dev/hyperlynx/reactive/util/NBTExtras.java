@@ -26,12 +26,12 @@ public class NBTExtras {
                 ReactiveMod.LOGGER.error("Skipping bad entry: {}", tag.toString());
                 continue;
             }
-            map.put(t_serializer.decode(entry.getCompound("key")), u_serializer.decode(entry.getCompound("value")));
+            map.put(t_serializer.decode(entry.get("key")), u_serializer.decode(entry.get("value")));
         }
         return map;
     }
 
-    public static final NBTSerializer<Integer> INT = new NBTSerializer<Integer>() {
+    public static final NBTSerializer<Integer> INT = new NBTSerializer<>() {
         @Override
         public Tag encode(Integer data) {
             return IntTag.valueOf(data);
@@ -39,7 +39,7 @@ public class NBTExtras {
 
         @Override
         public @Nullable Integer decode(Tag input) {
-            if(!(input instanceof IntTag i)) {
+            if (!(input instanceof IntTag i)) {
                 return null;
             }
             return i.getAsInt();

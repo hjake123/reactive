@@ -294,8 +294,8 @@ public class MaterialFormulaMaps {
         //noinspection deprecation
         new MapBuilder<>(BASE_YIELDS)
                 .add(Registration.SALT_BLOCK_ITEM, new YieldEntry(64, 1, "salt", 1.0F), false)
-//                .add(Registration.ADEPT_SALT_BLOCK_ITEM, new YieldEntry(32, 4, "squares", 1.33F), false)
-//                .add(Registration.CREATION_SALT_BLOCK_ITEM, new YieldEntry(16, 16, "static", 2.0F), false)
+                .add(Registration.ADEPT_SALT_BLOCK_ITEM, new YieldEntry(32, 4, "squares", 1.33F), false)
+                .add(Registration.CREATION_SALT_BLOCK_ITEM, new YieldEntry(16, 16, "static", 2.0F), false)
                 .add(Items.WHITE_WOOL.builtInRegistryHolder().key().location(), new YieldEntry(64, 1, "wool", 0.0F), false)
         ;
     }

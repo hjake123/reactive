@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.alchemy.material.ClientMaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialData;
+import dev.hyperlynx.reactive.blocks.MaterialBlock;
 import dev.hyperlynx.reactive.client.gui.DeskScreen;
 import dev.hyperlynx.reactive.client.models.HoverQuiltModel;
 import dev.hyperlynx.reactive.client.particles.*;
@@ -14,7 +15,6 @@ import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -90,6 +90,14 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         event.register(MaterialItem::getItemColor, Registration.MATERIAL_ITEM.get());
+    }
+
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register((state, getter, pos, index) -> {
+            assert getter != null;
+            return MaterialBlock.getBlockColor(getter, pos);
+        }, Registration.MATERIAL_BLOCK.get());
     }
 
 }
