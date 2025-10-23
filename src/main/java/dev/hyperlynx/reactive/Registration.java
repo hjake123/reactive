@@ -503,6 +503,8 @@ public class Registration {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
     public static final RegistryObject<Block> DUMMY_FAST_WATER = BLOCKS.register("fast_water",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
+    public static final RegistryObject<Block> DUMMY_SLOW_WATER = BLOCKS.register("slow_water",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.WATER)));
 
     //Register the recipe types and serializers.
     public static final RegistryObject<RecipeType<TransmuteRecipe>> TRANS_RECIPE_TYPE = RECIPE_TYPES.register("transmutation", () -> getRecipeType("transmutation"));

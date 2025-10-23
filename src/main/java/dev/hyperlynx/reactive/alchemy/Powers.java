@@ -3,6 +3,7 @@ package dev.hyperlynx.reactive.alchemy;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -30,6 +31,7 @@ public class Powers {
     public static final RegistryObject<Power> X_POWER = POWERS.register("esoteric_x", () -> new Power("esoteric_x", Registration.DUMMY_FAST_WATER, 0x9800FF, null));
     public static final RegistryObject<Power> Y_POWER = POWERS.register("esoteric_y", () -> new Power("esoteric_y", Registration.DUMMY_MAGIC_WATER,0xADEA12,null));
     public static final RegistryObject<Power> Z_POWER = POWERS.register("esoteric_z", () -> new Power("esoteric_z", Registration.DUMMY_NOISE_WATER,0xDACCE8, null));
+    public static final RegistryObject<Power> OMEN_POWER = POWERS.register("omen", () -> new Power("omen", Registration.DUMMY_SLOW_WATER, 0x2A4455, null));
     public static final RegistryObject<Power> ASTRAL_POWER = POWERS.register("astral", () -> new Power("astral", Registration.DUMMY_MAGIC_WATER,0xE9D7FA, null));
 
 }

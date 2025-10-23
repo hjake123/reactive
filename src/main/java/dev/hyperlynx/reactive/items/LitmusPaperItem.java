@@ -2,7 +2,9 @@ package dev.hyperlynx.reactive.items;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
@@ -37,6 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class LitmusPaperItem extends Item {
     public static final String TAG_MEASUREMENT = "Measurement";
@@ -120,6 +123,9 @@ public class LitmusPaperItem extends Item {
             return InteractionResult.PASS;
         }
 
+        if(context.getPlayer() instanceof ServerPlayer player && crucible.getPowerLevel(Powers.OMEN_POWER.get()) > 0) {
+            CriteriaTriggers.ISOLATE_OMEN.trigger(player);
+        }
         takeMeasurement(context.getItemInHand(), crucible);
 
         return InteractionResult.SUCCESS;

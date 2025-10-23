@@ -3,7 +3,9 @@
   "ingredient": {
     "item": "reactive:gold_foam"
   },
-  "result": "minecraft:gold_nugget",
+  "result": {
+    "item": "reactive:gold_thread"
+  },
   "experience": 0,
   "cookingtime": 20
 }

@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.advancements;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {
@@ -29,7 +30,7 @@ public class CriteriaTriggers {
     public static final FlagCriterion DISCOVER_MATERIAL = new FlagCriterion(ReactiveMod.location("discover_material_criterion"));
     public static final FlagCriterion GOLD_THREAD_REACTION = new FlagCriterion(ReactiveMod.location("see_gold_thread_reaction_criterion"));
     public static final FlagCriterion THROW_FLASK = new FlagCriterion(ReactiveMod.location("throw_flask_criterion"));
-
+    public static final FlagCriterion ISOLATE_OMEN = new FlagCriterion(ReactiveMod.location("isolate_omen_criterion"));
     public static final ReactionCriterion REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("reaction"));
     public static final ReactionCriterion PERFECT_REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("perfect_reaction"));
 
@@ -62,5 +63,6 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(DISCOVER_MATERIAL));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(GOLD_THREAD_REACTION));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(THROW_FLASK));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(ISOLATE_OMEN));
     }
 }

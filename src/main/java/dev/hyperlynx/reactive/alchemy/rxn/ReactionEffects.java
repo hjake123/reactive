@@ -412,4 +412,12 @@ public class ReactionEffects {
         Vec3 beam_target = pos.getCenter().add(new Vec3(direction.step()).scale(0.3));
         ParticleScribe.drawParticleLine(level, new EnergyParticle.Options(0.2F, Powers.Z_POWER.get().getColor(), beam_target, false), reactor.getBlockPos().getCenter(), beam_target, 50, 0.05F);
     }
+
+    public static void omenSettling(Reactor reactor){
+        if(reactor.getLevel().random.nextFloat() < 0.1F){
+            reactor.addPower(Powers.CURSE_POWER.get(), 1);
+        }
+        reactor.addPower(Powers.SOUL_POWER.get(), 2);
+    }
+
 }

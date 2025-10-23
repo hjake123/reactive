@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:soul_fire_base_blocks",
+    {
+      "id": "malum:umbral_spirit",
+      "required": false
+    }
+  ]
+}

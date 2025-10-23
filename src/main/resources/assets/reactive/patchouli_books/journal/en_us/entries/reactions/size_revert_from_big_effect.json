@@ -3,6 +3,7 @@
   "icon": "minecraft:paper",
   "category": "reactive:reactions",
   "advancement": "reactive:reactions/size_revert_effect_2",
+  "secret": true,
   "pages": [
     {
       "type": "patchouli:text",

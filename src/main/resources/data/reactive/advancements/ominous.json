@@ -1,0 +1,8 @@
+{
+  "parent": "reactive:make_crucible",
+  "criteria": {
+    "measure_omen": {
+      "trigger": "reactive:isolate_omen_criterion"
+    }
+  }
+}
