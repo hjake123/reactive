@@ -26,6 +26,8 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
     private final String TARGET_POS_TAG = "Target";
     private final String TARGET_DIMENSION_TAG = "Dimension";
     private final String COOLDOWN_TAG = "Cooldown";
+    private static final int STARTUP_DURATION = 50;
+    private int startup_timer = 0;
 
     public GatewayBlockEntity(BlockPos pos, BlockState blockState) {
         super(Registration.GATEWAY_BE.get(), pos, blockState);
@@ -44,6 +46,9 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         }
         if(level.isClientSide()){
             gateway.tick_count++;
+            if(gateway.startup_timer < STARTUP_DURATION) {
+                gateway.startup_timer++;
+            }
         } else if(gateway.isOnCooldown()){
             gateway.warp_cooldown--;
         }
@@ -51,6 +56,16 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
 
     public float totalTick(float partialTick) {
         return (float) tick_count + partialTick;
+    }
+
+    public float startupProportion(float partialTick) {
+        if(startup_timer >= STARTUP_DURATION) {
+            return 1.0F;
+        }
+        float x = (startup_timer + partialTick) / STARTUP_DURATION;
+        float c1 = 1.70158F;
+        float c3 = c1 + 1;
+        return (float) (1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2)); // https://easings.net/#easeOutBack
     }
 
     public void setCooldown(int cooldown){
@@ -80,7 +95,7 @@ public class GatewayBlockEntity extends TheEndPortalBlockEntity {
         }catch(ClassCastException exception){
             return;
         }
-        ResourceLocation location = new ResourceLocation(tag.get(TARGET_DIMENSION_TAG).getAsString());
+        ResourceLocation location = ResourceLocation.parse(tag.getString(TARGET_DIMENSION_TAG));
         target = GlobalPos.of(ResourceKey.create(Registries.DIMENSION, location), pos);
         warp_cooldown = tag.getInt(COOLDOWN_TAG);
     }

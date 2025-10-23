@@ -75,7 +75,7 @@ public class Power {
     }
 
     public static TagKey<Item> getSourceTag(ResourceLocation location){
-        return ItemTags.create(new ResourceLocation(location.getNamespace(), location.getPath() + "_sources"));
+        return ItemTags.create(ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_sources"));
     }
 
     // Searches the Power Registry to locate the power referred to by the name in the tag.
@@ -87,7 +87,7 @@ public class Power {
         String key = tag.getString(power_key);
         ResourceLocation location;
         if(key.contains(":")){
-            location = new ResourceLocation(key);
+            location = ResourceLocation.parse(key);
         }else{
             location = ReactiveMod.location(key);
         }
