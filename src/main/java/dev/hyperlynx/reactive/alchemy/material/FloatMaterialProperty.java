@@ -5,6 +5,10 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.FloatFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
+import dev.hyperlynx.reactive.util.Color;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -28,5 +32,17 @@ public class FloatMaterialProperty extends MaterialProperty<Float>{
             value *= float_outcome.calculate(formula);
         }
         return value;
+    }
+
+    @Override
+    public void save(CompoundTag tag, Object value) {
+        if(value instanceof Float f) {
+            tag.put(getTagName(), FloatTag.valueOf(f));
+        }
+    }
+
+    @Override
+    public Float fromTag(CompoundTag tag) {
+        return tag.getFloat(getTagName());
     }
 }

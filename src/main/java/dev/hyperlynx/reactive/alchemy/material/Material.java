@@ -46,6 +46,9 @@ public class Material {
             if(data.original_formula != null) {
                 tag.put("formula", Formula.SERIALIZER.encode(data.original_formula));
             }
+            for(MaterialProperty<?> property : data.properties.keySet()) {
+                property.save(tag, data.properties.get(property));
+            }
             return tag;
         }
 
@@ -54,8 +57,14 @@ public class Material {
             if(!(input instanceof CompoundTag compound)) {
                 return null;
             }
+            Reference2ObjectMap<MaterialProperty<?>, Object> properties = new Reference2ObjectArrayMap<>();
+            for(MaterialProperty<?> property : MaterialProperties.PROPERTY_SUPPLIER.get().getValues()) {
+                if(compound.contains(property.getTagName())) {
+                    properties.put(property, property.fromTag(compound));
+                }
+            }
             return new Material(
-                    null,
+                    properties,
                     compound.getString("name"),
                     compound.contains("formula") ? Formula.SERIALIZER.decode(compound.getCompound("formula")) : null,
                     compound.contains("discoverer") ? Discoverer.SERIALIZER.decode(compound.getCompound("discoverer")) : null,

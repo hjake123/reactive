@@ -4,6 +4,9 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.IntegerFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -26,5 +29,17 @@ public class IntMaterialProperty extends MaterialProperty<Integer>{
             return 0;
         }
         return outcome.calculate(formula);
+    }
+
+    @Override
+    public void save(CompoundTag tag, Object value) {
+        if(value instanceof Integer i) {
+            tag.put(getTagName(), IntTag.valueOf(i));
+        }
+    }
+
+    @Override
+    public Integer fromTag(CompoundTag tag) {
+        return tag.getInt(getTagName());
     }
 }

@@ -4,6 +4,7 @@ import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.net.material.MaterialDataSyncMessage;
 import dev.hyperlynx.reactive.util.NBTSerializer;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MaterialData extends SavedData {
@@ -29,11 +31,30 @@ public class MaterialData extends SavedData {
     private static final NBTSerializer<MaterialData> SERIALIZER_V1 = new NBTSerializer<>() {
         @Override
         public CompoundTag encode(MaterialData data) {
-            return null;
+            CompoundTag tag = new CompoundTag();
+            for(ResourceLocation id : data.materials().keySet()) {
+                tag.put(id.toString(), Material.SERIALIZER.encode(data.materials.get(id)));
+            }
+            return tag;
         }
 
         @Override
         public @Nullable MaterialData decode(Tag input) {
+            if(input instanceof CompoundTag compound_input) {
+                Map<ResourceLocation, Material> materials = new HashMap<>(compound_input.getAllKeys().size());
+                for(String key : compound_input.getAllKeys()) {
+                    try {
+                        ResourceLocation id = ResourceLocation.parse(key);
+                        Material material = Material.SERIALIZER.decode(compound_input.get(key));
+                        materials.put(id, material);
+                    } catch (ResourceLocationException exception) {
+                        ReactiveMod.LOGGER.error("Error loading material data: incorrect format for id:", exception);
+                    }
+                }
+                MaterialData data = new MaterialData();
+                data.materials.putAll(materials);
+                return data;
+            }
             return null;
         }
     };

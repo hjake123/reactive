@@ -97,7 +97,7 @@ public class MaterialMan {
         // Retrieve the base item's yield entry
         YieldEntry yield  = MaterialFormulaMaps.BASE_YIELDS.get(formula.base_material().builtInRegistryHolder().key().location());
         if(yield == null) {
-            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getName(formula.base_material().getDefaultInstance())  +") with no defined yield! This shouldn't have been possible...");
+            throw new IllegalStateException("Tried to make a material using a base (" + formula.base_material().getName(formula.base_material().getDefaultInstance()).getString()  +") with no defined yield! This shouldn't have been possible...");
         }
 
         // Construct and add the new material

@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.material.BuiltInMaterials;
 import dev.hyperlynx.reactive.alchemy.material.MaterialData;
 import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
+import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.be.*;
 import dev.hyperlynx.reactive.blocks.*;
@@ -663,6 +664,7 @@ public class Registration {
             ReactiveKubeJSPlugin.registerMessages();
         }
         CriteriaTriggers.enqueue(evt);
+        MaterialFormulaMaps.init();
         int index = 0;
         GENERAL_CHANNEL.registerMessage(index++, LitmusScreenMessage.class,
                 LitmusScreenMessage::encoder,

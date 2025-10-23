@@ -5,6 +5,8 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import dev.hyperlynx.reactive.alchemy.material.formula.StringFormulaOutcome;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -31,5 +33,17 @@ public class StringMaterialProperty extends MaterialProperty<String>{
             }
         }
         return "";
+    }
+
+    @Override
+    public void save(CompoundTag tag, Object value) {
+        if(value instanceof String string) {
+            tag.put(getTagName(), StringTag.valueOf(string));
+        }
+    }
+
+    @Override
+    public String fromTag(CompoundTag tag) {
+        return tag.getString(getTagName());
     }
 }

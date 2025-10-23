@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import dev.hyperlynx.reactive.alchemy.material.formula.PropertyFormulaRequirements;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -35,4 +36,17 @@ public abstract class MaterialProperty<T> {
     }
 
     public abstract T instance(Map<Power, Integer> formula);
+
+    protected ResourceLocation getId() {
+        return MaterialProperties.PROPERTY_SUPPLIER.get().getKey(this);
+    }
+
+    protected String getTagName() {
+        ResourceLocation id = getId();
+        return id.getNamespace() + "_" + id.getPath();
+    }
+
+    public abstract void save(CompoundTag tag, Object value);
+
+    public abstract T fromTag(CompoundTag tag);
 }

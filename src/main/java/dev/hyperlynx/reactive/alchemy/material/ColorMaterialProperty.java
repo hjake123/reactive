@@ -2,6 +2,9 @@ package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.Color;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.StringTag;
 
 import java.util.Map;
 
@@ -22,5 +25,17 @@ public class ColorMaterialProperty extends MaterialProperty<Color> {
         }
         mix_color.setMixColor(Color.white(), formula, totalpp, Math.max(1600, totalpp));
         return mix_color;
+    }
+
+    @Override
+    public void save(CompoundTag tag, Object value) {
+        if(value instanceof Color color) {
+            tag.put(getTagName(), IntTag.valueOf(color.hex()));
+        }
+    }
+
+    @Override
+    public Color fromTag(CompoundTag tag) {
+        return new Color(tag.getInt(getTagName()));
     }
 }

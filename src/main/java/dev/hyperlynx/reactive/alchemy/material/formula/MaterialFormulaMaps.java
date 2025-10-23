@@ -18,7 +18,7 @@ public class MaterialFormulaMaps {
     public static final Map<ResourceLocation, List<FormulaOutcome>> FORMULA_OUTCOME_MAP = new HashMap<>();
     public static final Map<ResourceLocation, YieldEntry> BASE_YIELDS = new HashMap<>();
 
-    protected void init() {
+    public static void init() {
         new MapBuilder<>(PROPERTY_FORMULA_MAP)
                 .add(MaterialProperties.MAGMA_STEP, new PropertyFormulaRequirements(List.of(
                         new PropertyFormulaRequirements.Part(Powers.BLAZE_POWER.getId(),
