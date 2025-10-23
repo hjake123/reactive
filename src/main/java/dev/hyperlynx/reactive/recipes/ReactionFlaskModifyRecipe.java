@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.recipes;
 
+import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import dev.hyperlynx.reactive.items.ReactionFlaskItem;
 import net.minecraft.core.NonNullList;
@@ -27,6 +28,9 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
         boolean has_volt_cell = false;
         boolean has_duplicate_items = false;
         for(ItemStack stack : input.getItems()) {
+            if(stack.isEmpty()) {
+                continue;
+            }
             if(stack.is(Registration.REACTION_FLASK_ITEM.get()) && ReactionFlaskItem.Contents.hasContents(stack)) {
                 if(has_reaction_flask) {
                     has_duplicate_items = true;
@@ -56,7 +60,8 @@ public class ReactionFlaskModifyRecipe extends CustomRecipe {
             }
         }
         if(contents == null) {
-            throw new RuntimeException("Reaction flask with no contents was allowed to assemble a flask modify recipe");
+            ReactiveMod.LOGGER.error("Reaction flask crafting failed: flask had null contents");
+            return ItemStack.EMPTY;
         }
         ItemStack flask = Registration.REACTION_FLASK_ITEM.get().getDefaultInstance();
         ReactionFlaskItem.Contents new_contents = new ReactionFlaskItem.Contents(contents.powers(), true);

@@ -5,12 +5,21 @@ import dev.hyperlynx.reactive.advancements.CriteriaTriggers;
 import dev.hyperlynx.reactive.advancements.FlagCriterion;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
+import dev.hyperlynx.reactive.alchemy.material.MaterialMan;
+import dev.hyperlynx.reactive.alchemy.material.YieldEntry;
+import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
+import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
+import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionStatusEntry;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
+import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import dev.hyperlynx.reactive.blocks.DisplacedBlock;
 import dev.hyperlynx.reactive.blocks.IncompleteStaffBlock;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.entities.ReactorEntity;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.items.LitmusPaperItem;
+import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.ConfigMan;
 import dev.hyperlynx.reactive.util.HyperPortalShape;
@@ -22,6 +31,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -156,6 +166,27 @@ public class SpecialCaseMan {
             if((e.getItem().is(Registration.MOTION_SALT_BLOCK_ITEM.get()) || e.getItem().is(Registration.FRAMED_MOTION_SALT_BLOCK_ITEM.get()))
                     && c.electricCharge > 0) {
                 displaceNearby(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(Registration.INERT_CRYSTAL.get()))) {
+                preventReactions(c);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if((e.getItem().is(Registration.GOLD_THREAD.get()))) {
+                expelReaction(c, e);
+                return true;
+            }
+            return false;
+        });
+        DISSOLVE_SPECIAL_CASES.add((c, e) -> {
+            if(MaterialFormulaMaps.BASE_YIELDS.containsKey(e.getItem().getItem().builtInRegistryHolder().key().location())) {
+                saltMaterialCraft(c, e);
                 return true;
             }
             return false;
@@ -597,6 +628,78 @@ public class SpecialCaseMan {
             if(!l.isClientSide)
                 FlagCriterion.triggerForNearbyPlayers((ServerLevel) l, CriteriaTriggers.PORTAL_FREEZE_TRIGGER, p, 9);
         }
+    }
+
+    private static void preventReactions(CrucibleBlockEntity crucible){
+        crucible.reactions_paused = true;
+    }
+
+    private static void expelReaction(CrucibleBlockEntity crucible, ItemEntity thread){
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
+        boolean is_reactive = false;
+        for(ReactionStatusEntry entry : crucible.getReactionStatus()){
+            if(entry.status().equals(Reaction.Status.REACTING)){
+                is_reactive = true;
+                break;
+            }
+        }
+        if(!is_reactive){
+            return;
+        }
+
+        ReactorEntity entity = new ReactorEntity(Registration.REACTOR.get(), crucible.getLevel());
+        entity.setPos(crucible.getPos().add(0, 1.0, 0));
+        entity.setPowers(crucible.getPowerMap());
+        entity.setLifespan(600);
+        crucible.expendPower();
+        crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+        crucible.getLevel().addFreshEntity(entity);
+        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS);
+        crucible.getLevel().playSound((Entity) null, crucible.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 0.7F);
+        thread.getItem().shrink(1);
+        if(thread.getItem().getCount() == 0){
+            thread.kill();
+        }
+        if(crucible.getLevel() instanceof ServerLevel slevel) {
+            FlagCriterion.triggerForNearbyPlayers(slevel, CriteriaTriggers.GOLD_THREAD_REACTION, crucible.getBlockPos(), 9);
+        }
+    }
+
+    private static final int MATERIAL_CRAFT_MIN_POWER = 800;
+    private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
+        if(crucible.getLevel() == null) {
+            return;
+        }
+
+        if(crucible.getTotalPowerLevel() < MATERIAL_CRAFT_MIN_POWER && !(crucible.getPowerLevel(Powers.ACID_POWER.get()) > 10)) {
+            return;
+        }
+        ItemStack material_stack = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItem()));
+        MaterialItem.setMaterialId(material_stack, material_id);
+
+        int max_amount_used = 1;
+        int yield_multiplier = 1;
+        YieldEntry yield_entry = MaterialFormulaMaps.BASE_YIELDS.get(salt_item_entity.getItem().getItem().builtInRegistryHolder().key().location());
+        if(yield_entry != null) {
+            max_amount_used = yield_entry.max_input_items();
+            yield_multiplier = yield_entry.yield_per_input();
+        }
+        int amount_used = Math.min(salt_item_entity.getItem().getCount(), max_amount_used);
+        material_stack.setCount(amount_used * yield_multiplier);
+        salt_item_entity.getItem().shrink(amount_used);
+        if(salt_item_entity.getItem().getCount() <= 0) {
+            salt_item_entity.kill();
+        }
+
+        Vec3 in_crucible = crucible.getBlockPos().getCenter();
+        ItemEntity drop = new ItemEntity(crucible.getLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
+        crucible.getLevel().addFreshEntity(drop);
+        crucible.expendPower();
+        crucible.setDirty();
     }
 
 }

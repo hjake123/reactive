@@ -92,6 +92,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     public final SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader(); // Used for the Sculk Catalyst special case reaction.
     public List<ReactionStatusEntry> reaction_status = new ArrayList<>(); // Reaction states of the previous tick. Only updated on the server. Used by Litmus Paper.
     public List<String> reactions_to_render = new LinkedList<>(); // This is used by CrucibleRenderer to more render reactions, and is updated by a packet.
+    public boolean reactions_paused = false; // Set by the Inert Crystal special case. Inhibits all Reactions when true.
 
     public CrucibleBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CRUCIBLE_BE.get(), pos, state);
@@ -187,6 +188,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
 
                         // Spread Sculk, if applicable
                         crucible.sculkSpreader.updateCursors(level, crucible.getBlockPos(), level.random, true);
+
+                        // Reset reaction pause mechanic.
+                        crucible.reactions_paused = false;
                     }
 
                     case 4 -> {
@@ -228,6 +232,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
 
     public int getTickCount(){
         return tick_counter;
+    }
+
+    @Override
+    public boolean areReactionsPaused() {
+        return reactions_paused;
     }
 
     private static void checkIntegrity(Level level, BlockPos pos, BlockState state, CrucibleBlockEntity crucible) {
@@ -426,7 +435,6 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
                 }
 
             }
-
             crucible.gather_stage++;
         }
 
