@@ -27,7 +27,7 @@ public class MaterialListScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        list_panel = new MaterialsList(Minecraft.getInstance(), 165, this.getRectangle().height() - 40, 10, this.getRectangle().top() + 20, 32);
+        list_panel = new MaterialsList(Minecraft.getInstance(), 165, this.getRectangle().height() - 40, this.getRectangle().top() + 20, this.getRectangle().height() - 40, 32);
         list_panel.setLeftPos(this.getRectangle().getCenterInAxis(ScreenAxis.HORIZONTAL) - 165);
         this.addRenderableWidget(list_panel);
         formula_box = new BetterFittingMultiLineTextWidget(this.getRectangle().getCenterInAxis(ScreenAxis.HORIZONTAL) + 25, this.getRectangle().top() + 20, 150, this.getRectangle().height() - 40, Component.empty(), getMinecraft().font);
@@ -79,10 +79,16 @@ public class MaterialListScreen extends Screen {
                     this.addEntry(new MaterialEntry(material_id));
                 }
             }
+            setRenderTopAndBottom(false);
         }
 
         public int getRowWidth() {
             return 165;
+        }
+
+        @Override
+        protected int getScrollbarPosition() {
+            return getLeft() + getRowWidth() + 10;
         }
     }
 
@@ -119,6 +125,12 @@ public class MaterialListScreen extends Screen {
         @Override
         public @NotNull Component getNarration() {
             return material.getNameComponent();
+        }
+
+        @Override
+        public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+            setFocused(true);
+            return true;
         }
     }
 }

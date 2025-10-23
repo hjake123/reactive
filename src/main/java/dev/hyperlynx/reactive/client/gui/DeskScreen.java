@@ -24,8 +24,6 @@ import java.util.List;
 public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
     private static final ResourceLocation DESK_BACKGROUND_LOCATION = ReactiveMod.location("textures/gui/discovery_desk.png");
     private static final ResourceLocation VIEW_DISCOVERIES_BUTTON = ReactiveMod.location("textures/gui/discoveries_tab.png");
-//    private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_INACTIVE = ReactiveMod.location("discoveries_tab_inactive");
-//    private static final ResourceLocation VIEW_DISCOVERIES_BUTTON_FOCUSED = ReactiveMod.location("discoveries_tab_focused");
 
     final Button rename_button = new Button.Builder(Component.empty(),
             button -> {
@@ -38,7 +36,7 @@ public class DeskScreen extends AbstractContainerScreen<DeskMenu> {
                 }
             }).build();
 
-    final Button discoveries_button = new ImageButton(0, 0, 20, 20, 0, 0,0, VIEW_DISCOVERIES_BUTTON, 20, 20,
+    final Button discoveries_button = new ImageButton(0, 0, 20, 20, 0, 0,20, VIEW_DISCOVERIES_BUTTON, 20, 80,
             button -> ScreenOpener.materialList(), Component.translatable("button.reactive.discoveries"));
     BetterFittingMultiLineTextWidget readout;
     int slot_x;
