@@ -55,5 +55,6 @@ public class HoverQuiltRenderer extends EntityRenderer<HoverQuilt> implements Re
             assert Minecraft.getInstance().level != null;
             HoverQuilt.handleHeightUpdate(payload, Minecraft.getInstance().level);
         });
+        context.get().setPacketHandled(true);
     }
 }

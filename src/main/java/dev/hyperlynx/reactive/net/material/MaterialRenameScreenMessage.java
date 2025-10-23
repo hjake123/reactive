@@ -25,5 +25,6 @@ public record MaterialRenameScreenMessage(ResourceLocation material_id)  {
                 ScreenOpener.materialRename(material_id());
             }
         });
+        context.get().setPacketHandled(true);
     }
 }
