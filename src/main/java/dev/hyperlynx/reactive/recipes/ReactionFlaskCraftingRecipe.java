@@ -6,12 +6,14 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.items.ReactionFlaskItem;
+import dev.hyperlynx.reactive.util.VirtualCraftingContainer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -48,7 +50,7 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
         if(!input.getItem(0).is(Registration.INERT_CRYSTAL.get()) || !input.getItem(6).is(Registration.GOLD_THREAD.get())){
             return false;
         }
-        return input.getItem(4).is(POWER_BOTTLE_TAG);
+        return input.getItem(3).is(POWER_BOTTLE_TAG);
     }
 
     private boolean matchTwoWide(CraftingContainer input) {
@@ -71,17 +73,63 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
                 && input.getItem(5).is(POWER_BOTTLE_TAG);
     }
 
+    private int calculateWidth(CraftingContainer input) {
+        int width = 0;
+        if(!input.getItem(0).isEmpty() || !input.getItem(3).isEmpty() || !input.getItem(6).isEmpty()) {
+            // Left column is populated.
+            width++;
+        }
+        if(!input.getItem(1).isEmpty() || !input.getItem(4).isEmpty() || !input.getItem(7).isEmpty()) {
+            // Center is populated.
+            width++;
+        }
+        if(!input.getItem(2).isEmpty() || !input.getItem(5).isEmpty() || !input.getItem(8).isEmpty()) {
+            // Right column is populated.
+            width++;
+        }
+        return width;
+    }
+
+    private CraftingContainer leftAdjustAndCopy(CraftingContainer input) {
+        CraftingContainer copy = new VirtualCraftingContainer(input);
+        boolean left_column_is_empty = copy.getItem(0).isEmpty() && copy.getItem(3).isEmpty() && copy.getItem(6).isEmpty();
+        while(left_column_is_empty) {
+            // Shift all items to the left by one position and then check if the left column is still empty
+            // Copy center column to left
+            copy.setItem(0, copy.getItem(1));
+            copy.setItem(3, copy.getItem(4));
+            copy.setItem(6, copy.getItem(7));
+
+            // Copy right column to center
+            copy.setItem(1, copy.getItem(2));
+            copy.setItem(4, copy.getItem(5));
+            copy.setItem(7, copy.getItem(8));
+
+            // Delete right column
+            copy.setItem(2, ItemStack.EMPTY);
+            copy.setItem(5, ItemStack.EMPTY);
+            copy.setItem(8, ItemStack.EMPTY);
+
+            // Recheck left column
+            left_column_is_empty = copy.getItem(0).isEmpty() && copy.getItem(3).isEmpty() && copy.getItem(6).isEmpty();
+        }
+        return copy;
+    }
+
     @Override
-    public boolean matches(CraftingContainer input, @NotNull Level level) {
-        if(input.getHeight() == 3 && input.getWidth() == 1){
-            return matchOneWide(input);
+    public boolean matches(@NotNull CraftingContainer input, @NotNull Level level) {
+        int width = calculateWidth(input);
+        CraftingContainer adjusted = leftAdjustAndCopy(input);
+        if(width == 1){
+            return matchOneWide(adjusted);
         }
-        if(input.getHeight() == 3 && input.getWidth() == 2){
-            return matchTwoWide(input);
+        if(width == 2){
+            return matchTwoWide(adjusted);
         }
-        if(input.getHeight() == 3 && input.getWidth() == 3){
-            return matchThreeWide(input);
+        if(width == 3){
+            return matchThreeWide(adjusted);
         }
+        // ...how?
         return false;
     }
 
