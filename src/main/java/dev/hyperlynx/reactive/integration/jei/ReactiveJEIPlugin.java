@@ -2,13 +2,18 @@ package dev.hyperlynx.reactive.integration.jei;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
+import dev.hyperlynx.reactive.alchemy.AlchemyTags;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipe;
 import dev.hyperlynx.reactive.integration.jei.bottles.PowerBottleRecipeCategory;
+import dev.hyperlynx.reactive.items.MaterialItem;
+import dev.hyperlynx.reactive.items.ReactionFlaskItem;
 import dev.hyperlynx.reactive.items.StaffItem;
 import dev.hyperlynx.reactive.recipes.DissolveRecipe;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.recipes.ReactionFlaskCraftingRecipe;
+import dev.hyperlynx.reactive.recipes.TransmuteRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -20,11 +25,20 @@ import mezz.jei.api.registration.*;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -124,6 +138,8 @@ public class ReactiveJEIPlugin implements IModPlugin {
                 Registration.ACID_BOTTLE.get(), Registration.VERDANT_BOTTLE.get(), Registration.SOUL_BOTTLE.get(),
                 Registration.VITAL_BOTTLE.get(), Registration.MNEMONIC_BULB_ITEM.get());
         addPowerDescriptions(registration);
+        addMaterialRecipes(registration);
+        addReactionFlaskRecipes(registration);
     }
 
     private void addGenericDescriptions(IRecipeRegistration registration, Item... items){
@@ -175,5 +191,106 @@ public class ReactiveJEIPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), DISSOLVE_CATEGORY.getRecipeType());
         registration.addRecipeCatalyst(Registration.CRUCIBLE_ITEM.get().getDefaultInstance(), TRANSMUTE_CATEGORY.getRecipeType());
+    }
+
+    private void addReactionFlaskRecipes(IRecipeRegistration registration) {
+        ItemStack result_flask = Registration.REACTION_FLASK_ITEM.get().getDefaultInstance();
+        ReactionFlaskItem.Contents empty_contents = new ReactionFlaskItem.Contents(Map.of(), false);
+        empty_contents.saveToStack(result_flask);
+
+        ItemStack result_flask_charged = result_flask.copy();
+        ReactionFlaskItem.Contents charged_contents = new ReactionFlaskItem.Contents(Map.of(), true);
+        charged_contents.saveToStack(result_flask_charged);
+
+        registration.addRecipes(RecipeTypes.CRAFTING, List.of(
+                new ShapedRecipe(ReactiveMod.location("single_flask_craft"), "reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                                3, 3,
+                                NonNullList.of(Ingredient.EMPTY,
+                                        Ingredient.EMPTY, Ingredient.of(Registration.INERT_CRYSTAL.get()), Ingredient.EMPTY,
+                                        Ingredient.EMPTY, Ingredient.of(AlchemyTags.powerBottles), Ingredient.EMPTY,
+                                        Ingredient.EMPTY, Ingredient.of(Registration.GOLD_THREAD.get()), Ingredient.EMPTY),
+                                result_flask),
+
+                new ShapedRecipe(ReactiveMod.location("two_flask_craft"), "reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                        3, 3,
+                        NonNullList.of(Ingredient.EMPTY,
+                                Ingredient.EMPTY, Ingredient.of(Registration.INERT_CRYSTAL.get()), Ingredient.EMPTY,
+                                Ingredient.of(AlchemyTags.powerBottles), Ingredient.of(AlchemyTags.powerBottles), Ingredient.EMPTY,
+                                Ingredient.EMPTY, Ingredient.of(Registration.GOLD_THREAD.get()), Ingredient.EMPTY),
+                        result_flask),
+
+                new ShapedRecipe(ReactiveMod.location("three_flask_craft"), "reactive:special_crafting_recipe_flask", CraftingBookCategory.MISC,
+                        3, 3,
+                        NonNullList.of(Ingredient.EMPTY,
+                                Ingredient.EMPTY, Ingredient.of(Registration.INERT_CRYSTAL.get()), Ingredient.EMPTY,
+                                Ingredient.of(AlchemyTags.powerBottles), Ingredient.of(AlchemyTags.powerBottles), Ingredient.of(AlchemyTags.powerBottles),
+                                Ingredient.EMPTY, Ingredient.of(Registration.GOLD_THREAD.get()), Ingredient.EMPTY),
+                        result_flask),
+
+                new ShapelessRecipe(ReactiveMod.location("special_crafting_recipe_flask"),
+                        "special_crafting_recipe_flask",
+                        CraftingBookCategory.MISC,
+                        result_flask_charged,
+                        NonNullList.of(Ingredient.EMPTY,
+                                Ingredient.of(result_flask),
+                                Ingredient.of(Registration.VOLT_CELL.get())))
+        ));
+    }
+
+    private void addMaterialRecipes(IRecipeRegistration registration) {
+//        ListTag lore_list_tag = new ListTag();
+//        lore_list_tag.add(StringTag.valueOf(Component.translatable("text.reactive.jei_material_tooltip").getString()));
+//        lore_list_tag.add(StringTag.valueOf(Component.translatable("text.reactive.jei_material_tooltip_1").getString()));
+//        lore_list_tag.add(StringTag.valueOf(Component.translatable("text.reactive.jei_material_tooltip_2").getString()));
+//        CompoundTag lore_tag = new CompoundTag();
+//        lore_tag.put("Lore", lore_list_tag);
+// Can't find a good way to get this to work! Seems like a JEI issue...
+
+        ItemStack salt_material_example = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        MaterialItem.setMaterialId(salt_material_example, ReactiveMod.location("example_salt"));
+
+        ItemStack adept_salt_material_example = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        MaterialItem.setMaterialId(adept_salt_material_example, ReactiveMod.location("example_adept_salt"));
+
+        ItemStack creation_salt_material_example = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        MaterialItem.setMaterialId(creation_salt_material_example, ReactiveMod.location("example_creation_salt"));
+
+        ItemStack wool_material_example = Registration.MATERIAL_ITEM.get().getDefaultInstance();
+        MaterialItem.setMaterialId(wool_material_example, ReactiveMod.location("example_wool"));
+
+        registration.addRecipes(TRANSMUTE_CATEGORY.getRecipeType(), List.of(
+                new TransmuteRecipe(
+                        ReactiveMod.location("material_crafting_demo.salt"),
+                        "material_crafting_demo",
+                        Ingredient.of(Registration.SALT_BLOCK.get()),
+                        salt_material_example,
+                        List.of(Powers.MIND_POWER.get()),
+                        10, 10, false
+                ),
+                new TransmuteRecipe(
+                        ReactiveMod.location("material_crafting_demo.adept_salt"),
+                        "material_crafting_demo",
+                        Ingredient.of(Registration.ADEPT_SALT_BLOCK.get()),
+                        adept_salt_material_example,
+                        List.of(Powers.SOUL_POWER.get()),
+                                10, 10, false
+                ),
+                new TransmuteRecipe(
+                        ReactiveMod.location("material_crafting_demo.creation_salt"),
+                        "material_crafting_demo",
+                        Ingredient.of(Registration.CREATION_SALT_BLOCK.get()),
+                        creation_salt_material_example,
+                        List.of(Powers.WARP_POWER.get()),
+                        10, 10, false
+                ),
+                new TransmuteRecipe(
+                        ReactiveMod.location("material_crafting_demo.wool"),
+                        "material_crafting_demo",
+                        Ingredient.of(Items.WHITE_WOOL),
+                        wool_material_example,
+                        List.of(Powers.LIGHT_POWER.get()),
+                        10, 10, false
+                )
+        ));
     }
 }

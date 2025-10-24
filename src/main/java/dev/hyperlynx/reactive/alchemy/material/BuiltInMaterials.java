@@ -25,7 +25,7 @@ public class BuiltInMaterials {
         ));
         addMaterial(map, "example_wool", "Example Dyed Wool", Map.of(
                 MaterialProperties.MODEL_NAME.get(), MaterialModel.WOOL.getSerializedName(),
-                MaterialProperties.COLOR.get(), new Color(0x7A82C4)
+                MaterialProperties.COLOR.get(), new Color(0xf6dab4)
         ));
     }
 

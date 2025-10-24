@@ -185,8 +185,9 @@ public class MaterialBlock extends Block implements EntityBlock {
         }
     }
 
+
     @Override
-    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction direction) { // Working!
+    public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
         return super.isFireSource(state, level, pos, direction) || material(level, pos).has(MaterialProperties.FIRE_SOURCE.get());
     }
 

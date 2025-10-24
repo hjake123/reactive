@@ -17,4 +17,5 @@ public class AlchemyTags {
     public static final TagKey<Block> displaceConductive = BlockTags.create(ReactiveMod.location("displacement_conductive"));
     public static final TagKey<Block> notRelocatable = BlockTags.create(ResourceLocation.fromNamespaceAndPath("neoforge", "relocation_not_supported"));
     public static final TagKey<Block> crucibleCanBecome = BlockTags.create(ReactiveMod.location("crucible_can_become"));
+    public static final TagKey<Item> powerBottles = ItemTags.create(ReactiveMod.location("power_bottles"));
 }
