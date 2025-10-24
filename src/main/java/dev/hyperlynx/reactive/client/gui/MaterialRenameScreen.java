@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 public class MaterialRenameScreen extends Screen {
     final ResourceLocation material_to_rename;
@@ -64,5 +65,14 @@ public class MaterialRenameScreen extends Screen {
         graphics.pose().scale(4, 4, 4); // Zoom in to make the material block preview bigger
         graphics.renderFakeItem(dummy_stack, this.width / 8 - 8, this.height / 8 - 17); // The pixel scaling is also altered by the zoom in
         graphics.pose().popPose();
+    }
+
+
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        if(name_box.isFocused() && pKeyCode != GLFW.GLFW_KEY_ESCAPE) {
+            // Don't send any other keyboard inputs when the name box is focused.
+            return name_box.keyPressed(pKeyCode, pScanCode, pModifiers);
+        }
+        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
     }
 }
