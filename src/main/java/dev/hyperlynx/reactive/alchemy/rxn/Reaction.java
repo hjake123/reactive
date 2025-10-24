@@ -170,7 +170,7 @@ public abstract class Reaction {
     public boolean isPerfect(Reactor reactor){
         // If reactor only has the same number of powers as the reagents, and the reaction could run, then it would be running with nothing extra.
         // Therefore, it is running 'perfectly'.
-        return reactor.getPowerMap().keySet().size() == reagents.size();
+        return reactor.getPowerMap().size() == reagents.size();
     }
 
     public MutableComponent getName() {

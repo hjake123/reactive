@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.alchemy.material.formula;
 import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.NBTExtras;
 import dev.hyperlynx.reactive.util.NBTSerializer;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

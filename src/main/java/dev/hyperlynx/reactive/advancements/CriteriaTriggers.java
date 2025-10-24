@@ -1,7 +1,6 @@
 package dev.hyperlynx.reactive.advancements;
 
 import dev.hyperlynx.reactive.ReactiveMod;
-import net.minecraft.advancements.CriterionTrigger;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {

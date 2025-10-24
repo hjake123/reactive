@@ -299,10 +299,8 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
         if (crucible.enderRiftStrength > 1)
             signal += level.random.nextInt(1, 7);
 
-        if(signal > 15)
-            return 15;
+        return Math.min(signal, 15);
 
-        return signal;
     }
 
     @Nullable

@@ -1,7 +1,5 @@
 package dev.hyperlynx.reactive.alchemy.material.formula;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.resources.ResourceLocation;
 

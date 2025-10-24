@@ -39,7 +39,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class LitmusPaperItem extends Item {
     public static final String TAG_MEASUREMENT = "Measurement";

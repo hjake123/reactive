@@ -4,7 +4,6 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.StringTag;
 
 import java.util.Map;
 

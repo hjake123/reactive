@@ -3,7 +3,6 @@ package dev.hyperlynx.reactive.alchemy;
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.Registration;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -21,7 +20,7 @@ public class Powers {
     public static final RegistryObject<Power> BLAZE_POWER = POWERS.register("blaze", () -> new Power("blaze", () -> Blocks.WATER, 0xFFA300, Registration.BLAZE_BOTTLE.get()));
     public static final RegistryObject<Power> MIND_POWER = POWERS.register("mind", () -> new Power("mind", Registration.DUMMY_MAGIC_WATER, 0x7A5BB5, Registration.MIND_BOTTLE.get()));
     public static final RegistryObject<Power> SOUL_POWER = POWERS.register("soul", () -> new Power("soul", Registration.DUMMY_FAST_WATER, 0x60F5FA, Registration.SOUL_BOTTLE.get()));
-    public static final RegistryObject<Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse", Registration.DUMMY_NOISE_WATER,0x2D231D, (Item) null));
+    public static final RegistryObject<Power> CURSE_POWER = POWERS.register("curse", () -> new Power("curse", Registration.DUMMY_NOISE_WATER,0x2D231D, null));
     public static final RegistryObject<Power> LIGHT_POWER = POWERS.register("light", () -> new Power("light", Registration.DUMMY_MAGIC_WATER,0xF6DAB4, Registration.LIGHT_BOTTLE.get()));
     public static final RegistryObject<Power> WARP_POWER = POWERS.register("warp", () -> new Power("warp", Registration.DUMMY_NOISE_WATER,0x118066, Registration.WARP_BOTTLE.get()));
     public static final RegistryObject<Power> VITAL_POWER = POWERS.register("vital", () -> new Power("vital", () -> Blocks.WATER,0xFF0606, Registration.VITAL_BOTTLE.get()));

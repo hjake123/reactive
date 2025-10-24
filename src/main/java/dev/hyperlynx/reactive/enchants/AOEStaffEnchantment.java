@@ -20,11 +20,6 @@ public class AOEStaffEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMaxLevel() {
-        return 1;
-    }
-
-    @Override
     public @NotNull String getDescriptionId() {
         return "enchantment.reactive.super_missile";
     }

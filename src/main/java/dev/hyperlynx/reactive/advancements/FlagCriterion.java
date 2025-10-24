@@ -29,7 +29,7 @@ public class FlagCriterion extends SimpleCriterionTrigger<FlagCriterion.FlagTrig
         }
     }
 
-    class FlagTriggerInstance extends AbstractCriterionTriggerInstance {
+    protected class FlagTriggerInstance extends AbstractCriterionTriggerInstance {
         public FlagTriggerInstance(ContextAwarePredicate pred) {
             super(crit_rl, pred);
         }
@@ -49,7 +49,7 @@ public class FlagCriterion extends SimpleCriterionTrigger<FlagCriterion.FlagTrig
         return new FlagTriggerInstance(pred);
     }
 
-    public @NotNull FlagCriterion.FlagTriggerInstance createInstance(ContextAwarePredicate pred) {
+    protected @NotNull FlagCriterion.FlagTriggerInstance createInstance(ContextAwarePredicate pred) {
         return new FlagTriggerInstance(pred);
     }
 

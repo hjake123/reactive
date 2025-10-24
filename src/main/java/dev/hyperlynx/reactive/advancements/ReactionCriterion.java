@@ -52,7 +52,7 @@ public class ReactionCriterion extends SimpleCriterionTrigger<ReactionCriterion.
         return crit_rl;
     }
 
-    class ReactionTriggerInstance extends AbstractCriterionTriggerInstance {
+    public class ReactionTriggerInstance extends AbstractCriterionTriggerInstance {
         String reaction_alias;
 
         public ReactionTriggerInstance(ContextAwarePredicate pred, String reaction_alias) {

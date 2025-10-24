@@ -17,7 +17,6 @@ import dev.hyperlynx.reactive.alchemy.material.MaterialProperties;
 import dev.hyperlynx.reactive.alchemy.material.MaterialProperty;
 import dev.hyperlynx.reactive.alchemy.rxn.Reaction;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
-import dev.hyperlynx.reactive.client.gui.MaterialRenameScreen;
 import dev.hyperlynx.reactive.items.MaterialItem;
 import dev.hyperlynx.reactive.items.WarpBottleItem;
 import dev.hyperlynx.reactive.net.material.MaterialRenameScreenMessage;

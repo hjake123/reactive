@@ -5,10 +5,8 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.alchemy.material.formula.FloatFormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.FormulaOutcome;
 import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;

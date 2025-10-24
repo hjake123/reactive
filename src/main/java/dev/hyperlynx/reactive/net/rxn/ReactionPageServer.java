@@ -35,7 +35,7 @@ public class ReactionPageServer {
             if (reaction instanceof CurseAssimilationReaction) {
                 formula.append(Component.translatable("docs.reactive.curse_label").getString());
             }
-            if (reaction.getReagents().keySet().isEmpty()) {
+            if (reaction.getReagents().isEmpty()) {
                 formula.append(Component.translatable("docs.reactive.any_label").getString());
             }
             formula.append(Component.translatable("docs.reactive.stimulus_label").getString());

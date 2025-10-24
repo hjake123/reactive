@@ -91,9 +91,9 @@ public class GatewayPlinthBlock extends Block {
                     return InteractionResult.PASS;
                 }
                 setGateway(level, pos.above(), warp_target, state);
-                level.playSound((Player) null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
-                level.playSound((Player) null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
-                level.playSound((Player) null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
+                level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                level.playSound(null, pos, SoundEvents.EVOKER_CAST_SPELL, SoundSource.BLOCKS, 0.9F, 0.75F);
+                level.playSound(null, pos, SoundEvents.BELL_RESONATE, SoundSource.BLOCKS, 0.3F, 1F);
                 player.setItemInHand(hand, Registration.QUARTZ_BOTTLE.get().getDefaultInstance());
                 return InteractionResult.SUCCESS;
             }

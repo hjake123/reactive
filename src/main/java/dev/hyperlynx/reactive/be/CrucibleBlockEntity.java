@@ -472,7 +472,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
                 // The special case may have removed the item entity; continue to the next if it has died.
                 if(!item_entity.isAlive()) continue;
 
-                changed = changed || tryTransmute(level, pos, state, crucible, ((ItemEntity) entity_inside));
+                changed = changed || tryTransmute(level, pos, state, crucible, item_entity);
                 changed = changed || tryReduceToPower(item_entity.getItem(), crucible);
 
                 // Remove entities that were completely transmuted or dissolved.
@@ -752,9 +752,9 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
             }
             Color pow_color = p.getColor();
             float pow_weight = getPowerLevel(p) / (float) getTotalVisiblePowerLevel();
-            next_mix_color.red += pow_color.red * pow_weight;
-            next_mix_color.green += pow_color.green * pow_weight;
-            next_mix_color.blue += pow_color.blue * pow_weight;
+            next_mix_color.red += (int) (pow_color.red * pow_weight);
+            next_mix_color.green += (int) (pow_color.green * pow_weight);
+            next_mix_color.blue += (int) (pow_color.blue * pow_weight);
         }
 
         // Adjust the tint to be proportional to the amount of the crucible's maximum currently in use.
