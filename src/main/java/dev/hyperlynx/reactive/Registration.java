@@ -639,7 +639,6 @@ public class Registration {
     public static final RegistryObject<RecipeType<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask", () -> getRecipeType("crafting_special_reaction_flask"));
     public static final RegistryObject<RecipeSerializer<ReactionFlaskCraftingRecipe>> REACTION_FLASK_RECIPE_SERIALIZER = RECIPE_SERIALIZERS.register("crafting_special_reaction_flask", () -> new SimpleCraftingRecipeSerializer<>(ReactionFlaskCraftingRecipe::new));
 
-
     public static final RegistryObject<MenuType<DeskMenu>> DESK_MENU = MENUS.register("desk", () ->
             new MenuType<>(DeskMenu::new, FeatureFlags.DEFAULT_FLAGS));
 

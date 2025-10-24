@@ -10,11 +10,17 @@ import java.util.List;
 
 public class VirtualCraftingContainer implements CraftingContainer {
     private final List<ItemStack> items = new ArrayList<>(9);
+    public final boolean all_empty;
 
     public VirtualCraftingContainer(CraftingContainer other) {
+        boolean all_empty = true;
         for(ItemStack stack : other.getItems()) {
             items.add(stack.copy());
+            if(!stack.isEmpty()) {
+                all_empty = false;
+            }
         }
+        this.all_empty = all_empty;
     }
 
     @Override

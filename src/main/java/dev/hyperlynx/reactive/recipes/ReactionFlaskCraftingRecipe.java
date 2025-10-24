@@ -91,7 +91,10 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     }
 
     private CraftingContainer leftAdjustAndCopy(CraftingContainer input) {
-        CraftingContainer copy = new VirtualCraftingContainer(input);
+        VirtualCraftingContainer copy = new VirtualCraftingContainer(input);
+        if(copy.all_empty) {
+            return copy;
+        }
         boolean left_column_is_empty = copy.getItem(0).isEmpty() && copy.getItem(3).isEmpty() && copy.getItem(6).isEmpty();
         while(left_column_is_empty) {
             // Shift all items to the left by one position and then check if the left column is still empty
