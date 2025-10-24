@@ -1,11 +1,15 @@
 package dev.hyperlynx.reactive.alchemy.material;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Mod.EventBusSubscriber
@@ -27,6 +31,11 @@ public class BuiltInMaterials {
                 MaterialProperties.MODEL_NAME.get(), MaterialModel.WOOL.getSerializedName(),
                 MaterialProperties.COLOR.get(), new Color(0xf6dab4)
         ));
+
+        // Accept materials from external sources (like e.g. KubeJS integration)
+        BuiltInMaterialEvent event = new BuiltInMaterialEvent();
+        MinecraftForge.EVENT_BUS.post(event);
+        map.putAll(event.getExternalMaterials());
     }
 
     public static Map<ResourceLocation, Material> generate() {
@@ -37,6 +46,20 @@ public class BuiltInMaterials {
 
     private static void addMaterial(Map<ResourceLocation, Material> map, String id, String name, Map<MaterialProperty<?>, Object> properties) {
         map.put(ReactiveMod.location(id), new Material(properties, name));
+    }
+
+    /**
+     * This event is fired on both sides after BuiltInMaterials constructs the native built-in materials.
+     * You can add new built-in materials using addMaterial().
+     */
+    public static class BuiltInMaterialEvent extends Event {
+        private final Map<ResourceLocation, Material> externally_made_materials = new HashMap<>();
+        public void addMaterial(ResourceLocation id, Material material) {
+            externally_made_materials.put(id, material);
+        }
+        private Map<ResourceLocation, Material> getExternalMaterials() {
+            return externally_made_materials;
+        }
     }
 }
 

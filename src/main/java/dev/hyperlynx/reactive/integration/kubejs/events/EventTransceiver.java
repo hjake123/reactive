@@ -1,5 +1,6 @@
 package dev.hyperlynx.reactive.integration.kubejs.events;
 
+import dev.hyperlynx.reactive.alchemy.material.BuiltInMaterials;
 import dev.hyperlynx.reactive.alchemy.rxn.ReactionMan;
 import dev.hyperlynx.reactive.alchemy.special.DissolveEvent;
 import dev.hyperlynx.reactive.alchemy.special.EmptyEvent;
@@ -17,6 +18,7 @@ public class EventTransceiver {
     public static EventHandler CUSTOM_REACTION_TEST_CONDITIONS_EVENT = EVENTS.common("checkReaction", () -> CustomReactionTickEventJS.class).hasResult();
     public static EventHandler CUSTOM_REACTION_RUN_EVENT = EVENTS.server("runReaction", () -> CustomReactionTickEventJS.class);
     public static EventHandler CUSTOM_REACTION_RENDER_EVENT = EVENTS.client("renderReaction", () -> CustomReactionTickEventJS.class);
+    public static EventHandler BUILT_IN_MATERIAL_EVENT = EVENTS.common("defineBuiltInMaterials", () -> BuiltInMaterialEventJS.class);
 
     @SubscribeEvent
     public static void translateDissolveEvent(DissolveEvent event){
@@ -36,5 +38,10 @@ public class EventTransceiver {
     @SubscribeEvent
     public static void translateReactionResetEvent(ReactionMan.ReactionResetEvent event){
         ReactiveKubeJSPlugin.REACTION_EFFECT_CACHE.resetReactionHandlers();
+    }
+
+    @SubscribeEvent
+    public static void translateBuiltInMaterialEvent(BuiltInMaterials.BuiltInMaterialEvent event){
+        BUILT_IN_MATERIAL_EVENT.post(new BuiltInMaterialEventJS(event));
     }
 }
