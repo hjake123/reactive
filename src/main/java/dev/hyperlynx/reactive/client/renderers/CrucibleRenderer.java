@@ -71,11 +71,11 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private void renderElectricity(CrucibleBlockEntity crucible){
         float speedDivisor = 27F;
         if(crucible.electricCharge > 0){
-            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.ELECTRIC_SPARK, crucible.getBlockPos(),
+            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.obtainLevel()), ParticleTypes.ELECTRIC_SPARK, crucible.getBlockPos(),
                     0.05F,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor
             );
         }
     }
@@ -83,11 +83,11 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
     private void renderSculkCharge(CrucibleBlockEntity crucible){
         float speedDivisor = 27F;
         if(!crucible.sculkSpreader.getCursors().isEmpty()){
-            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.getLevel()), ParticleTypes.SCULK_SOUL, crucible.getBlockPos(),
+            ParticleScribe.drawParticleCrucibleTop(Objects.requireNonNull(crucible.obtainLevel()), ParticleTypes.SCULK_SOUL, crucible.getBlockPos(),
                     0.05F,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor,
-                    (crucible.getLevel().random.nextFloat()-0.5)/speedDivisor
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor,
+                    (crucible.obtainLevel().random.nextFloat()-0.5)/speedDivisor
             );
         }
     }
@@ -100,7 +100,7 @@ public class CrucibleRenderer implements BlockEntityRenderer<CrucibleBlockEntity
         pose_stack.mulPose(Axis.XP.rotationDegrees(90f));
         if(crucible.getBlockState().getValue(CrucibleBlock.FULL)) {
             TextureAtlasSprite sprite = getSprite(crucible);
-            Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos()));
+            Color color = crucible.getCombinedColor(BiomeColors.getAverageWaterColor(Objects.requireNonNull(crucible.obtainLevel()), crucible.getBlockPos()));
             VertexConsumer consumer = buffer_source.getBuffer(Sheets.translucentCullBlockSheet());
             renderIcon(pose_stack, consumer, sprite, color, crucible.getOpacity(), overlay, light);
 

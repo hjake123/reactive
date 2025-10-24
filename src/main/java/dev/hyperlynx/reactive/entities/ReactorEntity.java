@@ -65,7 +65,7 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     public void tick() {
         super.tick();
-        if(this.level().isClientSide){
+        if(this.obtainLevel().isClientSide){
             return;
         }
         if(sync_timer <= 0){
@@ -76,7 +76,7 @@ public class ReactorEntity extends Entity implements Reactor {
         }
 
         if(react_timer <= 0){
-            react((ServerLevel) level());
+            react((ServerLevel) obtainLevel());
             react_timer = ConfigMan.COMMON.crucibleTickDelay.get() * 5;
         } else {
             react_timer--;
@@ -91,7 +91,7 @@ public class ReactorEntity extends Entity implements Reactor {
 
     // Adjacent Reactor Entities may merge into one.
     private void tryMergeWithNeighbor() {
-        List<ReactorEntity> nearby_others = this.level().getEntitiesOfClass(ReactorEntity.class,
+        List<ReactorEntity> nearby_others = this.obtainLevel().getEntitiesOfClass(ReactorEntity.class,
                 this.getBoundingBox().inflate(4.0));
         nearby_others.remove(this);
         for(ReactorEntity neighbor : nearby_others) {
@@ -101,7 +101,7 @@ public class ReactorEntity extends Entity implements Reactor {
             this.move(MoverType.SELF, step);
         }
 
-        List<ReactorEntity> touching_others = this.level().getEntitiesOfClass(ReactorEntity.class, this.getBoundingBox());
+        List<ReactorEntity> touching_others = this.obtainLevel().getEntitiesOfClass(ReactorEntity.class, this.getBoundingBox());
         touching_others.remove(this);
         for(ReactorEntity touching : touching_others) {
             for(Power power : touching.getPowerMap().keySet()) {
@@ -124,14 +124,14 @@ public class ReactorEntity extends Entity implements Reactor {
     }
 
     public ReactorData reactorData() {
-        if(this.level().isClientSide){
+        if(this.obtainLevel().isClientSide){
             return this.getEntityData().get(SYNCED_REACTOR_DATA);
         }
         return server_reactor_data;
     }
 
     private void update() {
-        if(this.level().isClientSide){
+        if(this.obtainLevel().isClientSide){
             throw new UnsupportedOperationException("Can't modify the state of the reaction data on the client!");
         }
         this.getEntityData().set(SYNCED_REACTOR_DATA, server_reactor_data.copy(), true);
@@ -168,7 +168,7 @@ public class ReactorEntity extends Entity implements Reactor {
         if(compound.contains(LIFESPAN_KEY)){
             data.set(LIFESPAN, compound.getInt(LIFESPAN_KEY));
         }
-        if(this.level() instanceof ServerLevel server && compound.contains(LINKED_CRYSTAL_KEY)) {
+        if(this.obtainLevel() instanceof ServerLevel server && compound.contains(LINKED_CRYSTAL_KEY)) {
             UUID uuid = compound.getUUID(LINKED_CRYSTAL_KEY);
             if (server.getEntity(uuid) instanceof EndCrystal crystal) {
                 this.linked_crystal = crystal;
@@ -217,12 +217,12 @@ public class ReactorEntity extends Entity implements Reactor {
     }
 
     @Override
-    public BlockState getBlockState() {
-        return this.level().getBlockState(this.getBlockPos());
+    public BlockState blockState() {
+        return this.obtainLevel().getBlockState(this.blockPos());
     }
 
     @Override
-    public BlockPos getBlockPos() {
+    public BlockPos blockPos() {
         return this.blockPosition();
     }
 
@@ -249,13 +249,13 @@ public class ReactorEntity extends Entity implements Reactor {
     @Override
     public AreaMemory getAreaMemory() {
         if(this.area_memory == null){
-            this.area_memory = new AreaMemory(this.getBlockPos());
+            this.area_memory = new AreaMemory(this.blockPos());
         }
         return area_memory;
     }
 
     @Override
-    public Level getLevel() {
+    public Level obtainLevel() {
         return this.level();
     }
 

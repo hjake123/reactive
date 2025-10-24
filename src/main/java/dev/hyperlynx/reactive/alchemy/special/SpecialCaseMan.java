@@ -78,7 +78,7 @@ public class SpecialCaseMan {
 
     public static void checkEmptySpecialCases(CrucibleBlockEntity c){
         MinecraftForge.EVENT_BUS.post(new EmptyEvent(c));
-        if(c.getLevel() == null) return;
+        if(c.obtainLevel() == null) return;
         for(EmptySpecialCase empty_case : EMPTY_SPECIAL_CASES){
             empty_case.attempt(c);
         }
@@ -108,21 +108,21 @@ public class SpecialCaseMan {
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Tags.Items.ENDER_PEARLS)) {
-                enderPearlDissolve(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e, c);
+                enderPearlDissolve(Objects.requireNonNull(c.obtainLevel()), c.getBlockPos(), e, c);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Tags.Items.GUNPOWDER) && c.getPowerLevel(Powers.BLAZE_POWER.get()) > 10) {
-                explodeGunpowderDueToBlaze(Objects.requireNonNull(c.getLevel()), c.getBlockPos(), e);
+                explodeGunpowderDueToBlaze(Objects.requireNonNull(c.obtainLevel()), c.getBlockPos(), e);
                 return true;
             }
             return false;
         });
         DISSOLVE_SPECIAL_CASES.add((c, e) -> {
             if(e.getItem().is(Items.CARVED_PUMPKIN)) {
-                pumpkinMagic(Objects.requireNonNull(c.getLevel()), e, c);
+                pumpkinMagic(Objects.requireNonNull(c.obtainLevel()), e, c);
                 return true;
             }
             return false;
@@ -215,8 +215,8 @@ public class SpecialCaseMan {
                 lightEscape(c);
         });
         EMPTY_SPECIAL_CASES.add(c -> {
-            if(c.areaMemory.exists(c.getLevel(), Registration.INCOMPLETE_STAFF.get()))
-                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.getLevel(), Registration.INCOMPLETE_STAFF.get()));
+            if(c.areaMemory.exists(c.obtainLevel(), Registration.INCOMPLETE_STAFF.get()))
+                IncompleteStaffBlock.staffCraftStep(c, c.areaMemory.fetch(c.obtainLevel(), Registration.INCOMPLETE_STAFF.get()));
         });
     }
 
@@ -238,14 +238,14 @@ public class SpecialCaseMan {
 
     // Ender eyes that are thrown into the Crucible without Curse are launched as if used.
     private static void enderEyeFlyAway(CrucibleBlockEntity c, ItemEntity e) {
-        ServerLevel serverlevel = (ServerLevel) c.getLevel();
+        ServerLevel serverlevel = (ServerLevel) c.obtainLevel();
         BlockPos blockpos = serverlevel.findNearestMapStructure(StructureTags.EYE_OF_ENDER_LOCATED, c.getBlockPos(), 100, false);
         if (blockpos != null) {
-            EyeOfEnder eyeofender = new EyeOfEnder(c.getLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
+            EyeOfEnder eyeofender = new EyeOfEnder(c.obtainLevel(), c.getBlockPos().getX(), c.getBlockPos().getY(), c.getBlockPos().getZ());
             eyeofender.setItem(e.getItem());
             eyeofender.signalTo(blockpos);
-            c.getLevel().addFreshEntity(eyeofender);
-            c.getLevel().playSound(null, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.5, c.getBlockPos().getZ()+0.5, SoundEvents.ENDER_EYE_LAUNCH, SoundSource.NEUTRAL, 0.5F, 0.4F / (c.getLevel().getRandom().nextFloat() * 0.4F + 0.8F));
+            c.obtainLevel().addFreshEntity(eyeofender);
+            c.obtainLevel().playSound(null, c.getBlockPos().getX()+0.5, c.getBlockPos().getY()+0.5, c.getBlockPos().getZ()+0.5, SoundEvents.ENDER_EYE_LAUNCH, SoundSource.NEUTRAL, 0.5F, 0.4F / (c.obtainLevel().getRandom().nextFloat() * 0.4F + 0.8F));
             e.getItem().shrink(1);
             if(e.getItem().getCount() < 1)
                 e.kill();
@@ -276,7 +276,7 @@ public class SpecialCaseMan {
 
     // Either spread Sculk or change Vital to Soul using a Catalyst.
     private static void sculkMagic(CrucibleBlockEntity c) {
-        if(!(c.getLevel() instanceof ServerLevel))
+        if(!(c.obtainLevel() instanceof ServerLevel))
             return;
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
@@ -525,55 +525,55 @@ public class SpecialCaseMan {
             e.kill();
         else
             e.getItem().shrink(1);
-        Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.getLevel()));
+        Slime slime = new Slime(EntityType.SLIME, Objects.requireNonNull(c.obtainLevel()));
         slime.setPos(Vec3.atCenterOf(c.getBlockPos()).add(0, 0.1, 0));
         slime.setSize(1, true);
-        c.getLevel().addFreshEntity(slime);
+        c.obtainLevel().addFreshEntity(slime);
     }
 
     // Throwing a Motion Salt Block into an electrified crucible displaces a nearby block.
     private static void displaceNearby(CrucibleBlockEntity c) {
         Optional<BlockPos> target = BlockPos.findClosestMatch(c.getBlockPos(), ConfigMan.COMMON.crucibleRange.get(), ConfigMan.COMMON.crucibleRange.get(),
                 blockPos -> {
-                    BlockState state = Objects.requireNonNull(c.getLevel()).getBlockState(blockPos);
+                    BlockState state = Objects.requireNonNull(c.obtainLevel()).getBlockState(blockPos);
                     return !blockPos.equals(c.getBlockPos()) && !state.isAir() && !state.is(Registration.VOLT_CELL.get());
                 });
         if(target.isPresent()){
-            DisplacedBlock.displace(c.getLevel().getBlockState(target.get()), target.get(), c.getLevel(), 200);
+            DisplacedBlock.displace(c.obtainLevel().getBlockState(target.get()), target.get(), c.obtainLevel(), 200);
             for(int i = 0; i < 2; i++)
-                ParticleScribe.drawParticleZigZag(c.getLevel(), ParticleTypes.ELECTRIC_SPARK, c.getBlockPos(), target.get(),
+                ParticleScribe.drawParticleZigZag(c.obtainLevel(), ParticleTypes.ELECTRIC_SPARK, c.getBlockPos(), target.get(),
                         5, 8, 0.9F);
         }
     }
 
     private static void soulEscape(CrucibleBlockEntity c){
-        if(c.getLevel() == null) return;
-        if(c.getLevel().isClientSide()){
-            c.getLevel().addParticle(ParticleTypes.SOUL, c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.65,
+        if(c.obtainLevel() == null) return;
+        if(c.obtainLevel().isClientSide()){
+            c.obtainLevel().addParticle(ParticleTypes.SOUL, c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.65,
                     c.getBlockPos().getZ() + 0.5, 0, 0, 0);
         }else{
-            ((ServerLevel) c.getLevel()).sendParticles(ParticleTypes.SOUL, c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.65,
+            ((ServerLevel) c.obtainLevel()).sendParticles(ParticleTypes.SOUL, c.getBlockPos().getX() + 0.5, c.getBlockPos().getY() + 0.65,
                     c.getBlockPos().getZ() + 0.5, 1,0, 0, 0, 0.0);
         }
     }
 
     private static void curseEscape(CrucibleBlockEntity c){
-        if(c.getLevel() == null) return;
+        if(c.obtainLevel() == null) return;
         AABB aoe = new AABB(c.getBlockPos());
         aoe = aoe.inflate(5); // Inflate the AOE to be 5x the size of the crucible.
-        if(!c.getLevel().isClientSide()){
+        if(!c.obtainLevel().isClientSide()){
             if(c.getPowerLevel(Powers.CURSE_POWER.get()) > 1400){
                 Monster m;
-                if(c.getLevel().getRandom().nextFloat() < 0.35){
-                    m = new Skeleton(EntityType.SKELETON, c.getLevel());
+                if(c.obtainLevel().getRandom().nextFloat() < 0.35){
+                    m = new Skeleton(EntityType.SKELETON, c.obtainLevel());
                 }else{
-                   m = new Zombie(EntityType.ZOMBIE, c.getLevel());
+                   m = new Zombie(EntityType.ZOMBIE, c.obtainLevel());
                 }
                 m.setSilent(true);
                 m.setPos(aoe.getCenter().add(WorldSpecificValue.get("monster_summon_x", -5, 5), 1, WorldSpecificValue.get("monster_summon_z", -5, 5)));
-                c.getLevel().addFreshEntity(m);
+                c.obtainLevel().addFreshEntity(m);
             }
-            List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            List<LivingEntity> nearby_ents = c.obtainLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for(LivingEntity e : nearby_ents){
                 if(e.getMobType().equals(MobType.UNDEAD))
                     continue;
@@ -584,41 +584,41 @@ public class SpecialCaseMan {
                     CriteriaTriggers.BE_CURSED_TRIGGER.trigger((ServerPlayer) e);
                 }
             }
-            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.get(), SoundSource.BLOCKS, 1, 1);
+            c.obtainLevel().playSound(null, c.getBlockPos(), SoundEvents.AMBIENT_CAVE.get(), SoundSource.BLOCKS, 1, 1);
         }
     }
 
     private static void blazeEscape(CrucibleBlockEntity c){
-        if(c.getLevel() == null) return;
+        if(c.obtainLevel() == null) return;
         AABB blast_zone = new AABB(c.getBlockPos());
         blast_zone.inflate(1.5, 3, 1.5);
-        if(!c.getLevel().isClientSide()){
-            List<LivingEntity> nearby_ents = c.getLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
+        if(!c.obtainLevel().isClientSide()){
+            List<LivingEntity> nearby_ents = c.obtainLevel().getEntitiesOfClass(LivingEntity.class, blast_zone);
             for(LivingEntity e : nearby_ents){
                 e.hurt(e.level().damageSources().inFire(), 12);
                 e.setSecondsOnFire(3);
             }
-            c.getLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
+            c.obtainLevel().playSound(null, c.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 1.0F);
             for(int i = 0; i < 10; i++) {
                 if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
-                    ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                    ParticleScribe.drawParticleCrucibleTop(c.obtainLevel(), ParticleTypes.SOUL_FIRE_FLAME, c.getBlockPos(), 1, 0, 1, 0);
                 }else{
-                    ParticleScribe.drawParticleCrucibleTop(c.getLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
+                    ParticleScribe.drawParticleCrucibleTop(c.obtainLevel(), ParticleTypes.FLAME, c.getBlockPos(), 1, 0, 1, 0);
                 }
             }
         }
     }
 
     private static void verdantEscape(CrucibleBlockEntity c) {
-        if(c.getLevel() == null || c.getLevel().isClientSide || WorldSpecificValue.getBool("no_moss", 0.5F))
+        if(c.obtainLevel() == null || c.obtainLevel().isClientSide || WorldSpecificValue.getBool("no_moss", 0.5F))
             return;
-        ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.getLevel(), c.getLevel().random, c.getBlockPos().below(), c.getBlockState());
+        ((MossBlock) Blocks.MOSS_BLOCK).performBonemeal((ServerLevel) c.obtainLevel(), c.obtainLevel().random, c.getBlockPos().below(), c.getBlockState());
     }
 
     private static void lightEscape(CrucibleBlockEntity c) {
-        if(c.getLevel() == null || c.getLevel().isClientSide || !c.getLevel().getBlockState(c.getBlockPos().above()).isAir())
+        if(c.obtainLevel() == null || c.obtainLevel().isClientSide || !c.obtainLevel().getBlockState(c.getBlockPos().above()).isAir())
             return;
-        c.getLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+        c.obtainLevel().setBlock(c.getBlockPos().above(), Registration.GLOWING_AIR.get().defaultBlockState(), Block.UPDATE_CLIENTS);
     }
 
     public static void solidifyPortal(Level l, BlockPos p, Direction.Axis axis){
@@ -635,7 +635,7 @@ public class SpecialCaseMan {
     }
 
     private static void expelReaction(CrucibleBlockEntity crucible, ItemEntity thread){
-        if(crucible.getLevel() == null) {
+        if(crucible.obtainLevel() == null) {
             return;
         }
 
@@ -650,27 +650,27 @@ public class SpecialCaseMan {
             return;
         }
 
-        ReactorEntity entity = new ReactorEntity(Registration.REACTOR.get(), crucible.getLevel());
+        ReactorEntity entity = new ReactorEntity(Registration.REACTOR.get(), crucible.obtainLevel());
         entity.setPos(crucible.getPos().add(0, 1.0, 0));
         entity.setPowers(crucible.getPowerMap());
         entity.setLifespan(600);
         crucible.expendPower();
-        crucible.getLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
-        crucible.getLevel().addFreshEntity(entity);
-        crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS);
-        crucible.getLevel().playSound((Entity) null, crucible.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 0.7F);
+        crucible.obtainLevel().setBlock(crucible.getBlockPos(), crucible.getBlockState().setValue(CrucibleBlock.FULL, false), Block.UPDATE_CLIENTS);
+        crucible.obtainLevel().addFreshEntity(entity);
+        crucible.obtainLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS);
+        crucible.obtainLevel().playSound((Entity) null, crucible.getBlockPos(), SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS, 1.0F, 0.7F);
         thread.getItem().shrink(1);
         if(thread.getItem().getCount() == 0){
             thread.kill();
         }
-        if(crucible.getLevel() instanceof ServerLevel slevel) {
+        if(crucible.obtainLevel() instanceof ServerLevel slevel) {
             FlagCriterion.triggerForNearbyPlayers(slevel, CriteriaTriggers.GOLD_THREAD_REACTION, crucible.getBlockPos(), 9);
         }
     }
 
     private static final int MATERIAL_CRAFT_MIN_POWER = 800;
     private static void saltMaterialCraft(CrucibleBlockEntity crucible, ItemEntity salt_item_entity) {
-        if(crucible.getLevel() == null) {
+        if(crucible.obtainLevel() == null) {
             return;
         }
 
@@ -678,7 +678,7 @@ public class SpecialCaseMan {
             return;
         }
         ItemStack material_stack = Registration.MATERIAL_ITEM.get().getDefaultInstance();
-        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.getLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItem()));
+        ResourceLocation material_id = MaterialMan.createOrFetchByFormula(crucible.obtainLevel(), new Formula(crucible.getPowerMap(), salt_item_entity.getItem().getItem()));
         MaterialItem.setMaterialId(material_stack, material_id);
 
         int max_amount_used = 1;
@@ -696,8 +696,8 @@ public class SpecialCaseMan {
         }
 
         Vec3 in_crucible = crucible.getBlockPos().getCenter();
-        ItemEntity drop = new ItemEntity(crucible.getLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
-        crucible.getLevel().addFreshEntity(drop);
+        ItemEntity drop = new ItemEntity(crucible.obtainLevel(), in_crucible.x, in_crucible.y, in_crucible.z, material_stack);
+        crucible.obtainLevel().addFreshEntity(drop);
         crucible.expendPower();
         crucible.setDirty();
     }

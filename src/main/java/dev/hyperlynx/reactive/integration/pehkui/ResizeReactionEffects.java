@@ -36,22 +36,22 @@ public class ResizeReactionEffects {
     }
 
     private static void resizeNearby(Reactor reactor, float new_scale, Mode mode, ParticleOptions particle) {
-        if (Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.4) {
-            AABB aoe = new AABB(reactor.getBlockPos());
+        if (Objects.requireNonNull(reactor.obtainLevel()).random.nextFloat() < 0.4) {
+            AABB aoe = new AABB(reactor.blockPos());
             aoe = aoe.inflate(3);
-            List<LivingEntity> victims = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            List<LivingEntity> victims = reactor.obtainLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity victim : victims) {
                 if (CrystalIronItem.effectNotBlocked(victim, 2)) {
                     ScaleData victim_scale_data = ScaleTypes.BASE.getScaleData(victim);
                     if(mode == Mode.ENLARGE && victim_scale_data.getScale() < new_scale
                             || mode == Mode.REDUCE && victim_scale_data.getScale() > new_scale){
                         victim_scale_data.setTargetScale(new_scale);
-                        ParticleScribe.drawParticleZigZag(reactor.getLevel(), particle,
-                                reactor.getBlockPos().getX()+0.5, reactor.getBlockPos().getY()+0.6, reactor.getBlockPos().getZ()+0.5,
+                        ParticleScribe.drawParticleZigZag(reactor.obtainLevel(), particle,
+                                reactor.blockPos().getX()+0.5, reactor.blockPos().getY()+0.6, reactor.blockPos().getZ()+0.5,
                                 victim.getEyePosition().x, victim.getEyePosition().y, victim.getEyePosition().z, 20, 5, 0.9);
-                        reactor.getLevel().playSound(null, reactor.getBlockPos(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS);
-                        reactor.getLevel().playSound(null, reactor.getBlockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.getLevel().random.nextFloat()*0.2F);
-                        victim.hurt(reactor.getLevel().damageSources().magic(), 1);
+                        reactor.obtainLevel().playSound(null, reactor.blockPos(), Registration.ZAP_SOUND.get(), SoundSource.BLOCKS);
+                        reactor.obtainLevel().playSound(null, reactor.blockPos(), SoundEvents.RESPAWN_ANCHOR_CHARGE, SoundSource.BLOCKS, 0.5F, 1.3F + reactor.obtainLevel().random.nextFloat()*0.2F);
+                        victim.hurt(reactor.obtainLevel().damageSources().magic(), 1);
                         if(victim instanceof ServerPlayer splayer){
                             if (new_scale == 1.0) {
                                 ReactivePehkuiPlugin.SIZE_REVERTED.trigger(splayer);

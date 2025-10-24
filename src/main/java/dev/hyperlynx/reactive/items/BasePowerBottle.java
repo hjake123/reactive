@@ -52,7 +52,7 @@ public interface BasePowerBottle {
 
             if(changed){
                 crucible.setDirty();
-                crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
+                crucible.obtainLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.obtainLevel().getRandom().nextFloat()/5));
             }
             return stack;
         }

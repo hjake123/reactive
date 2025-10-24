@@ -107,7 +107,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
 
             // Each tick, deal with ender rift if needed.
             if (!level.isClientSide && crucible.enderRiftStrength > 0) {
-                crucible.enderRiftStrength = SpecialCaseMan.tryTeleportNearbyEntity(crucible.getBlockPos(), crucible.getLevel(), crucible.getBlockPos(), true) ? 0 : crucible.enderRiftStrength - 1;
+                crucible.enderRiftStrength = SpecialCaseMan.tryTeleportNearbyEntity(crucible.getBlockPos(), crucible.obtainLevel(), crucible.getBlockPos(), true) ? 0 : crucible.enderRiftStrength - 1;
                 ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, pos.getX() + 0.5, pos.getY() + 0.5625 + level.random.nextDouble() * 2.0, pos.getZ() + 0.5, 1, level.random.nextGaussian(), 0.0, level.random.nextGaussian(), 0.0);
             }
 
@@ -132,7 +132,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
                         // Check for Effusive Sponges and fill if there is one.
                         if (!level.isClientSide() && !state.getValue(CrucibleBlock.FULL)) {
                             if (crucible.areaMemory.existsAbove(crucible.level, ConfigMan.COMMON.crucibleRange.get(), Registration.WARP_SPONGE.get())) {
-                                crucible.getLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
+                                crucible.obtainLevel().setBlock(crucible.getBlockPos(), level.getBlockState(crucible.getBlockPos()).setValue(CrucibleBlock.FULL, true), Block.UPDATE_CLIENTS);
                                 level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.6F, 1F);
                                 level.gameEvent(GameEvent.FLUID_PLACE, pos, GameEvent.Context.of(state));
                             }
@@ -302,8 +302,8 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
 
         if(changed){
             crucible.setDirty();
-            crucible.getLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.getLevel().getRandom().nextFloat()/5));
-            crucible.getLevel().gameEvent(GameEvent.FLUID_PICKUP, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
+            crucible.obtainLevel().playSound(null, crucible.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1F, 0.65F+(crucible.obtainLevel().getRandom().nextFloat()/5));
+            crucible.obtainLevel().gameEvent(GameEvent.FLUID_PICKUP, crucible.getBlockPos(), GameEvent.Context.of(crucible.getBlockState()));
         }
     }
 
@@ -354,6 +354,16 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     @Override
     public void setUsedCrystalThisCycle(boolean used) {
         used_crystal_this_cycle = true;
+    }
+
+    @Override
+    public BlockState blockState() {
+        return getBlockState();
+    }
+
+    @Override
+    public BlockPos blockPos() {
+        return getBlockPos();
     }
 
     @Override
@@ -481,7 +491,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
         List<Power> stack_power_list = Power.getSourcePower(stack);
         boolean changed = false;
         if(stack_power_list.isEmpty()){
-            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, stack.getCount(), crucible);
+            boolean dissolved = tryDissolveWithByproduct(Objects.requireNonNull(crucible.obtainLevel()), crucible.getBlockPos(), stack, stack.getCount(), crucible);
             if(dissolved)
                 stack.setCount(0);
             return false;
@@ -492,7 +502,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
                 continue;
             }
             changed = changed || crucible.addPower(p, stack.getCount() * Power.getSourceLevel(stack) / stack_power_list.size());
-            tryDissolveWithByproduct(Objects.requireNonNull(crucible.getLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity), crucible);
+            tryDissolveWithByproduct(Objects.requireNonNull(crucible.obtainLevel()), crucible.getBlockPos(), stack, Math.min(stack.getCount(), dissolve_capacity), crucible);
             stack.setCount(Math.max(stack.getCount()-dissolve_capacity, 0));
         }
         return changed;
@@ -551,7 +561,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
         // ----- Helper and power management methods -----
 
     public void setDirty(){
-        setDirty(Objects.requireNonNull(this.getLevel()), this.getBlockPos(), this.getBlockState());
+        setDirty(Objects.requireNonNull(this.obtainLevel()), this.getBlockPos(), this.getBlockState());
     }
 
     @Override
@@ -595,9 +605,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     }
 
     @Override
-    public Level getLevel() {
+    public Level obtainLevel() {
         return this.level;
     }
+
+
 
     @Override
     public ReactionStatusMessage getStatusMessage() {
@@ -618,7 +630,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     // Deals with the sacrifice mechanic. Sacrifices add to the sacrifice counter and contribute Power.
     @SubscribeEvent
     public void onDeath(LivingDeathEvent event) {
-        if(this.getLevel() == null || !this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level().isClientSide || Objects.requireNonNull(this.getLevel()).isClientSide) {
+        if(this.obtainLevel() == null || !this.getBlockState().getValue(CrucibleBlock.FULL) || event.getEntity().level().isClientSide || Objects.requireNonNull(this.obtainLevel()).isClientSide) {
             return;
         }
 
@@ -670,10 +682,10 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     }
 
     private void spawnPhantom(double x, double y, double z) {
-        Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(getLevel()));
+        Phantom p = new Phantom(EntityType.PHANTOM, Objects.requireNonNull(obtainLevel()));
         p.setPos(new Vec3(x, y +2, z));
-        p.setPhantomSize(this.getLevel().random.nextInt(2, 4));
-        getLevel().addFreshEntity(p);
+        p.setPhantomSize(this.obtainLevel().random.nextInt(2, 4));
+        obtainLevel().addFreshEntity(p);
         ParticleScribe.drawParticleLine(level, ParticleTypes.SMOKE, x, y, z, x, y +2, z, 25, 0.1);
     }
 
@@ -823,7 +835,7 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     @Override
     public void load(@NotNull CompoundTag main_tag) {
         super.load(main_tag);
-        if(main_tag.contains("LinkedCrystal") && this.getLevel() instanceof ServerLevel server){
+        if(main_tag.contains("LinkedCrystal") && this.obtainLevel() instanceof ServerLevel server){
             UUID crystal_uuid = main_tag.getUUID("LinkedCrystal");
             if(server.getEntity(crystal_uuid) instanceof EndCrystal crystal)
                 linked_crystal = crystal;

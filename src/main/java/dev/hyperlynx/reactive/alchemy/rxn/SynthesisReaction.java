@@ -25,8 +25,8 @@ public class SynthesisReaction extends Reaction{
             crucible.expendPower(p, rate);
         }
         crucible.addPower(resultPower, rate);
-        if(!Objects.requireNonNull(crucible.getLevel()).isClientSide)
-            FlagCriterion.triggerForNearbyPlayers((ServerLevel) crucible.getLevel(), CriteriaTriggers.SEE_SYNTHESIS_TRIGGER, crucible.getBlockPos(), 8);
+        if(!Objects.requireNonNull(crucible.obtainLevel()).isClientSide)
+            FlagCriterion.triggerForNearbyPlayers((ServerLevel) crucible.obtainLevel(), CriteriaTriggers.SEE_SYNTHESIS_TRIGGER, crucible.blockPos(), 8);
     }
 
     @Override

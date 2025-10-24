@@ -27,8 +27,8 @@ public class CatalystEffectReaction extends EffectReaction{
             return Status.INHIBITED;
         }
         Status reaction_status = super.conditionsMet(crucible);
-        assert crucible.getLevel() != null;
-        for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())) {
+        assert crucible.obtainLevel() != null;
+        for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.obtainLevel())) {
             if (entity_inside instanceof ItemEntity item_ent && item_ent.getItem().is(reactant)) {
                 // The catalyst condition is met; return the check without catalyst consideration.
                 return reaction_status;

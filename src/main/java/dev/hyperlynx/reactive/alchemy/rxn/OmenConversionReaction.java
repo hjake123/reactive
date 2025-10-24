@@ -25,9 +25,9 @@ public class OmenConversionReaction extends Reaction {
         reactor.expendPower(Powers.OMEN_POWER.get(), omen);
         reactor.addPower(Powers.SOUL_POWER.get(), omen / 2);
 
-        Level level = Objects.requireNonNull(reactor.getLevel());
-        level.playSound(null, reactor.getBlockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, 1.1F);
-        ParticleScribe.drawParticleSphere(level, ParticleTypes.SOUL_FIRE_FLAME, reactor.getBlockPos(), 0.7, 0.5, 10);
+        Level level = Objects.requireNonNull(reactor.obtainLevel());
+        level.playSound(null, reactor.blockPos(), SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 1.0F, 1.1F);
+        ParticleScribe.drawParticleSphere(level, ParticleTypes.SOUL_FIRE_FLAME, reactor.blockPos(), 0.7, 0.5, 10);
         reactor.setDirty();
     }
 

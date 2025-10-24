@@ -197,7 +197,7 @@ public class ParticleScribe {
 
     public static void drawParticleReactionSurface(Level level, ParticleOptions opt, Reactor reactor, float odds, double xspeed, double yspeed, double zspeed){
         if(reactor instanceof CrucibleBlockEntity) {
-            drawParticleCrucibleTop(level, opt, reactor.getBlockPos(), odds, xspeed, yspeed, zspeed);
+            drawParticleCrucibleTop(level, opt, reactor.blockPos(), odds, xspeed, yspeed, zspeed);
         } else if(reactor instanceof ReactorEntity) {
             drawParticle(level, opt, reactor.getPos().x, reactor.getPos().y, reactor.getPos().z, odds, xspeed, yspeed, zspeed);
         } else {

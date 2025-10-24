@@ -35,7 +35,7 @@ public class IncompleteStaffBlock extends BaseStaffBlock{
     public static void staffCraftStep(CrucibleBlockEntity c, BlockPos staff_pos){
         for(Power p : c.getPowerMap().keySet()){
             if(c.getPowerLevel(p) > 800){
-                tryMakeProgress(Objects.requireNonNull(c.getLevel()), c.getLevel().getBlockState(staff_pos), staff_pos, p);
+                tryMakeProgress(Objects.requireNonNull(c.obtainLevel()), c.obtainLevel().getBlockState(staff_pos), staff_pos, p);
             }
         }
     }

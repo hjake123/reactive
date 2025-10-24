@@ -19,10 +19,10 @@ public interface KubeCrucibleEvent {
     }
 
     default BlockPos getBlockPos(){
-        return getCrucible().reactor.getBlockPos();
+        return getCrucible().reactor.blockPos();
     }
 
     default Level getLevel(){
-        return getCrucible().reactor.getLevel();
+        return getCrucible().reactor.obtainLevel();
     }
 }

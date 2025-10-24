@@ -68,61 +68,61 @@ public class ReactionRenderers {
     }
 
     public void smoke(Reactor reactor) {
-        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.LARGE_SMOKE, reactor, 0.3F);
+        ParticleScribe.drawParticleReactionSurface(reactor.obtainLevel(), ParticleTypes.LARGE_SMOKE, reactor, 0.3F);
     }
 
     public void annihilationSmoke(Reactor reactor) {
-        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.SMOKE, reactor, 0.2F);
+        ParticleScribe.drawParticleReactionSurface(reactor.obtainLevel(), ParticleTypes.SMOKE, reactor, 0.2F);
     }
 
     public void curseRing(Reactor reactor) {
-        RandomSource random = reactor.getLevel().random;
+        RandomSource random = reactor.obtainLevel().random;
         if(random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
     public void astralRing(Reactor reactor) {
-        RandomSource random = reactor.getLevel().random;
+        RandomSource random = reactor.obtainLevel().random;
         if (random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.getLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
     public void growth(Reactor reactor) {
-        ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.HAPPY_VILLAGER, reactor, 0.1F);
+        ParticleScribe.drawParticleReactionSurface(reactor.obtainLevel(), ParticleTypes.HAPPY_VILLAGER, reactor, 0.1F);
     }
 
     // Shoot flames from the crucible!
     public void flamethrower(Reactor reactor) {
-        if(reactor.getLevel() == null) return;
+        if(reactor.obtainLevel() == null) return;
 
         if(reactor.getPowerLevel(Powers.SOUL_POWER.get()) > 20){
-            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.SOUL_FIRE_FLAME, reactor, 0.1F, 0, 0.1, 0);
+            ParticleScribe.drawParticleReactionSurface(reactor.obtainLevel(), ParticleTypes.SOUL_FIRE_FLAME, reactor, 0.1F, 0, 0.1, 0);
         }else{
-            ParticleScribe.drawParticleReactionSurface(reactor.getLevel(), ParticleTypes.FLAME, reactor, 0.1F, 0, 0.1, 0);
+            ParticleScribe.drawParticleReactionSurface(reactor.obtainLevel(), ParticleTypes.FLAME, reactor, 0.1F, 0, 0.1, 0);
         }
     }
 
     public void creation(Reactor reactor){
-        Set<BlockPos> points = ReactionEffects.getCreationPoints(reactor.getBlockPos());
+        Set<BlockPos> points = ReactionEffects.getCreationPoints(reactor.blockPos());
         for(BlockPos pos : points){
-            if(reactor.getLevel().getBlockState(pos).isAir())
-                ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.getLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
+            if(reactor.obtainLevel().getBlockState(pos).isAir())
+                ParticleScribe.drawParticleSphere(Objects.requireNonNull(reactor.obtainLevel()), Registration.STARDUST_PARTICLE, pos, 0.5, 1.0, 1);
         }
     }
 
     public void snow(Reactor reactor) {
-        AABB aoe = new AABB(reactor.getBlockPos());
+        AABB aoe = new AABB(reactor.blockPos());
         aoe = aoe.inflate(5);
-        ParticleScribe.drawParticleBox(reactor.getLevel(), ParticleTypes.SNOWFLAKE, aoe, 1);
+        ParticleScribe.drawParticleBox(reactor.obtainLevel(), ParticleTypes.SNOWFLAKE, aoe, 1);
     }
 
     public void warpEnergy(Reactor reactor) {
-        if(reactor.getLevel().random.nextFloat() < 0.2F) {
-            ParticleScribe.drawParticleBox(reactor.getLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), AABB.ofSize(reactor.getPos(), 1, 1, 1), 1);
+        if(reactor.obtainLevel().random.nextFloat() < 0.2F) {
+            ParticleScribe.drawParticleBox(reactor.obtainLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), AABB.ofSize(reactor.getPos(), 1, 1, 1), 1);
         }
     }
 }

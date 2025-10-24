@@ -32,7 +32,7 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
         for(Power power : powers.keySet()) {
             float chance = powers.get(power) * 2.0F / reactor.maxPower();
             if(Minecraft.getInstance().level.random.nextFloat() < chance) {
-                ParticleScribe.drawExactParticleSphere(reactor.level(),
+                ParticleScribe.drawExactParticleSphere(reactor.obtainLevel(),
                         new EnergyParticle.Options(power.getColor(), reactor.position()),
                         reactor.position(), 0.0, 0.4, 1);
             }
@@ -43,8 +43,8 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
     }
 
     private void renderCharge(ReactorEntity reactor) {
-        if(reactor.getElectricCharge() > 0 && reactor.level().random.nextFloat() < 0.03F) {
-            ParticleScribe.drawExactParticleSphere(reactor.level(), ParticleTypes.ELECTRIC_SPARK,
+        if(reactor.getElectricCharge() > 0 && reactor.obtainLevel().random.nextFloat() < 0.03F) {
+            ParticleScribe.drawExactParticleSphere(reactor.obtainLevel(), ParticleTypes.ELECTRIC_SPARK,
                     reactor.position(), 0.0, 0.1, 1);
         }
     }

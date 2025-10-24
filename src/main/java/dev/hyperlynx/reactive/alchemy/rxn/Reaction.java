@@ -123,7 +123,7 @@ public abstract class Reaction {
     private boolean checkStimulus(Reactor reactor){
         return switch (stimulus) {
             case END_CRYSTAL -> checkEndCrystal(reactor);
-            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.getLevel(), Registration.GOLD_SYMBOL.get());
+            case GOLD_SYMBOL -> reactor.getAreaMemory().exists(reactor.obtainLevel(), Registration.GOLD_SYMBOL.get());
             case ELECTRIC -> reactor.getElectricCharge() > 0;
             case NO_ELECTRIC -> reactor.getElectricCharge() == 0;
             default -> true;
@@ -131,7 +131,7 @@ public abstract class Reaction {
     }
 
     private boolean checkEndCrystal(Reactor reactor){
-        Level level = reactor.getLevel();
+        Level level = reactor.obtainLevel();
         if(reactor.getLinkedCrystal() != null && !reactor.getLinkedCrystal().isRemoved()) {
             reactor.setUsedCrystalThisCycle(true);
             return true;
@@ -144,26 +144,26 @@ public abstract class Reaction {
         }
 
         int range = ConfigMan.COMMON.crucibleRange.get();
-        AABB aoe = new AABB(reactor.getBlockPos().offset(-range, -range, -range), reactor.getBlockPos().offset(range, range, range));
+        AABB aoe = new AABB(reactor.blockPos().offset(-range, -range, -range), reactor.blockPos().offset(range, range, range));
         List<EndCrystal> end_crystals = level.getEntitiesOfClass(EndCrystal.class, aoe);
         if(end_crystals.isEmpty())
             return false;
-        end_crystals.get(0).setBeamTarget(reactor.getBlockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
+        end_crystals.get(0).setBeamTarget(reactor.blockPos().below(2)); // For some strange reason, it shoots at the block 2 above the set position.
         reactor.setLinkedCrystal(end_crystals.get(0));
         reactor.setUsedCrystalThisCycle(true);
         return true;
     }
 
     public void run(Reactor reactor){
-        if(!(reactor.getLevel() instanceof ServerLevel server))
+        if(!(reactor.obtainLevel() instanceof ServerLevel server))
             return;
-        reactor.getLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, reactor.getBlockPos(), GameEvent.Context.of(reactor.getBlockState()));
+        reactor.obtainLevel().gameEvent(GameEvent.BLOCK_ACTIVATE, reactor.blockPos(), GameEvent.Context.of(reactor.blockState()));
         // Award the completion criteria.
-        ReactionCriterion.triggerForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
+        ReactionCriterion.triggerForNearbyPlayers(server, alias, reactor.blockPos(), 6);
 
         if(always_perfect || isPerfect(reactor)){
             // Award the perfect criterion.
-            ReactionCriterion.triggerPerfectForNearbyPlayers(server, alias, reactor.getBlockPos(), 6);
+            ReactionCriterion.triggerPerfectForNearbyPlayers(server, alias, reactor.blockPos(), 6);
         }
     }
 

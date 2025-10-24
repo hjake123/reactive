@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.alchemy.PowerBearer;
 import dev.hyperlynx.reactive.net.rxn.ReactionStatusMessage;
 import dev.hyperlynx.reactive.util.AreaMemory;
 import net.minecraft.core.BlockPos;
+import net.minecraft.obfuscate.DontObfuscate;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
@@ -15,6 +16,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.List;
 
+@DontObfuscate
 public interface Reactor extends PowerBearer {
     List<ReactionStatusEntry> getReactionStatus();
 
@@ -36,7 +38,7 @@ public interface Reactor extends PowerBearer {
         }
 
         // Update clients each reaction tick about what to display.
-        BlockPos pos = this.getBlockPos();
+        BlockPos pos = this.blockPos();
         Registration.REACTION_SYNC_CHANNEL.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint
                 .p(pos.getX(), pos.getY(), pos.getZ(), 32, level.dimension())
         ), getStatusMessage());
@@ -46,20 +48,20 @@ public interface Reactor extends PowerBearer {
         }
 
         if (!this.hasUsedCrystalThisCycle() && this.getLinkedCrystal() != null)
-            this.unlinkCrystal(level, this.getBlockPos(), this.getBlockState());
+            this.unlinkCrystal(level, this.blockPos(), this.blockState());
     }
 
     default boolean checkGoldSymbol(){
-        return this.getAreaMemory().exists(this.getLevel(), Registration.GOLD_SYMBOL.get());
+        return this.getAreaMemory().exists(this.obtainLevel(), Registration.GOLD_SYMBOL.get());
     }
 
     boolean hasUsedCrystalThisCycle();
 
     void setUsedCrystalThisCycle(boolean used);
 
-    BlockState getBlockState();
+    BlockState blockState();
 
-    BlockPos getBlockPos();
+    BlockPos blockPos();
 
     Vec3 getPos();
 
@@ -70,7 +72,7 @@ public interface Reactor extends PowerBearer {
 
     AreaMemory getAreaMemory();
 
-    Level getLevel();
+    Level obtainLevel(); // Named strangely to get around strange obfuscation bug
 
     int getElectricCharge();
 
