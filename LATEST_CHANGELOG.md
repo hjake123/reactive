@@ -2,6 +2,7 @@ Welcome to version 10! This is a major update, so while past worlds should work 
 
 - Added the custom Material system
     - Materials can be created by the player dynamically and are saved in the world
+    - Materials can also be defined using KubeJS
     - Added the Discovery Desk
     - Added the /reactive materials command tree
     - Added Adept Salts
