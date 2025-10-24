@@ -2,8 +2,10 @@ package dev.hyperlynx.reactive.integration.kubejs;
 
 import dev.hyperlynx.reactive.ReactiveMod;
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.alchemy.material.*;
 import dev.hyperlynx.reactive.alchemy.material.formula.Formula;
+import dev.hyperlynx.reactive.alchemy.material.formula.MaterialFormulaMaps;
 import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
@@ -135,12 +137,15 @@ public class MaterialFactory {
         if(base == null) {
             throw new KubeScriptException("Invalid item id " + item_id);
         }
+        if(!MaterialFormulaMaps.BASE_YIELDS.containsKey(item_id)) {
+            throw new KubeScriptException("This item is not a registered material base");
+        }
         base_material = base;
         return this;
     }
 
-    public MaterialFactory addFormulaCost(Power reagent, int cost) {
-        power_costs.put(reagent, cost);
+    public MaterialFactory addFormulaCost(String reagent, int cost) {
+        power_costs.put(Powers.POWER_SUPPLIER.get().getValue(ResourceLocation.parse(reagent)), cost);
         return this;
     }
 
