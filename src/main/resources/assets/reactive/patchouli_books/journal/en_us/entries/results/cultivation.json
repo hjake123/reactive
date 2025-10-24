@@ -31,7 +31,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "mind_lichen_from_vine",
-      "text": "Indeed, deeper Study of $(l:reactive:results/mnemonic)some of these Specimens$(/l) may be worth considering."
+      "text": "Indeed, deeper Study of $(l:reactive:results/mnemonic)some of these Specimens$(/l) may be worth considering.$(p)$(o)The veins of this organism hunger for $(2)experience$(0)."
     },
     {
       "type": "reactive:transmute",
