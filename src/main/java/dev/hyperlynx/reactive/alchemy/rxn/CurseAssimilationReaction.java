@@ -24,19 +24,19 @@ public class CurseAssimilationReaction extends Reaction{
     }
 
     @Override
-    public void run(Reactor crucible) {
-        super.run(crucible);
-        crucible.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
-        crucible.addPower(Powers.CURSE_POWER.get(), rate);
+    public void run(Reactor reactor) {
+        super.run(reactor);
+        reactor.expendAnyPowerExcept(Powers.ASTRAL_POWER.get(), rate);
+        reactor.addPower(Powers.CURSE_POWER.get(), rate);
 
-        if(Objects.requireNonNull(crucible.getLevel()).random.nextFloat() < 0.2 && crucible.getPowerLevel(Powers.CURSE_POWER.get()) >
+        if(Objects.requireNonNull(reactor.getLevel()).random.nextFloat() < 0.2 && reactor.getPowerLevel(Powers.CURSE_POWER.get()) >
                 WorldSpecificValue.get("curse_assim_hurt_threshold", 900, 1100)){
-            AABB aoe = new AABB(crucible.getBlockPos());
-            aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the crucible.
-            List<LivingEntity> nearby_ents = crucible.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
+            AABB aoe = new AABB(reactor.getBlockPos());
+            aoe = aoe.inflate(3); // Inflate the AOE to be 3x the size of the reactor.
+            List<LivingEntity> nearby_ents = reactor.getLevel().getEntitiesOfClass(LivingEntity.class, aoe);
             for (LivingEntity e : nearby_ents) {
                 if (CrystalIronItem.effectNotBlocked(e, 1)) {
-                    e.hurt(crucible.getLevel().damageSources().magic(), 1);
+                    e.hurt(reactor.getLevel().damageSources().magic(), 1);
                 }
             }
         }

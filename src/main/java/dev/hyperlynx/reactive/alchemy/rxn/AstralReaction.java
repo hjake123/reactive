@@ -22,8 +22,8 @@ public class AstralReaction extends Reaction{
     }
 
     @Override
-    public Status conditionsMet(Reactor crucible){
-        if(crucible.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0)
+    public Status conditionsMet(Reactor reactor){
+        if(reactor.getPowerLevel(Powers.ASTRAL_POWER.get()) > 0 && reactor.getTotalPowerLevel() > reactor.getPowerLevel(Powers.ASTRAL_POWER.get()))
             return Status.REACTING;
         return Status.STABLE;
     }

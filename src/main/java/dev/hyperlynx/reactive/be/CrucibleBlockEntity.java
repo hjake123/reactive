@@ -595,6 +595,11 @@ public class CrucibleBlockEntity extends BlockEntity implements PowerBearer, Rea
     }
 
     @Override
+    public Level getLevel() {
+        return this.level;
+    }
+
+    @Override
     public ReactionStatusMessage getStatusMessage() {
         return new ReactionStatusMessage(getBlockPos(), getReactionStatus());
     }

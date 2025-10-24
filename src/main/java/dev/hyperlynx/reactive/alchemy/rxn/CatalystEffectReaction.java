@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.alchemy.rxn;
 
 import dev.hyperlynx.reactive.alchemy.Power;
+import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.blocks.CrucibleBlock;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,8 +22,12 @@ public class CatalystEffectReaction extends EffectReaction{
     }
 
     @Override
-    public Status conditionsMet(Reactor crucible) {
+    public Status conditionsMet(Reactor reactor) {
+        if(!(reactor instanceof CrucibleBlockEntity crucible)) {
+            return Status.INHIBITED;
+        }
         Status reaction_status = super.conditionsMet(crucible);
+        assert crucible.getLevel() != null;
         for(Entity entity_inside : CrucibleBlock.getEntitesInside(crucible.getBlockPos(), crucible.getLevel())) {
             if (entity_inside instanceof ItemEntity item_ent && item_ent.getItem().is(reactant)) {
                 // The catalyst condition is met; return the check without catalyst consideration.
