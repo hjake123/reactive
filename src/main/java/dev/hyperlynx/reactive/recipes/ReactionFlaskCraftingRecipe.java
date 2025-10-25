@@ -120,6 +120,10 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
 
     @Override
     public boolean matches(@NotNull CraftingContainer input, @NotNull Level level) {
+        if (!canCraftInDimensions(input.getWidth(), input.getHeight())) {
+            // Apparently Vanilla doesn't check this...? See issue #115
+            return false;
+        }
         int width = calculateWidth(input);
         CraftingContainer adjusted = leftAdjustAndCopy(input);
         if(width == 1){
@@ -136,7 +140,7 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull CraftingContainer input, RegistryAccess pRegistryAccess) {
+    public @NotNull ItemStack assemble(@NotNull CraftingContainer input, @NotNull RegistryAccess pRegistryAccess) {
         var powers = getPowerBalance(input);
         ItemStack result = Registration.REACTION_FLASK_ITEM.get().getDefaultInstance();
         ReactionFlaskItem.Contents contents = new ReactionFlaskItem.Contents(powers, false);
@@ -145,7 +149,7 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer input) {
+    public @NotNull NonNullList<ItemStack> getRemainingItems(@NotNull CraftingContainer input) {
         boolean already_removed_one_bottle = false;
         NonNullList<ItemStack> filtered_remaining_items = NonNullList.create();
         for(ItemStack stack : super.getRemainingItems(input)) {
