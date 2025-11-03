@@ -13,6 +13,7 @@ import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.entities.ReactorEntity;
 import dev.hyperlynx.reactive.items.CrystalIronItem;
 import dev.hyperlynx.reactive.ConfigMan;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.util.BlockMoveChecker;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
@@ -410,7 +411,7 @@ public class ReactionEffects {
         reactor.expendPower(Powers.WARP_POWER.get(), 4);
         level.playSound(null, pos, SoundEvents.TUFF_PLACE, SoundSource.BLOCKS,1.0F, 1.2F);
         Vec3 beam_target = pos.getCenter().add(new Vec3(direction.step()).scale(0.3));
-        ParticleScribe.drawParticleLine(level, new EnergyParticle.Options(0.2F, Powers.Z_POWER.get().getColor(), beam_target, false), reactor.blockPos().getCenter(), beam_target, 50, 0.05F);
+        ParticleScribe.drawParticleLine(level, new EnergyParticleOptions(0.2F, Powers.Z_POWER.get().getColor(), beam_target, false), reactor.blockPos().getCenter(), beam_target, 50, 0.05F);
     }
 
     public static void omenSettling(Reactor reactor){

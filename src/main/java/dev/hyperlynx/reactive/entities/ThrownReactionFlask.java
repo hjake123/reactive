@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Power;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.items.ReactionFlaskItem;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -44,7 +45,7 @@ public class ThrownReactionFlask extends ThrowableItemProjectile {
         level().addFreshEntity(entity);
 
         for(Power power : powers.keySet()){
-            ParticleScribe.drawExactParticleRing(level(), new EnergyParticle.Options(0.1F, power.getColor(), entity.position()),
+            ParticleScribe.drawExactParticleRing(level(), new EnergyParticleOptions(0.1F, power.getColor(), entity.position()),
                     result.getLocation(), 0, 0.2, 5);
         }
         this.kill();

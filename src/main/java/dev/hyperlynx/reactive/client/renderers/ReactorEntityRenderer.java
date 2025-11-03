@@ -6,6 +6,7 @@ import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.client.renderers.rxn.ReactorRenderer;
 import dev.hyperlynx.reactive.entities.ReactorEntity;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -33,7 +34,7 @@ public class ReactorEntityRenderer extends EntityRenderer<ReactorEntity> impleme
             float chance = powers.get(power) * 2.0F / reactor.maxPower();
             if(Minecraft.getInstance().level.random.nextFloat() < chance) {
                 ParticleScribe.drawExactParticleSphere(reactor.obtainLevel(),
-                        new EnergyParticle.Options(power.getColor(), reactor.position()),
+                        new EnergyParticleOptions(power.getColor(), reactor.position()),
                         reactor.position(), 0.0, 0.4, 1);
             }
         }

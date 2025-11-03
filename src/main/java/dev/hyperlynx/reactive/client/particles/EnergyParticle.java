@@ -1,22 +1,12 @@
 package dev.hyperlynx.reactive.client.particles;
 
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.hyperlynx.reactive.Registration;
-import dev.hyperlynx.reactive.util.Color;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.core.particles.DustParticleOptionsBase;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 
 public class EnergyParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
@@ -25,7 +15,7 @@ public class EnergyParticle extends TextureSheetParticle {
     private final boolean reversed;
     private final boolean orbit;
 
-    protected EnergyParticle(ClientLevel level, double x, double y, double z, Options options, SpriteSet sprites) {
+    protected EnergyParticle(ClientLevel level, double x, double y, double z, EnergyParticleOptions options, SpriteSet sprites) {
         super(level, x, y, z);
         this.sprites = sprites;
         this.target = options.getTarget();
@@ -34,7 +24,7 @@ public class EnergyParticle extends TextureSheetParticle {
         this.gCol = options.getColor().y / 255.0F;
         this.bCol = options.getColor().z / 255.0F;
         this.hasPhysics = false;
-        this.reversed = options.reverse_motion;
+        this.reversed = options.isReversed();
         this.orbit = options.orbit;
         this.setLifetime(reversed || orbit ? 20 : 200);
         setSpriteFromAge(sprites);
@@ -78,95 +68,7 @@ public class EnergyParticle extends TextureSheetParticle {
         super.move(move_step.x, move_step.y, move_step.z);
     }
 
-    public static class Options extends DustParticleOptionsBase {
-        final float speed;
-        final Color color;
-        final Vec3 target;
-        final boolean reverse_motion;
-        final boolean orbit;
-
-        public Options(Color color, Vec3 target) {
-            this(0.05F, color, target);
-        }
-
-        public Options(float speed, Color color, Vec3 target) {
-            this(speed, color, target, false);
-        }
-
-        public Options(float speed, Color color, Vec3 target, boolean reverse) {
-            this(speed, color, target, reverse, false);
-        }
-
-        public Options(float speed, Color color, Vec3 target, boolean reverse, boolean orbit) {
-            super(color.toVector3f(), 0.1F);
-            this.speed = speed;
-            this.color = color;
-            this.target = target;
-            this.reverse_motion = reverse;
-            this.orbit = orbit;
-        }
-
-        protected static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-                        Codec.FLOAT.fieldOf("speed").forGetter(Options::getSpeed),
-                        Color.CODEC.fieldOf("color").forGetter(Options::getHyperColor),
-                        Vec3.CODEC.fieldOf("target").forGetter(Options::getTarget),
-                        Codec.BOOL.fieldOf("reversed").forGetter(Options::isReversed),
-                        Codec.BOOL.fieldOf("orbit").forGetter(Options::isOrbiting)
-                ).apply(instance, Options::new)
-        );
-
-
-        @Override
-        public @NotNull ParticleType<?> getType() {
-            return Registration.ENERGY_PARTICLE_TYPE.get();
-        }
-
-        private Color getHyperColor() { return color; }
-
-        public float getSpeed() {
-            return this.speed;
-        }
-
-        public Vec3 getTarget() {
-            return this.target;
-        }
-
-        public boolean isReversed() { return this.reverse_motion; }
-
-        private boolean isOrbiting() {
-            return orbit;
-        }
-    }
-
-    public static class Type extends ParticleType<Options> {
-        public Type() {
-            super(false, DESERIALIZER);
-        }
-
-        @Override
-        public @NotNull Codec<Options> codec() {
-            return Options.CODEC.codec();
-        }
-    }
-
-    public static final ParticleOptions.Deserializer<Options> DESERIALIZER = new ParticleOptions.Deserializer<>() {
-        @Override
-        public Options fromCommand(ParticleType<Options> type, StringReader reader) throws CommandSyntaxException {
-            try {
-                return new Options(reader.readFloat(), new Color(reader.readInt()), new Vec3(reader.readDouble(), reader.readDouble(), reader.readDouble()),
-                        reader.readBoolean(), reader.readBoolean());
-            } catch (Exception e) {
-                throw CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherParseException().create(e);
-            }
-        }
-
-        @Override
-        public Options fromNetwork(ParticleType<Options> type, FriendlyByteBuf buf) {
-            return new Options(buf.readFloat(), new Color(buf.readInt()), new Vec3(buf.readVector3f()), buf.readBoolean(), buf.readBoolean());
-        }
-    };
-
-    public static class Provider implements ParticleProvider<Options> {
+    public static class Provider implements ParticleProvider<EnergyParticleOptions> {
         private final SpriteSet sprites;
 
         public Provider(SpriteSet sprites) {
@@ -174,7 +76,7 @@ public class EnergyParticle extends TextureSheetParticle {
         }
 
         @Override
-        public @Nullable Particle createParticle(@NotNull Options options, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        public @Nullable Particle createParticle(@NotNull EnergyParticleOptions options, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             EnergyParticle particle = new EnergyParticle(level, x, y, z, options, sprites);
             particle.speed = options.getSpeed();
             return particle;

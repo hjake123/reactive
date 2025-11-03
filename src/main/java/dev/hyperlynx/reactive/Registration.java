@@ -32,6 +32,7 @@ import dev.hyperlynx.reactive.net.material.*;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltHeightMessage;
 import dev.hyperlynx.reactive.net.quilt.HoverQuiltVelocityMessage;
 import dev.hyperlynx.reactive.net.rxn.*;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import dev.hyperlynx.reactive.util.HyperMobEffect;
 import dev.hyperlynx.reactive.items.*;
 import dev.hyperlynx.reactive.recipes.*;
@@ -629,8 +630,8 @@ public class Registration {
                     .updateInterval(1)
                     .build("hover_quilt"));
 
-    public static final ParticleType<EnergyParticle.Options> ENERGY = new EnergyParticle.Type();
-    public static final RegistryObject<ParticleType<EnergyParticle.Options>> ENERGY_PARTICLE_TYPE = PARTICLES.register("energy",
+    public static final ParticleType<EnergyParticleOptions> ENERGY = new EnergyParticleOptions.Type();
+    public static final RegistryObject<ParticleType<EnergyParticleOptions>> ENERGY_PARTICLE_TYPE = PARTICLES.register("energy",
             () -> ENERGY);
 
     public static final RegistryObject<RecipeType<ReactionFlaskModifyRecipe>> REACTION_FLASK_MODIFY_RECIPE_TYPE = RECIPE_TYPES.register("crafting_special_reaction_flask_modify", () -> getRecipeType("crafting_special_reaction_flask_modify"));

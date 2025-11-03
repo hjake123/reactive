@@ -5,6 +5,7 @@ import dev.hyperlynx.reactive.alchemy.Powers;
 import dev.hyperlynx.reactive.blocks.AirLightBlock;
 import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import dev.hyperlynx.reactive.util.BeamHelper;
 import dev.hyperlynx.reactive.ConfigMan;
 import net.minecraft.core.BlockPos;
@@ -212,7 +213,7 @@ public class StaffEffects {
             }
         }
 
-        ParticleScribe.drawParticleBox(user.level(), new EnergyParticle.Options(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), user.level().random.nextFloat() > 0.2, true), aoe.deflate(3.0), 5);
+        ParticleScribe.drawParticleBox(user.level(), new EnergyParticleOptions(0.1F, Powers.VITAL_POWER.get().getColor(), user.getEyePosition(), user.level().random.nextFloat() > 0.2, true), aoe.deflate(3.0), 5);
         user.level().playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 0.7F, 1.3f);
     }
 }

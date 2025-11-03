@@ -10,6 +10,7 @@ import dev.hyperlynx.reactive.client.particles.EnergyParticle;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
 import dev.hyperlynx.reactive.integration.kubejs.ReactiveKubeJSPlugin;
 import dev.hyperlynx.reactive.net.rxn.ReactionStatusMessage;
+import dev.hyperlynx.reactive.particles.EnergyParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -79,7 +80,7 @@ public class ReactionRenderers {
         RandomSource random = reactor.obtainLevel().random;
         if(random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticle.Options(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticleOptions(0.05F, Powers.CURSE_POWER.get().getColor(), reactor.getPos(), false, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
@@ -87,7 +88,7 @@ public class ReactionRenderers {
         RandomSource random = reactor.obtainLevel().random;
         if (random.nextFloat() < 0.3) {
             Vec3 random_offset = new Vec3(random.nextFloat() * 0.4 - 0.2, random.nextFloat() * 0.4 - 0.4, random.nextFloat() * 0.4 - 0.2);
-            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticle.Options(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
+            ParticleScribe.drawExactParticleRing(reactor.obtainLevel(), new EnergyParticleOptions(0.05F, Powers.ASTRAL_POWER.get().getColor(), reactor.getPos(), true, true), reactor.getPos().add(random_offset), 0, 0.7, 1);
         }
     }
 
@@ -122,7 +123,7 @@ public class ReactionRenderers {
 
     public void warpEnergy(Reactor reactor) {
         if(reactor.obtainLevel().random.nextFloat() < 0.2F) {
-            ParticleScribe.drawParticleBox(reactor.obtainLevel(), new EnergyParticle.Options(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), AABB.ofSize(reactor.getPos(), 1, 1, 1), 1);
+            ParticleScribe.drawParticleBox(reactor.obtainLevel(), new EnergyParticleOptions(0.1F, Powers.WARP_POWER.get().getColor(), reactor.getPos(), true), AABB.ofSize(reactor.getPos(), 1, 1, 1), 1);
         }
     }
 }
