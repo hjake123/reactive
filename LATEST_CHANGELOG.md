@@ -1,1 +1,1 @@
-- Fix issue with custom crafting that broke 2x2 crafting with Polymorph installed
+- Fixed various issues preventing the mod from loading on dedicated servers
