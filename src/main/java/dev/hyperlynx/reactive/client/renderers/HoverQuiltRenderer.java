@@ -27,6 +27,11 @@ public class HoverQuiltRenderer extends EntityRenderer<HoverQuilt> implements Re
         model = new HoverQuiltModel(context.bakeLayer(HoverQuiltModel.LAYER_LOCATION));
     }
 
+    public static void updateHeight(HoverQuiltHeightMessage payload) {
+        assert Minecraft.getInstance().level != null;
+        HoverQuilt.handleHeightUpdate(payload, Minecraft.getInstance().level);
+    }
+
     @Override
     public @NotNull HoverQuiltModel getModel() {
         return model;
