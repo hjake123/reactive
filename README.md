@@ -1,5 +1,5 @@
 # reactive
-<img src="https://github.com/hjake123/reactive/blob/b18be11710f4c1da151d1ee685942ee37df6735c/img/modrinth_banner.png" alt="reactive logo"/>
+<img src="https://github.com/hjake123/reactive/blob/852c5a2435e4fa32f3bf15fb80a6d23d4b8066b0/img/banner.png" alt="reactive logo"/>
 Reactive is an alchemy-themed magic mod based on in-world experimentation. 
 If you're here, you're either curious about the source code, or want to know the format for recipes.
 Either way, this is a passion project but I tried to put in work to make it understandable at least. 
