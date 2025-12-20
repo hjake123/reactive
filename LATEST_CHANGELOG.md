@@ -1,1 +1,2 @@
-- Fixed various issues preventing the mod from loading on dedicated servers
+- Prevent a crash when rendering Material Blocks without them being in the world
+    - In particular, this fixes a crash with the mod "Hold My Items", although due to limitations of that mod, Material blocks will have their default appearance (similar to Apprentice's Salt) in first person when using it
