@@ -1,4 +1,2 @@
-- Update compatibility range for KubeJS to allow the mod to load with its versions `2101.7.2+`
-  - The new compatibility range to all `2101.7.x` versions
-- Fix issues in the Cultivation and Inert Crystal Journal entries
-- Fixed typos in the SGA invocation in the journal (thanks to heksile on CurseForge for finding them!)
+- Prevent a crash when rendering Material Blocks without them being in the world
+    - In particular, this fixes a crash with the mod "Hold My Items", although due to limitations of that mod, Material blocks will have their default appearance (similar to Apprentice's Salt) in first person when using it
