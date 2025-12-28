@@ -286,7 +286,7 @@ public class SpecialCaseMan {
             c.sculkSpreader.addCursors(c.getBlockPos().south(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().east(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().west(), spread);
-            FlagTrigger.triggerForNearbyPlayers((ServerLevel) c.getLevel(), ReactiveCriterionTriggers.SEE_SCULK_GENESIS.get(), c.getBlockPos(), 10);
+            FlagCriterion.triggerForNearbyPlayers((ServerLevel) c.getLevel(), CriteriaTriggers.SEE_SCULK_GENESIS, c.getBlockPos(), 10);
             c.expendPower(Powers.SOUL_POWER.get(), 1000);
         }else{
             if(c.getPowerLevel(Powers.VITAL_POWER.get()) > 100){

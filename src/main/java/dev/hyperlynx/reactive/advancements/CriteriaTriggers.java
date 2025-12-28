@@ -1,6 +1,7 @@
 package dev.hyperlynx.reactive.advancements;
 
 import dev.hyperlynx.reactive.ReactiveMod;
+import net.minecraft.advancements.CriterionTrigger;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 
 public class CriteriaTriggers {
@@ -32,7 +33,8 @@ public class CriteriaTriggers {
     public static final FlagCriterion ISOLATE_OMEN = new FlagCriterion(ReactiveMod.location("isolate_omen_criterion"));
     public static final ReactionCriterion REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("reaction"));
     public static final ReactionCriterion PERFECT_REACTION_TRIGGER = new ReactionCriterion(ReactiveMod.location("perfect_reaction"));
-
+    public static final FlagCriterion SEE_SCULK_GENESIS = new FlagCriterion(ReactiveMod.location("see_sculk_genesis"));
+    public static final FlagCriterion GET_SOUL_FROM_ALLAY =  new FlagCriterion(ReactiveMod.location("get_soul_from_allay"));
 
     // Called in Registration.
     public static void enqueue(FMLCommonSetupEvent evt) {
@@ -63,5 +65,7 @@ public class CriteriaTriggers {
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(GOLD_THREAD_REACTION));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(THROW_FLASK));
         evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(ISOLATE_OMEN));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(GET_SOUL_FROM_ALLAY));
+        evt.enqueueWork(() -> net.minecraft.advancements.CriteriaTriggers.register(SEE_SCULK_GENESIS));
     }
 }
