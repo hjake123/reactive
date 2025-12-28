@@ -165,7 +165,7 @@ public class ReactionFlaskCraftingRecipe extends CustomRecipe {
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {
-        return width >= 3 && height >= 3;
+        return width == 3 && height == 3;
     }
 
     @Override
