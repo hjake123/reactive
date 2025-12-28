@@ -281,12 +281,13 @@ public class SpecialCaseMan {
 
         int spread = WorldSpecificValue.get("sculk_spread_amount", 12, 20);
 
-        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 800){
+        if(c.getPowerLevel(Powers.SOUL_POWER.get()) > 1150){
             c.sculkSpreader.addCursors(c.getBlockPos().north(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().south(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().east(), spread);
             c.sculkSpreader.addCursors(c.getBlockPos().west(), spread);
-            c.expendPower(Powers.SOUL_POWER.get(), 500);
+            FlagTrigger.triggerForNearbyPlayers((ServerLevel) c.getLevel(), ReactiveCriterionTriggers.SEE_SCULK_GENESIS.get(), c.getBlockPos(), 10);
+            c.expendPower(Powers.SOUL_POWER.get(), 1000);
         }else{
             if(c.getPowerLevel(Powers.VITAL_POWER.get()) > 100){
                 c.expendPower(Powers.VITAL_POWER.get(), 100);

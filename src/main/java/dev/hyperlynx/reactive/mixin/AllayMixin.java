@@ -27,45 +27,62 @@ public abstract class AllayMixin {
     private static final EntityDataAccessor<Boolean> DATA_CAN_DONATE = SynchedEntityData.defineId(Allay.class, EntityDataSerializers.BOOLEAN);
 
     @Unique
+    private static final EntityDataAccessor<Boolean> DATA_JUST_DONATED = SynchedEntityData.defineId(Allay.class, EntityDataSerializers.BOOLEAN);
     int symbol_cache_ticker = 0;
 
-    @Unique
-    boolean unredeemed_duplication = false;
+    private Allay self() {
+        return ((Allay)(Object) this);
+    }
 
     @Inject(method = "defineSynchedData", at = @At("RETURN"))
     public void defineSynchedData(CallbackInfo ci) {
-        ((Allay) (Object) this).getEntityData().define(DATA_CAN_DONATE, false);
+        self().getEntityData().define(DATA_CAN_DONATE, false);
+        self().getEntityData().define(DATA_JUST_DONATED, false);
+    }
+
+    private SynchedEntityData data() {
+        return self().getEntityData();
     }
 
     @Inject(method = "duplicateAllay", at = @At("RETURN"))
     public void duplicateAllay(CallbackInfo ci) {
-        unredeemed_duplication = true;
+        data().set(DATA_CAN_DONATE, true);
+        data().set(DATA_JUST_DONATED, false);
     }
 
     @Inject(method = "tick", at = @At("RETURN"))
-    public void tick(CallbackInfo ci) {
+    public void reactiveTick(CallbackInfo ci) {
         symbol_cache_ticker++;
         if(symbol_cache_ticker > ConfigMan.COMMON.crucibleTickDelay.get()){
-            symbol_maybe = BlockPos.findClosestMatch(((Allay)(Object)this).blockPosition(), 10, 10,
-                    blockPos -> ((Allay)(Object)this).level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
+            symbol_maybe = BlockPos.findClosestMatch(self().blockPosition(), 10, 10,
+                    blockPos -> self().level().getBlockState(blockPos).is(Registration.IRON_SYMBOL.get()));
             symbol_cache_ticker = 0;
         }
 
         if(symbol_maybe.isPresent()) {
-            ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 4);
+            self().hurt(self().level().damageSources().magic(), 4);
         }
 
-        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(Registration.CRYSTAL_IRON.get())){
-            ((Allay)(Object) this).hurt(((Allay) (Object) this).level().damageSources().magic(), 10);
+        if(self().getItemInHand(InteractionHand.MAIN_HAND).is(ReactiveItems.CRYSTAL_IRON.get())){
+            self().hurt(self().level().damageSources().magic(), 10);
         }
 
-        if(((Allay)(Object) this).getItemInHand(InteractionHand.MAIN_HAND).is(Registration.QUARTZ_BOTTLE.get())){
-            if(unredeemed_duplication){
-                ((Allay)(Object) this).level().playSound(null, ((Allay)(Object) this).blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1.1F);
-                ((Allay)(Object) this).setItemInHand(InteractionHand.MAIN_HAND, Registration.SOUL_BOTTLE.get().getDefaultInstance());
-                ((Allay) (Object) this).getEntityData().set(DATA_CAN_DONATE, false);
-                unredeemed_duplication = false;
+        if(self().getItemInHand(InteractionHand.MAIN_HAND).is(ReactiveItems.QUARTZ_BOTTLE.get())){
+            if(data().get(DATA_CAN_DONATE)){
+                self().level().playSound(null, self().blockPosition(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.8F, 1.1F);
+                self().setItemInHand(InteractionHand.MAIN_HAND, ReactiveItems.SOUL_BOTTLE.get().getDefaultInstance());
+                data().set(DATA_CAN_DONATE, false);
+                data().set(DATA_JUST_DONATED, true);
             }
+        }
+    }
+
+    @Inject(method = "mobInteract", at = @At("HEAD"))
+    public void reactiveInteractTestTakeSoul(Player player, InteractionHand hand, CallbackInfoReturnable cir) {
+        ItemStack held_item = self().getItemInHand(InteractionHand.MAIN_HAND);
+        if(held_item.is(ReactiveItems.SOUL_BOTTLE) && data().get(DATA_JUST_DONATED) && player instanceof ServerPlayer splayer) {
+            ReactiveCriterionTriggers.GET_SOUL_FROM_ALLAY.get().trigger(splayer);
+            data().set(DATA_JUST_DONATED, false);
         }
     }
 
