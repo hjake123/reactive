@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "see_sacrifice": {
+      "trigger": "reactive:get_soul_from_allay"
+    }
+  }
+}

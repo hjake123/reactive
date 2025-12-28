@@ -1,0 +1,7 @@
+{
+  "criteria": {
+    "see_sacrifice": {
+      "trigger": "reactive:see_sculk_genesis"
+    }
+  }
+}
