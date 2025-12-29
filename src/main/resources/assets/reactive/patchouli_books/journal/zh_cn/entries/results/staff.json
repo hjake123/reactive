@@ -1,7 +1,7 @@
 {
   "name": "能量法杖",
   "icon": "reactive:incomplete_staff",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:see_synthesis",
   "pages": [
     {

@@ -1,7 +1,7 @@
 {
   "name": "记忆鳞茎",
   "icon": "reactive:mnemonic_bulb",
-  "category": "reactive:items",
+  "category": "reactive:results",
   "advancement": "reactive:get_mnemonic_bulb",
   "pages": [
     {
