@@ -84,7 +84,10 @@ public class ClientRegistration {
     @SubscribeEvent
     public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         event.register((state, getter, pos, index) -> {
-            assert getter != null;
+            if(getter == null || pos == null) {
+                // We're being called from some really strange situation, like the Hold My Items mod. Fallback to all white.
+                return 0xFFFFFFFF;
+            }
             return MaterialBlock.getBlockColor(getter, pos);
         }, ReactiveBlocks.MATERIAL_BLOCK.get());
     }

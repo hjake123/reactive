@@ -104,4 +104,10 @@ public class ReactiveCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> THROW_FLASK = CRITERIA_TRIGGERS.register("throw_flask_criterion",
             FlagTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> SEE_SCULK_GENESIS = CRITERIA_TRIGGERS.register("see_sculk_genesis",
+            FlagTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FlagTrigger> GET_SOUL_FROM_ALLAY = CRITERIA_TRIGGERS.register("get_soul_from_allay",
+            FlagTrigger::new);
 }

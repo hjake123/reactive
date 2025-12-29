@@ -1,4 +1,5 @@
-- Update compatibility range for KubeJS to allow the mod to load with its versions `2101.7.2+`
-  - The new compatibility range to all `2101.7.x` versions
-- Fix issues in the Cultivation and Inert Crystal Journal entries
-- Fixed typos in the SGA invocation in the journal (thanks to heksile on CurseForge for finding them!)
+- Added descriptions for the mod's enchantments to be shown by Enchantment Descriptions
+- Added quest markers for Something That Spreads and Study of the Allay to lead players to those mechanics more directly
+- Tweaked the values for the Sculk Catalyst special case to make it easier to use
+- Improved the logic of the Allay bottle filling mechanic
+- Fixed modded larger-than-3x3 crafting tables causing the client to hang when used
