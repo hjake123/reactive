@@ -3,7 +3,7 @@
   "icon": "minecraft:paper",
   "category": "reactive:reactions",
   "advancement": "reactive:reactions/size_grow_effect",
-  "flag": "mod:pehkui",
+  "secret": true,
   "pages": [
     {
       "type": "patchouli:text",

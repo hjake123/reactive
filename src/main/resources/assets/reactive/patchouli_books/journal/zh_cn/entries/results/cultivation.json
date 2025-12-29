@@ -7,7 +7,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "使用奥术手段操纵植物的可行性已在历史中多次验证，记录颇丰，我们的炼金技艺也应当不例外。对繁茂能量进行简单实验，就能产生奇妙的结果。"
+      "text": "使用奥术手段操纵植物的可行性已在历史中得到过多次验证，记录颇丰，我们的炼金技艺也应当不例外。对繁茂能量进行简单实验，就能产生奇妙的结果。"
     },
     {
       "type": "patchouli:text",
@@ -31,7 +31,7 @@
     {
       "type": "reactive:transmute",
       "recipe": "mind_lichen_from_vine",
-      "text": "值得考虑开展对$(l:reactive:items/mnemonic)此类样本$(/l)的深度研究。"
+      "text": "值得考虑开展对$(l:reactive:results/mnemonic)此类样本$(/l)的深度研究。$(p)$(o)此类生物体的根索渴望$(2)经验$(0)。"
     },
     {
       "type": "reactive:transmute",
