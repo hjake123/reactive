@@ -1,5 +1,1 @@
-- Added descriptions for the mod's enchantments to be shown by Enchantment Descriptions
-- Added quest markers for Something That Spreads and Study of the Allay to lead players to those mechanics more directly
-- Tweaked the values for the Sculk Catalyst special case to make it easier to use
-- Improved the logic of the Allay bottle filling mechanic
-- Fixed modded larger-than-3x3 crafting tables causing the client to hang when used
+- Updated the Simplified Chinese translation (Thanks to ChuijkYahus)
