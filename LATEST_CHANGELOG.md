@@ -1,1 +1,1 @@
-- Updated the Simplified Chinese translation (Thanks to ChuijkYahus)
+- Fixed a crash when loading the game when Ponder is present, but Create is not.

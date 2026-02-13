@@ -1,4 +1,4 @@
-package dev.hyperlynx.reactive.integration.ponder;
+package dev.hyperlynx.reactive.integration.create.ponder;
 
 import com.simibubi.create.infrastructure.ponder.AllCreatePonderTags;
 import dev.hyperlynx.reactive.registration.ReactiveItems;

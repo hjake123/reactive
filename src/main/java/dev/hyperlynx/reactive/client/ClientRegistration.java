@@ -14,7 +14,7 @@ import dev.hyperlynx.reactive.client.renderers.entities.HoverQuiltRenderer;
 import dev.hyperlynx.reactive.client.renderers.entities.ReactorEntityRenderer;
 import dev.hyperlynx.reactive.client.renderers.be.SymbolRenderer;
 import dev.hyperlynx.reactive.integration.iris.IrisGatewayRenderer;
-import dev.hyperlynx.reactive.integration.ponder.ReactivePonderPlugin;
+import dev.hyperlynx.reactive.integration.create.ponder.ReactivePonderPlugin;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -70,7 +70,7 @@ public class ClientRegistration {
 
     @SubscribeEvent
     public static void onClientSetupEvent(FMLClientSetupEvent evt){
-        if(ModList.get().isLoaded("ponder")){
+        if(ModList.get().isLoaded("create") && ModList.get().isLoaded("ponder")){
             ReactivePonderPlugin.clientInit();
         }
         //noinspection deprecation
