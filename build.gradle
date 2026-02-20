@@ -206,6 +206,8 @@ dependencies {
 
     implementation fg.deobf("curse.maven:json-things-541617:6100175")
 
+    compileOnly fg.deobf("curse.maven:thirst-was-taken-679270:6660408")
+
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html

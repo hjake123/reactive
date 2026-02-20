@@ -1,1 +1,2 @@
-- Updated the Simplified Chinese translation (Thanks to ChuijkYahus)
+- Added compatibility for Thirst Was Taken water buckets
+- Made Redstone Melting Materials accept indirect Redstone signal to activate

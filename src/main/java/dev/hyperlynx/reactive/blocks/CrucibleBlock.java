@@ -8,6 +8,7 @@ import dev.hyperlynx.reactive.alchemy.special.SpecialCaseMan;
 import dev.hyperlynx.reactive.alchemy.WorldSpecificValues;
 import dev.hyperlynx.reactive.be.CrucibleBlockEntity;
 import dev.hyperlynx.reactive.client.particles.ParticleScribe;
+import dev.hyperlynx.reactive.integration.thirst.ThirstModCompat;
 import dev.hyperlynx.reactive.items.PowerBottleItem;
 import dev.hyperlynx.reactive.util.WorldSpecificValue;
 import net.minecraft.core.BlockPos;
@@ -132,6 +133,7 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
             // New code to allow for non-vanilla fluid input.
             IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(player.getItemInHand(hand).copy()).orElse(null);
 
+            // Check for water containers
             if (checkFluidInStack(fluidHandler, Fluids.WATER)) {
                 becomeFull(state, level, pos, (ServerPlayer) player);
                 if (((ServerPlayer) player).gameMode.isSurvival()) {
@@ -140,6 +142,14 @@ public class CrucibleBlock extends CrucibleShapedBlock implements EntityBlock, W
                 }
                 return InteractionResult.CONSUME;
             }
+
+            // Thirst mod compat hook
+            if(ThirstModCompat.checkAndUseWaterBucket(fluidHandler.getContainer(), (ServerPlayer) player, hand)) {
+                becomeFull(state, level, pos, (ServerPlayer) player);
+                return InteractionResult.CONSUME;
+            }
+
+            // Check for lava containers
             if (checkFluidInStack(fluidHandler, Fluids.LAVA)) {
                 lavaCrucibleFill(level, pos, (ServerPlayer) player);
                 if (((ServerPlayer) player).gameMode.isSurvival()) {
