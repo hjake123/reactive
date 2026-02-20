@@ -308,7 +308,7 @@ public class MaterialBlock extends Block implements EntityBlock {
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
         if(material(level, pos).has(MaterialProperties.REDSTONE_MELTING.get())) {
-            if(level.getDirectSignalTo(pos) > 0) {
+            if(level.getBestNeighborSignal(pos) > 0) {
                 level.setBlock(pos, state.setValue(MODEL, MaterialModel.GEL), Block.UPDATE_CLIENTS);
             } else {
                 level.setBlock(pos, state.setValue(MODEL, MaterialModel.valueOf(material(level, pos).get(MaterialProperties.MODEL_NAME.get()).toUpperCase())), Block.UPDATE_CLIENTS);

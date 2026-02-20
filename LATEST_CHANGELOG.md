@@ -1,1 +1,2 @@
-- Fixed a crash when loading the game when Ponder is present, but Create is not.
+(Development version)
+- Made Redstone Melting Materials accept indirect Redstone signal to activate
