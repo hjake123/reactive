@@ -15,10 +15,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MaterialItem extends BlockItem {
     public static final String MATERIAL_ID_KEY = "MaterialId";
@@ -49,7 +50,12 @@ public class MaterialItem extends BlockItem {
     @Override
     public Component getName(ItemStack stack) {
         if(hasMaterialId(stack)) {
-            return ClientMaterialMan.getName(Objects.requireNonNull(getMaterialId(stack)));
+            if(FMLEnvironment.dist.isClient()) {
+                return ClientNameFetchWrapper.getName(getMaterialId(stack));
+            } else {
+                // We're trying to get the name from a dedicated server! Uh oh!
+                return MaterialMan.fetch(ServerLifecycleHooks.getCurrentServer().overworld(), getMaterialId(stack)).getNameComponent();
+            }
         }
         return Component.translatable("block.reactive.invalid_material");
     }

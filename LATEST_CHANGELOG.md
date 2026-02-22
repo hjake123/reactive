@@ -1,1 +1,1 @@
-- (ChujinYahus) Added the Thirst Was Taken compatibility text to the Simplified Chinese translation.
+- Fixed a potential crash if a mod asked for a Material Item's name from the server on dedicated server
