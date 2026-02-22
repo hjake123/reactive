@@ -1,2 +1,1 @@
-- Added compatibility for Thirst Was Taken water buckets
-- Made Redstone Melting Materials accept indirect Redstone signal to activate
+- (ChujinYahus) Added the Thirst Was Taken compatibility text to the Simplified Chinese translation.
