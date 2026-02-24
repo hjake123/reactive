@@ -16,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +30,12 @@ public class MaterialItem extends BlockItem {
     @Override
     public Component getName(ItemStack stack) {
         if(stack.has(ReactiveComponentTypes.MATERIAL_ID.get())) {
-            return ClientMaterialMan.getName(Objects.requireNonNull(stack.get(ReactiveComponentTypes.MATERIAL_ID.get())));
+            if(FMLEnvironment.dist.isClient()) {
+                return ClientNameFetchWrapper.getName(stack.get(ReactiveComponentTypes.MATERIAL_ID.get()));
+            } else {
+                // We're trying to get the name from a dedicated server! Uh oh!
+                return MaterialMan.fetch(ServerLifecycleHooks.getCurrentServer().overworld(), stack.get(ReactiveComponentTypes.MATERIAL_ID.get())).getNameComponent();
+            }
         }
         return Component.translatable("block.reactive.invalid_material");
     }
