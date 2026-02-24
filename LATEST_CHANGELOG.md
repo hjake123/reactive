@@ -1,1 +1,4 @@
-- Made Redstone Melting Materials accept indirect Redstone signal to activate
+- Made all Synthesis reactions cost half as much of each Power
+  - This fixes an issue where the Staves of Power might be impossible to create if you get very unlucky
+  - This should not provoke any re-randomization
+- Fixed a possible crash if the server requests the custom name of a Material Item due to some other mod
