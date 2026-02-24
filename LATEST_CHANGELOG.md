@@ -1,1 +1,3 @@
-- Fixed a potential crash if a mod asked for a Material Item's name from the server on dedicated server
+- Made all Synthesis reactions cost half as much of each Power
+    - This fixes an issue where the Staves of Power might be impossible to create if you get very unlucky
+    - This should not provoke any re-randomization

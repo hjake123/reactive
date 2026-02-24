@@ -14,6 +14,9 @@ public class SynthesisReaction extends Reaction{
 
     public SynthesisReaction(String alias, Power resultPower, Power... reagents) {
         super(alias, reagents);
+        // Adjust the power requirements for Synthesis reaction to make them not prohibitively expensive.
+        // See issue #128
+        this.reagents.replaceAll((p, v) -> Math.max(1, this.reagents.get(p) / 2));
         rate = WorldSpecificValue.get(alias+"rate", 40, 100);
         this.resultPower = resultPower;
     }
